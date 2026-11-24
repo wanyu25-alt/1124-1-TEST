@@ -1,0 +1,52 @@
+{
+ "schemaVersion": 1,
+ "categories": [
+  {
+   "id": "9itk60p",
+   "name": "水果",
+   "sort": 0,
+   "cardOrder": [
+    "j70gjdd",
+    "dlgoxik",
+    "7yhr5j2",
+    "vyrwmga",
+    "jh14q4i"
+   ]
+  },
+  {
+   "id": "56t05rw",
+   "name": "交通工具",
+   "sort": 1,
+   "cardOrder": [
+    "88ywvqo",
+    "t0th4m9",
+    "5g8c9s5",
+    "zprsz71",
+    "l48t6n1",
+    "17didvr"
+   ]
+  },
+  {
+   "id": "741jh8d",
+   "name": "民生用品",
+   "sort": 2,
+   "cardOrder": [
+    "vll8o12",
+    "mbcs4qy",
+    "o4uvaaf",
+    "0qwvsdp",
+    "3jtag5m",
+    "u6qv1qh",
+    "u8hst93"
+   ]
+  },
+  {
+   "id": "63vl3s4",
+   "name": "三餐",
+   "sort": 3,
+   "cardOrder": [
+    "o4uvaaf"
+   ]
+  }
+ ]
+}

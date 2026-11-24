@@ -1,0 +1,99 @@
+{
+ "format": "詞彙特快車",
+ "schemaVersion": 1,
+ "kind": "materials",
+ "version": "e7d6551aa63b",
+ "updatedAt": "2026-11-23T07:38:48.061Z",
+ "builtAt": "2026-11-24T05:12:17.412Z",
+ "counts": {
+  "cards": 18,
+  "categories": 4,
+  "images": 18,
+  "audio": 0
+ },
+ "files": {
+  "images/card_001.jpg": {
+   "size": 41911,
+   "crc32": 359114293
+  },
+  "images/card_002.jpg": {
+   "size": 23327,
+   "crc32": 64547755
+  },
+  "images/card_003.jpg": {
+   "size": 83662,
+   "crc32": 2792510950
+  },
+  "images/card_004.jpg": {
+   "size": 82202,
+   "crc32": 2992332761
+  },
+  "images/card_005.jpg": {
+   "size": 46915,
+   "crc32": 1824923478
+  },
+  "images/card_006.jpg": {
+   "size": 53736,
+   "crc32": 43774218
+  },
+  "images/card_007.jpg": {
+   "size": 33489,
+   "crc32": 1858470916
+  },
+  "images/card_008.jpg": {
+   "size": 35797,
+   "crc32": 3187350430
+  },
+  "images/card_009.jpg": {
+   "size": 25067,
+   "crc32": 2256455543
+  },
+  "images/card_010.jpg": {
+   "size": 32645,
+   "crc32": 465099227
+  },
+  "images/card_011.jpg": {
+   "size": 50044,
+   "crc32": 629303461
+  },
+  "images/card_012.jpg": {
+   "size": 34429,
+   "crc32": 1250150834
+  },
+  "images/card_013.jpg": {
+   "size": 30139,
+   "crc32": 202454943
+  },
+  "images/card_014.jpg": {
+   "size": 51789,
+   "crc32": 1515820435
+  },
+  "images/card_015.jpg": {
+   "size": 46289,
+   "crc32": 2216544534
+  },
+  "images/card_016.jpg": {
+   "size": 17245,
+   "crc32": 1530829369
+  },
+  "images/card_017.jpg": {
+   "size": 42567,
+   "crc32": 492759719
+  },
+  "images/card_018.jpg": {
+   "size": 48396,
+   "crc32": 3986455083
+  }
+ },
+ "hashes": {
+  "cards.json": {
+   "size": 3760
+  },
+  "categories.json": {
+   "size": 684
+  },
+  "settings.json": {
+   "size": 579
+  }
+ }
+}
