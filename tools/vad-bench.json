@@ -1,0 +1,98 @@
+[
+ {
+  "name": "語音偵測率 · 一般音量（−22 dBFS）",
+  "old": 1,
+  "nw": 1,
+  "unit": "ratio"
+ },
+ {
+  "name": "VAD 延遲 ms · 一般音量（−22 dBFS）",
+  "old": null,
+  "nw": 116.66666666666697,
+  "unit": "ms"
+ },
+ {
+  "name": "語音偵測率 · 小聲（−34 dBFS）",
+  "old": 1,
+  "nw": 1,
+  "unit": "ratio"
+ },
+ {
+  "name": "VAD 延遲 ms · 小聲（−34 dBFS）",
+  "old": null,
+  "nw": 133.33333333333348,
+  "unit": "ms"
+ },
+ {
+  "name": "語音偵測率 · 非常小聲（−44 dBFS）",
+  "old": 0,
+  "nw": 1,
+  "unit": "ratio"
+ },
+ {
+  "name": "VAD 延遲 ms · 非常小聲（−44 dBFS）",
+  "old": null,
+  "nw": 150,
+  "unit": "ms"
+ },
+ {
+  "name": "小聲 −34 dBFS＋較吵環境 −50 dBFS 偵測率",
+  "old": 1,
+  "nw": 1,
+  "unit": "ratio"
+ },
+ {
+  "name": "慢速說話（每字 1.4 s、字間停 1.6 s，−30 dBFS）整段不被切斷",
+  "old": 0,
+  "nw": 1,
+  "unit": "ratio"
+ },
+ {
+  "name": "誤觸發 次/分鐘 · 安靜環境底噪 −60 dBFS",
+  "old": 0,
+  "nw": 0,
+  "unit": "perMin"
+ },
+ {
+  "name": "誤觸發 次/分鐘 · 風扇／冷氣（低頻持續）−38 dBFS",
+  "old": 1,
+  "nw": 0,
+  "unit": "perMin"
+ },
+ {
+  "name": "誤觸發 次/分鐘 · 剛開啟的風扇（第 10 秒起 −36 dBFS 持續）",
+  "old": 1,
+  "nw": 0,
+  "unit": "perMin"
+ },
+ {
+  "name": "誤觸發 次/分鐘 · 敲桌聲（每 6 秒一次，−20 dBFS）",
+  "old": 9,
+  "nw": 0,
+  "unit": "perMin"
+ },
+ {
+  "name": "誤觸發 次/分鐘 · 拍手（每 7 秒一次，−18 dBFS）",
+  "old": 8,
+  "nw": 0,
+  "unit": "perMin"
+ },
+ {
+  "name": "誤觸發 次/分鐘 · 咳嗽（每 9 秒一次，−26 dBFS，0.3 s）",
+  "old": 6,
+  "nw": 0,
+  "unit": "perMin"
+ },
+ {
+  "name": "誤觸發 次/分鐘 · 背景音樂洩漏（持續 −35 dBFS）",
+  "old": 1,
+  "nw": 0,
+  "unit": "perMin"
+ },
+ {
+  "name": "環境底噪校準結果（真值約 −51 dBFS）",
+  "old": null,
+  "nw": -53.9,
+  "unit": "dB"
+ }
+]
