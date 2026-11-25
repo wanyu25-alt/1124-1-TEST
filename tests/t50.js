@@ -103,7 +103,7 @@ const CARDS=[C('a','棉被','ㄇㄧㄢˊ ㄅㄟˋ'),C('b','火車','ㄏㄨㄛˇ 
  T('independent success on due word advances schedule to next day',E('S.rv.b.sr.step')===1&&E('S.rv.b.sr.due')===E('REV.day(Date.now())')+864e5);
  E(`REV.upd({game:"pick",outcome:"correct",independent:false,first:{result:"wrong"},hints:[],itemId:"b",ts:Date.now(),id:"y",kind:"normal",pk:{sub:"same"}})`);
  T('failure resets to same-day, adds generalization reason',E('S.rv.b.sr.step')===0&&E('S.rv.b.sr.reasons.includes("generalization")'));
- setup('pick');E('S.rv.a={teach:0,assess:0,ok:0,last:0,sr:{base:REV.day(Date.now()),step:0,due:REV.day(Date.now()),reasons:["unstable_understanding"],hist:[]}}');E('PH.startReview()');await sleep(200);
+ setup('pick');/* 第04階段：到期日改由詞彙履歷（作答紀錄）推算；昨天獨立答對 → 今天到期 */E('S.recs.push({id:"z1",learnerId:LRN.id(),itemId:"a",itemKind:"word",game:"pick",outcome:"correct",independent:true,hints:[],first:{result:"correct"},ts:Date.now()-864e5,session:{id:"s1"},pk:{sub:"word",n:3},ext:{}});VP._k=null');E('PH.startReview()');await sleep(200);
  T('review round starts with due words',E('G.flow')===true&&E('G.cur.id')==='a'&&E('G.cur._rt.from')==='review');E('leave()');
  // ---------- 整合流程 ----------
  setup('listen',{lm:'integ',n:3,ps:{sw:30,fw:2,fg:1}});E('PH.startFlow()');await sleep(250);

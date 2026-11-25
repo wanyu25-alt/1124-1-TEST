@@ -48,7 +48,7 @@ const boot=async(o={})=>{const w=mk(Object.assign({fresh:true},o));const t0=Date
    E('FL.go()');if(E('G.on')&&E('G.n')>n)over.push(`${mode} st${st} ★${s} n=${n} G.n=${E('G.n')}`);E('try{leave()}catch(e){};FL.end();G.on=false')}
   T('actual question count never exceeds the chosen 5/10 (all available combinations)',over.length===0);if(over.length)console.log(over.slice(0,10).join('\n'));
   // 提示褪除重測：固定題數時取代後面一題，不延長
-  E('UI.pick("quiet");FL.open(1);FL.mem().star["quiet:1"]=1;FL.mem().n=10;FL.go()');
+  E('UI.pick("quiet");FL.open(1);FL.mem().star["quiet:1"]=1;FL.mem().n=10;FL.mem().range="pick";FL.mem().cat="all";FL.go()');
   const q0=E('G.q.length'),n0=E('G.n');E('PH.hinted=()=>true;PH.sched()');
   T('fade retest in a fixed-count round replaces a later slot instead of extending the round',E('G.n')===n0&&E('G.q.length')===q0&&!!E('G.fs'));
   E('try{leave()}catch(e){};FL.end();G.on=false');

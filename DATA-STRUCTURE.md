@@ -125,3 +125,49 @@ S.lrn = { cur:'L001', list:[個案…], store:{ <個案ID>: 該個案的隔離�
 
 **遷移**：不需要。舊資料沒有這些欄位時一律使用預設；匯出入沿用既有格式（個案資料含 `ext`）。
 **復原到 v8.0**：`git checkout v8.0-ui-phase01`；v9.0 新增欄位在 v8.0 會被忽略，不會損壞資料。
+
+
+## v10.0 新增（皆為可選欄位，資料版本仍為 3）
+| 位置 | 內容 |
+|---|---|
+| `S.set.keyVoice` | 注音按鍵發音開關（預設開；個案設定快照 `p.ext.pref.keyVoice` 會覆蓋） |
+| `S.set.cfBy` | 成人確認時預設的確認者（成人／家長／老師／治療師／其他） |
+| `rec.session` | `{id（練習場次＝本輪 id）, learnerId, idx（第幾題）, n}` |
+| `rec.sp.attempt` | 是否有可觀察的口語嘗試（辨識有結果、偵測到聲音或大人確認有開口） |
+| `rec.sp.asrUsed`、`rec.sp.asrFail` | 是否使用語音辨識；辨識失敗次數（不算答錯） |
+| `rec.sp.demoType`、`rec.sp.hintTypes` | 完整示範的實際類型（voice／zhuyin／text）、本題實際提示類型清單 |
+| `rec.sp.cls` 新值 | `partial`（部分口語表達）、`tech`（技術問題） |
+| `rec.confirm` | `{source, final, by, ts, iso, history:[{choice,label,by,ts,at,prev?,late?}], revisions, late?}`；沒有人工確認為 `null`。**不覆蓋 `rec.asr`、`rec.first`、`rec.outcome`** |
+| 作答 `man[]`（暫存於 RE.cur） | 每筆 `{choice, by:'adult', role, at, ts}`，`choice` 可為 correct/partial/attempt/wrong/none/tech |
+
+**口語十種結果對照**：自主正確＝`ok_indep`；部分提示後＝`ok_prompted`（P2/P3，或完整注音／文字）；完整示範後仿說＝`ok_imitated`（P4 語音）；部分口語＝`partial`；有效嘗試＝`attempt`；確認錯誤＝`wrong`；未出現口語＝`none`；辨識失敗待確認＝`unrecognized`（outcome `unconfirmed`）；技術異常＝outcome `tech_error`；跳過＝outcome `skipped`。
+**遷移**：不需要。舊紀錄沒有 `confirm/session/sp.attempt`，指標會用既有欄位保守計算。
+**復原到 v9.0**：`git checkout v9.0-phase02`。
+
+## v11.0 新增（皆為可選欄位，資料版本仍為 3）
+個案 `LRN.cur().ext.vp`（每位個案各自一份）：
+- `rules`：教師調整過的規則參數（只存與預設不同者）；預設 `famN 3、famSess 2、recentK 4、recentFail 1、stableGap 7、stableN 1、minEv 3、gaps [0,1,3,7,14,30]、immN 2`。
+- `rh`：規則版本紀錄 `[{ver,ts,by,changes[]}]`；目前版本＝`1.0` 加 `-t<次數>`。
+- `sm`：出題設定 `{ratio:{fam,need,new}, newPause, on, il:'auto|block|inter', per:0|1|2, assigned:[詞彙id], carry}`。
+- `snap`：每個詞彙×能力上次的狀態字串（用來偵測狀態變更）；`log`：狀態變更紀錄（最近 400 筆）`{ts,w,t,ab,from,to,ver,basis[]}`。
+- `notes`：生活口語運用觀察 `{id,w,kind:'spont|asked|none',txt,by,ts}`（只有 spont／asked 會成為證據）。
+- `plans`：最近 40 次出題 `{id,ts,n,ab,ver,ratio,target,actual,pct,avail,fallback[],note,baseline?,kind?,words[{id,t,b}]}`。
+
+每筆作答紀錄 `rec.ext.vp`：`{rv:規則版本, imm:是否剛聽過答案立即作答, sm:{pid,b}|null, note?}`；`rec.sp.imm`（口語題）。
+
+履歷本身**不另存**：`VP.prof(詞彙id)` 由 `S.recs`、`S.rv.*.exposed` 與 `notes` 推算 `{ab:{lc,pi,si,sp,zy,dc,ph,se,gn,dl}:{state,flag,regressed,cap,c:{I,P,D,A,F},basis[],sch:{step,due,why},last}, last, next}`。
+表現等級：I 獨立、P 部分提示／修正後、D 完整示範後（含剛聽完答案立即作答）、A 有嘗試、F 確認錯誤；技術異常、未確認、沒有回應、跳過、辨識失敗不列入。
+能力對應：聽詞選圖→圖片辨認（3 張以上或相似干擾也算聽詞理解）；不同圖片／用途選圖、情境說詞→不同圖片及情境；看圖說詞→自主說詞＋提示後說詞（完整示範後只算示範後）；注音／拼打→注音拼打（畫面有注音提示時只算提示後）；聽打→詞彙聽打；組合紀錄→短語組合（依組合內各詞）；句子紀錄→語句表達（以句子文字出現的詞彙推算，單字詞不推算）。
+遷移：舊資料沒有 `ext.vp` 時 `VP.ext()` 補預設；舊作答紀錄沒有 `ext.vp` 時視為非立即作答。
+
+## v12.0 新增（皆為可選欄位，資料版本仍為 3）
+**靜態資料（不進資料庫）**：`vocab/vocabulary.json`（詞彙：`id,word,zhuyin,category,categoryId,images[],primaryImage,hasImage,reviewStatus,pronunciationReview`）、`vocab/categories.json`（`id,name,count,withImages`）、`vocab/manifest.json`、`vocab/images/VOCxxxx_NN.webp`。對應：`word→text`、`zhuyin→zy`、`categoryId→cats`（經 `S.lib.cm` 對照到本機分類）、`id` 原樣保留。
+
+**`S.lib`（老師資料，與靜態資料分開）**
+- `ver`：詞彙庫版本；`en{id:1}`：已啟用；`cm{CATxx:本機分類ID}`：分類對照（同名既有分類→合併，否則 `LIB-CATxx`）；`merged{CATxx:既有分類ID}`。
+- `ov{id}`：老師對單一詞彙的修改——`zy`（注音）、`zyRev`（`pending／ok／edited`）、`rv`（`pending／approved`，圖片審核）、`primary`（主要圖片）、`hide[]`（隱藏的內建圖片路徑）、`add[{d,ts}]`（老師新增圖片，data URL）、`cats[]`（額外分類）、`audio`（老師錄音，停用時暫存）。
+- `upd{v,c,ts}`：匯入的更新（與靜態資料合併成有效詞彙庫）；`log[]`：最近 200 筆操作。
+**卡片（`S.cards`，啟用時產生）**：`{id:'VOCxxxx',text,zy,img,imgs[],libPrim,libRv,lib:1,audio,cats,…}`。`img` 是相對網址（`vocab/images/…`）；**未審核或無圖時 `img` 為空字串**，所以所有既有看圖題型自然排除它。`imgs[]` 為全部圖片。
+**個案 `ext.lib`**：`{mode:'fixed|rotate|random',rot{id:n},last{id:url},use{id:{檔名:次數}}}`；**`ext.libSel`**：該學生使用的內建詞彙 ID（缺省＝全部已啟用）。
+**匯出 `library.json`**：`{kind:'library',en,ov,cm,upd,merged}`；cards.json／categories.json 不含內建詞彙與內建分類（匯入時由 library.json 還原）。
+**遷移**：沒有需要遷移的舊資料；沒有 `S.lib` 的舊備份可直接匯入；取代式匯入若檔案沒有 library.json，會清除本機的詞彙庫設定（符合「取代」）。

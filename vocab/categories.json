@@ -1,0 +1,98 @@
+[
+  {
+    "id": "CAT01",
+    "name": "人物",
+    "count": 43,
+    "withImages": 21
+  },
+  {
+    "id": "CAT02",
+    "name": "身體",
+    "count": 43,
+    "withImages": 0
+  },
+  {
+    "id": "CAT03",
+    "name": "水果蔬菜",
+    "count": 51,
+    "withImages": 51
+  },
+  {
+    "id": "CAT04",
+    "name": "食物飲料",
+    "count": 85,
+    "withImages": 82
+  },
+  {
+    "id": "CAT05",
+    "name": "動物昆蟲",
+    "count": 85,
+    "withImages": 85
+  },
+  {
+    "id": "CAT06",
+    "name": "植物自然",
+    "count": 55,
+    "withImages": 55
+  },
+  {
+    "id": "CAT07",
+    "name": "交通",
+    "count": 43,
+    "withImages": 43
+  },
+  {
+    "id": "CAT08",
+    "name": "衣物",
+    "count": 43,
+    "withImages": 43
+  },
+  {
+    "id": "CAT09",
+    "name": "居家用品",
+    "count": 68,
+    "withImages": 68
+  },
+  {
+    "id": "CAT10",
+    "name": "餐廚衛生",
+    "count": 43,
+    "withImages": 43
+  },
+  {
+    "id": "CAT11",
+    "name": "學校休閒",
+    "count": 68,
+    "withImages": 68
+  },
+  {
+    "id": "CAT12",
+    "name": "職業場所",
+    "count": 68,
+    "withImages": 22
+  },
+  {
+    "id": "CAT13",
+    "name": "動作",
+    "count": 111,
+    "withImages": 0
+  },
+  {
+    "id": "CAT14",
+    "name": "顏色形狀數量",
+    "count": 44,
+    "withImages": 0
+  },
+  {
+    "id": "CAT15",
+    "name": "時間方位",
+    "count": 44,
+    "withImages": 0
+  },
+  {
+    "id": "CAT16",
+    "name": "狀態情緒需求",
+    "count": 106,
+    "withImages": 0
+  }
+]

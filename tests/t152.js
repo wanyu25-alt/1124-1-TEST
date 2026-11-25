@@ -6,7 +6,7 @@ const boot=async(o={})=>{const w=mk(Object.assign({fresh:true},o));const t0=Date
 (async()=>{
  // ① 設定頁內容
  {const {w,E,q,qa}=await boot();E('tab(5)');const t=q('#mid').textContent;
-  T('設定: 聲音 items',['背景音樂','真人語音音量','語音播放速度','注音按鍵發音','鼓勵音效'].every(k=>t.includes(k)||k==='語音播放速度'&&/播放速度/.test(t)));
+  T('設定: 聲音 items',['背景音樂','真人錄音音量','播放速度','按下注音鍵時立刻念出','鼓勵音效'].every(k=>t.includes(k)||k==='語音播放速度'&&/播放速度/.test(t)));
   T('設定: 學習輔助 items (等待時間/注音提示/語音提示/圖片選項數量/成人協助/換題/預設題數難度)',['作答等待時間','注音提示','自動播放語音','圖片選項數量','大人幫忙','自動換下一題','預設練習題數','預設挑戰難度'].every(k=>t.includes(k)));
   T('設定: 畫面 items (動畫/文字按鍵大小/畫面輔助)',['動畫效果','文字與按鍵大小','畫面輔助'].every(k=>t.includes(k)));
   T('設定: wait choices 5/10/15/20/不限時, default 不限制作答時間',['5 秒','10 秒','15 秒','20 秒','不限時'].every(k=>t.includes(k))&&/預設（不限制作答時間）/.test(t));
@@ -35,14 +35,14 @@ const boot=async(o={})=>{const w=mk(Object.assign({fresh:true},o));const t0=Date
  // ③ 輔助紀錄：每次作答記錄實際使用的輔助與提示程度
  {const {w,E,q,qa}=await boot();
   E('FL.set("hintMode","first");FL.set("waitSec",10);FL.set("autoNext",false);FL.set("aps",false);');
-  E('UI.pick("quiet");FL.open(1);FL.mem().star["quiet:1"]=1;FL.go()');
+  E('UI.pick("quiet");FL.open(1);FL.mem().star["quiet:1"]=1;FL.mem().range="pick";FL.mem().cat="all";FL.go()');/* 手動選擇教材：不經智慧出題（智慧出題的新詞彙第一題是示範卡，另在 t170 測試）*/
   const n0=E('S.recs.length');E('ok()');E('leave()');
   const rec=E('S.recs[S.recs.length-1]');
   T('record written for the answered item',E('S.recs.length')>n0);
   T('record stores ext.aid with hint mode, wait, autoNext, input type',rec&&rec.ext&&rec.ext.aid&&rec.ext.aid.hint==='first'&&rec.ext.aid.wait===10&&rec.ext.aid.autoNext===false&&['touch','phys'].includes(rec.ext.aid.input));
-  T('record stores ext.fl (station/mode/star/range)',rec.ext.fl&&rec.ext.fl.st===1&&rec.ext.fl.mode==='quiet'&&rec.ext.fl.star===1&&rec.ext.fl.range==='rec');
+  T('record stores ext.fl (station/mode/star/range)',rec.ext.fl&&rec.ext.fl.st===1&&rec.ext.fl.mode==='quiet'&&rec.ext.fl.star===1&&rec.ext.fl.range==='pick');
   T('record stores aid.symVoice=false (注音按鍵發音關) and pkN',rec.ext.aid.symVoice===false&&typeof rec.ext.aid.pkN==='number');
-  E('FL.reset()');E('UI.pick("quiet");FL.open(1);FL.go()');E('ok()');E('leave()');const r2=E('S.recs[S.recs.length-1]');
+  E('FL.reset()');E('UI.pick("quiet");FL.open(1);FL.mem().range="pick";FL.mem().cat="all";FL.go()');E('ok()');E('leave()');const r2=E('S.recs[S.recs.length-1]');
   T('a later record shows the defaults (aids differ per answer)',r2.ext.aid.hint==='full'&&r2.ext.aid.wait===null&&r2.ext.aid.autoNext===true);
  }
  // ④ 等待時間、手動換題、提示上限
@@ -64,7 +64,7 @@ const boot=async(o={})=>{const w=mk(Object.assign({fresh:true},o));const t0=Date
 
  // ④b 注音提示模式（首音／部分／完整）的實際行為
  {const {w,E,q,qa}=await boot();
-  const run=(mode)=>{E('try{leave()}catch(e){};G.on=false');E(`S.set.hz={...(S.set.hz||{}),free:true,u:"none"};FL.set("hintMode","${mode}");UI.pick("quiet");FL.open(1);FL.actSel="x0";FL.go()`);E('kHint("p");');E('kHint("p");');E('kHint("p");');const a=E('K.hst.length');E('kHint("f");');return{a,b:E('K.hst.length'),full:!!E('K.hfull')}};
+  const run=(mode)=>{E('try{leave()}catch(e){};G.on=false');E(`S.set.hz={...(S.set.hz||{}),free:true,u:"none"};FL.set("hintMode","${mode}");UI.pick("quiet");FL.open(1);FL.mem().range="pick";FL.mem().cat="all";FL.actSel="x0";FL.go()`);E('kHint("p");');E('kHint("p");');E('kHint("p");');const a=E('K.hst.length');E('kHint("f");');return{a,b:E('K.hst.length'),full:!!E('K.hfull')}};
   const f=run('first');T('首音: repeated 提示 reveals only the first stage; 完整注音 gives no full answer',f.a===1&&f.b===1&&!f.full);
   const pa=run('part');T('部分: stage by stage, 完整注音 button not available (no full reveal)',pa.a>=2&&!pa.full);
   const fu=run('full');T('完整: stage hints continue and 完整注音 reveals the full answer',fu.a>=2&&fu.full);

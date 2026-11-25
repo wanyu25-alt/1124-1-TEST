@@ -17,6 +17,7 @@ for(let i=0;i<120;i++){if(await p.$('#arr'))break;
  const st=await p.evaluate(()=>({lock:G.lock,n:document.querySelectorAll('.pko:not(.dis)').length,stars:S.rw.stars,dis:document.querySelectorAll('.pko.dis').length}));
  if(st.stars<prev)dropped=true;prev=st.stars;if(st.dis>0)wrongClicks++;
  if(!st.lock&&st.n>0)await p.locator('.pko:not(.dis)').nth(0).click({force:true,timeout:2000}).catch(()=>{});
+ else if(!st.lock&&await p.evaluate(()=>S.set.mode==='expose'))await p.evaluate(()=>EXP.done());/* 第04階段：新詞彙先看示範卡 */
  await p.waitForTimeout(450)}
 T('星星整個過程沒有減少（答錯也不扣）',!dropped,{dropped});console.log('INFO 過程中出現答錯後重試次數',wrongClicks);
 await p.waitForSelector('#arr',{timeout:15000}).catch(()=>{});
