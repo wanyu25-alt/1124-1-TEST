@@ -9,7 +9,7 @@ const mk=()=>new JSDOM(html,{url:'http://localhost/?noseed',runScripts:'dangerou
   S.cards=[${[["a","蘋果",["fr","x1"]],["b","香蕉",["fr","x2"]],["c","火車",["tr","x3"]],["d","高鐵",["tr","x4"]],["e","計程車",["tr","x5"]],["f","公車",["tr","x6"]]].map(x=>`(${card.toString()})('${x[0]}','${x[1]}',${JSON.stringify(x[2])})`).join(',')}];
   S.logs=[{t:1,cid:'a',word:'蘋果',cat:'ind',tries:0,mode:'key'}];save();tab(2);sub='cards';tch()`);
  const nav=[...w.document.querySelectorAll('#tch .sub button')].map(b=>b.textContent);
- T('nav: 詞彙管理 left of 分類管理; no 全部圖卡',nav[0].includes('詞彙管理')&&nav[1].includes('分類管理')&&!nav.join().includes('全部圖卡')&&nav.length===11);
+ T('nav: 詞彙管理 left of 分類管理; no 全部圖卡',nav[0].includes('詞彙管理')&&nav[1].includes('分類管理')&&!nav.join().includes('全部圖卡')&&nav.length===15);
  T('詞彙管理 keeps edit form with 分類 checkboxes + quick new category',w.document.querySelector('#sp').innerHTML.includes('4. 分類')&&!!w.document.querySelector('#fnc'));
  E('sub="cats";tch()');const sp=()=>w.document.querySelector('#sp');
  T('category list shows names with counts, edit/delete buttons',sp().textContent.includes('水果（2張）')&&sp().textContent.includes('交通工具（4張）')&&sp().textContent.includes('編輯')&&sp().textContent.includes('刪除'));
@@ -38,9 +38,9 @@ const mk=()=>new JSDOM(html,{url:'http://localhost/?noseed',runScripts:'dangerou
  T('only 水果 and 交通工具 remain; all 6 cards kept with memberships',E('S.cats.map(c=>c.name).join()')==='水果,交通工具'&&E('S.cards.length')===6&&E('catCnt("fr")')===2&&E('catCnt("tr")')===4&&E('byId("c").cats.join()')==='tr');
  const w2=mk();await sleep(500);T('reopen: state persisted, cleanup not re-run (no auto delete)',w2.eval('S.cats.length')===2&&w2.eval('S.cards.length')===6);
  // game from category & all
- E('S.set.src="c:fr";S.set.n=4;S.set.mode="key";S.set.sound=false;S.set.music=false;home();startRound()');T('game from 水果 only uses fruit',E('G.q.every(c=>["蘋果","香蕉"].includes(c.text))'));E('leave()');
- E('S.set.src="all";home();startRound()');T('全部圖卡 pool = 6 unique',E('pool().length')===6);E('leave()');
- T('home selector lists 全部圖卡 + 水果 + 交通工具',/全部圖卡（6）/.test(E('document.querySelector("#mid").innerHTML'))&&/水果（2張）/.test(E('document.querySelector("#mid").innerHTML')));
+ E('S.set.src="c:fr";S.set.n=4;S.set.mode="key";S.set.sound=false;S.set.music=false;RC.ui.classic=true;home();startRound()');T('game from 水果 only uses fruit',E('G.q.every(c=>["蘋果","香蕉"].includes(c.text))'));E('RC.ui.classic=true;leave()');
+ E('S.set.src="all";RC.ui.classic=true;home();startRound()');T('全部圖卡 pool = 6 unique',E('pool().length')===6);E('RC.ui.classic=true;leave()');
+ E('UI.pick("quiet");FL.open(1)');T('setup range selector lists 全部圖卡 + 水果',/全部圖卡（6）/.test(E('document.querySelector("#mid").innerHTML'))&&/水果（2張）/.test(E('document.querySelector("#mid").innerHTML')));
  // settings page has no vocab management
  E('tab(2);sub="set";tch()');T('settings has no card selection/bank/category management',!sp().textContent.includes('加入分類')&&!sp().textContent.includes('詞彙庫')&&sp().textContent.includes('每關題目數量'));
  // zip roundtrip keeps checkbox states

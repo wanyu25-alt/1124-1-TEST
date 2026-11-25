@@ -2,7 +2,7 @@ const fs=require('fs');const {JSDOM}=require('jsdom');require('fake-indexeddb/au
 const html=fs.readFileSync(''+(process.env.IDX||(process.env.IDX||'/mnt/user-data/outputs/vocabulary-express/index.html'))+'','utf8').replace(/<script src[^>]*><\/script>/,'').replace('prepDone:false','prepDone:true');
 const R={P:0,F:0},T=(n,c)=>{c?R.P++:R.F++;console.log(c?'PASS':'FAIL',n)},sleep=ms=>new Promise(r=>setTimeout(r,ms));
 function mk(opt={}){const w=new JSDOM((opt.prep?html.replace('prepDone:true','prepDone:false'):html),{url:'http://localhost/?noseed',runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){
- w.indexedDB=indexedDB;w.alert=()=>{};w.confirm=()=>true;w.__ttsLog=[];w.__aud=[];w.__asr=[];w.__gum=0;
+ w.indexedDB=opt.fresh?new (require('fake-indexeddb').IDBFactory)():indexedDB;w.alert=()=>{};w.confirm=()=>true;w.__ttsLog=[];w.__aud=[];w.__asr=[];w.__gum=0;
  w.speechSynthesis={getVoices:()=>[],cancel(){w.__ttsCancel=(w.__ttsCancel||0)+1},speak(u){w.__ttsLog.push({t:u.text,at:Date.now(),rate:u.rate,vol:u.volume});setTimeout(()=>u.onend&&u.onend(),60)}};w.SpeechSynthesisUtterance=function(t){this.text=t};
  w.AudioContext=function(){this.currentTime=0;this.state='running';this.destination={};const P=()=>({value:0,setValueAtTime(){return this},exponentialRampToValueAtTime(){},setTargetAtTime(){},cancelScheduledValues(){}});
   this.createGain=()=>({gain:P(),connect(x){return x},disconnect(){}});this.createOscillator=()=>({type:'sine',frequency:P(),connect(x){return x},start(){},stop(){}});this.createBiquadFilter=()=>({type:'',frequency:P(),connect(x){return x}});

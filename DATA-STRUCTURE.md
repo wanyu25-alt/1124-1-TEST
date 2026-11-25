@@ -80,3 +80,48 @@ S.lrn = { cur:'L001', list:[個案…], store:{ <個案ID>: 該個案的隔離�
 - `taskId`：S5.sxt／S5.sxc／S5.sxo／S5.sxs／S5.sxe／S5.sxx／S5.sxp／S5.sxl／S6.scn／S6.scq／S6.scc。`game` 為實際模式（口語題為 `speak`，題型在 `sub`／`sp`）。
 - 溝通類型判定：無內容提示且未被問 → `spontaneous`；系統／成人問句後無內容提示 → `responded`；P2／P3 → `prompted`；P4（完整語音或完整注音）→ `imitated`；手勢／圖卡 → `aac`（非口語，如實記錄，不計入口語指標）；其餘 → `none`。P1（慢慢想）不含內容，不改變類型。看圖命名（sxs 等）永遠不計入主動溝通。
 - 材料匯出入：語句／情境／觀察紀錄包含在「完整備份」（整份狀態）；單獨的教材匯出（圖卡、分類）格式不變。
+
+
+## 第05階段新增欄位（資料版本仍為 3，全部可選）
+- `S.as`（只在教師調整規則或做人工修正時才建立；計算報告本身不寫入任何資料）：
+  - `ver`：規則版本字串 `1.0.N`；`rules`：與預設不同的門檻（`minN`、`minNWord`、`unk`、`delayH`、`confMin`、`maxAnHint`）。
+  - `log[]`：`{ver, ts, by, note, changes{欄位:{from,to}}, rules}`，每次調整一筆。
+  - `fix{ 作答紀錄ID: [ {id, ts, by, reason, set{outcome|purpose|exclude|independent}, orig{outcome,purpose,independent}, revoke} ] }`：人工修正疊加層，**不改 `S.recs` 原始紀錄**；最後一筆非撤銷者生效，撤銷也是一筆歷程。
+- 生活觀察 `S.ob[].purpose` 新增值：`comment`（評論）、`ask`（提問）、`name`（實物命名）；舊值 `share` 保留（舊紀錄含評論）。
+- 報告物件（`AS.calc()` 回傳，不儲存）：`meta{spec,rules,counts,…}`、`c1`–`c7`、`lit`；每個指標 `{label, num, den, unc, pct, status('ok'|'low'|'none'), note}`。
+- 使用的作答紀錄欄位：`taskId, itemKind, itemId, game, sub, channel, purpose, outcome, first.result, independent, hints[].level／type, maxHint, kind(retest), rtFirstInput, ts, ext.closedBy, pk.sub/n, newImage, novelCombo/novelSentence, combo{swap,taughtBefore,demoBefore,parts}, sentence{taughtBefore,demoBefore}, comm{type,expanded}, spontaneous, generalization{kinds}`。
+
+## 第06階段：教師後台（v6.0）
+- `S.acl`：`{salt,it,h(PBKDF2式雜湊),rsalt,rh(復原碼雜湊),fails,lockUntil,ts,audit[{ts,action,note}]}`；無 `h` 代表尚未設定密碼。
+- `S.as.err{ 作答ID:{cat,ts,by,note,prev} }`、`S.as.errLog[]`：教師對錯誤類型的確認（可撤銷）。
+- 個案 `p.ext.goals[]`：`{id,text,pri,key,base{num,den,pct,ver},status,notes[],ts}`；`p.ext.cfgLog[]`：`{ts,field,from,to}`；`p.ext.excl[]`：此個案排除的教材ID。
+- 儀表板、熱力表、趨勢、報表皆即時由紀錄計算，不儲存。
+
+## 第07階段：推薦與每日任務（v7.0）
+- 全域 `S.rc`：`{ver:'1.0.N', rules:{門檻覆寫}, log:[{ts,ver,note,changes{欄位:{from,to}}}]}`（規則版本與調整紀錄）。
+- 個案 `p.ext.rc`：`ia{skip{步驟:{ts,note}}, sup{步驟:{lvl:can|part|not,note,ts}}, started}`、`mins`（每日分鐘，0=預設）、`zy`（auto|yes|no）、`need`（R04–R07 或空）、`lit`、`active{1,2:推薦}`、`cancelled{規則:ts}`、`lastSug`、`log[]`（系統建議／接受／修改／取消／階段變更；推薦快照含 why、practice、minutes、parent、ind{label,target,base}、evidence[]、rule、ver、ts）、`wordStage{詞彙ID:階段}`、`daily{date,t0,mins,sig,items[{id,state,n0,target,launch,rule}],cur,lastSync,rewarded,paused,evs[]}`。
+- 推薦、進階判斷、最近進步皆由紀錄即時計算，不儲存結果（只儲存教師決定與當時快照）。
+
+## v8.0 新增（皆為可選欄位，資料版本仍為 3）
+- `S.set.inputPicked`（布林）：使用者／教師是否明確選過輸入方式。未選過時，`S.set.input` 的 `'phys'` 視為「自動判斷」。
+- `S.set.micRem`、`S.set.micLaterAt`（毫秒時間戳）：麥克風提醒最後一次互動／按「稍後再設定」的時間。
+- `LRN.cur().ext.rs`：斷點接續快照 `{v:1,ts,rid,set:{mode,mix,theme,src,order,lm,pks,sps},ids:[剩餘題目卡片id],done,total,lid}`。每位個案各自一份；12 小時過期；題目卡片不存在即不提供；完成一輪（arrive）即清除；只支援看圖打字／聽音打字／看字拼音／看圖說詞／聽詞選圖／聽詞認識，詞組與語句情境類不支援。
+
+
+## v9.0 新增（皆為可選欄位，資料版本仍為 3）
+| 位置 | 內容 |
+|---|---|
+| `p.ext.fl` | 個案上次的選擇：`mode`、`n`（5/10/15/20）、`star`（鍵 `模式:站號` → 1–5，各站各模式獨立）、`range`（`rec`/`rv`/`pick`）、`cat`、`veh` |
+| `p.ext.pref` | 個案個別化設定快照（`vol vv recRate ttsRate aps keySnd sound vf ap hintMode adult waitSec autoNext anim fx uiSize uiAid mv music`…）；沒有的欄位＝用預設。切換個案時自動套用；「恢復預設」會刪除它 |
+| `p.ext.recSt` | 老師勾選的推薦站（最多兩個，1–6） |
+| `p.ps.pkN` | 圖片選項數量（沿用既有欄位，設定頁可改） |
+| `S.set.flbk` | 練習進行中的暫存備份（開始前的 src/n/theme/hl/pks/sps/p4Gen/order）。正常離開、完成、開機時會還原並刪除 |
+| `S.set.legacyCost` | 舊版「提示扣星」相容開關，預設不存在＝關閉，只給回歸測試用 |
+| 作答紀錄 `rec.ext.aid` | 當題實際輔助：`hint hl adult wait autoPlay symVoice pkN autoNext recRate ttsRate vol vv sound teacherVoice anim size look input forced` |
+| 作答紀錄 `rec.ext.fl` | `st mode star act range` |
+| 作答紀錄 `rec.reward.kind='encourage'` | 該題只拿到 1 顆鼓勵星（有效嘗試但未完成） |
+| 範圍 `S.set.src` 暫時值 | `rec`（系統推薦）、`rv`（複習學過的詞彙）只在練習中存在；存入個案 `scope` 時會回到 `all` |
+| `STG[1].n` | 站名改為「詞彙練習站」（站號不變，舊紀錄不受影響） |
+
+**遷移**：不需要。舊資料沒有這些欄位時一律使用預設；匯出入沿用既有格式（個案資料含 `ext`）。
+**復原到 v8.0**：`git checkout v8.0-ui-phase01`；v9.0 新增欄位在 v8.0 會被忽略，不會損壞資料。

@@ -16,10 +16,10 @@ const CARDS=[{id:'a',text:'棉被',zy:'ㄇㄧㄢˊ ㄅㄟˋ',img:PNG,audio:'',ca
  T('legacy logs NOT converted into new records (no guessing)',E('S.recs.length')===0&&E('S.mig[0].legacyLogs')===2);
  T('default learner inherits current teacher settings (wait 9s, judge B)',E('LRN.cur().wait')===9&&E('LRN.cur().judge')==='B');
  T('migration is idempotent: reboot keeps single learner & data',await (async()=>{w.close();w=mk();await sleep(600);E=s=>w.eval(s);q=s=>w.document.querySelector(s);w.URL.createObjectURL=()=>'blob:t'+Math.random();return E('S.lrn.list.length')===1&&E('S.logs.length')===2&&E('S.mig.length')===1})());
- const setup=(m='key')=>E(`S.cards=${JSON.stringify(CARDS)};S.cats=[];S.set.src='all';S.set.order='seq';S.set.lm='quiet';S.set.mode='${m}';S.set.mix=false;S.set.n=3;S.set.ap=false;S.set.anim=false;S.set.hz={u:'none',cost:true,n:1,free:false};S.set.hl={w:1,c:1,p:1,f:1,a:1};S.set.sk=true;S.set.rp='teach';S.set.ow=6;S.set.oj='B';S.rw.stars=5;S.recs=[];S.rv={};S.logs=[];`);
- setup();E('home()');T('home shows learner + 學習地圖 button; vehicle labels no longer say 階段',q('#mid').textContent.includes('學習地圖')&&q('#mid').textContent.includes('預設個案')&&!q('.vgrid').textContent.includes('階段'));
+ const setup=(m='key')=>E(`S.set.legacyCost=true;S.cards=${JSON.stringify(CARDS)};S.cats=[];S.set.src='all';S.set.order='seq';S.set.lm='quiet';S.set.mode='${m}';S.set.mix=false;S.set.n=3;S.set.ap=false;S.set.anim=false;S.set.hz={u:'none',cost:true,n:1,free:false};S.set.hl={w:1,c:1,p:1,f:1,a:1};S.set.sk=true;S.set.rp='teach';S.set.ow=6;S.set.oj='B';S.rw.stars=5;S.recs=[];S.rv={};S.logs=[];`);
+ setup();E('UI.view="home";home()');const hl=q('#mid').textContent.includes('預設個案');E('UI.pick("integ")');T('home shows learner; mode view shows 學習地圖 button; vehicle labels no longer say 階段',hl&&q('#mid').textContent.includes('選一站開始')&&!q('#mid').textContent.includes('階段'));
  E('MAP.show()');let st=[...w.document.querySelectorAll('.lstn')];
- T('map has 6 stations in order',st.length===6&&['詞彙認識站','自主說詞站','詞彙連結站','短語組合站','語句表達站','生活溝通站'].every((n,i)=>st[i].textContent.includes(n)));
+ T('map has 6 stations in order',st.length===6&&['詞彙認識站','詞彙練習站','詞彙連結站','短語組合站','語句表達站','生活溝通站'].every((n,i)=>st[i].textContent.includes(n)));
  T('each station shows goal/current content/progress/indicators/dev status/difficulty',st.every(s=>['學習目標','目前練習內容','學習進度','對應評量指標','教師設定難度'].every(k=>s.textContent.includes(k))&&(s.textContent.includes('已完成開發')||s.textContent.includes('尚未開發'))));
  T('stations 1–6 all developed; 5–6 have start controls (locked with reason when no teaching material)',st.every(s=>s.textContent.includes('已完成開發'))&&st.slice(0,2).every(s=>s.querySelector('button.go'))&&st.slice(2,6).every(s=>s.querySelector('button')));
  T('no fake data: undeveloped show no counts; developed show 尚無作答紀錄 before play',st.slice(4).every(s=>!/\d+\s*\/\s*\d+/.test(s.textContent.split('學習進度：')[1].split('對應')[0]))&&st[0].textContent.includes('尚無作答紀錄'));
@@ -67,7 +67,7 @@ const CARDS=[{id:'a',text:'棉被',zy:'ㄇㄧㄢˊ ㄅㄟˋ',img:PNG,audio:'',ca
  E(`LRN.switchTo("${B}")`);
  T('switch: stars/badges/logs/recs are B own (empty); A stashed',E('S.lrn.cur')===B&&E('S.rw.stars')===0&&E('S.logs.length')===0&&E('S.recs.length')===0&&E('S.rw.badges.length')===0&&E('S.lrn.store.L001.recs.length')===A_recs&&E('S.lrn.store.L001.rw.stars')===A_stars);
  T('switch applies B personal settings (free hints, wait 11)',E('S.set.hz.free')===true&&E('S.set.ow')===11);
- E('S.cards='+JSON.stringify(CARDS)+';S.set.mode="key";S.set.lm="quiet";S.set.ap=false;S.set.n=3;S.set.order="seq";S.set.src="all"');E('startRound()');await sleep(150);
+ E('S.set.legacyCost=true;S.cards='+JSON.stringify(CARDS)+';S.set.mode="key";S.set.lm="quiet";S.set.ap=false;S.set.n=3;S.set.order="seq";S.set.src="all"');E('startRound()');await sleep(150);
  T('difficulty 簡單: only words ≤2 chars offered to B',E('deck().cards.every(c=>[...c.text].length<=2)')&&E('deck().cards.length')===2);
  E('G.repDone=1');await play(['ㄅ','ㄇ','ㄧ','ㄢ','ˊ','ㄅ','ㄟ','ˋ']);await sleep(80);E('leave()');
  T('B record carries B id; B stars 1',E('S.recs.length')===1&&E('S.recs[0].learnerId')===B&&E('S.rw.stars')===1);

@@ -1,0 +1,16 @@
+const {chromium}=require('playwright');
+const URL='http://localhost:8124/1124-1-TEST/';let P=0,F=0;const T=(n,c,x)=>{c?P++:F++;console.log(c?'PASS':'FAIL',n,c?'':JSON.stringify(x))};
+(async()=>{const b=await chromium.launch({args:['--use-fake-device-for-media-stream','--use-fake-ui-for-media-stream']});
+const ctx=await b.newContext({viewport:{width:1100,height:800}});const p=await ctx.newPage();const errs=[];p.on('pageerror',e=>errs.push(e.message));
+await p.goto(URL);await p.waitForFunction(()=>typeof UI!=='undefined'&&S&&S.cards&&S.cards.length,null,{timeout:40000});await p.waitForTimeout(1200);
+await p.evaluate(()=>{window.confirm=()=>true;window.alert=()=>{};S.set.music=false;S.set.sound=false;V2.prepDone=true;S.set.n=3;save()});
+await p.click('.mc-quiet');await p.waitForTimeout(300);await p.waitForTimeout(500);
+const m=await p.evaluate(()=>({txt:document.querySelector('#mid').innerText.slice(0,160),btns:[...document.querySelectorAll('#mid button')].map(b=>b.textContent.trim()).slice(0,14)}));
+T('選擇模式後直接看到六站地圖',/站/.test(m.txt)&&(await p.evaluate(()=>document.querySelectorAll('.stc').length))===6,m);
+const games=await p.evaluate(()=>[...document.querySelectorAll('#mid button')].filter(b=>/^▶/.test(b.textContent)).map(b=>b.textContent.trim()));console.log('站內可啟動遊戲按鈕',JSON.stringify(games));
+await p.click('.stc >> nth=0 >> text=進入這一站');await p.waitForTimeout(400);await p.click('.fgob');await p.waitForTimeout(2500);
+const g=await p.evaluate(()=>({on:G.on,mode:S.set.mode}));T('從學習地圖啟動遊戲',g.on,g);
+await p.evaluate(()=>{leave()});await p.waitForTimeout(600);
+const h=await p.evaluate(()=>({view:UI.view,mc:document.querySelectorAll('.mc').length,vc:document.querySelectorAll('#mid .vc').length,txt:document.querySelector('#mid').innerText.slice(0,40)}));console.log('離開後畫面',JSON.stringify(h));
+T('離開遊戲後回到有效畫面（非空白）',h.txt.length>3,h);
+T('無頁面錯誤',errs.length===0,errs);console.log('PASS',P,'FAIL',F);await b.close()})();
