@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-Hant-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>語音測試頁｜詞彙特快車</title>
+<!-- 獨立的合成語音（speechSynthesis）測試頁：只使用瀏覽器內建功能，不送出任何資料、不使用麥克風、不讀寫學習紀錄。 -->
+<style>
+body{font-family:-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;max-width:760px;margin:0 auto;padding:14px;background:#f6f8fc;color:#223;font-size:17px;line-height:1.5}
+h1{font-size:24px;margin:6px 0}.box{background:#fff;border-radius:14px;padding:12px 14px;margin:10px 0;box-shadow:0 1px 4px #0001}
+.t{display:flex;flex-wrap:wrap;align-items:center;gap:8px}.t b{min-width:2em}.t .d{flex:1 1 260px}
+button{font-size:17px;border:0;border-radius:10px;padding:8px 14px;cursor:pointer;background:#2f6fe4;color:#fff}
+button.y{background:#1b7a3a}button.n{background:#b8322b}button.g{background:#667}button.sel{outline:3px solid #f0c040}
+.ev{font-size:14px;color:#556;width:100%}textarea{width:100%;height:170px;font-size:13px;box-sizing:border-box}
+small{color:#556}
+</style></head><body>
+<h1>🔊 語音測試頁</h1>
+<div class="box"><b>使用方法</b>：音量先開好。由上往下，一次按一個「▶ 測試」，聽完後按「🔊 有聽到」或「🔇 沒聽到」。全部做完後，按最下面的「複製結果」，把文字貼給開發者。<br>
+<small>這一頁只用瀏覽器內建的語音功能，不會送出任何資料，也不需要麥克風。</small></div>
+<div class="box" id="env"></div>
+<div id="list"></div>
+<div class="box"><button onclick="copyOut()">📋 複製結果</button> <button class="g" onclick="location.reload()">↻ 重新整理（重新開始）</button>
+<textarea id="out" readonly></textarea></div>
+<script>
+const s=window.speechSynthesis||null,R={},HEARD={};let keep=[];
+const vs=()=>{try{return s?s.getVoices():[]}catch(e){return[]}};
+const zh=()=>vs().filter(v=>/^zh/i.test(v.lang||''));
+const vLocal=()=>zh().find(v=>/^zh[-_]TW$/i.test(v.lang)&&v.localService)||zh().find(v=>v.localService)||null;
+const vNet=()=>zh().find(v=>!v.localService)||null;
+const vOther=()=>{const a=vLocal();return zh().find(v=>/^zh[-_]TW$/i.test(v.lang)&&v!==a)||null};
+const vName=v=>v?v.name+'（'+v.lang+'，'+(v.localService?'本機':'網路')+'）':'（沒有）';
+/* 念一段話，記錄瀏覽器回報的事件 */
+function say(text,o){return new Promise(res=>{const ev=[],t0=performance.now(),T=()=>Math.round(performance.now()-t0);if(!s||!window.SpeechSynthesisUtterance){res(['不支援語音合成']);return}
+ let done=false;const fin=x=>{if(done)return;done=true;ev.push(x);res(ev)};
+ const u=new SpeechSynthesisUtterance(text);if(o.lang)u.lang=o.lang;if(o.voice)u.voice=o.voice;if(o.vol!=null)u.volume=o.vol;if(o.rate)u.rate=o.rate;keep.push(u);
+ u.onstart=()=>ev.push('開始@'+T()+'ms');u.onend=()=>fin('結束@'+T()+'ms');u.onerror=e=>fin('錯誤:'+((e&&e.error)||'?')+'@'+T()+'ms');
+ try{s.speak(u)}catch(e){fin('例外:'+e.message)}setTimeout(()=>fin('逾時（5 秒沒有結束）speaking='+s.speaking+' pending='+s.pending+' paused='+s.paused),5000)})}
+const W='葡萄';
+const TESTS=[
+ ['A','最簡單：中文、不指定語音',()=>say(W,{lang:'zh-TW'})],
+ ['B','英文 hello（確認語音功能整體）',()=>say('hello',{lang:'en-US'})],
+ ['C','本機中文語音：'+'（自動挑選）',()=>say(W,{lang:'zh-TW',voice:vLocal()}),()=>vName(vLocal())],
+ ['D','網路中文語音（Chrome 的 Google 語音）',()=>vNet()?say(W,{lang:vNet().lang,voice:vNet()}):Promise.resolve(['這個瀏覽器沒有網路中文語音']),()=>vName(vNet())],
+ ['E','另一個本機中文語音',()=>vOther()?say(W,{lang:'zh-TW',voice:vOther()}):Promise.resolve(['沒有其他中文語音']),()=>vName(vOther())],
+ ['F','網站設定：慢速 0.75、音量 1、本機中文語音',()=>say(W,{lang:'zh-TW',voice:vLocal(),rate:.75,vol:1})],
+ ['H','先呼叫 resume 再念',async()=>{try{s.resume()}catch(e){}return say(W,{lang:'zh-TW'})}],
+ ['I','先 cancel 再念',async()=>{try{s.cancel()}catch(e){}await new Promise(r=>setTimeout(r,80));return say(W,{lang:'zh-TW'})}],
+ ['J','先念「音量 0」的一段，再正常念（網站舊的解鎖方式）',async()=>{say(' ',{vol:0});return say(W,{lang:'zh-TW'})}],
+ ['K','先念「空字串」，再正常念',async()=>{say('',{vol:0});return say(W,{lang:'zh-TW'})}],
+ ['Z','最後再試一次 A（看前面的步驟有沒有讓之後都沒聲音）',()=>say(W,{lang:'zh-TW'})]];
+function env(){const z=zh();document.getElementById('env').innerHTML='<b>這個瀏覽器</b>：'+navigator.userAgent.replace(/[<>]/g,'')+'<br>語音總數：'+vs().length+'，中文語音：'+z.length+'<br><small>'+z.slice(0,30).map(vName).join('、')+'</small>';out()}
+function row([k,t,f,nm]){const d=document.createElement('div');d.className='box t';d.id='r'+k;d.innerHTML=`<b>${k}</b><span class="d">${t}${nm?'<br><small>'+nm()+'</small>':''}</span><button onclick="run('${k}')">▶ 測試</button><button class="y" onclick="mark('${k}',1)">🔊 有聽到</button><button class="n" onclick="mark('${k}',0)">🔇 沒聽到</button><div class="ev" id="e${k}"></div>`;document.getElementById('list').appendChild(d)}
+async function run(k){const t=TESTS.find(x=>x[0]===k);document.getElementById('e'+k).textContent='播放中…';R[k]=await t[2]();document.getElementById('e'+k).textContent='瀏覽器回報：'+R[k].join('，');out()}
+function mark(k,h){HEARD[k]=h;const r=document.getElementById('r'+k);r.querySelectorAll('.y,.n').forEach(b=>b.classList.remove('sel'));r.querySelector(h?'.y':'.n').classList.add('sel');out()}
+function out(){const L=['【語音測試結果】'+new Date().toLocaleString(),navigator.userAgent,'語音總數 '+vs().length+'，中文 '+zh().length+'；本機中文：'+vName(vLocal())+'；網路中文：'+vName(vNet())];
+ TESTS.forEach(([k,t])=>L.push(k+' '+t+'｜'+(HEARD[k]==null?'未回答':HEARD[k]?'有聽到':'沒聽到')+'｜'+(R[k]?R[k].join('，'):'未測')));document.getElementById('out').value=L.join('\n')}
+function copyOut(){const t=document.getElementById('out');t.select();try{navigator.clipboard.writeText(t.value).then(()=>alert('已複製'),()=>{document.execCommand('copy');alert('已複製')})}catch(e){document.execCommand('copy');alert('已複製')}}
+TESTS.forEach(row);env();if(s&&s.addEventListener)s.addEventListener('voiceschanged',()=>{document.getElementById('list').innerHTML='';TESTS.forEach(row);env()});
+</script></body></html>

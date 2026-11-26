@@ -379,7 +379,7 @@ body.aid-calm #scene{max-height:90px;overflow:hidden}body.aid-calm .stc .ste{dis
 <script src="lib/pinyin-pro.js"></script>
 <script>
 /* ===== 基本工具 ===== */
-const APP={build:'v22.5',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
+const APP={build:'v22.5.1',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -6241,7 +6241,7 @@ ZG.KEEP=['ttsRate','recRate','aiGain'];
 {const f=LRN.ensure;LRN.ensure=async function(){const r=await f.apply(this,arguments);try{if(S.set&&!S.set.ttsFix224){(S.lrn&&S.lrn.list||[]).forEach(p=>{const pr=p.ext&&p.ext.pref;if(pr&&+pr.ttsRate===0.5)pr.ttsRate=.75});S.set.ttsFix224=1}}catch(e){}return r}}
 /*P26-END*/
 /*P27-BEGIN v22.4.1 第03-B批：舊版示範教材完全移除（併入 GitHub 15:30 的 P23B 並補強）、materials/ 依賴移除、跨瀏覽器語音備援、版本識別 */
-APP.id='20261126-04';
+APP.id='20261126-04B';
 /* ---- 一、舊版內建示範教材（materials/ 18 張、4 個分類）：備份後一次性移除 ----
    只移除「仍與網站原始版本完全相同」的舊版圖卡（以 packSnap 簽章比對，不看名稱）；老師改過的保留為自訂教材；
    舊版分類只有在裡面已經沒有任何保留下來的圖卡時才移除；學習紀錄全部保留；S.legacyGone 標記後不再重複執行。
@@ -6344,7 +6344,7 @@ P28.o=()=>{const r=typeof RE!=='undefined'&&RE.cur;return r&&r.o28?r.o28:null};
 {const _v=MV.voiceNoAsr;MV.voiceNoAsr=function(){try{const o=P28.o();if(o)o.vna++}catch(e){}return _v.apply(this,arguments)}}
 {const _v=MV.noVoice;MV.noVoice=function(){try{const o=P28.o();if(o)o.nv++}catch(e){}return _v.apply(this,arguments)}}
 {const _h=SK.heardNo;SK.heardNo=function(){try{const o=P28.o();if(o)o.other++}catch(e){}return _h.apply(this,arguments)}}
-{const _c=SK.credit;SK.credit=function(by,m){try{const o=P28.o();if(o){if(by==='asr'){o.cls=m&&m.by==='homophone'?'B':'A';o.by=(m&&m.by)||'text'}else o.teacher=true}}catch(e){}return _c.apply(this,arguments)}}
+{const _c=SK.credit;SK.credit=function(by,m){try{const o=P28.o();if(o){if(by==='asr'){o.cls=m&&m.by==='homophone'?'B':'A';o.by=(m&&m.by)||'text';if(!o.tries)o.tries=1}else o.teacher=true}}catch(e){}return _c.apply(this,arguments)}}
 {const _m=SK.mark;SK.mark=function(cls){try{const o=P28.o();if(o&&cls!=='tech'&&cls!=='retry')o.teacher=true}catch(e){}return _m.apply(this,arguments)}}
 /* 辨識結果：系統聲音播放中被略過的次數、最後結果次數、接近讀音、暫時結果（「正在辨識」） */
 {const _a=asrRes;asrRes=function(e){const o=P28.o(),now=Date.now(),near0=G&&G.sp?(G.sp.near||0):0;let fin=0;try{for(let i=e.resultIndex||0;i<e.results.length;i++)if(e.results[i]&&e.results[i].isFinal)fin++}catch(x){}
@@ -6424,6 +6424,33 @@ P28.PAUSE=2000;
 /* 等待時間：預設改為 10 秒（原本 6 秒）；舊裝置仍是舊預設 6 秒者，只調整一次（之後老師自行修改的值不受影響） */
 P28.init=()=>{try{if(!S.set.p28ow){if(S.set.ow==null||+S.set.ow===6)S.set.ow=10;S.set.p28ow=1}}catch(e){}};
 /*P28-END*/
+/*P29-BEGIN v22.5.1 第04-B批：Mac Chrome、iPhone Safari 聽不到合成語音（AI 念詞彙）的低風險修正與診斷
+  教師實測：Mac Safari 正常；Mac Chrome、iPhone Safari 合成語音完全沒有聲音（連「語音診斷→試聽」也沒有），真人錄音、音樂、音效都正常。
+  網頁只能看到瀏覽器回報的「開始／結束」，無法得知喇叭是否發聲；原因須由 tts-test.html 在教師裝置上量測。本區只做不影響 Safari 正常路徑的修正：
+  ① 非 iOS 瀏覽器不再念「音量 0／空白」的解鎖語音（原為 iOS 設計；疑似讓 Chrome 之後的語音失聲）；iOS 改為正常音量的一個空格。
+  ② 只有真的暫停時才呼叫 speechSynthesis.resume()。
+  ③ 開啟網頁時與第一次點擊時（非 iOS）先 cancel 一次，清掉其他分頁殘留、卡住的語音佇列（在念之前做，不會吃掉新的語音）。
+  ④ 記錄最近一次合成語音的瀏覽器回報，顯示在語音診斷；語音診斷加上語音測試頁連結。 */
+const P29={last:null,c0:0};
+P29.ios=(()=>{try{const u=navigator.userAgent||'';return /iPad|iPhone|iPod/.test(u)||(/Macintosh/.test(u)&&(navigator.maxTouchPoints||0)>1)}catch(e){return false}})();
+P29.ss=window.speechSynthesis||null;
+P29.clear=()=>{if(P29.ios||!P29.ss)return;try{P29.ss.cancel()}catch(e){}};
+try{const ss=P29.ss;if(ss){
+  if(ss.resume){const r0=ss.resume.bind(ss);ss.resume=function(){try{if(ss.paused)return r0()}catch(e){}}}
+  if(ss.speak){const sp0=ss.speak.bind(ss);ss.speak=function(u){try{if(u&&u.addEventListener){const t0=Date.now(),x={text:String(u.text||'').slice(0,20),voice:u.voice?u.voice.name+(u.voice.localService?'（本機）':'（網路）'):'（瀏覽器預設）',vol:u.volume,rate:u.rate,t:t0,start:null,end:null,err:null};
+     if(x.text.trim())P29.last=x;const st=()=>{if(x.start==null)x.start=Date.now()-t0},en=()=>{if(x.end==null)x.end=Date.now()-t0},er=e=>{x.err=(e&&e.error)||'error'};
+     u.addEventListener('start',st);u.addEventListener('end',en);u.addEventListener('error',er);
+     const os=u.onstart,oe=u.onend,oer=u.onerror;u.onstart=function(){st();return os&&os.apply(this,arguments)};u.onend=function(){en();return oe&&oe.apply(this,arguments)};u.onerror=function(e){er(e);return oer&&oer.apply(this,arguments)}}}catch(e){}return sp0(u)}}
+  P29.clear()}}catch(e){}
+/* 解鎖：非 iOS 直接標記為已完成（不念任何語音）；iOS 念一個空格（正常音量） */
+{const _u=AM.unlock;AM.unlock=function(){try{if(!AM.tp||!TTSX.ul){if(P29.ios){if(!AM.tp&&P29.ss&&window.SpeechSynthesisUtterance){const u=new SpeechSynthesisUtterance(' ');u.lang='zh-TW';P29.ss.speak(u)}}else if(!P29.c0){P29.c0=1;P29.clear()}AM.tp=1;TTSX.ul=1}}catch(e){}return _u.apply(this,arguments)}}
+/* 語音診斷：目前語音、最近一次回報、語音測試頁 */
+P29.diag=()=>{const v=(TTSX.last||TTSX.pick()),l=P29.last;
+ return`<div class="panel"><b>🔈 合成語音（AI 念詞彙）檢查</b><p><small>目前選用：${v?esc(v.name)+'（'+esc(v.lang)+'，'+(v.localService?'本機':'網路')+'）':'瀏覽器預設'}　裝置：${P29.ios?'iPhone／iPad':'電腦'}<br>
+ 最近一次：${l?'「'+esc(l.text)+'」 語音 '+esc(l.voice)+'，開始 '+(l.start==null?'—':l.start+' 毫秒')+'，結束 '+(l.end==null?'—':l.end+' 毫秒')+(l.err?'，錯誤 '+esc(l.err):''):'還沒有念過'}<br>
+ 瀏覽器回報「開始、結束」不代表喇叭真的有聲音。聽不到詞彙時，請開啟 <a href="tts-test.html" target="_blank" rel="noopener">語音測試頁</a>，照頁面說明逐項測試，再把結果交給開發者。</small></p></div>`};
+{const f=VDX.html;VDX.html=function(){let h=f.apply(this,arguments);try{h=h.replace(/<\/div>$/,P29.diag()+'</div>')}catch(e){}return h}}
+/*P29-END*/
 (async()=>{let s=await load();if(s&&s.decks&&!s.v){await kvPut('backup-pre-v2',s);s=migrate(s)}const mb=await kvGet('music').catch(()=>null);if(mb)mus.url=URL.createObjectURL(mb);if(s)S={...DEF(),...s,set:{...DEF().set,...s.set}};if(s&&s.set&&s.set.vs==null&&s.set.vol!=null)S.set.vs=s.set.vol;
 await zaLoad();await LRN.ensure();try{if(await LIB.load()){await LIB.defBoot();LIB.sync()}}catch(e){console.warn('LIB boot',e)}if(S.set.stuName===undefined)S.set.stuName='';try{P28.init()}catch(e){}if(S.set.musSrc==='project'&&!S.set.musPicked)S.set.musSrc='builtin';if(!['key','listen','spell','speak'].includes(S.set.mode))S.set.mode='key';if(S.set.ttsMig!==3){S.set.ttsMig=3;S.set.ttsRate=.75;S.set.recRate=1.25;S.set.aiGain=1.5}if(!S.bankMap)S.bankMap={};if((S.banks||[]).some(b=>!(b.id in S.bankMap))||/^b:/.test(S.set.src||'')){if(!(await kvGet('backup-pre-bankmig')))await kvPut('backup-pre-bankmig',JSON.parse(JSON.stringify(S)));migrateBanks()}if(!S.set.musMig){S.set.musMig=1;S.set.musSrc='project';save()}FL.recover();try{FL.applyPref()}catch(e){}save();UI.init();home();mtLbl();packLoad();
  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();

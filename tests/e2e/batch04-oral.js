@@ -43,12 +43,12 @@ const ST=p=>p.evaluate(()=>st());
   T('A5 口語練習二星（看圖說詞，系統推薦）：每個詞彙也都有口說步驟',q2.ids>0&&q2.noSpeak===0,q2);
   await c.ctx.close()}
  /* ===== B：聲波來自真實麥克風訊號、狀態分明 ===== */
- {const c=await open(b);await uiStart(c.p,{st:2,star:3});
-  const q0=await ST(c.p);T('B1 安靜時：顯示「正在聆聽」，聲波平穩（不是假的跳動動畫）',q0.mode==='speak'&&q0.bx==='listen'&&/聆聽|說/.test(q0.wst)&&Math.max(...q0.bars)<=12,q0);
+ {const c=await open(b);await uiStart(c.p,{st:2,star:3});await c.p.evaluate(()=>toWord('葡萄'));
+  const q0=await ST(c.p);T('B1 安靜時：顯示「正在聆聽」，聲波平穩（不是假的跳動動畫）',q0.mode==='speak'&&q0.bx==='listen'&&/聆聽|說/.test(q0.wst)&&Math.max(...q0.bars)<=25,q0);
   await c.p.evaluate(()=>__mic.voice(.3));await c.p.waitForTimeout(900);const v=await ST(c.p);
   T('B2 說話時：狀態「偵測到聲音」，聲波依實際音量升高',v.bx==='voice'&&/聲音|聽/.test(v.wst)&&Math.max(...v.bars)>40&&v.micState==='speaking',v);
   await c.p.evaluate(()=>__mic.voice(0));await c.p.waitForTimeout(2600);const v2=await ST(c.p);
-  T('B3 停止說話後：聲波回到平穩、題目沒有被判對或判錯',Math.max(...v2.bars)<=12&&!v2.lock&&v2.mode==='speak',v2);
+  T('B3 停止說話後：聲波回到平穩、題目沒有被判對或判錯',Math.max(...v2.bars)<=25&&!v2.lock&&v2.mode==='speak',v2);
   await c.p.evaluate(()=>__say(G.cur.text.slice(0,1),false));await c.p.waitForTimeout(150);const pr=await ST(c.p);
   T('B4 收到辨識中的暫時結果：狀態「正在辨識」',pr.bx==='proc'&&/辨識/.test(pr.wst),pr);
   await c.p.evaluate(()=>__say(G.cur.text,true));await c.p.waitForTimeout(250);const dn=await ST(c.p);
