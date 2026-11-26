@@ -3,7 +3,7 @@ const {chromium}=require('playwright');let P=0,F=0;const T=(n,c,x)=>{c?P++:F++;c
 const fs=require('fs');
 (async()=>{const b=await chromium.launch();const ctx=await b.newContext({viewport:{width:1100,height:900}});const p=await ctx.newPage();const errs=[],imgReq=[],badRes=[];
 p.on('pageerror',e=>errs.push(e.message));p.on('request',r=>{if(/\/vocab\/images\//.test(r.url()))imgReq.push(r.url())});p.on('response',r=>{if(r.status()>=400&&!/favicon/.test(r.url()))badRes.push(r.status()+' '+r.url())});
-await p.goto('http://localhost:8124/1124-1-TEST/');await p.waitForFunction(()=>typeof LIB!=='undefined'&&S&&S.cards,null,{timeout:40000});await p.waitForTimeout(1200);
+await p.goto('http://localhost:'+(process.env.E2E_PORT||8124)+'/1124-1-TEST/');await p.waitForFunction(()=>typeof LIB!=='undefined'&&S&&S.cards,null,{timeout:40000});await p.waitForTimeout(1200);
 await p.evaluate(()=>{window.confirm=()=>true;window.alert=m=>{window.__al=m};S.set.music=false;S.set.sound=false;V2.prepDone=true;S.set.ap=false;S.set.anim=false;save()});
 const before=await p.evaluate(()=>({cards:S.cards.length,cats:S.cats.length}));
 T('開啟網站時不會下載任何詞彙庫圖片（沒有啟用就不載入）',imgReq.length===0,imgReq.length);
@@ -64,6 +64,6 @@ await p.setInputFiles('#sp input[type=file][accept*=json]','/tmp/upd.json');awai
 T('更新預覽：新詞彙 1',/新詞彙 1、/.test(await p.evaluate(()=>document.querySelector('#sp').innerText)));
 await p.click('text=確認套用');await p.waitForTimeout(500);
 T('套用後新詞彙加入、完成摘要出現',await p.evaluate(()=>LIB.idx.has('VOC9001'))&&/更新完成/.test(await p.evaluate(()=>document.querySelector('#sp').innerText)));
-T('沒有任何圖片或資源 404',badRes.length===0,badRes.slice(0,3));
+const unexp=badRes.filter(x=>!/default-library\.json|levels\.json/.test(x));T('沒有任何圖片或資源 404（網站尚未發布 default-library.json 時，default-library.json／levels.json 為選用檔，舊資料沒有時的 404 是預期的）',unexp.length===0,unexp.slice(0,3));
 T('沒有頁面錯誤',errs.length===0,errs.slice(0,2));
 console.log('e2e phase5:',P,'pass',F,'fail');await b.close();process.exit(F?1:0)})();

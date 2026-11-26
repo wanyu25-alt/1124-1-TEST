@@ -1,0 +1,3965 @@
+{
+ "schemaVersion": 1,
+ "kind": "library-default",
+ "ver": "V077",
+ "note": "詞彙庫預設清單（V077）：啟用有圖片的 950 詞；全部圖片視為已審核（教師決定，詞彙庫內仍可逐張退回）。放在 vocab/default-library.json。",
+ "counts": {
+  "enabled": 950,
+  "overrides": 1000
+ },
+ "mode": "fixed",
+ "en": {
+  "VOC0001": 1,
+  "VOC0002": 1,
+  "VOC0003": 1,
+  "VOC0004": 1,
+  "VOC0005": 1,
+  "VOC0006": 1,
+  "VOC0007": 1,
+  "VOC0008": 1,
+  "VOC0009": 1,
+  "VOC0010": 1,
+  "VOC0022": 1,
+  "VOC0024": 1,
+  "VOC0025": 1,
+  "VOC0026": 1,
+  "VOC0027": 1,
+  "VOC0031": 1,
+  "VOC0032": 1,
+  "VOC0033": 1,
+  "VOC0034": 1,
+  "VOC0035": 1,
+  "VOC0036": 1,
+  "VOC0044": 1,
+  "VOC0045": 1,
+  "VOC0046": 1,
+  "VOC0047": 1,
+  "VOC0048": 1,
+  "VOC0049": 1,
+  "VOC0050": 1,
+  "VOC0051": 1,
+  "VOC0052": 1,
+  "VOC0053": 1,
+  "VOC0054": 1,
+  "VOC0055": 1,
+  "VOC0056": 1,
+  "VOC0057": 1,
+  "VOC0058": 1,
+  "VOC0059": 1,
+  "VOC0060": 1,
+  "VOC0061": 1,
+  "VOC0062": 1,
+  "VOC0063": 1,
+  "VOC0064": 1,
+  "VOC0065": 1,
+  "VOC0066": 1,
+  "VOC0067": 1,
+  "VOC0068": 1,
+  "VOC0069": 1,
+  "VOC0070": 1,
+  "VOC0071": 1,
+  "VOC0072": 1,
+  "VOC0073": 1,
+  "VOC0074": 1,
+  "VOC0075": 1,
+  "VOC0076": 1,
+  "VOC0077": 1,
+  "VOC0078": 1,
+  "VOC0079": 1,
+  "VOC0080": 1,
+  "VOC0081": 1,
+  "VOC0082": 1,
+  "VOC0083": 1,
+  "VOC0084": 1,
+  "VOC0085": 1,
+  "VOC0086": 1,
+  "VOC0087": 1,
+  "VOC0088": 1,
+  "VOC0089": 1,
+  "VOC0090": 1,
+  "VOC0091": 1,
+  "VOC0092": 1,
+  "VOC0093": 1,
+  "VOC0094": 1,
+  "VOC0095": 1,
+  "VOC0096": 1,
+  "VOC0097": 1,
+  "VOC0098": 1,
+  "VOC0099": 1,
+  "VOC0100": 1,
+  "VOC0101": 1,
+  "VOC0102": 1,
+  "VOC0103": 1,
+  "VOC0104": 1,
+  "VOC0105": 1,
+  "VOC0106": 1,
+  "VOC0107": 1,
+  "VOC0108": 1,
+  "VOC0109": 1,
+  "VOC0110": 1,
+  "VOC0111": 1,
+  "VOC0112": 1,
+  "VOC0113": 1,
+  "VOC0114": 1,
+  "VOC0115": 1,
+  "VOC0116": 1,
+  "VOC0117": 1,
+  "VOC0118": 1,
+  "VOC0119": 1,
+  "VOC0120": 1,
+  "VOC0121": 1,
+  "VOC0122": 1,
+  "VOC0123": 1,
+  "VOC0124": 1,
+  "VOC0125": 1,
+  "VOC0126": 1,
+  "VOC0127": 1,
+  "VOC0128": 1,
+  "VOC0129": 1,
+  "VOC0130": 1,
+  "VOC0131": 1,
+  "VOC0132": 1,
+  "VOC0133": 1,
+  "VOC0134": 1,
+  "VOC0135": 1,
+  "VOC0136": 1,
+  "VOC0137": 1,
+  "VOC0138": 1,
+  "VOC0139": 1,
+  "VOC0140": 1,
+  "VOC0141": 1,
+  "VOC0142": 1,
+  "VOC0143": 1,
+  "VOC0144": 1,
+  "VOC0145": 1,
+  "VOC0146": 1,
+  "VOC0147": 1,
+  "VOC0148": 1,
+  "VOC0149": 1,
+  "VOC0150": 1,
+  "VOC0151": 1,
+  "VOC0152": 1,
+  "VOC0153": 1,
+  "VOC0154": 1,
+  "VOC0155": 1,
+  "VOC0156": 1,
+  "VOC0157": 1,
+  "VOC0158": 1,
+  "VOC0159": 1,
+  "VOC0160": 1,
+  "VOC0161": 1,
+  "VOC0162": 1,
+  "VOC0163": 1,
+  "VOC0164": 1,
+  "VOC0165": 1,
+  "VOC0166": 1,
+  "VOC0167": 1,
+  "VOC0168": 1,
+  "VOC0169": 1,
+  "VOC0170": 1,
+  "VOC0171": 1,
+  "VOC0172": 1,
+  "VOC0173": 1,
+  "VOC0174": 1,
+  "VOC0175": 1,
+  "VOC0176": 1,
+  "VOC0177": 1,
+  "VOC0178": 1,
+  "VOC0179": 1,
+  "VOC0180": 1,
+  "VOC0181": 1,
+  "VOC0182": 1,
+  "VOC0183": 1,
+  "VOC0184": 1,
+  "VOC0185": 1,
+  "VOC0186": 1,
+  "VOC0187": 1,
+  "VOC0188": 1,
+  "VOC0189": 1,
+  "VOC0190": 1,
+  "VOC0191": 1,
+  "VOC0192": 1,
+  "VOC0193": 1,
+  "VOC0194": 1,
+  "VOC0195": 1,
+  "VOC0196": 1,
+  "VOC0197": 1,
+  "VOC0198": 1,
+  "VOC0199": 1,
+  "VOC0200": 1,
+  "VOC0201": 1,
+  "VOC0202": 1,
+  "VOC0203": 1,
+  "VOC0204": 1,
+  "VOC0205": 1,
+  "VOC0206": 1,
+  "VOC0207": 1,
+  "VOC0208": 1,
+  "VOC0209": 1,
+  "VOC0210": 1,
+  "VOC0211": 1,
+  "VOC0212": 1,
+  "VOC0213": 1,
+  "VOC0214": 1,
+  "VOC0215": 1,
+  "VOC0216": 1,
+  "VOC0217": 1,
+  "VOC0218": 1,
+  "VOC0219": 1,
+  "VOC0220": 1,
+  "VOC0221": 1,
+  "VOC0222": 1,
+  "VOC0223": 1,
+  "VOC0224": 1,
+  "VOC0225": 1,
+  "VOC0226": 1,
+  "VOC0227": 1,
+  "VOC0228": 1,
+  "VOC0229": 1,
+  "VOC0230": 1,
+  "VOC0231": 1,
+  "VOC0232": 1,
+  "VOC0233": 1,
+  "VOC0234": 1,
+  "VOC0235": 1,
+  "VOC0236": 1,
+  "VOC0237": 1,
+  "VOC0238": 1,
+  "VOC0239": 1,
+  "VOC0240": 1,
+  "VOC0241": 1,
+  "VOC0242": 1,
+  "VOC0243": 1,
+  "VOC0244": 1,
+  "VOC0245": 1,
+  "VOC0246": 1,
+  "VOC0247": 1,
+  "VOC0248": 1,
+  "VOC0249": 1,
+  "VOC0250": 1,
+  "VOC0251": 1,
+  "VOC0252": 1,
+  "VOC0253": 1,
+  "VOC0254": 1,
+  "VOC0255": 1,
+  "VOC0256": 1,
+  "VOC0257": 1,
+  "VOC0258": 1,
+  "VOC0259": 1,
+  "VOC0260": 1,
+  "VOC0261": 1,
+  "VOC0262": 1,
+  "VOC0263": 1,
+  "VOC0264": 1,
+  "VOC0265": 1,
+  "VOC0266": 1,
+  "VOC0267": 1,
+  "VOC0268": 1,
+  "VOC0269": 1,
+  "VOC0270": 1,
+  "VOC0271": 1,
+  "VOC0272": 1,
+  "VOC0273": 1,
+  "VOC0274": 1,
+  "VOC0275": 1,
+  "VOC0276": 1,
+  "VOC0277": 1,
+  "VOC0278": 1,
+  "VOC0279": 1,
+  "VOC0280": 1,
+  "VOC0281": 1,
+  "VOC0282": 1,
+  "VOC0283": 1,
+  "VOC0284": 1,
+  "VOC0285": 1,
+  "VOC0286": 1,
+  "VOC0287": 1,
+  "VOC0288": 1,
+  "VOC0289": 1,
+  "VOC0290": 1,
+  "VOC0291": 1,
+  "VOC0292": 1,
+  "VOC0293": 1,
+  "VOC0294": 1,
+  "VOC0295": 1,
+  "VOC0296": 1,
+  "VOC0297": 1,
+  "VOC0298": 1,
+  "VOC0299": 1,
+  "VOC0300": 1,
+  "VOC0301": 1,
+  "VOC0302": 1,
+  "VOC0303": 1,
+  "VOC0304": 1,
+  "VOC0305": 1,
+  "VOC0306": 1,
+  "VOC0307": 1,
+  "VOC0308": 1,
+  "VOC0309": 1,
+  "VOC0310": 1,
+  "VOC0311": 1,
+  "VOC0312": 1,
+  "VOC0313": 1,
+  "VOC0314": 1,
+  "VOC0315": 1,
+  "VOC0316": 1,
+  "VOC0317": 1,
+  "VOC0318": 1,
+  "VOC0319": 1,
+  "VOC0320": 1,
+  "VOC0321": 1,
+  "VOC0322": 1,
+  "VOC0323": 1,
+  "VOC0324": 1,
+  "VOC0325": 1,
+  "VOC0326": 1,
+  "VOC0327": 1,
+  "VOC0328": 1,
+  "VOC0329": 1,
+  "VOC0330": 1,
+  "VOC0331": 1,
+  "VOC0332": 1,
+  "VOC0333": 1,
+  "VOC0334": 1,
+  "VOC0335": 1,
+  "VOC0336": 1,
+  "VOC0337": 1,
+  "VOC0338": 1,
+  "VOC0339": 1,
+  "VOC0340": 1,
+  "VOC0341": 1,
+  "VOC0342": 1,
+  "VOC0343": 1,
+  "VOC0344": 1,
+  "VOC0345": 1,
+  "VOC0346": 1,
+  "VOC0347": 1,
+  "VOC0348": 1,
+  "VOC0349": 1,
+  "VOC0350": 1,
+  "VOC0351": 1,
+  "VOC0352": 1,
+  "VOC0353": 1,
+  "VOC0354": 1,
+  "VOC0355": 1,
+  "VOC0356": 1,
+  "VOC0357": 1,
+  "VOC0358": 1,
+  "VOC0359": 1,
+  "VOC0360": 1,
+  "VOC0361": 1,
+  "VOC0362": 1,
+  "VOC0363": 1,
+  "VOC0364": 1,
+  "VOC0365": 1,
+  "VOC0366": 1,
+  "VOC0367": 1,
+  "VOC0368": 1,
+  "VOC0369": 1,
+  "VOC0370": 1,
+  "VOC0371": 1,
+  "VOC0372": 1,
+  "VOC0373": 1,
+  "VOC0374": 1,
+  "VOC0375": 1,
+  "VOC0376": 1,
+  "VOC0377": 1,
+  "VOC0378": 1,
+  "VOC0379": 1,
+  "VOC0380": 1,
+  "VOC0381": 1,
+  "VOC0382": 1,
+  "VOC0383": 1,
+  "VOC0384": 1,
+  "VOC0385": 1,
+  "VOC0386": 1,
+  "VOC0387": 1,
+  "VOC0388": 1,
+  "VOC0389": 1,
+  "VOC0390": 1,
+  "VOC0391": 1,
+  "VOC0392": 1,
+  "VOC0393": 1,
+  "VOC0394": 1,
+  "VOC0395": 1,
+  "VOC0396": 1,
+  "VOC0397": 1,
+  "VOC0398": 1,
+  "VOC0399": 1,
+  "VOC0400": 1,
+  "VOC0401": 1,
+  "VOC0402": 1,
+  "VOC0403": 1,
+  "VOC0404": 1,
+  "VOC0405": 1,
+  "VOC0406": 1,
+  "VOC0407": 1,
+  "VOC0408": 1,
+  "VOC0409": 1,
+  "VOC0410": 1,
+  "VOC0411": 1,
+  "VOC0412": 1,
+  "VOC0413": 1,
+  "VOC0414": 1,
+  "VOC0415": 1,
+  "VOC0416": 1,
+  "VOC0417": 1,
+  "VOC0418": 1,
+  "VOC0419": 1,
+  "VOC0420": 1,
+  "VOC0421": 1,
+  "VOC0422": 1,
+  "VOC0423": 1,
+  "VOC0424": 1,
+  "VOC0425": 1,
+  "VOC0426": 1,
+  "VOC0427": 1,
+  "VOC0428": 1,
+  "VOC0429": 1,
+  "VOC0430": 1,
+  "VOC0431": 1,
+  "VOC0432": 1,
+  "VOC0433": 1,
+  "VOC0434": 1,
+  "VOC0435": 1,
+  "VOC0436": 1,
+  "VOC0437": 1,
+  "VOC0438": 1,
+  "VOC0439": 1,
+  "VOC0440": 1,
+  "VOC0441": 1,
+  "VOC0442": 1,
+  "VOC0443": 1,
+  "VOC0444": 1,
+  "VOC0445": 1,
+  "VOC0446": 1,
+  "VOC0447": 1,
+  "VOC0448": 1,
+  "VOC0449": 1,
+  "VOC0450": 1,
+  "VOC0451": 1,
+  "VOC0452": 1,
+  "VOC0453": 1,
+  "VOC0454": 1,
+  "VOC0455": 1,
+  "VOC0456": 1,
+  "VOC0457": 1,
+  "VOC0458": 1,
+  "VOC0459": 1,
+  "VOC0460": 1,
+  "VOC0461": 1,
+  "VOC0462": 1,
+  "VOC0463": 1,
+  "VOC0464": 1,
+  "VOC0465": 1,
+  "VOC0466": 1,
+  "VOC0467": 1,
+  "VOC0468": 1,
+  "VOC0469": 1,
+  "VOC0470": 1,
+  "VOC0471": 1,
+  "VOC0472": 1,
+  "VOC0473": 1,
+  "VOC0474": 1,
+  "VOC0475": 1,
+  "VOC0476": 1,
+  "VOC0477": 1,
+  "VOC0478": 1,
+  "VOC0479": 1,
+  "VOC0480": 1,
+  "VOC0481": 1,
+  "VOC0482": 1,
+  "VOC0483": 1,
+  "VOC0484": 1,
+  "VOC0485": 1,
+  "VOC0486": 1,
+  "VOC0487": 1,
+  "VOC0488": 1,
+  "VOC0489": 1,
+  "VOC0490": 1,
+  "VOC0491": 1,
+  "VOC0492": 1,
+  "VOC0493": 1,
+  "VOC0494": 1,
+  "VOC0495": 1,
+  "VOC0496": 1,
+  "VOC0497": 1,
+  "VOC0498": 1,
+  "VOC0499": 1,
+  "VOC0500": 1,
+  "VOC0501": 1,
+  "VOC0502": 1,
+  "VOC0503": 1,
+  "VOC0504": 1,
+  "VOC0505": 1,
+  "VOC0506": 1,
+  "VOC0507": 1,
+  "VOC0508": 1,
+  "VOC0509": 1,
+  "VOC0510": 1,
+  "VOC0511": 1,
+  "VOC0512": 1,
+  "VOC0513": 1,
+  "VOC0514": 1,
+  "VOC0515": 1,
+  "VOC0516": 1,
+  "VOC0517": 1,
+  "VOC0518": 1,
+  "VOC0519": 1,
+  "VOC0520": 1,
+  "VOC0521": 1,
+  "VOC0522": 1,
+  "VOC0523": 1,
+  "VOC0524": 1,
+  "VOC0525": 1,
+  "VOC0526": 1,
+  "VOC0527": 1,
+  "VOC0528": 1,
+  "VOC0529": 1,
+  "VOC0530": 1,
+  "VOC0531": 1,
+  "VOC0532": 1,
+  "VOC0533": 1,
+  "VOC0534": 1,
+  "VOC0535": 1,
+  "VOC0536": 1,
+  "VOC0537": 1,
+  "VOC0538": 1,
+  "VOC0539": 1,
+  "VOC0540": 1,
+  "VOC0541": 1,
+  "VOC0542": 1,
+  "VOC0543": 1,
+  "VOC0544": 1,
+  "VOC0545": 1,
+  "VOC0546": 1,
+  "VOC0547": 1,
+  "VOC0548": 1,
+  "VOC0549": 1,
+  "VOC0550": 1,
+  "VOC0551": 1,
+  "VOC0552": 1,
+  "VOC0553": 1,
+  "VOC0554": 1,
+  "VOC0555": 1,
+  "VOC0556": 1,
+  "VOC0557": 1,
+  "VOC0558": 1,
+  "VOC0559": 1,
+  "VOC0560": 1,
+  "VOC0561": 1,
+  "VOC0562": 1,
+  "VOC0563": 1,
+  "VOC0564": 1,
+  "VOC0565": 1,
+  "VOC0566": 1,
+  "VOC0567": 1,
+  "VOC0568": 1,
+  "VOC0569": 1,
+  "VOC0570": 1,
+  "VOC0571": 1,
+  "VOC0572": 1,
+  "VOC0573": 1,
+  "VOC0574": 1,
+  "VOC0575": 1,
+  "VOC0576": 1,
+  "VOC0577": 1,
+  "VOC0578": 1,
+  "VOC0579": 1,
+  "VOC0580": 1,
+  "VOC0581": 1,
+  "VOC0582": 1,
+  "VOC0583": 1,
+  "VOC0584": 1,
+  "VOC0585": 1,
+  "VOC0586": 1,
+  "VOC0587": 1,
+  "VOC0588": 1,
+  "VOC0589": 1,
+  "VOC0590": 1,
+  "VOC0591": 1,
+  "VOC0592": 1,
+  "VOC0593": 1,
+  "VOC0594": 1,
+  "VOC0595": 1,
+  "VOC0596": 1,
+  "VOC0597": 1,
+  "VOC0598": 1,
+  "VOC0599": 1,
+  "VOC0600": 1,
+  "VOC0601": 1,
+  "VOC0602": 1,
+  "VOC0603": 1,
+  "VOC0604": 1,
+  "VOC0605": 1,
+  "VOC0606": 1,
+  "VOC0607": 1,
+  "VOC0608": 1,
+  "VOC0609": 1,
+  "VOC0610": 1,
+  "VOC0611": 1,
+  "VOC0612": 1,
+  "VOC0613": 1,
+  "VOC0614": 1,
+  "VOC0615": 1,
+  "VOC0616": 1,
+  "VOC0617": 1,
+  "VOC0618": 1,
+  "VOC0619": 1,
+  "VOC0620": 1,
+  "VOC0621": 1,
+  "VOC0622": 1,
+  "VOC0623": 1,
+  "VOC0624": 1,
+  "VOC0625": 1,
+  "VOC0626": 1,
+  "VOC0627": 1,
+  "VOC0628": 1,
+  "VOC0629": 1,
+  "VOC0630": 1,
+  "VOC0631": 1,
+  "VOC0632": 1,
+  "VOC0633": 1,
+  "VOC0634": 1,
+  "VOC0635": 1,
+  "VOC0636": 1,
+  "VOC0637": 1,
+  "VOC0638": 1,
+  "VOC0639": 1,
+  "VOC0640": 1,
+  "VOC0641": 1,
+  "VOC0642": 1,
+  "VOC0643": 1,
+  "VOC0644": 1,
+  "VOC0645": 1,
+  "VOC0646": 1,
+  "VOC0647": 1,
+  "VOC0648": 1,
+  "VOC0649": 1,
+  "VOC0650": 1,
+  "VOC0651": 1,
+  "VOC0652": 1,
+  "VOC0653": 1,
+  "VOC0654": 1,
+  "VOC0655": 1,
+  "VOC0656": 1,
+  "VOC0657": 1,
+  "VOC0658": 1,
+  "VOC0659": 1,
+  "VOC0660": 1,
+  "VOC0661": 1,
+  "VOC0662": 1,
+  "VOC0663": 1,
+  "VOC0664": 1,
+  "VOC0665": 1,
+  "VOC0666": 1,
+  "VOC0667": 1,
+  "VOC0668": 1,
+  "VOC0669": 1,
+  "VOC0670": 1,
+  "VOC0671": 1,
+  "VOC0672": 1,
+  "VOC0673": 1,
+  "VOC0674": 1,
+  "VOC0675": 1,
+  "VOC0676": 1,
+  "VOC0677": 1,
+  "VOC0678": 1,
+  "VOC0679": 1,
+  "VOC0680": 1,
+  "VOC0681": 1,
+  "VOC0682": 1,
+  "VOC0683": 1,
+  "VOC0684": 1,
+  "VOC0685": 1,
+  "VOC0686": 1,
+  "VOC0687": 1,
+  "VOC0688": 1,
+  "VOC0689": 1,
+  "VOC0690": 1,
+  "VOC0691": 1,
+  "VOC0692": 1,
+  "VOC0693": 1,
+  "VOC0694": 1,
+  "VOC0695": 1,
+  "VOC0696": 1,
+  "VOC0697": 1,
+  "VOC0698": 1,
+  "VOC0699": 1,
+  "VOC0700": 1,
+  "VOC0701": 1,
+  "VOC0702": 1,
+  "VOC0704": 1,
+  "VOC0705": 1,
+  "VOC0706": 1,
+  "VOC0707": 1,
+  "VOC0708": 1,
+  "VOC0709": 1,
+  "VOC0710": 1,
+  "VOC0711": 1,
+  "VOC0712": 1,
+  "VOC0713": 1,
+  "VOC0714": 1,
+  "VOC0715": 1,
+  "VOC0716": 1,
+  "VOC0717": 1,
+  "VOC0718": 1,
+  "VOC0719": 1,
+  "VOC0720": 1,
+  "VOC0721": 1,
+  "VOC0722": 1,
+  "VOC0723": 1,
+  "VOC0724": 1,
+  "VOC0725": 1,
+  "VOC0726": 1,
+  "VOC0727": 1,
+  "VOC0728": 1,
+  "VOC0729": 1,
+  "VOC0730": 1,
+  "VOC0731": 1,
+  "VOC0732": 1,
+  "VOC0733": 1,
+  "VOC0734": 1,
+  "VOC0735": 1,
+  "VOC0736": 1,
+  "VOC0737": 1,
+  "VOC0738": 1,
+  "VOC0739": 1,
+  "VOC0740": 1,
+  "VOC0741": 1,
+  "VOC0742": 1,
+  "VOC0743": 1,
+  "VOC0744": 1,
+  "VOC0745": 1,
+  "VOC0746": 1,
+  "VOC0747": 1,
+  "VOC0748": 1,
+  "VOC0749": 1,
+  "VOC0750": 1,
+  "VOC0751": 1,
+  "VOC0752": 1,
+  "VOC0753": 1,
+  "VOC0754": 1,
+  "VOC0755": 1,
+  "VOC0756": 1,
+  "VOC0757": 1,
+  "VOC0758": 1,
+  "VOC0759": 1,
+  "VOC0760": 1,
+  "VOC0761": 1,
+  "VOC0762": 1,
+  "VOC0763": 1,
+  "VOC0764": 1,
+  "VOC0765": 1,
+  "VOC0766": 1,
+  "VOC0767": 1,
+  "VOC0768": 1,
+  "VOC0769": 1,
+  "VOC0770": 1,
+  "VOC0771": 1,
+  "VOC0772": 1,
+  "VOC0773": 1,
+  "VOC0774": 1,
+  "VOC0775": 1,
+  "VOC0776": 1,
+  "VOC0777": 1,
+  "VOC0778": 1,
+  "VOC0779": 1,
+  "VOC0780": 1,
+  "VOC0781": 1,
+  "VOC0782": 1,
+  "VOC0783": 1,
+  "VOC0784": 1,
+  "VOC0785": 1,
+  "VOC0786": 1,
+  "VOC0787": 1,
+  "VOC0788": 1,
+  "VOC0789": 1,
+  "VOC0790": 1,
+  "VOC0791": 1,
+  "VOC0792": 1,
+  "VOC0793": 1,
+  "VOC0794": 1,
+  "VOC0795": 1,
+  "VOC0796": 1,
+  "VOC0797": 1,
+  "VOC0798": 1,
+  "VOC0799": 1,
+  "VOC0800": 1,
+  "VOC0801": 1,
+  "VOC0802": 1,
+  "VOC0803": 1,
+  "VOC0804": 1,
+  "VOC0805": 1,
+  "VOC0807": 1,
+  "VOC0808": 1,
+  "VOC0809": 1,
+  "VOC0810": 1,
+  "VOC0811": 1,
+  "VOC0812": 1,
+  "VOC0813": 1,
+  "VOC0814": 1,
+  "VOC0815": 1,
+  "VOC0816": 1,
+  "VOC0817": 1,
+  "VOC0818": 1,
+  "VOC0819": 1,
+  "VOC0820": 1,
+  "VOC0821": 1,
+  "VOC0822": 1,
+  "VOC0823": 1,
+  "VOC0824": 1,
+  "VOC0825": 1,
+  "VOC0826": 1,
+  "VOC0827": 1,
+  "VOC0828": 1,
+  "VOC0829": 1,
+  "VOC0830": 1,
+  "VOC0831": 1,
+  "VOC0832": 1,
+  "VOC0833": 1,
+  "VOC0834": 1,
+  "VOC0835": 1,
+  "VOC0836": 1,
+  "VOC0837": 1,
+  "VOC0838": 1,
+  "VOC0839": 1,
+  "VOC0840": 1,
+  "VOC0841": 1,
+  "VOC0842": 1,
+  "VOC0843": 1,
+  "VOC0844": 1,
+  "VOC0845": 1,
+  "VOC0846": 1,
+  "VOC0847": 1,
+  "VOC0848": 1,
+  "VOC0849": 1,
+  "VOC0850": 1,
+  "VOC0851": 1,
+  "VOC0852": 1,
+  "VOC0853": 1,
+  "VOC0854": 1,
+  "VOC0855": 1,
+  "VOC0856": 1,
+  "VOC0857": 1,
+  "VOC0858": 1,
+  "VOC0859": 1,
+  "VOC0860": 1,
+  "VOC0861": 1,
+  "VOC0862": 1,
+  "VOC0863": 1,
+  "VOC0864": 1,
+  "VOC0865": 1,
+  "VOC0866": 1,
+  "VOC0867": 1,
+  "VOC0868": 1,
+  "VOC0869": 1,
+  "VOC0870": 1,
+  "VOC0871": 1,
+  "VOC0872": 1,
+  "VOC0873": 1,
+  "VOC0874": 1,
+  "VOC0875": 1,
+  "VOC0876": 1,
+  "VOC0877": 1,
+  "VOC0878": 1,
+  "VOC0879": 1,
+  "VOC0880": 1,
+  "VOC0881": 1,
+  "VOC0882": 1,
+  "VOC0883": 1,
+  "VOC0884": 1,
+  "VOC0885": 1,
+  "VOC0886": 1,
+  "VOC0887": 1,
+  "VOC0888": 1,
+  "VOC0889": 1,
+  "VOC0890": 1,
+  "VOC0891": 1,
+  "VOC0892": 1,
+  "VOC0893": 1,
+  "VOC0894": 1,
+  "VOC0895": 1,
+  "VOC0896": 1,
+  "VOC0897": 1,
+  "VOC0898": 1,
+  "VOC0899": 1,
+  "VOC0900": 1,
+  "VOC0901": 1,
+  "VOC0902": 1,
+  "VOC0903": 1,
+  "VOC0904": 1,
+  "VOC0905": 1,
+  "VOC0906": 1,
+  "VOC0907": 1,
+  "VOC0908": 1,
+  "VOC0909": 1,
+  "VOC0910": 1,
+  "VOC0911": 1,
+  "VOC0912": 1,
+  "VOC0913": 1,
+  "VOC0914": 1,
+  "VOC0915": 1,
+  "VOC0916": 1,
+  "VOC0917": 1,
+  "VOC0918": 1,
+  "VOC0919": 1,
+  "VOC0920": 1,
+  "VOC0921": 1,
+  "VOC0922": 1,
+  "VOC0923": 1,
+  "VOC0924": 1,
+  "VOC0925": 1,
+  "VOC0926": 1,
+  "VOC0927": 1,
+  "VOC0928": 1,
+  "VOC0929": 1,
+  "VOC0930": 1,
+  "VOC0931": 1,
+  "VOC0932": 1,
+  "VOC0933": 1,
+  "VOC0934": 1,
+  "VOC0935": 1,
+  "VOC0936": 1,
+  "VOC0937": 1,
+  "VOC0938": 1,
+  "VOC0939": 1,
+  "VOC0940": 1,
+  "VOC0941": 1,
+  "VOC0942": 1,
+  "VOC0943": 1,
+  "VOC0944": 1,
+  "VOC0945": 1,
+  "VOC0946": 1,
+  "VOC0947": 1,
+  "VOC0948": 1,
+  "VOC0949": 1,
+  "VOC0950": 1,
+  "VOC0951": 1,
+  "VOC0952": 1,
+  "VOC0953": 1,
+  "VOC0954": 1,
+  "VOC0955": 1,
+  "VOC0956": 1,
+  "VOC0957": 1,
+  "VOC0958": 1,
+  "VOC0959": 1,
+  "VOC0960": 1,
+  "VOC0961": 1,
+  "VOC0962": 1,
+  "VOC0963": 1,
+  "VOC0964": 1,
+  "VOC0965": 1,
+  "VOC0966": 1,
+  "VOC0967": 1,
+  "VOC0968": 1,
+  "VOC0969": 1,
+  "VOC0970": 1,
+  "VOC0971": 1,
+  "VOC0972": 1,
+  "VOC0973": 1,
+  "VOC0974": 1
+ },
+ "ov": {
+  "VOC0001": {
+   "rv": "approved"
+  },
+  "VOC0002": {
+   "rv": "approved"
+  },
+  "VOC0003": {
+   "rv": "approved"
+  },
+  "VOC0004": {
+   "rv": "approved"
+  },
+  "VOC0005": {
+   "rv": "approved"
+  },
+  "VOC0006": {
+   "rv": "approved"
+  },
+  "VOC0007": {
+   "rv": "approved"
+  },
+  "VOC0008": {
+   "rv": "approved"
+  },
+  "VOC0009": {
+   "rv": "approved"
+  },
+  "VOC0010": {
+   "rv": "approved"
+  },
+  "VOC0011": {
+   "rv": "approved"
+  },
+  "VOC0012": {
+   "rv": "approved"
+  },
+  "VOC0013": {
+   "rv": "approved"
+  },
+  "VOC0014": {
+   "rv": "approved"
+  },
+  "VOC0015": {
+   "rv": "approved"
+  },
+  "VOC0016": {
+   "rv": "approved"
+  },
+  "VOC0017": {
+   "rv": "approved"
+  },
+  "VOC0018": {
+   "rv": "approved"
+  },
+  "VOC0019": {
+   "rv": "approved"
+  },
+  "VOC0020": {
+   "rv": "approved"
+  },
+  "VOC0021": {
+   "rv": "approved"
+  },
+  "VOC0022": {
+   "rv": "approved"
+  },
+  "VOC0023": {
+   "rv": "approved"
+  },
+  "VOC0024": {
+   "rv": "approved"
+  },
+  "VOC0025": {
+   "rv": "approved"
+  },
+  "VOC0026": {
+   "rv": "approved"
+  },
+  "VOC0027": {
+   "rv": "approved"
+  },
+  "VOC0028": {
+   "rv": "approved"
+  },
+  "VOC0029": {
+   "rv": "approved"
+  },
+  "VOC0030": {
+   "rv": "approved"
+  },
+  "VOC0031": {
+   "rv": "approved"
+  },
+  "VOC0032": {
+   "rv": "approved"
+  },
+  "VOC0033": {
+   "rv": "approved"
+  },
+  "VOC0034": {
+   "rv": "approved"
+  },
+  "VOC0035": {
+   "rv": "approved"
+  },
+  "VOC0036": {
+   "rv": "approved"
+  },
+  "VOC0037": {
+   "rv": "approved"
+  },
+  "VOC0038": {
+   "rv": "approved"
+  },
+  "VOC0039": {
+   "rv": "approved"
+  },
+  "VOC0040": {
+   "rv": "approved"
+  },
+  "VOC0041": {
+   "rv": "approved"
+  },
+  "VOC0042": {
+   "rv": "approved"
+  },
+  "VOC0043": {
+   "rv": "approved"
+  },
+  "VOC0044": {
+   "rv": "approved"
+  },
+  "VOC0045": {
+   "rv": "approved"
+  },
+  "VOC0046": {
+   "rv": "approved"
+  },
+  "VOC0047": {
+   "rv": "approved"
+  },
+  "VOC0048": {
+   "rv": "approved"
+  },
+  "VOC0049": {
+   "rv": "approved"
+  },
+  "VOC0050": {
+   "rv": "approved"
+  },
+  "VOC0051": {
+   "rv": "approved"
+  },
+  "VOC0052": {
+   "rv": "approved"
+  },
+  "VOC0053": {
+   "rv": "approved"
+  },
+  "VOC0054": {
+   "rv": "approved"
+  },
+  "VOC0055": {
+   "rv": "approved"
+  },
+  "VOC0056": {
+   "rv": "approved"
+  },
+  "VOC0057": {
+   "rv": "approved"
+  },
+  "VOC0058": {
+   "rv": "approved"
+  },
+  "VOC0059": {
+   "rv": "approved"
+  },
+  "VOC0060": {
+   "rv": "approved"
+  },
+  "VOC0061": {
+   "rv": "approved"
+  },
+  "VOC0062": {
+   "rv": "approved"
+  },
+  "VOC0063": {
+   "rv": "approved"
+  },
+  "VOC0064": {
+   "rv": "approved"
+  },
+  "VOC0065": {
+   "rv": "approved"
+  },
+  "VOC0066": {
+   "rv": "approved"
+  },
+  "VOC0067": {
+   "rv": "approved"
+  },
+  "VOC0068": {
+   "rv": "approved"
+  },
+  "VOC0069": {
+   "rv": "approved"
+  },
+  "VOC0070": {
+   "rv": "approved"
+  },
+  "VOC0071": {
+   "rv": "approved"
+  },
+  "VOC0072": {
+   "rv": "approved"
+  },
+  "VOC0073": {
+   "rv": "approved"
+  },
+  "VOC0074": {
+   "rv": "approved"
+  },
+  "VOC0075": {
+   "rv": "approved"
+  },
+  "VOC0076": {
+   "rv": "approved"
+  },
+  "VOC0077": {
+   "rv": "approved"
+  },
+  "VOC0078": {
+   "rv": "approved"
+  },
+  "VOC0079": {
+   "rv": "approved"
+  },
+  "VOC0080": {
+   "rv": "approved"
+  },
+  "VOC0081": {
+   "rv": "approved"
+  },
+  "VOC0082": {
+   "rv": "approved"
+  },
+  "VOC0083": {
+   "rv": "approved"
+  },
+  "VOC0084": {
+   "rv": "approved"
+  },
+  "VOC0085": {
+   "rv": "approved"
+  },
+  "VOC0086": {
+   "rv": "approved"
+  },
+  "VOC0087": {
+   "rv": "approved"
+  },
+  "VOC0088": {
+   "rv": "approved"
+  },
+  "VOC0089": {
+   "rv": "approved"
+  },
+  "VOC0090": {
+   "rv": "approved"
+  },
+  "VOC0091": {
+   "rv": "approved"
+  },
+  "VOC0092": {
+   "rv": "approved"
+  },
+  "VOC0093": {
+   "rv": "approved"
+  },
+  "VOC0094": {
+   "rv": "approved"
+  },
+  "VOC0095": {
+   "rv": "approved"
+  },
+  "VOC0096": {
+   "rv": "approved"
+  },
+  "VOC0097": {
+   "rv": "approved"
+  },
+  "VOC0098": {
+   "rv": "approved"
+  },
+  "VOC0099": {
+   "rv": "approved"
+  },
+  "VOC0100": {
+   "rv": "approved"
+  },
+  "VOC0101": {
+   "rv": "approved"
+  },
+  "VOC0102": {
+   "rv": "approved"
+  },
+  "VOC0103": {
+   "rv": "approved"
+  },
+  "VOC0104": {
+   "rv": "approved"
+  },
+  "VOC0105": {
+   "rv": "approved"
+  },
+  "VOC0106": {
+   "rv": "approved"
+  },
+  "VOC0107": {
+   "rv": "approved"
+  },
+  "VOC0108": {
+   "rv": "approved"
+  },
+  "VOC0109": {
+   "rv": "approved"
+  },
+  "VOC0110": {
+   "rv": "approved"
+  },
+  "VOC0111": {
+   "rv": "approved"
+  },
+  "VOC0112": {
+   "rv": "approved"
+  },
+  "VOC0113": {
+   "rv": "approved"
+  },
+  "VOC0114": {
+   "rv": "approved"
+  },
+  "VOC0115": {
+   "rv": "approved"
+  },
+  "VOC0116": {
+   "rv": "approved"
+  },
+  "VOC0117": {
+   "rv": "approved"
+  },
+  "VOC0118": {
+   "rv": "approved"
+  },
+  "VOC0119": {
+   "rv": "approved"
+  },
+  "VOC0120": {
+   "rv": "approved"
+  },
+  "VOC0121": {
+   "rv": "approved"
+  },
+  "VOC0122": {
+   "rv": "approved"
+  },
+  "VOC0123": {
+   "rv": "approved"
+  },
+  "VOC0124": {
+   "rv": "approved"
+  },
+  "VOC0125": {
+   "rv": "approved"
+  },
+  "VOC0126": {
+   "rv": "approved"
+  },
+  "VOC0127": {
+   "rv": "approved"
+  },
+  "VOC0128": {
+   "rv": "approved"
+  },
+  "VOC0129": {
+   "rv": "approved"
+  },
+  "VOC0130": {
+   "rv": "approved"
+  },
+  "VOC0131": {
+   "rv": "approved"
+  },
+  "VOC0132": {
+   "rv": "approved"
+  },
+  "VOC0133": {
+   "rv": "approved"
+  },
+  "VOC0134": {
+   "rv": "approved"
+  },
+  "VOC0135": {
+   "rv": "approved"
+  },
+  "VOC0136": {
+   "rv": "approved"
+  },
+  "VOC0137": {
+   "rv": "approved"
+  },
+  "VOC0138": {
+   "rv": "approved"
+  },
+  "VOC0139": {
+   "rv": "approved"
+  },
+  "VOC0140": {
+   "rv": "approved"
+  },
+  "VOC0141": {
+   "rv": "approved"
+  },
+  "VOC0142": {
+   "rv": "approved"
+  },
+  "VOC0143": {
+   "rv": "approved"
+  },
+  "VOC0144": {
+   "rv": "approved"
+  },
+  "VOC0145": {
+   "rv": "approved"
+  },
+  "VOC0146": {
+   "rv": "approved"
+  },
+  "VOC0147": {
+   "rv": "approved"
+  },
+  "VOC0148": {
+   "rv": "approved"
+  },
+  "VOC0149": {
+   "rv": "approved"
+  },
+  "VOC0150": {
+   "rv": "approved"
+  },
+  "VOC0151": {
+   "rv": "approved"
+  },
+  "VOC0152": {
+   "rv": "approved"
+  },
+  "VOC0153": {
+   "rv": "approved"
+  },
+  "VOC0154": {
+   "rv": "approved"
+  },
+  "VOC0155": {
+   "rv": "approved"
+  },
+  "VOC0156": {
+   "rv": "approved"
+  },
+  "VOC0157": {
+   "rv": "approved"
+  },
+  "VOC0158": {
+   "rv": "approved"
+  },
+  "VOC0159": {
+   "rv": "approved"
+  },
+  "VOC0160": {
+   "rv": "approved"
+  },
+  "VOC0161": {
+   "rv": "approved"
+  },
+  "VOC0162": {
+   "rv": "approved"
+  },
+  "VOC0163": {
+   "rv": "approved"
+  },
+  "VOC0164": {
+   "rv": "approved"
+  },
+  "VOC0165": {
+   "rv": "approved"
+  },
+  "VOC0166": {
+   "rv": "approved"
+  },
+  "VOC0167": {
+   "rv": "approved"
+  },
+  "VOC0168": {
+   "rv": "approved"
+  },
+  "VOC0169": {
+   "rv": "approved"
+  },
+  "VOC0170": {
+   "rv": "approved"
+  },
+  "VOC0171": {
+   "rv": "approved"
+  },
+  "VOC0172": {
+   "rv": "approved"
+  },
+  "VOC0173": {
+   "rv": "approved"
+  },
+  "VOC0174": {
+   "rv": "approved"
+  },
+  "VOC0175": {
+   "rv": "approved"
+  },
+  "VOC0176": {
+   "rv": "approved"
+  },
+  "VOC0177": {
+   "rv": "approved"
+  },
+  "VOC0178": {
+   "rv": "approved"
+  },
+  "VOC0179": {
+   "rv": "approved"
+  },
+  "VOC0180": {
+   "rv": "approved"
+  },
+  "VOC0181": {
+   "rv": "approved"
+  },
+  "VOC0182": {
+   "rv": "approved"
+  },
+  "VOC0183": {
+   "rv": "approved"
+  },
+  "VOC0184": {
+   "rv": "approved"
+  },
+  "VOC0185": {
+   "rv": "approved"
+  },
+  "VOC0186": {
+   "rv": "approved"
+  },
+  "VOC0187": {
+   "rv": "approved"
+  },
+  "VOC0188": {
+   "rv": "approved"
+  },
+  "VOC0189": {
+   "rv": "approved"
+  },
+  "VOC0190": {
+   "rv": "approved"
+  },
+  "VOC0191": {
+   "rv": "approved"
+  },
+  "VOC0192": {
+   "rv": "approved"
+  },
+  "VOC0193": {
+   "rv": "approved"
+  },
+  "VOC0194": {
+   "rv": "approved"
+  },
+  "VOC0195": {
+   "rv": "approved"
+  },
+  "VOC0196": {
+   "rv": "approved"
+  },
+  "VOC0197": {
+   "rv": "approved"
+  },
+  "VOC0198": {
+   "rv": "approved"
+  },
+  "VOC0199": {
+   "rv": "approved"
+  },
+  "VOC0200": {
+   "rv": "approved"
+  },
+  "VOC0201": {
+   "rv": "approved"
+  },
+  "VOC0202": {
+   "rv": "approved"
+  },
+  "VOC0203": {
+   "rv": "approved"
+  },
+  "VOC0204": {
+   "rv": "approved"
+  },
+  "VOC0205": {
+   "rv": "approved"
+  },
+  "VOC0206": {
+   "rv": "approved"
+  },
+  "VOC0207": {
+   "rv": "approved"
+  },
+  "VOC0208": {
+   "rv": "approved"
+  },
+  "VOC0209": {
+   "rv": "approved"
+  },
+  "VOC0210": {
+   "rv": "approved"
+  },
+  "VOC0211": {
+   "rv": "approved"
+  },
+  "VOC0212": {
+   "rv": "approved"
+  },
+  "VOC0213": {
+   "rv": "approved"
+  },
+  "VOC0214": {
+   "rv": "approved"
+  },
+  "VOC0215": {
+   "rv": "approved"
+  },
+  "VOC0216": {
+   "rv": "approved"
+  },
+  "VOC0217": {
+   "rv": "approved"
+  },
+  "VOC0218": {
+   "rv": "approved"
+  },
+  "VOC0219": {
+   "rv": "approved"
+  },
+  "VOC0220": {
+   "rv": "approved"
+  },
+  "VOC0221": {
+   "rv": "approved"
+  },
+  "VOC0222": {
+   "rv": "approved"
+  },
+  "VOC0223": {
+   "rv": "approved"
+  },
+  "VOC0224": {
+   "rv": "approved"
+  },
+  "VOC0225": {
+   "rv": "approved"
+  },
+  "VOC0226": {
+   "rv": "approved"
+  },
+  "VOC0227": {
+   "rv": "approved"
+  },
+  "VOC0228": {
+   "rv": "approved"
+  },
+  "VOC0229": {
+   "rv": "approved"
+  },
+  "VOC0230": {
+   "rv": "approved"
+  },
+  "VOC0231": {
+   "rv": "approved"
+  },
+  "VOC0232": {
+   "rv": "approved"
+  },
+  "VOC0233": {
+   "rv": "approved"
+  },
+  "VOC0234": {
+   "rv": "approved"
+  },
+  "VOC0235": {
+   "rv": "approved"
+  },
+  "VOC0236": {
+   "rv": "approved"
+  },
+  "VOC0237": {
+   "rv": "approved"
+  },
+  "VOC0238": {
+   "rv": "approved"
+  },
+  "VOC0239": {
+   "rv": "approved"
+  },
+  "VOC0240": {
+   "rv": "approved"
+  },
+  "VOC0241": {
+   "rv": "approved"
+  },
+  "VOC0242": {
+   "rv": "approved"
+  },
+  "VOC0243": {
+   "rv": "approved"
+  },
+  "VOC0244": {
+   "rv": "approved"
+  },
+  "VOC0245": {
+   "rv": "approved"
+  },
+  "VOC0246": {
+   "rv": "approved"
+  },
+  "VOC0247": {
+   "rv": "approved"
+  },
+  "VOC0248": {
+   "rv": "approved"
+  },
+  "VOC0249": {
+   "rv": "approved"
+  },
+  "VOC0250": {
+   "rv": "approved"
+  },
+  "VOC0251": {
+   "rv": "approved"
+  },
+  "VOC0252": {
+   "rv": "approved"
+  },
+  "VOC0253": {
+   "rv": "approved"
+  },
+  "VOC0254": {
+   "rv": "approved"
+  },
+  "VOC0255": {
+   "rv": "approved"
+  },
+  "VOC0256": {
+   "rv": "approved"
+  },
+  "VOC0257": {
+   "rv": "approved"
+  },
+  "VOC0258": {
+   "rv": "approved"
+  },
+  "VOC0259": {
+   "rv": "approved"
+  },
+  "VOC0260": {
+   "rv": "approved"
+  },
+  "VOC0261": {
+   "rv": "approved"
+  },
+  "VOC0262": {
+   "rv": "approved"
+  },
+  "VOC0263": {
+   "rv": "approved"
+  },
+  "VOC0264": {
+   "rv": "approved"
+  },
+  "VOC0265": {
+   "rv": "approved"
+  },
+  "VOC0266": {
+   "rv": "approved"
+  },
+  "VOC0267": {
+   "rv": "approved"
+  },
+  "VOC0268": {
+   "rv": "approved"
+  },
+  "VOC0269": {
+   "rv": "approved"
+  },
+  "VOC0270": {
+   "rv": "approved"
+  },
+  "VOC0271": {
+   "rv": "approved"
+  },
+  "VOC0272": {
+   "rv": "approved"
+  },
+  "VOC0273": {
+   "rv": "approved"
+  },
+  "VOC0274": {
+   "rv": "approved"
+  },
+  "VOC0275": {
+   "rv": "approved"
+  },
+  "VOC0276": {
+   "rv": "approved"
+  },
+  "VOC0277": {
+   "rv": "approved"
+  },
+  "VOC0278": {
+   "rv": "approved"
+  },
+  "VOC0279": {
+   "rv": "approved"
+  },
+  "VOC0280": {
+   "rv": "approved"
+  },
+  "VOC0281": {
+   "rv": "approved"
+  },
+  "VOC0282": {
+   "rv": "approved"
+  },
+  "VOC0283": {
+   "rv": "approved"
+  },
+  "VOC0284": {
+   "rv": "approved"
+  },
+  "VOC0285": {
+   "rv": "approved"
+  },
+  "VOC0286": {
+   "rv": "approved"
+  },
+  "VOC0287": {
+   "rv": "approved"
+  },
+  "VOC0288": {
+   "rv": "approved"
+  },
+  "VOC0289": {
+   "rv": "approved"
+  },
+  "VOC0290": {
+   "rv": "approved"
+  },
+  "VOC0291": {
+   "rv": "approved"
+  },
+  "VOC0292": {
+   "rv": "approved"
+  },
+  "VOC0293": {
+   "rv": "approved"
+  },
+  "VOC0294": {
+   "rv": "approved"
+  },
+  "VOC0295": {
+   "rv": "approved"
+  },
+  "VOC0296": {
+   "rv": "approved"
+  },
+  "VOC0297": {
+   "rv": "approved"
+  },
+  "VOC0298": {
+   "rv": "approved"
+  },
+  "VOC0299": {
+   "rv": "approved"
+  },
+  "VOC0300": {
+   "rv": "approved"
+  },
+  "VOC0301": {
+   "rv": "approved"
+  },
+  "VOC0302": {
+   "rv": "approved"
+  },
+  "VOC0303": {
+   "rv": "approved"
+  },
+  "VOC0304": {
+   "rv": "approved"
+  },
+  "VOC0305": {
+   "rv": "approved"
+  },
+  "VOC0306": {
+   "rv": "approved"
+  },
+  "VOC0307": {
+   "rv": "approved"
+  },
+  "VOC0308": {
+   "rv": "approved"
+  },
+  "VOC0309": {
+   "rv": "approved"
+  },
+  "VOC0310": {
+   "rv": "approved"
+  },
+  "VOC0311": {
+   "rv": "approved"
+  },
+  "VOC0312": {
+   "rv": "approved"
+  },
+  "VOC0313": {
+   "rv": "approved"
+  },
+  "VOC0314": {
+   "rv": "approved"
+  },
+  "VOC0315": {
+   "rv": "approved"
+  },
+  "VOC0316": {
+   "rv": "approved"
+  },
+  "VOC0317": {
+   "rv": "approved"
+  },
+  "VOC0318": {
+   "rv": "approved"
+  },
+  "VOC0319": {
+   "rv": "approved"
+  },
+  "VOC0320": {
+   "rv": "approved"
+  },
+  "VOC0321": {
+   "rv": "approved"
+  },
+  "VOC0322": {
+   "rv": "approved"
+  },
+  "VOC0323": {
+   "rv": "approved"
+  },
+  "VOC0324": {
+   "rv": "approved"
+  },
+  "VOC0325": {
+   "rv": "approved"
+  },
+  "VOC0326": {
+   "rv": "approved"
+  },
+  "VOC0327": {
+   "rv": "approved"
+  },
+  "VOC0328": {
+   "rv": "approved"
+  },
+  "VOC0329": {
+   "rv": "approved"
+  },
+  "VOC0330": {
+   "rv": "approved"
+  },
+  "VOC0331": {
+   "rv": "approved"
+  },
+  "VOC0332": {
+   "rv": "approved"
+  },
+  "VOC0333": {
+   "rv": "approved"
+  },
+  "VOC0334": {
+   "rv": "approved"
+  },
+  "VOC0335": {
+   "rv": "approved"
+  },
+  "VOC0336": {
+   "rv": "approved"
+  },
+  "VOC0337": {
+   "rv": "approved"
+  },
+  "VOC0338": {
+   "rv": "approved"
+  },
+  "VOC0339": {
+   "rv": "approved"
+  },
+  "VOC0340": {
+   "rv": "approved"
+  },
+  "VOC0341": {
+   "rv": "approved"
+  },
+  "VOC0342": {
+   "rv": "approved"
+  },
+  "VOC0343": {
+   "rv": "approved"
+  },
+  "VOC0344": {
+   "rv": "approved"
+  },
+  "VOC0345": {
+   "rv": "approved"
+  },
+  "VOC0346": {
+   "rv": "approved"
+  },
+  "VOC0347": {
+   "rv": "approved"
+  },
+  "VOC0348": {
+   "rv": "approved"
+  },
+  "VOC0349": {
+   "rv": "approved"
+  },
+  "VOC0350": {
+   "rv": "approved"
+  },
+  "VOC0351": {
+   "rv": "approved"
+  },
+  "VOC0352": {
+   "rv": "approved"
+  },
+  "VOC0353": {
+   "rv": "approved"
+  },
+  "VOC0354": {
+   "rv": "approved"
+  },
+  "VOC0355": {
+   "rv": "approved"
+  },
+  "VOC0356": {
+   "rv": "approved"
+  },
+  "VOC0357": {
+   "rv": "approved"
+  },
+  "VOC0358": {
+   "rv": "approved"
+  },
+  "VOC0359": {
+   "rv": "approved"
+  },
+  "VOC0360": {
+   "rv": "approved"
+  },
+  "VOC0361": {
+   "rv": "approved"
+  },
+  "VOC0362": {
+   "rv": "approved"
+  },
+  "VOC0363": {
+   "rv": "approved"
+  },
+  "VOC0364": {
+   "rv": "approved"
+  },
+  "VOC0365": {
+   "rv": "approved"
+  },
+  "VOC0366": {
+   "rv": "approved"
+  },
+  "VOC0367": {
+   "rv": "approved"
+  },
+  "VOC0368": {
+   "rv": "approved"
+  },
+  "VOC0369": {
+   "rv": "approved"
+  },
+  "VOC0370": {
+   "rv": "approved"
+  },
+  "VOC0371": {
+   "rv": "approved"
+  },
+  "VOC0372": {
+   "rv": "approved"
+  },
+  "VOC0373": {
+   "rv": "approved"
+  },
+  "VOC0374": {
+   "rv": "approved"
+  },
+  "VOC0375": {
+   "rv": "approved"
+  },
+  "VOC0376": {
+   "rv": "approved"
+  },
+  "VOC0377": {
+   "rv": "approved"
+  },
+  "VOC0378": {
+   "rv": "approved"
+  },
+  "VOC0379": {
+   "rv": "approved"
+  },
+  "VOC0380": {
+   "rv": "approved"
+  },
+  "VOC0381": {
+   "rv": "approved"
+  },
+  "VOC0382": {
+   "rv": "approved"
+  },
+  "VOC0383": {
+   "rv": "approved"
+  },
+  "VOC0384": {
+   "rv": "approved"
+  },
+  "VOC0385": {
+   "rv": "approved"
+  },
+  "VOC0386": {
+   "rv": "approved"
+  },
+  "VOC0387": {
+   "rv": "approved"
+  },
+  "VOC0388": {
+   "rv": "approved"
+  },
+  "VOC0389": {
+   "rv": "approved"
+  },
+  "VOC0390": {
+   "rv": "approved"
+  },
+  "VOC0391": {
+   "rv": "approved"
+  },
+  "VOC0392": {
+   "rv": "approved"
+  },
+  "VOC0393": {
+   "rv": "approved"
+  },
+  "VOC0394": {
+   "rv": "approved"
+  },
+  "VOC0395": {
+   "rv": "approved"
+  },
+  "VOC0396": {
+   "rv": "approved"
+  },
+  "VOC0397": {
+   "rv": "approved"
+  },
+  "VOC0398": {
+   "rv": "approved"
+  },
+  "VOC0399": {
+   "rv": "approved"
+  },
+  "VOC0400": {
+   "rv": "approved"
+  },
+  "VOC0401": {
+   "rv": "approved"
+  },
+  "VOC0402": {
+   "rv": "approved"
+  },
+  "VOC0403": {
+   "rv": "approved"
+  },
+  "VOC0404": {
+   "rv": "approved"
+  },
+  "VOC0405": {
+   "rv": "approved"
+  },
+  "VOC0406": {
+   "rv": "approved"
+  },
+  "VOC0407": {
+   "rv": "approved"
+  },
+  "VOC0408": {
+   "rv": "approved"
+  },
+  "VOC0409": {
+   "rv": "approved"
+  },
+  "VOC0410": {
+   "rv": "approved"
+  },
+  "VOC0411": {
+   "rv": "approved"
+  },
+  "VOC0412": {
+   "rv": "approved"
+  },
+  "VOC0413": {
+   "rv": "approved"
+  },
+  "VOC0414": {
+   "rv": "approved"
+  },
+  "VOC0415": {
+   "rv": "approved"
+  },
+  "VOC0416": {
+   "rv": "approved"
+  },
+  "VOC0417": {
+   "rv": "approved"
+  },
+  "VOC0418": {
+   "rv": "approved"
+  },
+  "VOC0419": {
+   "rv": "approved"
+  },
+  "VOC0420": {
+   "rv": "approved"
+  },
+  "VOC0421": {
+   "rv": "approved"
+  },
+  "VOC0422": {
+   "rv": "approved"
+  },
+  "VOC0423": {
+   "rv": "approved"
+  },
+  "VOC0424": {
+   "rv": "approved"
+  },
+  "VOC0425": {
+   "rv": "approved"
+  },
+  "VOC0426": {
+   "rv": "approved"
+  },
+  "VOC0427": {
+   "rv": "approved"
+  },
+  "VOC0428": {
+   "rv": "approved"
+  },
+  "VOC0429": {
+   "rv": "approved"
+  },
+  "VOC0430": {
+   "rv": "approved"
+  },
+  "VOC0431": {
+   "rv": "approved"
+  },
+  "VOC0432": {
+   "rv": "approved"
+  },
+  "VOC0433": {
+   "rv": "approved"
+  },
+  "VOC0434": {
+   "rv": "approved"
+  },
+  "VOC0435": {
+   "rv": "approved"
+  },
+  "VOC0436": {
+   "rv": "approved"
+  },
+  "VOC0437": {
+   "rv": "approved"
+  },
+  "VOC0438": {
+   "rv": "approved"
+  },
+  "VOC0439": {
+   "rv": "approved"
+  },
+  "VOC0440": {
+   "rv": "approved"
+  },
+  "VOC0441": {
+   "rv": "approved"
+  },
+  "VOC0442": {
+   "rv": "approved"
+  },
+  "VOC0443": {
+   "rv": "approved"
+  },
+  "VOC0444": {
+   "rv": "approved"
+  },
+  "VOC0445": {
+   "rv": "approved"
+  },
+  "VOC0446": {
+   "rv": "approved"
+  },
+  "VOC0447": {
+   "rv": "approved"
+  },
+  "VOC0448": {
+   "rv": "approved"
+  },
+  "VOC0449": {
+   "rv": "approved"
+  },
+  "VOC0450": {
+   "rv": "approved"
+  },
+  "VOC0451": {
+   "rv": "approved"
+  },
+  "VOC0452": {
+   "rv": "approved"
+  },
+  "VOC0453": {
+   "rv": "approved"
+  },
+  "VOC0454": {
+   "rv": "approved"
+  },
+  "VOC0455": {
+   "rv": "approved"
+  },
+  "VOC0456": {
+   "rv": "approved"
+  },
+  "VOC0457": {
+   "rv": "approved"
+  },
+  "VOC0458": {
+   "rv": "approved"
+  },
+  "VOC0459": {
+   "rv": "approved"
+  },
+  "VOC0460": {
+   "rv": "approved"
+  },
+  "VOC0461": {
+   "rv": "approved"
+  },
+  "VOC0462": {
+   "rv": "approved"
+  },
+  "VOC0463": {
+   "rv": "approved"
+  },
+  "VOC0464": {
+   "rv": "approved"
+  },
+  "VOC0465": {
+   "rv": "approved"
+  },
+  "VOC0466": {
+   "rv": "approved"
+  },
+  "VOC0467": {
+   "rv": "approved"
+  },
+  "VOC0468": {
+   "rv": "approved"
+  },
+  "VOC0469": {
+   "rv": "approved"
+  },
+  "VOC0470": {
+   "rv": "approved"
+  },
+  "VOC0471": {
+   "rv": "approved"
+  },
+  "VOC0472": {
+   "rv": "approved"
+  },
+  "VOC0473": {
+   "rv": "approved"
+  },
+  "VOC0474": {
+   "rv": "approved"
+  },
+  "VOC0475": {
+   "rv": "approved"
+  },
+  "VOC0476": {
+   "rv": "approved"
+  },
+  "VOC0477": {
+   "rv": "approved"
+  },
+  "VOC0478": {
+   "rv": "approved"
+  },
+  "VOC0479": {
+   "rv": "approved"
+  },
+  "VOC0480": {
+   "rv": "approved"
+  },
+  "VOC0481": {
+   "rv": "approved"
+  },
+  "VOC0482": {
+   "rv": "approved"
+  },
+  "VOC0483": {
+   "rv": "approved"
+  },
+  "VOC0484": {
+   "rv": "approved"
+  },
+  "VOC0485": {
+   "rv": "approved"
+  },
+  "VOC0486": {
+   "rv": "approved"
+  },
+  "VOC0487": {
+   "rv": "approved"
+  },
+  "VOC0488": {
+   "rv": "approved"
+  },
+  "VOC0489": {
+   "rv": "approved"
+  },
+  "VOC0490": {
+   "rv": "approved"
+  },
+  "VOC0491": {
+   "rv": "approved"
+  },
+  "VOC0492": {
+   "rv": "approved"
+  },
+  "VOC0493": {
+   "rv": "approved"
+  },
+  "VOC0494": {
+   "rv": "approved"
+  },
+  "VOC0495": {
+   "rv": "approved"
+  },
+  "VOC0496": {
+   "rv": "approved"
+  },
+  "VOC0497": {
+   "rv": "approved"
+  },
+  "VOC0498": {
+   "rv": "approved"
+  },
+  "VOC0499": {
+   "rv": "approved"
+  },
+  "VOC0500": {
+   "rv": "approved"
+  },
+  "VOC0501": {
+   "rv": "approved"
+  },
+  "VOC0502": {
+   "rv": "approved"
+  },
+  "VOC0503": {
+   "rv": "approved"
+  },
+  "VOC0504": {
+   "rv": "approved"
+  },
+  "VOC0505": {
+   "rv": "approved"
+  },
+  "VOC0506": {
+   "rv": "approved"
+  },
+  "VOC0507": {
+   "rv": "approved"
+  },
+  "VOC0508": {
+   "rv": "approved"
+  },
+  "VOC0509": {
+   "rv": "approved"
+  },
+  "VOC0510": {
+   "rv": "approved"
+  },
+  "VOC0511": {
+   "rv": "approved"
+  },
+  "VOC0512": {
+   "rv": "approved"
+  },
+  "VOC0513": {
+   "rv": "approved"
+  },
+  "VOC0514": {
+   "rv": "approved"
+  },
+  "VOC0515": {
+   "rv": "approved"
+  },
+  "VOC0516": {
+   "rv": "approved"
+  },
+  "VOC0517": {
+   "rv": "approved"
+  },
+  "VOC0518": {
+   "rv": "approved"
+  },
+  "VOC0519": {
+   "rv": "approved"
+  },
+  "VOC0520": {
+   "rv": "approved"
+  },
+  "VOC0521": {
+   "rv": "approved"
+  },
+  "VOC0522": {
+   "rv": "approved"
+  },
+  "VOC0523": {
+   "rv": "approved"
+  },
+  "VOC0524": {
+   "rv": "approved"
+  },
+  "VOC0525": {
+   "rv": "approved"
+  },
+  "VOC0526": {
+   "rv": "approved"
+  },
+  "VOC0527": {
+   "rv": "approved"
+  },
+  "VOC0528": {
+   "rv": "approved"
+  },
+  "VOC0529": {
+   "rv": "approved"
+  },
+  "VOC0530": {
+   "rv": "approved"
+  },
+  "VOC0531": {
+   "rv": "approved"
+  },
+  "VOC0532": {
+   "rv": "approved"
+  },
+  "VOC0533": {
+   "rv": "approved"
+  },
+  "VOC0534": {
+   "rv": "approved"
+  },
+  "VOC0535": {
+   "rv": "approved"
+  },
+  "VOC0536": {
+   "rv": "approved"
+  },
+  "VOC0537": {
+   "rv": "approved"
+  },
+  "VOC0538": {
+   "rv": "approved"
+  },
+  "VOC0539": {
+   "rv": "approved"
+  },
+  "VOC0540": {
+   "rv": "approved"
+  },
+  "VOC0541": {
+   "rv": "approved"
+  },
+  "VOC0542": {
+   "rv": "approved"
+  },
+  "VOC0543": {
+   "rv": "approved"
+  },
+  "VOC0544": {
+   "rv": "approved"
+  },
+  "VOC0545": {
+   "rv": "approved"
+  },
+  "VOC0546": {
+   "rv": "approved"
+  },
+  "VOC0547": {
+   "rv": "approved"
+  },
+  "VOC0548": {
+   "rv": "approved"
+  },
+  "VOC0549": {
+   "rv": "approved"
+  },
+  "VOC0550": {
+   "rv": "approved"
+  },
+  "VOC0551": {
+   "rv": "approved"
+  },
+  "VOC0552": {
+   "rv": "approved"
+  },
+  "VOC0553": {
+   "rv": "approved"
+  },
+  "VOC0554": {
+   "rv": "approved"
+  },
+  "VOC0555": {
+   "rv": "approved"
+  },
+  "VOC0556": {
+   "rv": "approved"
+  },
+  "VOC0557": {
+   "rv": "approved"
+  },
+  "VOC0558": {
+   "rv": "approved"
+  },
+  "VOC0559": {
+   "rv": "approved"
+  },
+  "VOC0560": {
+   "rv": "approved"
+  },
+  "VOC0561": {
+   "rv": "approved"
+  },
+  "VOC0562": {
+   "rv": "approved"
+  },
+  "VOC0563": {
+   "rv": "approved"
+  },
+  "VOC0564": {
+   "rv": "approved"
+  },
+  "VOC0565": {
+   "rv": "approved"
+  },
+  "VOC0566": {
+   "rv": "approved"
+  },
+  "VOC0567": {
+   "rv": "approved"
+  },
+  "VOC0568": {
+   "rv": "approved"
+  },
+  "VOC0569": {
+   "rv": "approved"
+  },
+  "VOC0570": {
+   "rv": "approved"
+  },
+  "VOC0571": {
+   "rv": "approved"
+  },
+  "VOC0572": {
+   "rv": "approved"
+  },
+  "VOC0573": {
+   "rv": "approved"
+  },
+  "VOC0574": {
+   "rv": "approved"
+  },
+  "VOC0575": {
+   "rv": "approved"
+  },
+  "VOC0576": {
+   "rv": "approved"
+  },
+  "VOC0577": {
+   "rv": "approved"
+  },
+  "VOC0578": {
+   "rv": "approved"
+  },
+  "VOC0579": {
+   "rv": "approved"
+  },
+  "VOC0580": {
+   "rv": "approved"
+  },
+  "VOC0581": {
+   "rv": "approved"
+  },
+  "VOC0582": {
+   "rv": "approved"
+  },
+  "VOC0583": {
+   "rv": "approved"
+  },
+  "VOC0584": {
+   "rv": "approved"
+  },
+  "VOC0585": {
+   "rv": "approved"
+  },
+  "VOC0586": {
+   "rv": "approved"
+  },
+  "VOC0587": {
+   "rv": "approved"
+  },
+  "VOC0588": {
+   "rv": "approved"
+  },
+  "VOC0589": {
+   "rv": "approved"
+  },
+  "VOC0590": {
+   "rv": "approved"
+  },
+  "VOC0591": {
+   "rv": "approved"
+  },
+  "VOC0592": {
+   "rv": "approved"
+  },
+  "VOC0593": {
+   "rv": "approved"
+  },
+  "VOC0594": {
+   "rv": "approved"
+  },
+  "VOC0595": {
+   "rv": "approved"
+  },
+  "VOC0596": {
+   "rv": "approved"
+  },
+  "VOC0597": {
+   "rv": "approved"
+  },
+  "VOC0598": {
+   "rv": "approved"
+  },
+  "VOC0599": {
+   "rv": "approved"
+  },
+  "VOC0600": {
+   "rv": "approved"
+  },
+  "VOC0601": {
+   "rv": "approved"
+  },
+  "VOC0602": {
+   "rv": "approved"
+  },
+  "VOC0603": {
+   "rv": "approved"
+  },
+  "VOC0604": {
+   "rv": "approved"
+  },
+  "VOC0605": {
+   "rv": "approved"
+  },
+  "VOC0606": {
+   "rv": "approved"
+  },
+  "VOC0607": {
+   "rv": "approved"
+  },
+  "VOC0608": {
+   "rv": "approved"
+  },
+  "VOC0609": {
+   "rv": "approved"
+  },
+  "VOC0610": {
+   "rv": "approved"
+  },
+  "VOC0611": {
+   "rv": "approved"
+  },
+  "VOC0612": {
+   "rv": "approved"
+  },
+  "VOC0613": {
+   "rv": "approved"
+  },
+  "VOC0614": {
+   "rv": "approved"
+  },
+  "VOC0615": {
+   "rv": "approved"
+  },
+  "VOC0616": {
+   "rv": "approved"
+  },
+  "VOC0617": {
+   "rv": "approved"
+  },
+  "VOC0618": {
+   "rv": "approved"
+  },
+  "VOC0619": {
+   "rv": "approved"
+  },
+  "VOC0620": {
+   "rv": "approved"
+  },
+  "VOC0621": {
+   "rv": "approved"
+  },
+  "VOC0622": {
+   "rv": "approved"
+  },
+  "VOC0623": {
+   "rv": "approved"
+  },
+  "VOC0624": {
+   "rv": "approved"
+  },
+  "VOC0625": {
+   "rv": "approved"
+  },
+  "VOC0626": {
+   "rv": "approved"
+  },
+  "VOC0627": {
+   "rv": "approved"
+  },
+  "VOC0628": {
+   "rv": "approved"
+  },
+  "VOC0629": {
+   "rv": "approved"
+  },
+  "VOC0630": {
+   "rv": "approved"
+  },
+  "VOC0631": {
+   "rv": "approved"
+  },
+  "VOC0632": {
+   "rv": "approved"
+  },
+  "VOC0633": {
+   "rv": "approved"
+  },
+  "VOC0634": {
+   "rv": "approved"
+  },
+  "VOC0635": {
+   "rv": "approved"
+  },
+  "VOC0636": {
+   "rv": "approved"
+  },
+  "VOC0637": {
+   "rv": "approved"
+  },
+  "VOC0638": {
+   "rv": "approved"
+  },
+  "VOC0639": {
+   "rv": "approved"
+  },
+  "VOC0640": {
+   "rv": "approved"
+  },
+  "VOC0641": {
+   "rv": "approved"
+  },
+  "VOC0642": {
+   "rv": "approved"
+  },
+  "VOC0643": {
+   "rv": "approved"
+  },
+  "VOC0644": {
+   "rv": "approved"
+  },
+  "VOC0645": {
+   "rv": "approved"
+  },
+  "VOC0646": {
+   "rv": "approved"
+  },
+  "VOC0647": {
+   "rv": "approved"
+  },
+  "VOC0648": {
+   "rv": "approved"
+  },
+  "VOC0649": {
+   "rv": "approved"
+  },
+  "VOC0650": {
+   "rv": "approved"
+  },
+  "VOC0651": {
+   "rv": "approved"
+  },
+  "VOC0652": {
+   "rv": "approved"
+  },
+  "VOC0653": {
+   "rv": "approved"
+  },
+  "VOC0654": {
+   "rv": "approved"
+  },
+  "VOC0655": {
+   "rv": "approved"
+  },
+  "VOC0656": {
+   "rv": "approved"
+  },
+  "VOC0657": {
+   "rv": "approved"
+  },
+  "VOC0658": {
+   "rv": "approved"
+  },
+  "VOC0659": {
+   "rv": "approved"
+  },
+  "VOC0660": {
+   "rv": "approved"
+  },
+  "VOC0661": {
+   "rv": "approved"
+  },
+  "VOC0662": {
+   "rv": "approved"
+  },
+  "VOC0663": {
+   "rv": "approved"
+  },
+  "VOC0664": {
+   "rv": "approved"
+  },
+  "VOC0665": {
+   "rv": "approved"
+  },
+  "VOC0666": {
+   "rv": "approved"
+  },
+  "VOC0667": {
+   "rv": "approved"
+  },
+  "VOC0668": {
+   "rv": "approved"
+  },
+  "VOC0669": {
+   "rv": "approved"
+  },
+  "VOC0670": {
+   "rv": "approved"
+  },
+  "VOC0671": {
+   "rv": "approved"
+  },
+  "VOC0672": {
+   "rv": "approved"
+  },
+  "VOC0673": {
+   "rv": "approved"
+  },
+  "VOC0674": {
+   "rv": "approved"
+  },
+  "VOC0675": {
+   "rv": "approved"
+  },
+  "VOC0676": {
+   "rv": "approved"
+  },
+  "VOC0677": {
+   "rv": "approved"
+  },
+  "VOC0678": {
+   "rv": "approved"
+  },
+  "VOC0679": {
+   "rv": "approved"
+  },
+  "VOC0680": {
+   "rv": "approved"
+  },
+  "VOC0681": {
+   "rv": "approved"
+  },
+  "VOC0682": {
+   "rv": "approved"
+  },
+  "VOC0683": {
+   "rv": "approved"
+  },
+  "VOC0684": {
+   "rv": "approved"
+  },
+  "VOC0685": {
+   "rv": "approved"
+  },
+  "VOC0686": {
+   "rv": "approved"
+  },
+  "VOC0687": {
+   "rv": "approved"
+  },
+  "VOC0688": {
+   "rv": "approved"
+  },
+  "VOC0689": {
+   "rv": "approved"
+  },
+  "VOC0690": {
+   "rv": "approved"
+  },
+  "VOC0691": {
+   "rv": "approved"
+  },
+  "VOC0692": {
+   "rv": "approved"
+  },
+  "VOC0693": {
+   "rv": "approved"
+  },
+  "VOC0694": {
+   "rv": "approved"
+  },
+  "VOC0695": {
+   "rv": "approved"
+  },
+  "VOC0696": {
+   "rv": "approved"
+  },
+  "VOC0697": {
+   "rv": "approved"
+  },
+  "VOC0698": {
+   "rv": "approved"
+  },
+  "VOC0699": {
+   "rv": "approved"
+  },
+  "VOC0700": {
+   "rv": "approved"
+  },
+  "VOC0701": {
+   "rv": "approved"
+  },
+  "VOC0702": {
+   "rv": "approved"
+  },
+  "VOC0703": {
+   "rv": "approved"
+  },
+  "VOC0704": {
+   "rv": "approved"
+  },
+  "VOC0705": {
+   "rv": "approved"
+  },
+  "VOC0706": {
+   "rv": "approved"
+  },
+  "VOC0707": {
+   "rv": "approved"
+  },
+  "VOC0708": {
+   "rv": "approved"
+  },
+  "VOC0709": {
+   "rv": "approved"
+  },
+  "VOC0710": {
+   "rv": "approved"
+  },
+  "VOC0711": {
+   "rv": "approved"
+  },
+  "VOC0712": {
+   "rv": "approved"
+  },
+  "VOC0713": {
+   "rv": "approved"
+  },
+  "VOC0714": {
+   "rv": "approved"
+  },
+  "VOC0715": {
+   "rv": "approved"
+  },
+  "VOC0716": {
+   "rv": "approved"
+  },
+  "VOC0717": {
+   "rv": "approved"
+  },
+  "VOC0718": {
+   "rv": "approved"
+  },
+  "VOC0719": {
+   "rv": "approved"
+  },
+  "VOC0720": {
+   "rv": "approved"
+  },
+  "VOC0721": {
+   "rv": "approved"
+  },
+  "VOC0722": {
+   "rv": "approved"
+  },
+  "VOC0723": {
+   "rv": "approved"
+  },
+  "VOC0724": {
+   "rv": "approved"
+  },
+  "VOC0725": {
+   "rv": "approved"
+  },
+  "VOC0726": {
+   "rv": "approved"
+  },
+  "VOC0727": {
+   "rv": "approved"
+  },
+  "VOC0728": {
+   "rv": "approved"
+  },
+  "VOC0729": {
+   "rv": "approved"
+  },
+  "VOC0730": {
+   "rv": "approved"
+  },
+  "VOC0731": {
+   "rv": "approved"
+  },
+  "VOC0732": {
+   "rv": "approved"
+  },
+  "VOC0733": {
+   "rv": "approved"
+  },
+  "VOC0734": {
+   "rv": "approved"
+  },
+  "VOC0735": {
+   "rv": "approved"
+  },
+  "VOC0736": {
+   "rv": "approved"
+  },
+  "VOC0737": {
+   "rv": "approved"
+  },
+  "VOC0738": {
+   "rv": "approved"
+  },
+  "VOC0739": {
+   "rv": "approved"
+  },
+  "VOC0740": {
+   "rv": "approved"
+  },
+  "VOC0741": {
+   "rv": "approved"
+  },
+  "VOC0742": {
+   "rv": "approved"
+  },
+  "VOC0743": {
+   "rv": "approved"
+  },
+  "VOC0744": {
+   "rv": "approved"
+  },
+  "VOC0745": {
+   "rv": "approved"
+  },
+  "VOC0746": {
+   "rv": "approved"
+  },
+  "VOC0747": {
+   "rv": "approved"
+  },
+  "VOC0748": {
+   "rv": "approved"
+  },
+  "VOC0749": {
+   "rv": "approved"
+  },
+  "VOC0750": {
+   "rv": "approved"
+  },
+  "VOC0751": {
+   "rv": "approved"
+  },
+  "VOC0752": {
+   "rv": "approved"
+  },
+  "VOC0753": {
+   "rv": "approved"
+  },
+  "VOC0754": {
+   "rv": "approved"
+  },
+  "VOC0755": {
+   "rv": "approved"
+  },
+  "VOC0756": {
+   "rv": "approved"
+  },
+  "VOC0757": {
+   "rv": "approved"
+  },
+  "VOC0758": {
+   "rv": "approved"
+  },
+  "VOC0759": {
+   "rv": "approved"
+  },
+  "VOC0760": {
+   "rv": "approved"
+  },
+  "VOC0761": {
+   "rv": "approved"
+  },
+  "VOC0762": {
+   "rv": "approved"
+  },
+  "VOC0763": {
+   "rv": "approved"
+  },
+  "VOC0764": {
+   "rv": "approved"
+  },
+  "VOC0765": {
+   "rv": "approved"
+  },
+  "VOC0766": {
+   "rv": "approved"
+  },
+  "VOC0767": {
+   "rv": "approved"
+  },
+  "VOC0768": {
+   "rv": "approved"
+  },
+  "VOC0769": {
+   "rv": "approved"
+  },
+  "VOC0770": {
+   "rv": "approved"
+  },
+  "VOC0771": {
+   "rv": "approved"
+  },
+  "VOC0772": {
+   "rv": "approved"
+  },
+  "VOC0773": {
+   "rv": "approved"
+  },
+  "VOC0774": {
+   "rv": "approved"
+  },
+  "VOC0775": {
+   "rv": "approved"
+  },
+  "VOC0776": {
+   "rv": "approved"
+  },
+  "VOC0777": {
+   "rv": "approved"
+  },
+  "VOC0778": {
+   "rv": "approved"
+  },
+  "VOC0779": {
+   "rv": "approved"
+  },
+  "VOC0780": {
+   "rv": "approved"
+  },
+  "VOC0781": {
+   "rv": "approved"
+  },
+  "VOC0782": {
+   "rv": "approved"
+  },
+  "VOC0783": {
+   "rv": "approved"
+  },
+  "VOC0784": {
+   "rv": "approved"
+  },
+  "VOC0785": {
+   "rv": "approved"
+  },
+  "VOC0786": {
+   "rv": "approved"
+  },
+  "VOC0787": {
+   "rv": "approved"
+  },
+  "VOC0788": {
+   "rv": "approved"
+  },
+  "VOC0789": {
+   "rv": "approved"
+  },
+  "VOC0790": {
+   "rv": "approved"
+  },
+  "VOC0791": {
+   "rv": "approved"
+  },
+  "VOC0792": {
+   "rv": "approved"
+  },
+  "VOC0793": {
+   "rv": "approved"
+  },
+  "VOC0794": {
+   "rv": "approved"
+  },
+  "VOC0795": {
+   "rv": "approved"
+  },
+  "VOC0796": {
+   "rv": "approved"
+  },
+  "VOC0797": {
+   "rv": "approved"
+  },
+  "VOC0798": {
+   "rv": "approved"
+  },
+  "VOC0799": {
+   "rv": "approved"
+  },
+  "VOC0800": {
+   "rv": "approved"
+  },
+  "VOC0801": {
+   "rv": "approved"
+  },
+  "VOC0802": {
+   "rv": "approved"
+  },
+  "VOC0803": {
+   "rv": "approved"
+  },
+  "VOC0804": {
+   "rv": "approved"
+  },
+  "VOC0805": {
+   "rv": "approved"
+  },
+  "VOC0806": {
+   "rv": "approved"
+  },
+  "VOC0807": {
+   "rv": "approved"
+  },
+  "VOC0808": {
+   "rv": "approved"
+  },
+  "VOC0809": {
+   "rv": "approved"
+  },
+  "VOC0810": {
+   "rv": "approved"
+  },
+  "VOC0811": {
+   "rv": "approved"
+  },
+  "VOC0812": {
+   "rv": "approved"
+  },
+  "VOC0813": {
+   "rv": "approved"
+  },
+  "VOC0814": {
+   "rv": "approved"
+  },
+  "VOC0815": {
+   "rv": "approved"
+  },
+  "VOC0816": {
+   "rv": "approved"
+  },
+  "VOC0817": {
+   "rv": "approved"
+  },
+  "VOC0818": {
+   "rv": "approved"
+  },
+  "VOC0819": {
+   "rv": "approved"
+  },
+  "VOC0820": {
+   "rv": "approved"
+  },
+  "VOC0821": {
+   "rv": "approved"
+  },
+  "VOC0822": {
+   "rv": "approved"
+  },
+  "VOC0823": {
+   "rv": "approved"
+  },
+  "VOC0824": {
+   "rv": "approved"
+  },
+  "VOC0825": {
+   "rv": "approved"
+  },
+  "VOC0826": {
+   "rv": "approved"
+  },
+  "VOC0827": {
+   "rv": "approved"
+  },
+  "VOC0828": {
+   "rv": "approved"
+  },
+  "VOC0829": {
+   "rv": "approved"
+  },
+  "VOC0830": {
+   "rv": "approved"
+  },
+  "VOC0831": {
+   "rv": "approved"
+  },
+  "VOC0832": {
+   "rv": "approved"
+  },
+  "VOC0833": {
+   "rv": "approved"
+  },
+  "VOC0834": {
+   "rv": "approved"
+  },
+  "VOC0835": {
+   "rv": "approved"
+  },
+  "VOC0836": {
+   "rv": "approved"
+  },
+  "VOC0837": {
+   "rv": "approved"
+  },
+  "VOC0838": {
+   "rv": "approved"
+  },
+  "VOC0839": {
+   "rv": "approved"
+  },
+  "VOC0840": {
+   "rv": "approved"
+  },
+  "VOC0841": {
+   "rv": "approved"
+  },
+  "VOC0842": {
+   "rv": "approved"
+  },
+  "VOC0843": {
+   "rv": "approved"
+  },
+  "VOC0844": {
+   "rv": "approved"
+  },
+  "VOC0845": {
+   "rv": "approved"
+  },
+  "VOC0846": {
+   "rv": "approved"
+  },
+  "VOC0847": {
+   "rv": "approved"
+  },
+  "VOC0848": {
+   "rv": "approved"
+  },
+  "VOC0849": {
+   "rv": "approved"
+  },
+  "VOC0850": {
+   "rv": "approved"
+  },
+  "VOC0851": {
+   "rv": "approved"
+  },
+  "VOC0852": {
+   "rv": "approved"
+  },
+  "VOC0853": {
+   "rv": "approved"
+  },
+  "VOC0854": {
+   "rv": "approved"
+  },
+  "VOC0855": {
+   "rv": "approved"
+  },
+  "VOC0856": {
+   "rv": "approved"
+  },
+  "VOC0857": {
+   "rv": "approved"
+  },
+  "VOC0858": {
+   "rv": "approved"
+  },
+  "VOC0859": {
+   "rv": "approved"
+  },
+  "VOC0860": {
+   "rv": "approved"
+  },
+  "VOC0861": {
+   "rv": "approved"
+  },
+  "VOC0862": {
+   "rv": "approved"
+  },
+  "VOC0863": {
+   "rv": "approved"
+  },
+  "VOC0864": {
+   "rv": "approved"
+  },
+  "VOC0865": {
+   "rv": "approved"
+  },
+  "VOC0866": {
+   "rv": "approved"
+  },
+  "VOC0867": {
+   "rv": "approved"
+  },
+  "VOC0868": {
+   "rv": "approved"
+  },
+  "VOC0869": {
+   "rv": "approved"
+  },
+  "VOC0870": {
+   "rv": "approved"
+  },
+  "VOC0871": {
+   "rv": "approved"
+  },
+  "VOC0872": {
+   "rv": "approved"
+  },
+  "VOC0873": {
+   "rv": "approved"
+  },
+  "VOC0874": {
+   "rv": "approved"
+  },
+  "VOC0875": {
+   "rv": "approved"
+  },
+  "VOC0876": {
+   "rv": "approved"
+  },
+  "VOC0877": {
+   "rv": "approved"
+  },
+  "VOC0878": {
+   "rv": "approved"
+  },
+  "VOC0879": {
+   "rv": "approved"
+  },
+  "VOC0880": {
+   "rv": "approved"
+  },
+  "VOC0881": {
+   "rv": "approved"
+  },
+  "VOC0882": {
+   "rv": "approved"
+  },
+  "VOC0883": {
+   "rv": "approved"
+  },
+  "VOC0884": {
+   "rv": "approved"
+  },
+  "VOC0885": {
+   "rv": "approved"
+  },
+  "VOC0886": {
+   "rv": "approved"
+  },
+  "VOC0887": {
+   "rv": "approved"
+  },
+  "VOC0888": {
+   "rv": "approved"
+  },
+  "VOC0889": {
+   "rv": "approved"
+  },
+  "VOC0890": {
+   "rv": "approved"
+  },
+  "VOC0891": {
+   "rv": "approved"
+  },
+  "VOC0892": {
+   "rv": "approved"
+  },
+  "VOC0893": {
+   "rv": "approved"
+  },
+  "VOC0894": {
+   "rv": "approved"
+  },
+  "VOC0895": {
+   "rv": "approved"
+  },
+  "VOC0896": {
+   "rv": "approved"
+  },
+  "VOC0897": {
+   "rv": "approved"
+  },
+  "VOC0898": {
+   "rv": "approved"
+  },
+  "VOC0899": {
+   "rv": "approved"
+  },
+  "VOC0900": {
+   "rv": "approved"
+  },
+  "VOC0901": {
+   "rv": "approved"
+  },
+  "VOC0902": {
+   "rv": "approved"
+  },
+  "VOC0903": {
+   "rv": "approved"
+  },
+  "VOC0904": {
+   "rv": "approved"
+  },
+  "VOC0905": {
+   "rv": "approved"
+  },
+  "VOC0906": {
+   "rv": "approved"
+  },
+  "VOC0907": {
+   "rv": "approved"
+  },
+  "VOC0908": {
+   "rv": "approved"
+  },
+  "VOC0909": {
+   "rv": "approved"
+  },
+  "VOC0910": {
+   "rv": "approved"
+  },
+  "VOC0911": {
+   "rv": "approved"
+  },
+  "VOC0912": {
+   "rv": "approved"
+  },
+  "VOC0913": {
+   "rv": "approved"
+  },
+  "VOC0914": {
+   "rv": "approved"
+  },
+  "VOC0915": {
+   "rv": "approved"
+  },
+  "VOC0916": {
+   "rv": "approved"
+  },
+  "VOC0917": {
+   "rv": "approved"
+  },
+  "VOC0918": {
+   "rv": "approved"
+  },
+  "VOC0919": {
+   "rv": "approved"
+  },
+  "VOC0920": {
+   "rv": "approved"
+  },
+  "VOC0921": {
+   "rv": "approved"
+  },
+  "VOC0922": {
+   "rv": "approved"
+  },
+  "VOC0923": {
+   "rv": "approved"
+  },
+  "VOC0924": {
+   "rv": "approved"
+  },
+  "VOC0925": {
+   "rv": "approved"
+  },
+  "VOC0926": {
+   "rv": "approved"
+  },
+  "VOC0927": {
+   "rv": "approved"
+  },
+  "VOC0928": {
+   "rv": "approved"
+  },
+  "VOC0929": {
+   "rv": "approved"
+  },
+  "VOC0930": {
+   "rv": "approved"
+  },
+  "VOC0931": {
+   "rv": "approved"
+  },
+  "VOC0932": {
+   "rv": "approved"
+  },
+  "VOC0933": {
+   "rv": "approved"
+  },
+  "VOC0934": {
+   "rv": "approved"
+  },
+  "VOC0935": {
+   "rv": "approved"
+  },
+  "VOC0936": {
+   "rv": "approved"
+  },
+  "VOC0937": {
+   "rv": "approved"
+  },
+  "VOC0938": {
+   "rv": "approved"
+  },
+  "VOC0939": {
+   "rv": "approved"
+  },
+  "VOC0940": {
+   "rv": "approved"
+  },
+  "VOC0941": {
+   "rv": "approved"
+  },
+  "VOC0942": {
+   "rv": "approved"
+  },
+  "VOC0943": {
+   "rv": "approved"
+  },
+  "VOC0944": {
+   "rv": "approved"
+  },
+  "VOC0945": {
+   "rv": "approved"
+  },
+  "VOC0946": {
+   "rv": "approved"
+  },
+  "VOC0947": {
+   "rv": "approved"
+  },
+  "VOC0948": {
+   "rv": "approved"
+  },
+  "VOC0949": {
+   "rv": "approved"
+  },
+  "VOC0950": {
+   "rv": "approved"
+  },
+  "VOC0951": {
+   "rv": "approved"
+  },
+  "VOC0952": {
+   "rv": "approved"
+  },
+  "VOC0953": {
+   "rv": "approved"
+  },
+  "VOC0954": {
+   "rv": "approved"
+  },
+  "VOC0955": {
+   "rv": "approved"
+  },
+  "VOC0956": {
+   "rv": "approved"
+  },
+  "VOC0957": {
+   "rv": "approved"
+  },
+  "VOC0958": {
+   "rv": "approved"
+  },
+  "VOC0959": {
+   "rv": "approved"
+  },
+  "VOC0960": {
+   "rv": "approved"
+  },
+  "VOC0961": {
+   "rv": "approved"
+  },
+  "VOC0962": {
+   "rv": "approved"
+  },
+  "VOC0963": {
+   "rv": "approved"
+  },
+  "VOC0964": {
+   "rv": "approved"
+  },
+  "VOC0965": {
+   "rv": "approved"
+  },
+  "VOC0966": {
+   "rv": "approved"
+  },
+  "VOC0967": {
+   "rv": "approved"
+  },
+  "VOC0968": {
+   "rv": "approved"
+  },
+  "VOC0969": {
+   "rv": "approved"
+  },
+  "VOC0970": {
+   "rv": "approved"
+  },
+  "VOC0971": {
+   "rv": "approved"
+  },
+  "VOC0972": {
+   "rv": "approved"
+  },
+  "VOC0973": {
+   "rv": "approved"
+  },
+  "VOC0974": {
+   "rv": "approved"
+  },
+  "VOC0975": {
+   "rv": "approved"
+  },
+  "VOC0976": {
+   "rv": "approved"
+  },
+  "VOC0977": {
+   "rv": "approved"
+  },
+  "VOC0978": {
+   "rv": "approved"
+  },
+  "VOC0979": {
+   "rv": "approved"
+  },
+  "VOC0980": {
+   "rv": "approved"
+  },
+  "VOC0981": {
+   "rv": "approved"
+  },
+  "VOC0982": {
+   "rv": "approved"
+  },
+  "VOC0983": {
+   "rv": "approved"
+  },
+  "VOC0984": {
+   "rv": "approved"
+  },
+  "VOC0985": {
+   "rv": "approved"
+  },
+  "VOC0986": {
+   "rv": "approved"
+  },
+  "VOC0987": {
+   "rv": "approved"
+  },
+  "VOC0988": {
+   "rv": "approved"
+  },
+  "VOC0989": {
+   "rv": "approved"
+  },
+  "VOC0990": {
+   "rv": "approved"
+  },
+  "VOC0991": {
+   "rv": "approved"
+  },
+  "VOC0992": {
+   "rv": "approved"
+  },
+  "VOC0993": {
+   "rv": "approved"
+  },
+  "VOC0994": {
+   "rv": "approved"
+  },
+  "VOC0995": {
+   "rv": "approved"
+  },
+  "VOC0996": {
+   "rv": "approved"
+  },
+  "VOC0997": {
+   "rv": "approved"
+  },
+  "VOC0998": {
+   "rv": "approved"
+  },
+  "VOC0999": {
+   "rv": "approved"
+  },
+  "VOC1000": {
+   "rv": "approved"
+  }
+ }
+}

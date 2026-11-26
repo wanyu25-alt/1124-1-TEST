@@ -1,0 +1,9 @@
+
+# 真實學生資料與備份不得進入儲存庫
+backup/
+*.enc
+詞彙特快車_完整備份*
+學習報表_*
+個案資料_*.json
+*.bundle.local
+test-logs/

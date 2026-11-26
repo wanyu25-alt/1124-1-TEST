@@ -1,6 +1,7 @@
 // 第05階段：內建詞彙庫整合（jsdom；讀取 vocab/ 實際檔案）
 const fs=require('fs'),path=require('path');const {mk,R,T,sleep}=require('./t30h.js');
-const VD=path.join(process.env.VDIR||'/home/claude/repo','vocab');
+process.env.VDIR=process.env.VDIR||require('child_process').execSync('bash '+__dirname+'/../tools/make-legacy-vocab.sh').toString().trim();
+const VD=path.join(process.env.VDIR,'vocab');
 const boot=async(o={})=>{const w=mk(Object.assign({fresh:true,vocab:true},o));const t0=Date.now();while(Date.now()-t0<8000&&!(w.eval('typeof LIB!=="undefined"&&typeof UI!=="undefined"&&S.set.ttsMig===3&&!!LIB.base')))await sleep(50);const E=c=>w.eval(c);w.alert=m=>{w.__al=m};w.confirm=()=>true;return{w,E}};
 const J=(E,c)=>JSON.parse(E('JSON.stringify('+c+')'));
 (async()=>{

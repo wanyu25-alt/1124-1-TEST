@@ -1,8 +1,18 @@
 {
-  "version": "1.0",
-  "words": 1000,
-  "withImages": 581,
-  "images": 592,
-  "categories": 16,
-  "pronunciationChanges": 9
+ "version": "V077_merged",
+ "words": 1000,
+ "withImages": 950,
+ "images": 961,
+ "categories": 16,
+ "pronunciationChanges": 9,
+ "pngPreviewCount": 0,
+ "missingImageWords": 50,
+ "sourceVersions": [
+  "V073",
+  "V074-V077"
+ ],
+ "imageSizes": {
+  "(512, 512)": 961
+ },
+ "levels": 20
 }

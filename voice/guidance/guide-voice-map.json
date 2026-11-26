@@ -1,0 +1,56 @@
+[
+ {
+  "id": "listen_carefully",
+  "text": "請仔細聽",
+  "orig_file": "152b9b29-____.m4a",
+  "orig_dur": 2.45,
+  "onset": 0.68,
+  "new_dur": 1.67,
+  "file": "voice/guidance/listen_carefully.m4a"
+ },
+ {
+  "id": "what_is_this",
+  "text": "這是什麼",
+  "orig_file": "4bcbffcb-____.m4a",
+  "orig_dur": 2.37,
+  "onset": 0.56,
+  "new_dur": 1.66,
+  "file": "voice/guidance/what_is_this.m4a"
+ },
+ {
+  "id": "your_turn",
+  "text": "換你說囉",
+  "orig_file": "4c24af8d-____.m4a",
+  "orig_dur": 2.45,
+  "onset": 0.69,
+  "new_dur": 1.7,
+  "file": "voice/guidance/your_turn.m4a"
+ },
+ {
+  "id": "repeat_after_me",
+  "text": "請跟我說一次",
+  "orig_file": "65e1a54b-______.m4a",
+  "orig_dur": 2.45,
+  "onset": 0.37,
+  "new_dur": 2.05,
+  "file": "voice/guidance/repeat_after_me.m4a"
+ },
+ {
+  "id": "speak_louder",
+  "text": "請大聲一點點喔",
+  "orig_file": "a614f271-_______.m4a",
+  "orig_dur": 3.14,
+  "onset": 0.54,
+  "new_dur": 2.43,
+  "file": "voice/guidance/speak_louder.m4a"
+ },
+ {
+  "id": "find_it",
+  "text": "請找找看",
+  "orig_file": "a97ebb55-____.m4a",
+  "orig_dur": 2.37,
+  "onset": 0.42,
+  "new_dur": 1.88,
+  "file": "voice/guidance/find_it.m4a"
+ }
+]

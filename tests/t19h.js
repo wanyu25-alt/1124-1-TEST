@@ -1,5 +1,5 @@
 const {JSDOM}=require('jsdom');const fs=require('fs');require('fake-indexeddb/auto');
-const html=fs.readFileSync((process.env.IDX||'/mnt/user-data/outputs/vocabulary-express/index.html'),'utf8').replace(/<script src[^>]*><\/script>/,'').replace("lm:'quiet'","lm:'integ'").replace("or:30,","or:0,").replace("hz:{u:'once',cost:true,n:1,free:false}","hz:{u:'none',cost:false,n:1,free:true}").replace("ap:true,","ap:false,").replace("oj:'A'","oj:'B'").replace("prepDone:false","prepDone:true");
+const html=fs.readFileSync((process.env.IDX||'/mnt/user-data/outputs/vocabulary-express/index.html'),'utf8').replace(/<script src[^>]*><\/script>/,'').replace('gv:true,','gv:false,')/* 專測既有收音／閒置行為；真人操作引導語音另由 t250／t251 測 */.replace("lm:'quiet'","lm:'integ'").replace("or:30,","or:0,").replace("hz:{u:'once',cost:true,n:1,free:false}","hz:{u:'none',cost:false,n:1,free:true}").replace("ap:true,","ap:false,").replace("oj:'A'","oj:'B'").replace("prepDone:false","prepDone:true");
 exports.sleep=ms=>new Promise(r=>setTimeout(r,ms));
 exports.res={P:0,F:0};
 exports.T=(n,c)=>{c?exports.res.P++:exports.res.F++;console.log(c?'PASS':'FAIL',n)};

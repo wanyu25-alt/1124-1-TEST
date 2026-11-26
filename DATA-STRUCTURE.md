@@ -171,3 +171,30 @@ S.lrn = { cur:'L001', list:[個案…], store:{ <個案ID>: 該個案的隔離�
 **個案 `ext.lib`**：`{mode:'fixed|rotate|random',rot{id:n},last{id:url},use{id:{檔名:次數}}}`；**`ext.libSel`**：該學生使用的內建詞彙 ID（缺省＝全部已啟用）。
 **匯出 `library.json`**：`{kind:'library',en,ov,cm,upd,merged}`；cards.json／categories.json 不含內建詞彙與內建分類（匯入時由 library.json 還原）。
 **遷移**：沒有需要遷移的舊資料；沒有 `S.lib` 的舊備份可直接匯入；取代式匯入若檔案沒有 library.json，會清除本機的詞彙庫設定（符合「取代」）。
+
+## v13.0 新增（皆為可選欄位，資料版本仍為 3）
+**`vocab/default-library.json`（網站檔案，非資料庫）**：`{schemaVersion:1,kind:'library-default',ver,exportedAt,hash,counts,note,en{id:1},ov{id:{zy,zyRev,rv,primary,hide[],cats[]}},mode}`。`ov` 只含可攜欄位：**不含** `audio`、`add`（老師上傳的 Base64 圖）、指向老師上傳圖的 `primary`。`hash` 由程式依內容重新計算，不信任檔內數值。讀入時逐欄清洗：ID 必須存在於詞彙庫、圖片路徑必須是 `images/檔名`、`rv／zyRev／mode` 只接受固定值。
+**`S.lib.def`**：`{hash,en[],ovh{id:雜湊},ts,skip?}`＝本機已採用的預設清單基準。比對規則：預設清單新增而基準沒有、本機也未啟用的詞彙→「新增啟用」；基準沒有或內容改變、且本機沒有該詞彙設定→「新設定」；本機已有該詞彙設定→「保留本機」。
+**狀態（記憶體）**：`LIB.defInfo.state`＝`none／applied／baseline／same／skipped／pending／err`。
+
+## v14.0 新增（皆為可選欄位，資料版本仍為 3）
+- **`S.par`**：`{tpl:[{id,title,text,ab,cat}],auth:null|[學員ID]}`。`auth` 為 `null`（預設）＝家長只能看目前選取的個案；陣列＝只能看／切換陣列中的個案。`tpl` 為教師預先建立的生活情境模板（`ab`＝詞彙履歷能力代碼，`cat`＝分類 ID，皆可空白＝通用）。
+- **個案 `ext.par`**：`{runs:[{ts,kind,mode,n,ids[]}]}`＝家長從家長專區啟動的複習任務紀錄（最近 50 筆）。
+- **生活觀察 `S.ob[]`**：新增可選欄位 `how`（`spont／asked／partial／imitate`）、`by`（`parent`）；其餘沿用（`initiated`、`prompted`、`mode`、`setting`、`settingNote`、`partner`、`purpose`、`src:'real_life'`）。對應：spont→主動＋無提示；asked→非主動＋無提示；partial→部分提示；imitate→完整示範。
+- **作答紀錄**：家長確認口語使用既有 `rec.confirm`（`by:'家長'`），`rec.asr` 不變。
+- **稽核**：家長操作寫入既有 `S.acl.audit`（動作名稱以「家長：」開頭）。
+- **匯出 `parent.json`**：`{schemaVersion:1,tpl[],auth}`。
+
+## v15.0 新增（皆為可選欄位，資料版本仍為 3）
+- 作答紀錄 `rec.ext.catQ`：詞彙分類題的分類名稱（`rec.game='pick'`、`rec.sub='cat'`）。
+- 新圖片說詞：`rec.game='speak'`、`rec.sub='newimg'`，`rec.qImgId`＝類化圖片編號，`rec.newImage`＝是否第一次看到這張圖（沿用既有欄位）。
+- 沒有新增儲存區；題型與學習目標對照表在程式內（`P15.OBJ`），不存進資料。
+
+## v17.0 新增（皆為可選欄位，資料版本仍為 3）
+- **`S.cloud`**：`{schema:1,enabled:false,devId:'dev_…'}`。`devId` 是這台裝置的識別，**不匯出**；`enabled` 永遠是 false（預留）。
+- **個案 `ext.cloud.sid`**：`stu_` + 16 位十六進位，永久學生編號，隨 `learners.json` 匯出。
+- **`S.lastFullBackupAt`**：上次完整備份時間（毫秒）。
+- **備份 ZIP 新檔案**：`teaching.json`（`{schemaVersion,cb,mx,se,sc}`）、`observations.json`（`{ob}`，僅完整備份）、`assessment.json`（`{as}`，僅完整備份）。`manifest.json` 新增 `dataVersion`、`build`、`counts.{learners,records,observations,combos,sentences,scenes}`，`files[*].sha256`（僅 `.json`）。
+- **本機另存**：`kv['backup-before-import']`（匯入前整份資料）與 `kv['backup-before-import-meta']`（時間、筆數）。
+- **不匯出**：`S.acl`（密碼雜湊與存取紀錄）、`S.cloud`。
+- 預留（尚未建立資料）：使用者 `usr_`、教師 `tch_`、家長 `par_`；角色 teacher／parent／admin；授權關係（使用者×學生×範圍×期間）；家長邀請碼；帳號存取紀錄；同步紀錄。詳見 `CLOUD-READINESS.md`。

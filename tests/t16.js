@@ -9,7 +9,7 @@ const mk=()=>new JSDOM(html,{url:'http://localhost/?noseed',runScripts:'dangerou
   S.cards=[${[["a","蘋果",["fr","x1"]],["b","香蕉",["fr","x2"]],["c","火車",["tr","x3"]],["d","高鐵",["tr","x4"]],["e","計程車",["tr","x5"]],["f","公車",["tr","x6"]]].map(x=>`(${card.toString()})('${x[0]}','${x[1]}',${JSON.stringify(x[2])})`).join(',')}];
   S.logs=[{t:1,cid:'a',word:'蘋果',cat:'ind',tries:0,mode:'key'}];save();tab(2);sub='cards';tch()`);
  const nav=[...w.document.querySelectorAll('#tch .sub button')].map(b=>b.textContent);
- T('nav: 詞彙管理 left of 分類管理; no 全部圖卡',nav[0].includes('詞彙管理')&&nav[1].includes('分類管理')&&!nav.join().includes('全部圖卡')&&nav.length===16&&nav.includes('📖 詞彙庫'));
+ T('nav: 詞彙管理 left of 分類管理; no 全部圖卡',nav[0].includes('詞彙管理')&&nav[1].includes('分類管理')&&!nav.join().includes('全部圖卡')&&nav.length===18&&nav.includes('📖 詞彙庫'));
  T('詞彙管理 keeps edit form with 分類 checkboxes + quick new category',w.document.querySelector('#sp').innerHTML.includes('4. 分類')&&!!w.document.querySelector('#fnc'));
  E('sub="cats";tch()');const sp=()=>w.document.querySelector('#sp');
  T('category list shows names with counts, edit/delete buttons',sp().textContent.includes('水果（2張）')&&sp().textContent.includes('交通工具（4張）')&&sp().textContent.includes('編輯')&&sp().textContent.includes('刪除'));

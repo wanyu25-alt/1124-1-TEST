@@ -382,7 +382,7 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
 const DEF=()=>({v:2,rw:{stars:0,badges:[],veh:[],journeys:[]},cards:[],cats:[],banks:[],bankMap:{},mst:{},
- set:{n:5,sound:true,vol:.7,anim:true,hint:'full',showText:false,theme:'bike',mode:'key',src:'all',input:'phys',stEvery:3,micAnim:true,micSens:3,ttsRate:.75,recRate:1.25,aiGain:1.5,showRw:true,mix:false,order:'rand',music:true,mv:.3,musSrc:'builtin',musName:'',hl:{w:1,c:1,p:1,f:1,a:1},vs:.7,vv:.9,vf:true,fx:'full',stageMode:'daily',stageN:3,lm:'quiet',ot:{A:true,B:true,C:true,D:true},or:30,orQ:'',oj:'A',ow:6,omx:2,opb:true,ap:true,apd:1000,gap:300,apw:true,aps:true,apy:true,ape:true,hz:{u:'once',cost:true,n:1,free:false},sa:{gain:true,spend:true,size:3},cs:true,rp:'teach',sk:true},logs:[],rounds:{started:0,completed:0},quits:[],dv:0,lrn:null,recs:[],rv:{},cx:{},cb:[],mx:[],mig:[]});
+ set:{n:5,sound:true,vol:.7,anim:true,hint:'full',showText:false,theme:'bike',mode:'key',src:'all',input:'phys',stEvery:3,micAnim:true,micSens:3,ttsRate:.75,recRate:1.25,aiGain:1.5,showRw:true,mix:false,order:'rand',music:true,mv:.3,musSrc:'builtin',musName:'',hl:{w:1,c:1,p:1,f:1,a:1},vs:.7,vv:.9,vf:true,fx:'full',stageMode:'daily',stageN:3,lm:'quiet',ot:{A:true,B:true,C:true,D:true},or:30,orQ:'',oj:'A',ow:6,omx:2,opb:true,ap:true,apd:1000,gap:300,apw:true,aps:true,apy:true,ape:true,gv:true,hz:{u:'once',cost:true,n:1,free:false},sa:{gain:true,spend:true,size:3},cs:true,rp:'teach',sk:true},logs:[],rounds:{started:0,completed:0},quits:[],dv:0,lrn:null,recs:[],rv:{},cx:{},cb:[],mx:[],mig:[]});
 let S=DEF();
 /* ===== IndexedDB 儲存（圖片、錄音、設定、紀錄都存在瀏覽器內） ===== */
 const idb=()=>new Promise((ok,no)=>{const r=indexedDB.open('trafficHero',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
@@ -700,7 +700,7 @@ function home(){
  const so=(v,t)=>`<option value="${v}" ${S.set.src===v?'selected':''}>${t}</option>`;
  $('#mid').innerHTML=`<div class="box" style="width:min(1000px,98%)"><h2 style="margin:0">🚂 詞彙特快車</h2><p style="margin:2px 0 2px">注音 × 詞彙 × 鐵道探索</p><p style="margin:0 0 6px;font-weight:700;color:#2f6fe4">選一種交通工具，直接出發練習</p><p style="margin:0 0 6px">🚂 個案：<b>${esc(LRN.cur().name)}</b> <button class="btn go" onclick="MAP.show()">🗺 學習地圖（六個學習站）</button></p>${S.cards.length?(PK.state==='warn'?'<p style="background:#fff3cd;border:2px solid #e0a800;border-radius:12px;padding:6px;font-size:15px">⚠ 目前無法連到網站教材，先使用這台電腦已儲存的教材。 <button class="btn alt" onclick="packRetry()">↻ 重新載入</button></p>':''):PK.state==='loading'||PK.state==='idle'?'<p style="background:#e8f1ff;border:2px solid #7fa8e8;border-radius:12px;padding:8px"><b>⏳ 教材載入中… '+esc(PK.prog)+'</b></p>':'<p style="background:#fff3cd;border:2px solid #e0a800;border-radius:12px;padding:8px"><b>沒有載入到教材。</b>'+esc(PK.msg||'')+' <button class="btn go" onclick="packRetry()">↻ 重新載入教材</button> 　或到「教師設定 → 教材與資料管理」匯入教材 ZIP。</p>'}
  <div class="vgrid">${Object.keys(TH).map((k,i)=>`<button class="vc ${thNow()===k?'on':''}" onclick="goV('${k}')"><span class="st">交通工具 ${i+1}</span><span class="ill">${vsvg(k,'26px')}</span><b>${TH[k].e} ${TH[k].n}</b><span style="font-weight:700">${TH[k].m}</span><span class="st">${TH[k].d}</span><span class="go2">▶ 出發</span></button>`).join('')}</div>
- <p>選擇分類 <select onchange="S.set.src=this.value;save();home()">${so('all','全部圖卡（'+S.cards.length+'）')}${S.cats.map(c=>so('c:'+c.id,esc(c.name)+'（'+S.cards.filter(x=>x.cats.includes(c.id)).length+'張）')).join('')}${so('mk','錯題集（'+mistakeCards().length+'）')}${so('wk','注音加強練習（'+weakCards().length+'）')}</select>
+ <p>選擇分類 <select onchange="S.set.src=this.value;save();home()">${so('all','全部圖卡（'+S.cards.length+'）')}${CATZ(c=>so('c:'+c.id,esc(c.name)+'（'+S.cards.filter(x=>x.cats.includes(c.id)).length+'張）'))}${so('mk','錯題集（'+mistakeCards().length+'）')}${so('wk','注音加強練習（'+weakCards().length+'）')}</select>
  順序 <select onchange="S.set.order=this.value;save()"><option value="rand" ${S.set.order!=='seq'?'selected':''}>隨機</option><option value="seq" ${S.set.order==='seq'?'selected':''}>依順序</option></select></p>
  <p>學習模式 <select onchange="S.set.lm=this.value;V2.noMic=false;save();home()">${Object.entries(V2.lmN).map(([k,v])=>`<option value="${k}" ${V2.lm()===k?'selected':''}>${v}</option>`).join('')}</select> <small>${{quiet:'聽＋打字，不使用麥克風',oral:'聽＋跟著說（會用到麥克風）',integ:'聽＋打字，部分題目加口說'}[V2.lm()]}</small></p>
  <p>輸入方式 <select onchange="S.set.input=this.value;save()"><option value="phys" ${S.set.input!=='touch'?'selected':''}>外接實體鍵盤</option><option value="touch" ${UI.touchKb()?'selected':''}>觸控注音鍵盤</option></select> <button class="btn alt" onclick="ktOpen()">⌨ 測試鍵盤</button><br><small>系統內建注音輸入法：不提供（瀏覽器無法可靠取得逐注音資料）</small></p>
@@ -837,9 +837,9 @@ function rwPage(){const R=S.rw;$('#tch').innerHTML=`<div class="panel"><h2>🏆 
  <div class="panel"><h3>車站徽章</h3>${R.badges.slice().reverse().slice(0,40).map(b=>`<span style="display:inline-block;margin:3px;padding:3px 10px;border:2px solid #e0a800;border-radius:12px;background:#fff7d6">🎖 ${esc(b.name)}</span>`).join('')||'<p>還沒有徽章，抵達車站就能獲得。</p>'}</div>
  <div class="panel"><h3>最近完成的旅程</h3>${R.journeys.slice().reverse().slice(0,10).map(j=>`<p>🏁 ${new Date(j.t).toLocaleDateString()}　${esc(j.deck)}　${j.n} 題・${j.stations} 站</p>`).join('')||'<p>還沒有完成的旅程。</p>'}</div>`}
 function tch(){
- const T={cards:'🖼 詞彙管理',cats:'🏷 分類管理',set:'⚙ 設定',log:'📊 紀錄',io:'📦 教材與資料管理',lm:'🎓 學習模式與口語',za:'🔤 注音音檔',lr:'👤 個案與學習路徑',cb:'🚃 詞彙組合',se:'💬 語句與情境',ob:'🌱 生活觀察',as:'📈 語言能力評量',dash:'📊 儀表板與報表',acl:'🔒 存取與隱私',rc:'🎯 初始評量與推薦',lib:'📖 詞彙庫'};
+ const T={cards:'🖼 詞彙管理',cats:'🏷 分類管理',set:'⚙ 設定',log:'📊 紀錄',io:'📦 教材與資料管理',lm:'🎓 學習模式與口語',za:'🔤 注音音檔',lr:'👤 個案與學習路徑',cb:'🚃 詞彙組合',se:'💬 語句與情境',ob:'🌱 生活觀察',as:'📈 語言能力評量',dash:'📊 儀表板與報表',acl:'🔒 存取與隱私',rc:'🎯 初始評量與推薦',lib:'📖 詞彙庫',par:'👪 家長專區設定',sec:'🛡 資料安全與雲端預留'};
  $('#tch').innerHTML=`<div class="sub">${Object.entries(T).map(([k,v])=>`<button class="${sub===k?'on':''}" onclick="sub='${k}';tch()">${v}</button>`).join('')}</div><div id="sp"></div>`;
- ({cards:tCards,cats:tCats,set:tSet,log:tLog,io:tIO,lm:tLM,za:tZA,lr:tLR,cb:tCB,se:tSE,ob:tOB,as:tAS,dash:tDASH,acl:tACL,rc:tRC,lib:()=>{$('#sp').innerHTML=LIB.view()}})[sub]();
+ ({cards:tCards,cats:tCats,set:tSet,log:tLog,io:tIO,lm:tLM,za:tZA,lr:tLR,cb:tCB,se:tSE,ob:tOB,as:tAS,dash:tDASH,acl:tACL,rc:tRC,lib:()=>{$('#sp').innerHTML=LIB.view()},par:tPAR,sec:()=>tSEC()})[sub]();
 }
 /* ===== 共用圖卡／分類／詞彙庫（以ID關聯，圖卡只存一份） ===== */
 let fl={q:'',cat:''},sel=new Set(),catOpen=null,bkOpen=null;
@@ -985,6 +985,7 @@ function tSet(){const s=S.set,ck=v=>v?'checked':'';
  <label>提示階梯（勾選＝開放；聽音打字的「聽一聽」固定開放）</label>${[['w','完整詞語語音'],['c','逐字語音'],['p','部分注音'],['f','完整注音'],['a','成人協助']].map(([k,t])=>`<label style="display:inline-block;margin-right:10px"><input type="checkbox" ${s.hl[k]?'checked':''} onchange="S.set.hl['${k}']=this.checked?1:0;save()"> ${t}</label>`).join('')}
 <label><input type="checkbox" ${ck(s.sound)} onchange="S.set.sound=this.checked;save()"> 開啟音效（交通工具音效、提示音）</label>
  <label><input type="checkbox" ${s.vf!==false?'checked':''} onchange="S.set.vf=this.checked;save();if(!this.checked)AM.stop()"> 開啟老師語音回饋（答對囉、再一次喔、加油加油…）</label>
+ <label><input type="checkbox" ${s.gv!==false?'checked':''} onchange="S.set.gv=this.checked;save();if(!this.checked)AM.stop()"> 開啟真人操作引導語音（請找找看、請跟我說一次、請仔細聽、請大聲一點點喔、換你說囉、這是什麼）</label>
  <label>音效音量 <input type="range" min="0" max="1" step=".05" value="${SV()}" oninput="S.set.vs=+this.value;save()"></label>
  <label>老師語音音量 <input type="range" min="0" max="1" step=".05" value="${VV()}" oninput="S.set.vv=+this.value;save();if(AM.a)AM.a.volume=+this.value"></label>
  <label>背景音樂音量 <input type="range" min="0" max=".8" step=".05" value="${s.mv}" oninput="S.set.mv=+this.value;save();musApply()"></label>
@@ -1086,21 +1087,24 @@ async function ioExport(kind){const full=kind==='full',files=[],warn=[],j=(n,o)=
  j('categories.json',{schemaVersion:1,categories:S.cats.filter(c=>!c.lib).map((c,i)=>({id:c.id,name:c.name,sort:i,cardOrder:catCards(c.id).map(x=>x.id)}))});
  {const idx={};let zn=0;for(const[k,v]of Object.entries(ZA.rec.a)){const x=AUX[v.m]||'m4a',fn='voice-custom/v'+String(++zn).padStart(3,'0')+'.'+x;files.push({name:fn,data:new Uint8Array(v.d)});idx[k]={file:fn,mime:v.m,name:v.n||''}}if(zn)j('voice-custom.json',{schemaVersion:1,items:idx,confirmed:ZA.rec.c})}
  if(S.lib&&Object.keys(S.lib.en||{}).length+Object.keys(S.lib.ov||{}).length)j('library.json',LIB.expo());
+ if(S.par&&((S.par.tpl||[]).length||Array.isArray(S.par.auth)))j('parent.json',{schemaVersion:1,tpl:S.par.tpl||[],auth:Array.isArray(S.par.auth)?S.par.auth:null,note:'家長專區：生活練習情境模板與授權個案'});
+ {const T={cb:S.cb||[],mx:S.mx||[],se:S.se||[],sc:S.sc||[]};if(Object.values(T).some(a=>a.length))j('teaching.json',{schemaVersion:1,...T,note:'詞彙組合、組合矩陣、語句、生活情境（教材）'})}
  if(S.cx&&Object.keys(S.cx).length)j('word-ext.json',{schemaVersion:1,cx:S.cx,note:'進階教材欄位（詞性、語意分類、情境、相關詞、替代說法、類化圖片、語音提示素材）'});
  j('settings.json',{schemaVersion:1,portable:portableSet(S.set),note:'裝置專屬項目（麥克風／語音辨識授權、背景音樂檔、實際語音引擎）不會匯出，需在新裝置重新設定'});
- if(full){j('students.json',{schemaVersion:1,students:[],note:'本程式為單一學生使用，無學生帳號；紀錄以圖卡 ID 連結'});
+ if(full){j('observations.json',{schemaVersion:1,ob:S.ob||[],note:'家長與教師的生活觀察紀錄（與遊戲作答紀錄分開保存）'});j('assessment.json',{schemaVersion:1,as:S.as||{},note:'教師對作答紀錄的修正與錯誤類型確認'});
+  j('students.json',{schemaVersion:1,students:[],note:'本程式為單一學生使用，無學生帳號；紀錄以圖卡 ID 連結'});
   j('records.json',{schemaVersion:1,logs:S.logs,quits:S.quits,rounds:S.rounds});
   j('progress.json',{schemaVersion:1,rw:S.rw,mst:S.mst,mflag:MF()});
   LRN.sync();{const data={};S.lrn.list.forEach(p=>{data[p.id]=p.id===S.lrn.cur?LRN.slice():(S.lrn.store[p.id]||perDef())});j('learners.json',{schemaVersion:1,dataVersion:DV,cur:S.lrn.cur,list:S.lrn.list,data,mig:S.mig,note:'各個案的星星、紀錄與作答紀錄彼此獨立'})}}
- const man={format:'詞彙特快車',schemaVersion:1,kind:full?'full':'materials',exportedAt:new Date().toISOString(),appVersion:'詞彙特快車 v3',
-  counts:{cards:cards.length,libraryWords:S.cards.filter(c=>c.lib).length,categories:S.cats.filter(c=>!c.lib).length,images:nImg,audio:nAud,logs:full?S.logs.length:0,settings:Object.keys(portableSet(S.set)).length},
-  files:Object.fromEntries(files.map(f=>[f.name,{size:f.data.length,crc32:crc32(f.data)}]))};
+ const man={format:'詞彙特快車',schemaVersion:1,dataVersion:DV,kind:full?'full':'materials',exportedAt:new Date().toISOString(),appVersion:'詞彙特快車 v3',build:'v19.0',
+  counts:{cards:cards.length,libraryWords:S.cards.filter(c=>c.lib).length,categories:S.cats.filter(c=>!c.lib).length,images:nImg,audio:nAud,logs:full?S.logs.length:0,settings:Object.keys(portableSet(S.set)).length,learners:full?S.lrn.list.length:0,records:full?S.lrn.list.reduce((n,p)=>n+(p.id===S.lrn.cur?S.recs.length:((S.lrn.store[p.id]||{}).recs||[]).length),0):0,observations:full?(S.ob||[]).length:0,combos:(S.cb||[]).length,sentences:(S.se||[]).length,scenes:(S.sc||[]).length},
+  files:Object.fromEntries(files.map(f=>[f.name,{size:f.data.length,crc32:crc32(f.data),...(/\.json$/.test(f.name)?{sha256:SHA.hex(SHA.hash(f.data))}:{})}]))};
  files.unshift({name:'manifest.json',data:U8(JSON.stringify(man,null,1))});
  if(warn.length&&!confirm('有 '+warn.length+' 項資料無法完整封裝：\n'+warn.slice(0,5).join('\n')+'\n\n仍要繼續匯出嗎？（這些圖片或錄音不會出現在備份中）'))return;
  let blob=zipMake(files),name=full?'詞彙特快車_完整備份_'+ymd()+'.zip':'詞彙特快車_完整教材_'+ymd()+'.zip';
  const pw=full&&$('#iopw')?$('#iopw').value:'';
  if(pw){if(!crypto||!crypto.subtle)return alert('這個瀏覽器不支援加密');blob=new Blob([await encBytes(new Uint8Array(await blob.arrayBuffer()),pw)]);name+='.enc'}
- IOP.last={blob,name};const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),120000);if(!full){S.lastExportAt=Date.now();save()}
+ IOP.last={blob,name};if(full){S.lastFullBackupAt=Date.now();save()}const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),120000);if(!full){S.lastExportAt=Date.now();save()}
  ioMsg('已匯出：'+name+'（'+cards.length+' 張圖卡、'+nImg+' 張圖片、'+nAud+' 個錄音'+(full?'、'+S.logs.length+' 筆學習紀錄':'')+'）。'+(warn.length?'警告：'+warn.length+' 項未能封裝。':'')+(full?' 完整備份含學習紀錄，請妥善保管。':' 這份檔案不含學生學習紀錄。')+' 檔案在瀏覽器的「下載項目」；iPad 可到「檔案」App → 下載項目，或按下方「用分享選單儲存」。');if(typeof tIO==='function'&&$('#iof1'))tIO()}
 async function ioShare(){const l=IOP.last;if(!l)return ioMsg('請先匯出');try{const f=new File([l.blob],l.name,{type:'application/zip'});if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],title:l.name});else ioMsg('這個瀏覽器不支援分享選單，請使用瀏覽器下載的檔案')}catch(e){if(e&&e.name!=='AbortError')ioMsg('無法開啟分享選單：'+(e.message||e))}}
 const ioV=x=>{const e=$('#iopv');if(e)e.innerHTML=x};
@@ -1114,7 +1118,8 @@ function jparse(m,n,req){const b=m.get(n);if(!b){if(req)throw new Error('缺少�
 async function pkgFromZip(buf,prog){const m=await zipRead(buf,prog),man=jparse(m,'manifest.json',1);
  if(man.format!=='詞彙特快車')throw new Error('這不是「詞彙特快車」的檔案');
  if(!(man.schemaVersion>=1))throw new Error('無法辨識檔案版本');if(man.schemaVersion>1)throw new Error('這個檔案來自較新版本（schemaVersion '+man.schemaVersion+'），請先更新本程式');
- const bad=[];for(const [p,i] of Object.entries(man.files||{})){const d=m.get(p);if(!d||d.length!==i.size||crc32(d)!==i.crc32)bad.push(p)}
+ if(man.dataVersion>DV)throw new Error('這個備份的資料版本（'+man.dataVersion+'）比目前程式（'+DV+'）新，請先更新程式再還原，以免資料被錯誤轉換');
+ const bad=[];for(const [p,i] of Object.entries(man.files||{})){const d=m.get(p);if(!d||d.length!==i.size||crc32(d)!==i.crc32||(i.sha256&&SHA.hex(SHA.hash(d))!==i.sha256))bad.push(p)}
  const P={kind:man.kind==='full'?'full':'materials',meta:{exportedAt:man.exportedAt,schema:man.schemaVersion,app:man.appVersion,counts:man.counts||{}},warn:[],fail:0};
  const cj=jparse(m,'cards.json',1);if(!Array.isArray(cj.cards))throw new Error('cards.json 結構不正確');
  P.cards=[];let hasImg=false,hasAud=false;
@@ -1127,11 +1132,14 @@ async function pkgFromZip(buf,prog){const m=await zipRead(buf,prog),man=jparse(m
  const bk=jparse(m,'banks.json');P.banks=bk&&Array.isArray(bk.banks||bk)?(bk.banks||bk).filter(b=>b&&sstr(b.id,60)&&sstr(b.name,60)&&Array.isArray(b.ids)).map(b=>({id:b.id,name:b.name,ids:b.ids.filter(x=>sstr(x,60))})):[];
  const st=jparse(m,'settings.json');P.set=st&&st.portable?portableSet(st.portable):{};
  P.za={a:{},c:{}};{const vc=jparse(m,'voice-custom.json');if(vc&&vc.items&&typeof vc.items==='object'){for(const[k,i]of Object.entries(vc.items)){if(!/^[SYWPH]:/.test(k)||!i||!/^voice-custom\/[\w.-]+$/.test(i.file||''))continue;const d=m.get(i.file);if(d&&d.length<2e6)P.za.a[k]={m:AUM[(i.file.split('.').pop()||'').toLowerCase()]||i.mime||'audio/mp4',d:d.buffer.slice(d.byteOffset,d.byteOffset+d.byteLength),n:String(i.name||'')}}P.za.c=vc.confirmed&&typeof vc.confirmed==='object'?vc.confirmed:{}}}
+ {const pj=jparse(m,'parent.json');if(pj&&Array.isArray(pj.tpl))P.par={tpl:pj.tpl.filter(t=>t&&sstr(t.id,60)&&sstr(t.title,40)&&sstr(t.text,300)).map(t=>({id:t.id,title:t.title,text:t.text,ab:sstr(t.ab,10)?t.ab:'',cat:sstr(t.cat,60)?t.cat:''})),auth:Array.isArray(pj.auth)?pj.auth.filter(x=>sstr(x,60)):null}}
+ {const tj=jparse(m,'teaching.json');if(tj&&typeof tj==='object'){const ok=a=>(Array.isArray(a)?a:[]).filter(x=>x&&typeof x==='object'&&sstr(x.id,60)&&x.id);P.teach={cb:ok(tj.cb),mx:ok(tj.mx),se:ok(tj.se),sc:ok(tj.sc)}}}
  {const lb=jparse(m,'library.json');if(lb&&typeof lb==='object'&&lb.kind==='library'&&lb.en)P.lib=lb}
  {const we=jparse(m,'word-ext.json');if(we&&we.cx&&typeof we.cx==='object'&&!Array.isArray(we.cx)){P.cx={};for(const[id,v]of Object.entries(we.cx))if(sstr(id,60)&&v&&typeof v==='object')P.cx[id]=v}}
  if(P.kind==='full'){const lj=jparse(m,'learners.json');if(lj&&Array.isArray(lj.list)&&lj.list.length&&lj.data&&typeof lj.data==='object'){const list=lj.list.filter(x=>x&&sstr(x.id,60)&&x.id&&sstr(x.name,60)).map(LRN.norm),data={};list.forEach(x=>{const d=lj.data[x.id]||{},o=perDef();PER.forEach(k=>{if(d[k]!=null&&typeof d[k]===typeof o[k]&&Array.isArray(d[k])===Array.isArray(o[k]))o[k]=d[k]});data[x.id]=o});if(list.length)P.lrn={cur:list.some(x=>x.id===lj.cur)?lj.cur:list[0].id,list,data}}}
  P.hasImg=hasImg;P.hasAud=hasAud;P.nSet=Object.keys(P.set).length;
- if(P.kind==='full'){const r=jparse(m,'records.json',1),g=jparse(m,'progress.json',1);if(!Array.isArray(r.logs))throw new Error('records.json 結構不正確');
+ if(P.kind==='full'){{const oj=jparse(m,'observations.json');if(oj&&Array.isArray(oj.ob))P.ob=oj.ob.filter(x=>x&&typeof x==='object'&&sstr(x.id,60)&&x.id&&sstr(x.learnerId,60));const aj=jparse(m,'assessment.json');if(aj&&aj.as&&typeof aj.as==='object'&&!Array.isArray(aj.as))P.as=aj.as}
+  const r=jparse(m,'records.json',1),g=jparse(m,'progress.json',1);if(!Array.isArray(r.logs))throw new Error('records.json 結構不正確');
   P.logs=r.logs.filter(x=>x&&typeof x==='object');P.quits=Array.isArray(r.quits)?r.quits.filter(x=>x&&typeof x==='object'):[];P.rounds=r.rounds&&typeof r.rounds==='object'?r.rounds:{started:0,completed:0};
   P.rw=g.rw&&typeof g.rw==='object'?g.rw:null;P.mst=g.mst&&typeof g.mst==='object'?g.mst:{};P.mflag=g.mflag&&typeof g.mflag==='object'?g.mflag:{}}
  if(bad.length){P.warn.push('完整性檢查：'+bad.length+' 個檔案與清單不符（'+bad.slice(0,3).join('、')+'）');P.fail+=bad.length}
@@ -1172,7 +1180,7 @@ async function ioApply(){const P=IOP.P;if(!P)return;const mode=(document.querySe
  if(mode!=='merge'){const cur='目前這台電腦有 '+S.cards.length+' 張圖卡、'+S.cats.length+' 個分類；',inn='將換成匯入的 '+P.cards.length+' 張圖卡、'+P.cats.length+' 個分類。\n',msg=mode==='full'?cur+inn+'完整資料還原還會取代：教學設定、學習紀錄、星星與進度。\n\n建議先按「匯出完整教材」備份目前教材。系統也會先在本機自動另存一份，驗證通過後才開始取代，失敗時不會改動原資料。確定要還原嗎？':cur+inn+'同時取代教學設定（學習紀錄會保留）。\n\n建議先按「匯出完整教材」備份目前教材。系統也會先在本機自動另存一份，ZIP 已通過驗證才開始取代，失敗時不會改動原資料。確定要取代嗎？';if(!confirm(msg))return}
  const cf=D.conf.map((x,i)=>({id:x.c.id,act:(mode==='merge'?($('#cf'+i)||{}).value:'over')||'keep'})),applySet=mode!=='merge'||($('#ioset')||{}).checked,R={added:0,updated:0,skipped:0,failed:P.fail};
  const old=S;
- try{ioMsg('備份目前資料…');await kvPut('backup-before-import',JSON.parse(JSON.stringify(S)));
+ try{ioMsg('備份目前資料…');await kvPut('backup-before-import',JSON.parse(JSON.stringify(S)));await kvPut('backup-before-import-meta',{at:Date.now(),mode,cards:S.cards.length,recs:S.recs.length,learners:S.lrn.list.length});
   const T=JSON.parse(JSON.stringify(S));S=T;
   const catIds=new Set();
   if(mode==='merge'){
@@ -1193,15 +1201,18 @@ async function ioApply(){const P=IOP.P;if(!P)return;const mode=(document.querySe
    R.logs=ad(S.logs,P.logs,x=>x.t+'|'+x.cid+'|'+x.word);ad(S.quits,P.quits,x=>x.t+'|'+x.word);S.mst={...P.mst,...S.mst};S.mflag={...P.mflag,...MF()};
    if(P.rw){ad(S.rw.badges,P.rw.badges||[],x=>x.key);ad(S.rw.veh,P.rw.veh||[],x=>x);ad(S.rw.journeys,P.rw.journeys||[],x=>x.t);S.rw.stars=Math.max(S.rw.stars,P.rw.stars||0)}}
   if(P.cx){const ov=id=>(cf.find(x=>x.id===id)||{}).act==='over';S.cx=S.cx||{};if(mode==='merge'){Object.entries(P.cx).forEach(([id,v])=>{if(byId(id)&&(!S.cx[id]||ov(id)))S.cx[id]=v})}else S.cx={...P.cx}}
+  if(mode==='merge'&&P.kind==='full')P17.remap(P,R);
   if(P.lrn){if(mode==='full'){S.lrn={cur:P.lrn.cur,list:P.lrn.list,store:{}};Object.entries(P.lrn.data).forEach(([id,d])=>{if(id===S.lrn.cur)LRN.load(d);else S.lrn.store[id]=d});LRN.fix();LRN.apply(LRN.cur())}else if(mode==='merge'&&P.kind==='full'){P.lrn.list.forEach(p=>{const d=P.lrn.data[p.id]||perDef();if(!LRN.get(p.id)){S.lrn.list.push(p);S.lrn.store[p.id]=d}else{const tg=p.id===S.lrn.cur?S:S.lrn.store[p.id],have=new Set(tg.recs.map(r=>r.id));d.recs.forEach(r=>{if(r&&r.id&&!have.has(r.id))tg.recs.push(r)})}});LRN.fix()}}
   migrateBanks();
   if(/^c:/.test(S.set.src||'')&&!S.cats.some(c=>'c:'+c.id===S.set.src))S.set.src='all';if(S.set.src==='mk'||S.set.src==='wk'){}
+  P17.apply(P,mode,R);
+  if(P.par){const s=PAR.st();if(mode==='full'){s.tpl=P.par.tpl;s.auth=P.par.auth&&(S.lrn&&S.lrn.list||[]).length?P.par.auth.filter(id=>S.lrn.list.some(x=>x.id===id)):null}else{const h0=new Set(s.tpl.map(t=>t.id));P.par.tpl.forEach(t=>{if(!h0.has(t.id))s.tpl.push(t)})}}
   if(P.lib){R.lib=LIB.impo(P.lib,mode==='merge'?'merge':'full');try{await LIB.load();LIB.sync()}catch(e){console.warn('LIB import sync',e)}}else if(mode!=='merge')S.lib=null;
   if(!Array.isArray(S.cards)||!Array.isArray(S.cats)||S.cards.some(c=>!c.id||!Array.isArray(c.cats)))throw new Error('匯入後資料檢查未通過');
   const db=await idb();await new Promise((ok,no)=>{const t=db.transaction('kv','readwrite');t.objectStore('kv').put(S,'s');t.oncomplete=ok;t.onerror=()=>no(t.error)});
   IOP.P=null;ioV('');
   if(P.za&&(Object.keys(P.za.a).length||Object.keys(P.za.c).length)){ZA.rec=mode==='merge'?{a:{...ZA.rec.a,...P.za.a},c:{...ZA.rec.c,...P.za.c}}:{a:{...P.za.a},c:{...P.za.c}};zaUrls();await zaSave()}
-  if(!G.on)try{home()}catch(e){}ioMsg('匯入完成（不需要重新整理網頁，到「學生遊戲」選一種交通工具就能開始）：新增 '+R.added+'、更新 '+R.updated+'、略過 '+R.skipped+'、失敗 '+R.failed+(R.logs!=null?'、新增學習紀錄 '+R.logs:'')+'。匯入前的資料已另存（本機備份），失敗時不會改動原資料。');tch();
+  if(!G.on)try{home()}catch(e){}ioMsg('匯入完成（不需要重新整理網頁，到「學生遊戲」選一種交通工具就能開始）：新增 '+R.added+'、更新 '+R.updated+'、略過 '+R.skipped+'、失敗 '+R.failed+(R.logs!=null?'、新增學習紀錄 '+R.logs:'')+P17.sum(R)+'。匯入前的資料已另存（本機備份），失敗時不會改動原資料。');tch();
  }catch(e){S=old;ioMsg('匯入失敗，原有資料沒有被改動：'+(e&&e.message||e))}}
 
 function tIO(){const lx=S.lastExportAt?new Date(S.lastExportAt).toLocaleString('zh-TW',{hour12:false}):'尚未匯出過',nI=S.cards.filter(c=>c.img).length,nA=S.cards.filter(c=>c.audio).length;
@@ -1902,7 +1913,7 @@ MAP.prog=st=>{const rs=RE.rows().filter(r=>r.stage===st.id&&r.outcome!=='tech_er
  return{n:rs.length,words:words.size,ind:ind.size,total:pool().length}};
 MAP.go=(mode)=>{const k=Object.keys(TH).find(x=>TH[x].mode===mode&&!TH[x].mix);if(k)goV(k)};
 MAP.show=()=>{AM.stop();stopSpeak();stopAsr();micStop();musStop();G.on=false;document.body.classList.remove('tk');scene();$('#stu').classList.remove('hide');
- const p=LRN.cur(),lr=S.lrn.list.filter(x=>!x.archived);
+ const p=LRN.cur(),lr=S.lrn.list.filter(x=>!x.archived&&PAR.allowed(x.id));
  const card=st=>{const g=MAP.prog(st),df=p.stageDiff[st.id]||1,cur=p.stage===st.id;
   const prog=!st.dev?'<b style="color:#8a6d00">尚未開發</b>：這一站還沒有遊戲，所以沒有任何成績或進度。':g&&g.n?`作答 ${g.n} 筆；答對過 <b>${g.words}</b> / ${g.total} 個詞，其中獨立完成 <b>${g.ind}</b> 個`:'尚無作答紀錄（還沒玩過這一站）';
   const btn=st.dev?PH.btns(st):'<button class="btn alt" disabled style="opacity:.6">🚧 尚未開發</button>';
@@ -3007,7 +3018,7 @@ SE.dec=(rec,r)=>{const sid=r.se||r.sc;if(!sid)return;const isSc=!!r.sc,d=isSc?SC
 OB.SET={home:'家庭',school:'學校',other:'其他'};OB.PUR={request:'要求（需求）',refuse:'拒絕',help:'求助',rest:'休息',feel:'表達感受',again:'再次／繼續',share:'分享（舊紀錄含評論）',comment:'評論',ask:'提問',name:'實物命名',greet:'打招呼／社交',answer:'回答問題',other:'其他'};
 OB.MODE={oral:'口語',gesture:'手勢',card:'圖卡',mixed:'混合方式'};OB.YN={y:'是',n:'否',u:'不確定'};OB.PRM={none:'沒有提示',partial:'部分提示',full:'完整示範／仿說',u:'不確定'};
 OB.nowLocal=()=>{const d=new Date(),p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes())};
-OB.form=(pre)=>{const L=S.lrn.list.filter(x=>!x.archived),cur=LRN.cur().id,o=pre||'ob',sel=(id,m,v)=>`<select id="${o}_${id}">${Object.entries(m).map(([k,t])=>`<option value="${k}" ${v===k?'selected':''}>${t}</option>`).join('')}</select>`;
+OB.form=(pre)=>{const L=S.lrn.list.filter(x=>!x.archived&&(RC.ctx!=='p'||PAR.allowed(x.id))),cur=LRN.cur().id,o=pre||'ob',sel=(id,m,v)=>`<select id="${o}_${id}">${Object.entries(m).map(([k,t])=>`<option value="${k}" ${v===k?'selected':''}>${t}</option>`).join('')}</select>`;
  return `<div class="obf"><p>個案 <select id="${o}_lid">${L.map(x=>`<option value="${x.id}" ${x.id===cur?'selected':''}>${esc(x.name)}（${esc(x.id)}）</option>`).join('')}</select>　日期時間 <input type="datetime-local" id="${o}_ts" value="${OB.nowLocal()}"></p>
  <p>實際說出的詞彙或語句 <input type="text" id="${o}_txt" style="width:22em" placeholder="照實寫；沒有說話可留白（例如只用手勢）"></p>
  <p>情境 ${sel('set',OB.SET,'home')} <input type="text" id="${o}_setn" placeholder="地點補充（選填）" style="width:10em">　互動人物 <input type="text" id="${o}_who" style="width:9em" placeholder="例：媽媽、同學"></p>
@@ -3410,8 +3421,8 @@ ACL.delLearner=(id,pin,typed)=>{const p=LRN.get(id);if(!p)return{ok:false,msg:'�
  ACL.log('刪除個案資料（不可復原）',id);save();return{ok:true}};
 ACL.register=a=>{if(a&&typeof a.verify==='function')ACL.adapter=a};   /* 未來雲端／集中式身分驗證的擴充介面（目前未啟用） */
 /* ---------- 錯誤分類 ERR ---------- */
-const ERR={CATS:{sem:'語意混淆',retr:'詞彙提取困難',artic:'語音或音節表達困難',imit:'仿說',order:'語序及組合錯誤',noresp:'尚未反應',oper:'操作問題',asr:'語音辨識失敗',pending:'待人工確認',unsure:'無法判斷／其他'},
- CERTAIN:['imit','order','noresp','oper','asr','pending']};
+const ERR={CATS:{sem:'語意混淆',retr:'詞彙提取困難',artic:'語音或音節表達困難',imit:'完整示範後才說出（可能依賴示範）',order:'語序及組合錯誤（舊版合併分類，只供教師手動標記舊資料）',combo:'詞彙組合困難',sent:'語句排列困難',noresp:'尚未反應',oper:'操作問題',asr:'語音辨識失敗',pending:'待人工確認',unsure:'無法判斷／其他'},
+ CERTAIN:['imit','order','combo','sent','noresp','oper','asr','pending']};
 ERR.err=()=>{const a=AS.st();return a.err||(a.err={})};
 /* 回傳 {cat,certain,basis}；certain＝由紀錄事件直接決定；否則只是「疑似」，須教師確認。不推定任何臨床語言障礙。 */
 ERR.cls=e=>{const r=e.r,tc=(r.tech||[]).map(t=>t.code||''),sp=r.sp||{},near=['near','approx'].includes(sp.matchedBy)||['unclear','mostly'].includes(r.clarity);
@@ -3422,8 +3433,8 @@ ERR.cls=e=>{const r=e.r,tc=(r.tech||[]).map(t=>t.code||''),sp=r.sp||{},near=['ne
  if(r.outcome==='no_response')return{cat:'noresp',certain:true,basis:'題目結束前沒有任何反應'};
  if(r.outcome!=='wrong')return null;
  if(r.game==='pick'||(r.confusions&&r.confusions.length))return{cat:'sem',certain:false,basis:'選了其他圖片（'+(r.confusions||[]).map(x=>x.chosen).join('、')+'）；是語意混淆、不專心或操作，系統無法判斷'};
- if(['cbo','sxo'].includes(r.game)||/\.(cbo|sxo)$/.test(e.tk))return{cat:'order',certain:true,basis:'排列順序與可接受語序不同'};
- if(['cbm','cbc','sxc','scc'].includes(r.game)||/\.(cbm|cbc|sxc|scc)$/.test(e.tk))return{cat:'order',certain:true,basis:'選了不合適的組合／車廂'};
+ if(['cbo','sxo'].includes(r.game)||/\.(cbo|sxo)$/.test(e.tk))return{cat:/sxo$/.test(e.tk)||r.game==='sxo'?'sent':'combo',certain:true,basis:'排列順序與可接受語序不同'};
+ if(['cbm','cbc','sxc','scc'].includes(r.game)||/\.(cbm|cbc|sxc|scc)$/.test(e.tk))return{cat:/(sxc|scc)$/.test(e.tk)||['sxc','scc'].includes(r.game)?'sent':'combo',certain:true,basis:'選了不合適的組合／車廂'};
  if(r.game==='speak'){if(near)return{cat:'artic',certain:false,basis:'語音辨識為接近但不完全相同；發音或音節問題需教師聽辨'};return{cat:'retr',certain:false,basis:'沒有說出目標內容；可能是想不起來、說法不同或其他原因，需教師判斷'}}
  return null};
 ERR.run=(inp,from,to,onlyAssess)=>{const R={...AS.DEF,...(inp.rules||{})},E=AS.prep(inp.recs||[],{fix:inp.fix,rules:R,from,to}),tag=(S.as&&S.as.err)||{},out=[];
@@ -3468,7 +3479,7 @@ DSH.HCOLS=[['comp','詞彙理解'],['name','自主說詞'],['hint','提示後說
 DSH.heat=()=>{const inp=DSH.inp(),f=DSH.ui.filt,now=Date.now(),R={...AS.DEF,...inp.rules};
  return inp.cards.filter(c=>!c.part).map(c=>{const w=AS.wordProfile(inp,c.id);if(!w)return null;const recs=inp.recs.filter(r=>r.itemId===c.id&&!['tech_error'].includes(r.outcome)),stages=new Set(recs.map(r=>r.stage));
   const nm=AS.prep(recs.filter(r=>r.game==='speak'&&r.itemKind==='word'),{fix:inp.fix,rules:R}).filter(e=>e.base==='valid'),lastN=nm[nm.length-1];
-  return{id:c.id,text:c.text,cats:c.cats||[],img:c.img,w,stages:[...stages],last:w.lastPractice,n:w.n,lastHint:lastN?(lastN.r.outcome==='correct'?lastN.hl:'x'):null,
+  return{id:c.id,text:c.text,cats:c.cats||[],img:c.img,w,vp:(()=>{try{return VP.prof(c.id)}catch(e){return null}})(),stages:[...stages],last:w.lastPractice,n:w.n,lastHint:lastN?(lastN.r.outcome==='correct'?lastN.hl:'x'):null,
    cells:{comp:w.comprehension,name:w.naming,hint:w.hinted,pair:w.pairing,phrase:w.phrase,spell:w.spell,listen:w.listen,newimg:w.newImage,delay:w.delayed,life:{count:w.life.n,status:w.life.n?'ok':'none'}}}}).filter(Boolean)
   .filter(x=>{if(!f.unpr&&!x.n&&!x.w.life.n&&!x.w.pairing.den&&!x.w.phrase.den)return false;if(f.cat&&!x.cats.includes(f.cat))return false;if(f.stage&&!x.stages.includes(+f.stage))return false;
    if(f.recent==='7'&&!(x.last&&now-x.last<=7*864e5))return false;if(f.recent==='30'&&!(x.last&&now-x.last<=30*864e5))return false;if(f.recent==='old'&&x.last&&now-x.last<=30*864e5)return false;if(f.recent==='never'&&x.last)return false;
@@ -3515,7 +3526,7 @@ RPT.sheets=()=>{const d=DSH.dash(),rep=d.rep,p=LRN.cur(),heat=DSH.heat(),tr=DSH.
   ['有效評量題',rep.meta.counts.valid],['教學練習（不計入）',rep.meta.counts.teach],['未標示用途',rep.meta.counts.unk],['未確認',rep.meta.counts.unc+rep.meta.counts.inc],['跳過',rep.meta.counts.skip],['技術異常',rep.meta.counts.tech]];
  const S2=[...RPT.head('七大核心語言能力分析'),['能力','指標','分子','分母','百分比／數值','未確認題數','狀態','說明'],...AS.rows(rep),[],['儀表板代表指標'],['能力','評量期間','結果','分子','分母','未確認題數','與前期（相近難度）比較','資料來源'],
   ...d.cards.map(c=>[c.ab.n,c.span,RPT.fm(c.m),c.m.num,c.m.den,c.m.unc,c.cmp.text,c.src+'（'+(c.srcN||'無')+'）'])];
- const S3=[...RPT.head('詞彙分析熱力表'),['詞彙',...DSH.HCOLS.map(x=>x[1]),'最近練習日期'],...heat.map(x=>[x.text,...DSH.HCOLS.map(([k])=>{const c=x.cells[k];return k==='life'?c.count+' 次':c.status==='none'?'尚未評量':c.status==='low'?'資料不足 '+c.num+'/'+c.den:c.pct+'% '+c.num+'/'+c.den}),x.last?new Date(x.last).toLocaleDateString('zh-TW'):''])];
+ const S3=[...RPT.head('詞彙分析熱力表'),['詞彙',...DSH.HCOLS.map(x=>x[1]),'詞彙熟悉度','最近練習日期','下一次複習日期'],...heat.map(x=>[x.text,...DSH.HCOLS.map(([k])=>{const c=x.cells[k];return k==='life'?c.count+' 次':c.status==='none'?'尚未評量':c.status==='low'?'資料不足 '+c.num+'/'+c.den:c.pct+'% '+c.num+'/'+c.den}),x.last?new Date(x.last).toLocaleDateString('zh-TW'):''])];
  const D=rep.c5.dist,S4=[...RPT.head('提示依賴分析'),['提示分類','題數','有效口語題數','百分比','狀態'],...['P0','P1','P2','P3','P4','fail'].map(k=>[D[k].label,D[k].num,D[k].den,D[k].pct==null?'':D[k].pct+'%',RPT.fm(D[k])]),['未確認',rep.c5.unconfirmed.num,rep.c5.unconfirmed.den],['無提示重測成功率',rep.c5.retest.num,rep.c5.retest.den,RPT.fm(rep.c5.retest)],[],
   ['提示種類','使用該提示的題數','當題成功','當題成功率','之後同題型再作答次數','其中獨立成功','獨立成功率','說明'],...fx.map(x=>[x.lab,x.n,x.ok,x.rate==null?'':x.rate+'%',x.nx,x.nxOk,x.nxRate==null?'':x.nxRate+'%','關聯性觀察，不代表因果；一題可能同時用到多種提示']),[],['提示需求變化（降低／持平／增加的詞彙數）',rep.c5.trend.down,rep.c5.trend.same,rep.c5.trend.up]];
  const S5=[...RPT.head('長期學習趨勢（'+({day:'每日',week:'每週',month:'每月'})[tr.unit]+'）'),['期間',...tr.series.map(s=>s.label),'題型／難度／教材範圍變化'],...tr.B.map((b,i)=>[b.label,...tr.series.map(s=>{const m=s.pts[i];return s.type==='count'?m.count:m.status==='none'?'尚未評量':(m.status==='low'?'資料不足 ':'')+m.pct+'% ('+m.num+'/'+m.den+')'}),tr.flags[i].join('；')])];
@@ -3575,7 +3586,7 @@ DSH.line=(pts,o)=>{o=o||{};const W=520,H=130,L=34,R=10,T=10,B=24,n=pts.length,va
  pts.forEach((p,i)=>{if(p.v==null){flush();return}seg.push(x(i)+','+y(p.v))});flush();
  pts.forEach((p,i)=>{if(p.v==null)return;s+=`<circle cx="${x(i)}" cy="${y(p.v)}" r="3.5" fill="${p.low?'#fff':'#3b7dd8'}" stroke="#3b7dd8" stroke-width="1.5"><title>${esc(p.t||'')}</title></circle>${p.flag?`<text x="${x(i)}" y="${T+6}" font-size="11" text-anchor="middle" fill="#c0392b">⚠</text>`:''}`});
  [0,Math.floor((n-1)/2),n-1].filter((v,i,a)=>n>0&&a.indexOf(v)===i).forEach(i=>{s+=`<text x="${x(i)}" y="${H-8}" font-size="10" text-anchor="middle">${esc((pts[i]||{}).lab||'')}</text>`});return s+'</svg>'};
-DSH.hd=()=>{const u=DSH.ui,lr=S.lrn.list.filter(x=>!x.archived),V=[['dash','📊 能力儀表板'],['heat','🔥 詞彙熱力表'],['hint','🪜 提示依賴'],['obs','🗣️ 口語觀察'],['vp','📚 詞彙履歷'],['trend','📈 長期趨勢'],['err','🧭 錯誤與技術'],['hist','🗂 個案歷史'],['goal','🎯 教學目標'],['rpt','🧾 報表匯出']];
+DSH.hd=()=>{const u=DSH.ui,lr=S.lrn.list.filter(x=>!x.archived),V=[['ovw','📋 學習總覽'],['dash','📊 能力儀表板'],['heat','🔥 詞彙熱力表'],['hint','🪜 提示依賴'],['obs','🗣️ 口語觀察'],['vp','📚 詞彙履歷'],['trend','📈 長期趨勢'],['err','🧭 錯誤與技術'],['hist','🗂 個案歷史'],['goal','🎯 教學目標'],['rpt','🧾 報表匯出']];
  return `<div class="panel"><h2 style="margin:0">📊 教師後台：個案數據分析</h2><p>個案：<select onchange="DSH.sw(this.value)">${lr.map(p=>`<option value="${p.id}" ${p.id===S.lrn.cur?'selected':''}>${esc(p.name)}</option>`).join('')}</select>
  　期間：<select onchange="DSH.set('pre',this.value)">${[['7','近 7 天'],['30','近 30 天'],['90','近 90 天'],['all','全部期間'],['custom','自訂']].map(([v,t])=>`<option value="${v}" ${u.pre===v?'selected':''}>${t}</option>`).join('')}</select>
  ${u.pre==='custom'?`<input type="date" value="${u.from}" onchange="DSH.set('from',this.value)"> ～ <input type="date" value="${u.to}" onchange="DSH.set('to',this.value)">`:''}
@@ -3600,7 +3611,7 @@ DSH.v.heat=()=>{const f=DSH.ui.filt,H=DSH.heat(),cats=S.cats;
  　最近練習 <select onchange="DSH.setF('recent',this.value)">${[['','不限'],['7','7 天內'],['30','30 天內'],['old','超過 30 天沒練'],['never','從未練習']].map(([v,t])=>`<option value="${v}" ${f.recent===v?'selected':''}>${t}</option>`).join('')}</select>
  　提示需求（最近一次口語） <select onchange="DSH.setF('hint',this.value)">${[['','不限'],['0','無提示成功'],['12','需 P1／P2'],['3','需部分提示'],['4','需完整示範'],['fail','未成功'],['none','沒有口語作答']].map(([v,t])=>`<option value="${v}" ${f.hint===v?'selected':''}>${t}</option>`).join('')}</select>
  　<label><input type="checkbox" ${f.unpr?'checked':''} onchange="DSH.setF('unpr',this.checked)"> 顯示尚未練習的詞彙</label></p>
- <div style="overflow:auto"><table class="hm"><tr><th>詞彙</th>${DSH.HCOLS.map(x=>`<th>${x[1]}</th>`).join('')}<th>最近練習</th></tr>${H.map(x=>`<tr><td class="w" onclick="DSH.ui.word='${x.id}';DSH.ui.view='heat';tch()">${esc(x.text)}</td>${DSH.HCOLS.map(([k])=>{const c=x.cells[k];return `<td style="background:${DSH.cellBg(c)};${c.status==='low'?'font-style:italic;':''}" title="${k==='life'?'':c.num+'／'+c.den}">${k==='life'?(c.count?c.count+' 次':'—'):c.status==='none'?'—':c.status==='low'?'不足<br>'+c.num+'／'+c.den:c.pct+'%<br>'+c.num+'／'+c.den}</td>`}).join('')}<td>${AS.fdt(x.last)}</td></tr>`).join('')||`<tr><td colspan="12">沒有符合條件的詞彙</td></tr>`}</table></div></div>`+(DSH.ui.word?DSH.wordDetail(DSH.ui.word):'')};
+ <div style="overflow:auto"><table class="hm"><tr><th>詞彙</th>${DSH.HCOLS.map(x=>`<th>${x[1]}</th>`).join('')}<th>詞彙熟悉度</th><th>最近練習</th><th>下一次複習</th></tr>${H.map(x=>`<tr><td class="w" onclick="DSH.ui.word='${x.id}';DSH.ui.view='heat';tch()">${esc(x.text)}</td>${DSH.HCOLS.map(([k])=>{const c=x.cells[k];return `<td style="background:${DSH.cellBg(c)};${c.status==='low'?'font-style:italic;':''}" title="${k==='life'?'':c.num+'／'+c.den}">${k==='life'?(c.count?c.count+' 次':'—'):c.status==='none'?'—':c.status==='low'?'不足<br>'+c.num+'／'+c.den:c.pct+'%<br>'+c.num+'／'+c.den}</td>`}).join('')}<td style="font-size:11px">${esc(DSH.famTxt(x.vp))}</td><td>${AS.fdt(x.last)}</td><td>${DSH.nextTxt(x.vp)}</td></tr>`).join('')||`<tr><td colspan="14">沒有符合條件的詞彙</td></tr>`}</table></div></div>`+(DSH.ui.word?DSH.wordDetail(DSH.ui.word):'')};
 DSH.wordDetail=cid=>{const inp=DSH.inp(),w=AS.wordProfile(inp,cid);if(!w)return '';const f=AS.wpTr(),recs=RE.rows().filter(r=>r.itemId===cid||(r.combo&&(r.combo.parts||[]).some(p=>p.cid===cid))).slice().reverse(),fr=AS.ui.fixId&&recs.find(r=>r.id===AS.ui.fixId),fx=(S.as&&S.as.fix)||{};
  return `<div class="panel" style="border:2px solid #3b7dd8"><h3 style="margin:0">「${esc(w.text)}」完整學習履歷　<button class="btn red sm" onclick="DSH.ui.word=null;AS.ui.fixId=null;tch()">關閉</button></h3>
  <ul><li>理解：${f(w.comprehension)}（教學題 ${w.comprehension.teachN}）</li><li>自主說詞：${f(w.naming)}；提示後說詞：${f(w.hinted)}；提示等級序列 ${w.hintSeq.join('→')||'—'}</li><li>語意配對：${f(w.pairing)}；短語組合：${f(w.phrase)}</li><li>拼打：${f(w.spell)}；聽打：${f(w.listen)}</li><li>新圖片類化：${f(w.newImage)}；延宕保留：${f(w.delayed)}</li><li>生活使用：${w.life.n} 筆（${esc(w.life.note)}）；最近練習 ${AS.fdt(w.lastPractice)}</li></ul>
@@ -3659,10 +3670,10 @@ function tACL(){const a=S.acl||{},u=ACL.ui;
  <p>目前狀態：${ACL.has()?'<b style="color:#2d7a2d">已設定教師密碼</b>（設定於 '+AS.fdt(a.ts)+'）':'<b style="color:#b8322b">尚未設定密碼：任何人都能打開教師設定</b>'}</p>
  ${u.msg?`<p><b>${esc(u.msg)}</b></p>`:''}${u.rc?`<div class="rtnote">⚠ 復原碼（只顯示這一次，請抄寫保存）：<b style="font-size:22px">${esc(u.rc)}</b><br>忘記密碼時，沒有復原碼就無法解鎖；只能清除瀏覽器資料，<b>個案資料也會一併消失</b>。<br><button class="btn alt" onclick="ACL.ui.rc=null;tch()">我已保存</button></div>`:''}
  <p>${ACL.has()?'更換密碼：目前 <input type="password" id="acl_o" style="width:7em"> ':'設定密碼：'}新密碼（4–12 位數字）<input type="password" id="acl_n" inputmode="numeric" style="width:8em"> 再輸入一次 <input type="password" id="acl_n2" inputmode="numeric" style="width:8em"> <button class="btn go" onclick="ACL.doSet()">${ACL.has()?'更換':'設定'}密碼</button></p>
- ${ACL.has()?`<p><button class="btn alt" onclick="ACL.lock();tab(1)">🔒 立即上鎖</button>　移除密碼（需輸入目前密碼）：<input type="password" id="acl_c" style="width:7em"> <button class="btn red" onclick="ACL.doClear()">移除</button></p>`:''}
+ ${ACL.has()?`<p><button class="btn alt" onclick="ACL.lock();tab(1)">🔒 登出（重新上鎖）</button>　移除密碼（需輸入目前密碼）：<input type="password" id="acl_c" style="width:7em"> <button class="btn red" onclick="ACL.doClear()">移除</button></p>`:''}
  <h4 style="margin:6px 0">這個密碼保護什麼、不保護什麼（單機版）</h4><ul><li><b>有保護</b>：沒有輸入密碼，無法進入「教師設定」（個案資料、儀表板、匯出、備份、刪除）；回到學生畫面會自動上鎖；閒置 15 分鐘自動上鎖；連續輸錯 5 次暫停 60 秒；<b>刪除個案資料、匯出單一個案資料一律要再輸入密碼</b>，沒有設定密碼時刪除功能直接拒絕。</li>
  <li><b>沒有保護</b>：這是純網頁單機版，資料存在這台電腦／iPad 瀏覽器的 IndexedDB，<b>沒有加密</b>。能直接操作這台裝置的瀏覽器開發者工具、瀏覽器資料夾或完整備份檔的人，仍可讀取資料。密碼用來防止孩子或旁人從畫面誤入，不是防駭。</li>
- <li>家長／老師的「生活觀察」快速表單只能新增紀錄，不需密碼，也不顯示任何分析資料。</li><li>匯出的 CSV、Excel、備份檔離開瀏覽器後不再受密碼保護，請自行妥善保管。</li><li>雲端同步與集中式帳號管理尚未啟用，只保留擴充介面（<code>SYNC</code>、<code>ACL.register</code>）。</li></ul>
+ <li>家長／老師的「生活觀察」快速表單只能新增紀錄，不需密碼，也不顯示任何分析資料。</li><li>匯出的 CSV、Excel、備份檔離開瀏覽器後不再受密碼保護，請自行妥善保管。</li><li><b>這只是原型測試用的本機入口保護，不能取代正式的帳號驗證與伺服器端權限控制。</b></li><li>雲端同步與集中式帳號管理尚未啟用，只保留擴充介面（<code>SYNC</code>、<code>ACL.register</code>）。</li></ul>
  <h4 style="margin:6px 0">存取紀錄（最近 30 筆，不含任何學生姓名或內容）</h4>${(a.audit||[]).length?`<table><tr><th>時間</th><th>動作</th><th>備註</th></tr>${a.audit.slice(-30).reverse().map(x=>`<tr><td>${new Date(x.ts).toLocaleString('zh-TW',{hour12:false})}</td><td>${esc(x.action)}</td><td>${esc(x.note)}</td></tr>`).join('')}</table>`:'<p><small>尚無紀錄</small></p>'}</div>`}
 /* ---------- 個案管理補強（接在第01階段個案頁後面） ---------- */
 DSH.excl=(cid,on)=>{const p=LRN.get(lrSel);if(!p)return;p.ext=p.ext||{};const s=new Set(p.ext.excl||[]);on?s.add(cid):s.delete(cid);p.ext.excl=[...s];p.modified=Date.now();save();tLR()};
@@ -4074,11 +4085,11 @@ UI.modeHtml=()=>{const k=UI.mode&&UI.LM[UI.mode]?UI.mode:V2.lm(),L=UI.LM[k];UI.m
  <p class="hmf"><button class="btn alt" onclick="MAP.show()">🗺 學習地圖（更多活動）</button></p></div>`};
 UI.parent=()=>{RC.ctx='p';RC.sync();return RC.pHtml()};
 UI.devNote=()=>{const m=UI.measure();return `畫面 ${m.w}×${m.h}（${{phone:'手機',tablet:'平板',desktop:'電腦'}[m.size]}大小、${m.land?'橫向':'直向'}）；${m.touch?'有觸控':'無觸控'}、${m.fine?'有滑鼠／觸控板':'無滑鼠'}；${UI.hw?'已偵測到實體鍵盤':'尚未偵測到實體鍵盤'}`};
-UI.settings=()=>{const so=(v,t)=>`<option value="${v}" ${S.set.src===v?'selected':''}>${t}</option>`,im=UI.inMode(),ms={granted:'已允許',denied:'已被拒絕（可在瀏覽器網址列旁重新開啟）',prompt:'尚未授權',unsupported:'這個瀏覽器不支援',unknown:'尚未確認',none:'找不到麥克風',error:'無法取得'}[UI.mic.state]||'尚未確認',lrn=S.lrn.list.filter(x=>!x.archived);
+UI.settings=()=>{const so=(v,t)=>`<option value="${v}" ${S.set.src===v?'selected':''}>${t}</option>`,im=UI.inMode(),ms={granted:'已允許',denied:'已被拒絕（可在瀏覽器網址列旁重新開啟）',prompt:'尚未授權',unsupported:'這個瀏覽器不支援',unknown:'尚未確認',none:'找不到麥克風',error:'無法取得'}[UI.mic.state]||'尚未確認',lrn=S.lrn.list.filter(x=>!x.archived&&PAR.allowed(x.id));
  return `<div class="hm3 st3"><h2>⚙ 設定</h2>
  <div class="panel"><h3>🔊 聲音</h3><p><button id="mt" class="btn alt" onclick="musToggle()"></button> 音樂音量 <input type="range" id="mvs" min="0" max=".8" step=".05" value="${S.set.mv}" oninput="S.set.mv=+this.value;musApply();save()"></p><p><label><input type="checkbox" ${S.set.sound?'checked':''} onchange="S.set.sound=this.checked;save()"> 提示音</label></p></div>
  <div class="panel"><h3>📚 練習內容</h3><p>題數 <input type="number" min="1" max="30" style="width:70px" value="${S.set.n}" onchange="S.set.n=Math.max(1,Math.min(30,+this.value||5));this.value=S.set.n;save()"></p>
- <p>選擇分類 <select onchange="S.set.src=this.value;save()">${so('all','全部圖卡（'+S.cards.length+'）')}${S.cats.map(c=>so('c:'+c.id,esc(c.name)+'（'+S.cards.filter(x=>x.cats.includes(c.id)).length+'張）')).join('')}${so('mk','錯題集（'+mistakeCards().length+'）')}${so('wk','注音加強練習（'+weakCards().length+'）')}</select></p>
+ <p>選擇分類 <select onchange="S.set.src=this.value;save()">${so('all','全部圖卡（'+S.cards.length+'）')}${CATZ(c=>so('c:'+c.id,esc(c.name)+'（'+S.cards.filter(x=>x.cats.includes(c.id)).length+'張）'))}${so('mk','錯題集（'+mistakeCards().length+'）')}${so('wk','注音加強練習（'+weakCards().length+'）')}</select></p>
  <p>順序 <select onchange="S.set.order=this.value;save()"><option value="rand" ${S.set.order!=='seq'?'selected':''}>隨機</option><option value="seq" ${S.set.order==='seq'?'selected':''}>依順序</option></select></p></div>
  <div class="panel"><h3>⌨ 輸入方式</h3><p><select id="inmode" onchange="UI.setIn(this.value)"><option value="auto" ${im==='auto'?'selected':''}>自動判斷（建議）</option><option value="phys" ${im==='phys'?'selected':''}>實體鍵盤</option><option value="touch" ${im==='touch'?'selected':''}>觸控注音鍵盤</option></select> <button class="btn alt" onclick="ktOpen()">⌨ 測試鍵盤</button></p><small>自動判斷：只有觸控、沒有滑鼠的裝置顯示觸控注音鍵盤；偵測到實體鍵盤按鍵就改用實體鍵盤。系統內建注音輸入法：不提供。</small></div>
  <div class="panel"><h3>🎤 麥克風</h3><p>目前狀態：<b id="micst">${ms}</b> ${UI.mic.state==='granted'||UI.mic.state==='unsupported'?'':'<button class="btn go" onclick="UI.micAsk()">立即授權</button>'}</p><small>聽讀練習不使用麥克風；只有口語題目才會收音，離開題目就停止。</small></div>
@@ -4109,6 +4120,9 @@ UI.init=()=>{UI.apply();let t=0;const f=()=>{clearTimeout(t);t=setTimeout(()=>{U
  document.addEventListener('focusin',f);document.addEventListener('focusout',f);addEventListener('keydown',UI.onKey,true);
  UI.micQuery().then(()=>UI.micRefresh())};
 /*P8-END*/
+/*V19-BEGIN 分類/Level 兩區*/
+const CATZ=f=>{const cs=S.cats.filter(c=>!c.lvl),ls=S.cats.filter(c=>c.lvl).sort((a,b)=>(a.sort||0)-(b.sort||0));return ls.length?`<option disabled>── 依分類 ──</option>${cs.map(f).join('')}<option disabled>── 依 Level ──</option>${ls.map(f).join('')}`:cs.map(f).join('')};
+/*V19-END*/
 /*P9-BEGIN*/
 /*P9-BEGIN 新版第02階段：模式→六站地圖→練習設定→五星難度→簡化星星→個案設定*/
 const FL={run:null,view:'map',st:null};
@@ -4194,7 +4208,7 @@ FL.mapHtml=()=>{const mode=FL.modeOf(),L=UI.LM[mode],R=FL.recs(),mm=FL.mem();
   return `<div class="stc ${okN?'':'off'}"><div class="stt"><span class="ste">${s.e}</span><b>第 ${s.id} 站｜${s.n}</b>${tag}</div><div class="std">${esc(FL.SD[s.id][mode])}</div>${rec?`<small class="strc">${esc(rec.why)}</small>`:''}
   ${okN?`<div class="stb"><button class="btn go" onclick="FL.open(${s.id})">進入這一站</button> <small>${okN}／5 個難度可用</small></div>`:`<div class="stb"><button class="btn alt" disabled>目前無法練習</button><small class="stw">${esc((first&&first.msg)||why||'尚無教材')}</small></div>`}</div>`}).join('');
  return `<div class="hm3 md3"><p class="bk"><button class="btn alt" onclick="UI.navTo(1)">← 回首頁</button></p><h2>${L.ic} ${L.n}</h2><p class="hq">${L.s}　<span class="mk2">${L.mic}</span></p>${UI.packNote()}<p class="hq2">選一站開始（每一站都可以自由選擇）</p><div class="stg6">${cards}</div></div>`};
-FL.rangeCat=()=>{const mm=FL.mem();return `<select id="fl_cat" onchange="FL.setCat(this.value)">${[['all','全部圖卡（'+S.cards.length+'）'],...S.cats.map(c=>['c:'+c.id,c.name+'（'+S.cards.filter(x=>x.cats.includes(c.id)).length+'張）']),['mk','錯題集（'+mistakeCards().length+'）'],['wk','注音加強練習（'+weakCards().length+'）']].map(([v,t])=>`<option value="${v}" ${mm.cat===v?'selected':''}>${esc(t)}</option>`).join('')}</select>`};
+FL.rangeCat=()=>{const mm=FL.mem();const mk=c=>['c:'+c.id,c.name+'（'+S.cards.filter(x=>x.cats.includes(c.id)).length+'張）'],lv=S.cats.filter(c=>c.lvl).sort((a,b)=>(a.sort||0)-(b.sort||0));return `<select id="fl_cat" onchange="FL.setCat(this.value)">${[['all','全部圖卡（'+S.cards.length+'）'],...(lv.length?[['','── 依分類 ──']]:[]),...S.cats.filter(c=>!c.lvl).map(mk),...(lv.length?[['','── 依 Level ──']]:[]),...lv.map(mk),['mk','錯題集（'+mistakeCards().length+'）'],['wk','注音加強練習（'+weakCards().length+'）']].map(([v,t])=>v===''?`<option disabled>${esc(t)}</option>`:`<option value="${v}" ${mm.cat===v?'selected':''}>${esc(t)}</option>`).join('')}</select>`};
 FL.setupHtml=()=>{const st=FL.st,mode=FL.modeOf(),S0=STG.find(s=>s.id===st),mm=FL.mem(),n=mm.n||(FL.pref().n)||5,star=FL.starFor(st,mode),rng=mm.range||'rec',lad=FL.ladder(st,mode),ex=FL.extras(st,mode),act=FL.actSel||'';
  const stars=lad.map((c,i)=>{const r=FL.chk(c,rng,mm.cat),on=star===i+1;return `<button class="fstar ${on?'on':''} ${r.ok?'':'na'}" ${r.ok?`onclick="FL.setStar(${i+1})"`:'disabled'} aria-pressed="${on}" aria-label="${FL.STAR[i]}難度${r.ok?'':'（目前無法使用）'}" title="${r.ok?'':esc(r.msg||'')}"><span>${'★'.repeat(i+1)}${'☆'.repeat(4-i)}</span><small>${r.ok?FL.STAR[i]:'尚無教材'}</small></button>`}).join('');
  const cur=lad[star-1],curChk=FL.chk(cur,rng,mm.cat),desc=curChk.ok?`<b>${FL.STAR[star-1]}：</b>${esc(cur.t)}　<small>每完成一題 ⭐ ${star} 顆</small>`:`<b>${FL.STAR[star-1]}目前無法使用：</b>${esc(curChk.msg)}`;
@@ -4241,7 +4255,7 @@ FL.encourage=(rec)=>{try{if(!rec||rec.outcome==='correct'||rec.outcome==='tech_e
 Object.defineProperty(FL,'run',{get:()=>FLR,set:v=>{FLR=v},configurable:true});
 
 /*P9B-BEGIN 個別化設定、輔助紀錄、換題方式、等待時間*/
-FL.PK=['keyVoice','music','mv','vol','vv','vs','recRate','ttsRate','aps','keySnd','sound','vf','ap','hintMode','waitSec','autoNext','anim','fx','uiSize','uiAid'];
+FL.PK=['keyVoice','music','mv','vol','vv','vs','recRate','ttsRate','aps','keySnd','sound','vf','gv','ap','hintMode','waitSec','autoNext','anim','fx','uiSize','uiAid'];
 FL.hlFor=m=>({full:{p:1,f:1,cap:0},part:{p:1,f:0,cap:0},first:{p:1,f:0,cap:1},none:{p:0,f:0,cap:0}}[m]||{p:1,f:1,cap:0});
 FL.hintModeOf=hl=>{hl=hl||{};const p=hl.p!==0&&hl.p!==false&&hl.p!=null?1:0,f=hl.f!==0&&hl.f!==false&&hl.f!=null?1:0;return !p&&!f?'none':f?'full':(+hl.cap>0?'first':'part')};
 FL.HINTN={full:'完整（可看完整注音）',part:'部分（逐步提示）',first:'首音（只提示第一個音）',none:'無提示'};
@@ -4271,7 +4285,7 @@ FL.adv=(fn,ms)=>{if(S.set.autoNext!==false){setTimeout(fn,ms);return}
  FL.nxFn=fn;setTimeout(()=>{if(!G.on||!FL.nxFn)return;const b=$('#bot');if(b&&!$('#nxrow'))b.insertAdjacentHTML('beforeend','<div class="row" id="nxrow"><button class="btn go fnx" onclick="FL.nx()">下一題 ▶</button></div>')},Math.min(ms,700))};
 FL.nx=()=>{const f=FL.nxFn;FL.nxFn=null;const e=$('#nxrow');if(e)e.remove();if(f)f()};
 /* ---------- 設定頁（依個案儲存、自動套用） ---------- */
-UI.settings=()=>{const im=UI.inMode(),ms={granted:'已允許',denied:'已被拒絕（可在瀏覽器網址列旁重新開啟）',prompt:'尚未授權',unsupported:'這個瀏覽器不支援',unknown:'尚未確認',none:'找不到麥克風',error:'無法取得'}[UI.mic.state]||'尚未確認',lrn=S.lrn.list.filter(x=>!x.archived),p=LRN.cur(),pr=FL.pref(),hm=S.set.hintMode||FL.hintModeOf(S.set.hl),w=S.set.waitSec==null?'x':String(S.set.waitSec),pk=(()=>{try{return PS().pkN}catch(e){return 2}})();
+UI.settings=()=>{const im=UI.inMode(),ms={granted:'已允許',denied:'已被拒絕（可在瀏覽器網址列旁重新開啟）',prompt:'尚未授權',unsupported:'這個瀏覽器不支援',unknown:'尚未確認',none:'找不到麥克風',error:'無法取得'}[UI.mic.state]||'尚未確認',lrn=S.lrn.list.filter(x=>!x.archived&&PAR.allowed(x.id)),p=LRN.cur(),pr=FL.pref(),hm=S.set.hintMode||FL.hintModeOf(S.set.hl),w=S.set.waitSec==null?'x':String(S.set.waitSec),pk=(()=>{try{return PS().pkN}catch(e){return 2}})();
  const rg=(id,l,min,max,step,val,fn)=>`<label class="srow">${l} <input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${val}" oninput="${fn}"></label>`;
  const sel=(id,l,opts,val,fn)=>`<label class="srow">${l} <select id="${id}" onchange="${fn}">${opts.map(([v,t])=>`<option value="${v}" ${String(val)===String(v)?'selected':''}>${t}</option>`).join('')}</select></label>`;
  const ck=(id,l,on,fn)=>`<label class="srow"><input type="checkbox" id="${id}" ${on?'checked':''} onchange="${fn}"> ${l}</label>`;
@@ -4281,7 +4295,7 @@ UI.settings=()=>{const im=UI.inMode(),ms={granted:'已允許',denied:'已被拒�
  ${rg('s_vv','真人錄音音量（詞語、注音、鼓勵語音）',0,1,.05,S.set.vv==null?.9:S.set.vv,"FL.set('vv',+this.value);if(AM.a)AM.a.volume=+this.value")}
  ${rg('s_rec','真人錄音播放速度',.8,1.6,.05,S.set.recRate||1.25,"FL.set('recRate',+this.value)")}${rg('s_tts','AI 語音播放速度',.5,1,.05,S.set.ttsRate||.75,"FL.set('ttsRate',+this.value)")}
  ${ck('s_kv','按下注音鍵時立刻念出那個注音（真人錄音）',S.set.keyVoice!==false,"FL.set('keyVoice',this.checked)")}<small>聲調沒有獨立錄音，按聲調鍵不會有聲音。</small>${ck('s_aps','提示時逐一念出各個注音符號',S.set.aps!==false,"FL.set('aps',this.checked)")}${ck('s_key','按下注音鍵時有提示音',S.set.keySnd!==false,"FL.set('keySnd',this.checked)")}
- ${ck('s_snd','鼓勵音效（交通工具音效、提示音）',!!S.set.sound,"FL.set('sound',this.checked)")}${ck('s_vf','老師鼓勵語音（答對囉、加油…）',S.set.vf!==false,"FL.set('vf',this.checked);if(!this.checked)AM.stop()")}</div>
+ ${ck('s_snd','鼓勵音效（交通工具音效、提示音）',!!S.set.sound,"FL.set('sound',this.checked)")}${ck('s_vf','老師鼓勵語音（答對囉、加油…）',S.set.vf!==false,"FL.set('vf',this.checked);if(!this.checked)AM.stop()")}${ck('s_gv','真人操作引導語音（請找找看、換你說囉…）',S.set.gv!==false,"FL.set('gv',this.checked);if(!this.checked)AM.stop()")}</div>
  <div class="panel"><h3>🧩 學習輔助</h3>
  ${sel('s_wait','作答等待時間',[['x','預設（不限制作答時間）'],[5,'5 秒'],[10,'10 秒'],[15,'15 秒'],[20,'20 秒'],[0,'不限時（不自動提示）']],w,"FL.set('waitSec',this.value==='x'?undefined:+this.value)")}<small>只是「多久沒反應後系統主動提示」，不是答題限制。</small>
  ${sel('s_hint','注音提示',Object.entries(FL.HINTN),hm,"FL.set('hintMode',this.value)")}
@@ -4790,7 +4804,7 @@ const LIB={base:null,cats:null,man:null,err:'',loading:null,ui:{q:'',cat:'',img:
  /* ---- 載入靜態資料（失敗要明確回報，不假裝成功）---- */
  async load(force){if(LIB.base&&!force)return true;if(LIB.loading&&!force)return LIB.loading;
   return LIB.loading=(async()=>{try{const g=async n=>{const r=await fetch(LIB.DIR+n,{cache:'no-cache'});if(!r.ok)throw new Error(n+' HTTP '+r.status);return r.json()};
-   const [v,c,m]=await Promise.all([g('vocabulary.json'),g('categories.json'),g('manifest.json').catch(()=>null)]);
+   const [v,c,m,lvj]=await Promise.all([g('vocabulary.json'),g('categories.json'),g('manifest.json').catch(()=>null),g('levels.json').catch(()=>null)]);LIB.lvs=lvj&&Array.isArray(lvj.levels)?lvj.levels.filter(x=>x&&/^[\w-]{1,20}$/.test(x.id)):[];
    const rep=LIB.check(v,c);if(rep.fatal)throw new Error(rep.fatal);
    const s=LIB.st();LIB.static={v,c};LIB.man=m;LIB.err='';LIB.rep=rep;
    LIB.base=LIB.merge(v,(s.upd&&s.upd.v)||[]);LIB.cats=LIB.mergeC(c,(s.upd&&s.upd.c)||[]);LIB.idx=new Map(LIB.base.map(w=>[w.id,w]));return true}
@@ -4810,7 +4824,7 @@ const LIB={base:null,cats:null,man:null,err:'',loading:null,ui:{q:'',cat:'',img:
  eff(id){const b=LIB.idx&&LIB.idx.get(id);if(!b)return null;const o=LIB.st().ov[id]||{},hide=o.hide||[],
   imgs=[...(b.images||[]).filter(p=>!hide.includes(p)),...(o.add||[]).map(a=>a.d)],
   prim=o.primary&&imgs.includes(o.primary)?o.primary:(b.primaryImage&&imgs.includes(b.primaryImage)?b.primaryImage:imgs[0]||'');
-  return{id,text:b.word,zy:o.zy!=null?o.zy:b.zhuyin,zyOrig:b.zhuyin,catId:b.categoryId,cat:b.category,imgs,prim,
+  return{id,text:b.word,zy:o.zy!=null?o.zy:b.zhuyin,zyOrig:b.zhuyin,catId:b.categoryId,cat:b.category,lvId:b.levelId||'',lvRank:b.levelRank||0,imgs,prim,
    rv:o.rv||(b.reviewStatus==='approved'?'approved':'pending'),zyRev:o.zyRev||(b.pronunciationReview==='reviewed'?'ok':'pending'),extraCats:o.cats||[],en:!!LIB.st().en[id],ov:o}},
  /* ---- 分類：由 categories.json 建立，不寫死；同名既有分類就合併 ---- */
  catSync(){const s=LIB.st();if(!LIB.cats)return;
@@ -4818,13 +4832,14 @@ const LIB={base:null,cats:null,man:null,err:'',loading:null,ui:{q:'',cat:'',img:
    const ex=S.cats.find(c=>c.name===k.name&&!c.lib);if(ex){s.cm[k.id]=ex.id;s.merged=s.merged||{};s.merged[k.id]=ex.id}else s.cm[k.id]='LIB-'+k.id});
   /* 只有在有啟用詞彙時才建立分類，避免學生端出現空分類 */
   const used=new Set();S.cards.forEach(c=>{if(c.lib)(c.cats||[]).forEach(x=>used.add(x))});
-  LIB.cats.forEach(k=>{const id=s.cm[k.id];if(!id.startsWith('LIB-'))return;const has=S.cats.find(c=>c.id===id);
-   if(used.has(id)&&!has)S.cats.push({id,name:k.name,order:[],lib:1,libId:k.id,sort:+k.id.replace(/\D/g,'')||0});
+  (LIB.lvs||[]).forEach(k=>{if(!s.cm[k.id])s.cm[k.id]='LIB-'+k.id});
+  [...LIB.cats,...(LIB.lvs||[]).map(k=>({id:k.id,name:k.label||k.name,lvl:1,level:k.level}))].forEach(k=>{const id=s.cm[k.id];if(!id||!id.startsWith('LIB-'))return;const has=S.cats.find(c=>c.id===id);
+   if(used.has(id)&&!has)S.cats.push({id,name:k.name,order:[],lib:1,libId:k.id,lvl:k.lvl?1:0,sort:k.lvl?100+(+k.level||0):(+k.id.replace(/\D/g,'')||0)});
    else if(!used.has(id)&&has&&!S.cards.some(c=>(c.cats||[]).includes(id))){S.cats=S.cats.filter(c=>c.id!==id)}
    else if(has&&has.name!==k.name&&has.lib)has.name=k.name})},
  /* ---- 把「已啟用」的詞彙放進 S.cards（相對網址圖片；教師自己加的圖才是 data URL）---- */
  card(w){const o=w.ov,s=LIB.st(),approved=w.rv==='approved',prim=w.prim,
-  cm=s.cm[w.catId],cats=[...new Set([cm,...w.extraCats].filter(Boolean))];
+  cm=s.cm[w.catId],lcm=w.lvId?s.cm[w.lvId]:null,cats=[...new Set([cm,lcm,...w.extraCats].filter(Boolean))];
   return{id:w.id,text:w.text,zy:w.zy,img:approved&&prim?LIB.url(prim):'',imgs:w.imgs.map(LIB.url),libPrim:prim?LIB.url(prim):'',audio:o.audio||'',cats,created:o.created||Date.now(),modified:Date.now(),lib:1,libRv:w.rv}},
  sync(){const s=LIB.st();if(!LIB.base)return 0;LIB.catSync();let n=0;
   /* 保存要被拿掉的詞彙錄音，之後再啟用能還原 */
@@ -4921,7 +4936,7 @@ const LIB={base:null,cats:null,man:null,err:'',loading:null,ui:{q:'',cat:'',img:
  async imgChk(ids){const bad=[];let n=0;for(const id of ids){const w=LIB.eff(id);if(!w)continue;for(const p of w.imgs){if(p.startsWith('data:'))continue;n++;try{const r=await fetch(LIB.url(p),{method:'HEAD'});if(!r.ok)bad.push(p)}catch(e){bad.push(p)}}}return{n,bad}},
  re(){if(document.getElementById('sp'))tch()},
  set(k,v){LIB.ui[k]=v;if(k!=='pg')LIB.ui.pg=0;LIB.re()},
- list(){const u=LIB.ui,q=u.q.trim();return LIB.base.map(b=>LIB.eff(b.id)).filter(w=>(!q||w.text.includes(q)||w.zy.includes(q)||w.id.toLowerCase().includes(q.toLowerCase()))&&(!u.cat||w.catId===u.cat)&&(!u.img||(u.img==='has'?w.imgs.length>0:u.img==='multi'?w.imgs.length>1:w.imgs.length===0))&&(!u.rv||w.rv===u.rv)&&(!u.en||(u.en==='on')===w.en)&&(!u.zy||(u.zy==='sus'?LIB.zyIssues(w.id).length>0:u.zy==='pend'?w.zyRev==='pending':w.zyRev!=='pending')))},
+ list(){const u=LIB.ui,q=u.q.trim();return LIB.base.map(b=>LIB.eff(b.id)).filter(w=>(!q||w.text.includes(q)||w.zy.includes(q)||w.id.toLowerCase().includes(q.toLowerCase()))&&(!u.cat||w.catId===u.cat)&&(!u.lv||w.lvId===u.lv)&&(!u.img||(u.img==='has'?w.imgs.length>0:u.img==='multi'?w.imgs.length>1:w.imgs.length===0))&&(!u.rv||w.rv===u.rv)&&(!u.en||(u.en==='on')===w.en)&&(!u.zy||(u.zy==='sus'?LIB.zyIssues(w.id).length>0:u.zy==='pend'?w.zyRev==='pending':w.zyRev!=='pending')))},
  tog(id,on){if(on)LIB.ui.sel[id]=1;else delete LIB.ui.sel[id]},
  selIds(){const k=Object.keys(LIB.ui.sel);return k},
  selAll(on){LIB.list().slice(LIB.ui.pg*30,LIB.ui.pg*30+30).forEach(w=>LIB.tog(w.id,on));LIB.re()},
@@ -4966,7 +4981,7 @@ LIB.view=()=>{
  <p>這位學生多張圖片的出法：<select onchange="LIB.ext().mode=this.value;save();LIB.re()">${[['fixed','固定：只用老師選的主要圖片'],['rotate','輪流：每次換下一張'],['random','隨機：每題隨機一張']].map(([v,t])=>`<option value="${v}" ${L0.mode===v?'selected':''}>${t}</option>`).join('')}</select> <small>每一題開始時才決定圖片，同一題中不會換圖；成績仍以詞彙為單位累計。</small></p>
  <p><small>⚠ 全部詞彙目前都是「待審核」：圖片經你審核通過前，不會出現在看圖題；只有「看文字拼注音」可以先使用已啟用的詞彙。注音也都還沒有逐字對照辭典，請用下方「需確認的注音」逐項確認。</small></p></div>
  <div class="panel"><h4 style="margin:0 0 4px">篩選與搜尋</h4>
- <input placeholder="搜尋詞彙、注音或編號" value="${esc(u.q)}" onchange="LIB.set('q',this.value)" style="width:12em"> <select onchange="LIB.set('cat',this.value)"><option value="">全部分類</option>${LIB.cats.map(c=>`<option value="${c.id}" ${u.cat===c.id?'selected':''}>${esc(c.name)}（${c.count}）</option>`).join('')}</select>
+ <input placeholder="搜尋詞彙、注音或編號" value="${esc(u.q)}" onchange="LIB.set('q',this.value)" style="width:12em"> <select onchange="LIB.set('cat',this.value)"><option value="">全部分類</option>${LIB.cats.map(c=>`<option value="${c.id}" ${u.cat===c.id?'selected':''}>${esc(c.name)}（${c.count}）</option>`).join('')}</select>${(LIB.lvs||[]).length?` <select onchange="LIB.set('lv',this.value)"><option value="">全部 Level</option>${LIB.lvs.map(l=>`<option value="${l.id}" ${u.lv===l.id?'selected':''}>${esc(l.label||l.name||l.id)}</option>`).join('')}</select>`:''}
  <select onchange="LIB.set('img',this.value)">${[['','圖片：全部'],['has','有圖片'],['multi','有多張圖片'],['none','沒有圖片']].map(([v,t])=>`<option value="${v}" ${u.img===v?'selected':''}>${t}</option>`).join('')}</select>
  <select onchange="LIB.set('rv',this.value)">${[['','審核：全部'],['pending','待審核'],['approved','已審核']].map(([v,t])=>`<option value="${v}" ${u.rv===v?'selected':''}>${t}</option>`).join('')}</select>
  <select onchange="LIB.set('en',this.value)">${[['','啟用：全部'],['on','已啟用'],['off','未啟用']].map(([v,t])=>`<option value="${v}" ${u.en===v?'selected':''}>${t}</option>`).join('')}</select>
@@ -4991,6 +5006,552 @@ LIB.view=()=>{
  <p><small>近期操作：${s.log.slice(-4).reverse().map(l=>new Date(l.ts).toLocaleString()+' '+esc(l.t)).join('｜')||'（無）'}</small></p></div>`};
 LIB.chkSel=async()=>{const ids=LIB.selIds();if(!ids.length||ids.length>60)return alert('請勾選 1～60 個詞彙再檢查（避免一次下載太多圖片）');const e=document.getElementById('lib_chk');e.textContent='檢查中…';const r=await LIB.imgChk(ids);e.textContent=r.bad.length?'有 '+r.bad.length+' 張讀不到：'+r.bad.slice(0,3).join('、'):'已檢查 '+r.n+' 張，全部讀得到'};
 /*P12-END*/
+/*P13-BEGIN 第06階段：預設詞彙清單（vocab/default-library.json）、無圖詞彙清單與 CSV 匯出*/
+LIB.hash=s=>{let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return(h>>>0).toString(16)};
+/* 只保留可攜、體積小的設定：啟用、審核、注音修改、主要圖片（內建圖）、隱藏圖片、額外分類。不含錄音、不含老師上傳的圖（Base64）、不含學生資料 */
+LIB.defClean=o=>{const okId=k=>typeof k==='string'&&/^[\w-]{1,40}$/.test(k),r={en:{},ov:{},mode:'fixed'};
+ if(!o||typeof o!=='object'||o.kind!=='library-default'||!o.en||typeof o.en!=='object')return null;
+ Object.keys(o.en).forEach(k=>{if(okId(k)&&LIB.idx&&LIB.idx.has(k))r.en[k]=1});
+ Object.entries(o.ov||{}).forEach(([k,v])=>{if(!okId(k)||!v||typeof v!=='object'||!LIB.idx||!LIB.idx.has(k))return;const x={};
+  if(typeof v.zy==='string'&&v.zy.length<=300)x.zy=v.zy;if(['pending','ok','edited'].includes(v.zyRev))x.zyRev=v.zyRev;if(['pending','approved'].includes(v.rv))x.rv=v.rv;
+  if(typeof v.primary==='string'&&/^images\/[\w.-]+$/.test(v.primary))x.primary=v.primary;
+  if(Array.isArray(v.hide))x.hide=v.hide.filter(p=>typeof p==='string'&&/^images\/[\w.-]+$/.test(p));
+  if(Array.isArray(v.cats))x.cats=v.cats.filter(p=>typeof p==='string'&&p.length<=60);
+  if(Object.keys(x).length)r.ov[k]=x});
+ if(['fixed','rotate','random'].includes(o.mode))r.mode=o.mode;r.hash=LIB.hash(JSON.stringify({en:r.en,ov:r.ov,mode:r.mode}));return r};
+LIB.defObj=()=>{const s=LIB.st(),x={en:{...s.en},ov:{},mode:LIB.mode()},drop={audio:0,add:0,prim:0};
+ Object.entries(s.ov).forEach(([id,o])=>{if(o.audio)drop.audio++;if(o.add&&o.add.length)drop.add+=o.add.length;const c={};
+  ['zy','zyRev','rv'].forEach(k=>{if(o[k]!=null)c[k]=o[k]});if(o.primary){if(/^data:/.test(o.primary))drop.prim++;else c.primary=o.primary}
+  if(o.hide&&o.hide.length)c.hide=o.hide.slice();if(o.cats&&o.cats.length)c.cats=o.cats.slice();if(Object.keys(c).length)x.ov[id]=c});
+ const h=LIB.hash(JSON.stringify({en:x.en,ov:x.ov,mode:x.mode}));
+ return{o:{schemaVersion:1,kind:'library-default',ver:s.ver,exportedAt:new Date().toISOString(),hash:h,counts:{enabled:Object.keys(x.en).length,overrides:Object.keys(x.ov).length},note:'詞彙庫預設清單。不含錄音、老師上傳的圖片與學生資料。放在網站的 vocab/default-library.json。',...x},drop}};
+LIB.defDl=()=>{if(!LIB.base)return alert('詞彙庫尚未讀取');const {o,drop}=LIB.defObj();
+ if(!Object.keys(o.en).length&&!confirm('目前沒有啟用任何詞彙，匯出的預設清單會是空的。仍要匯出嗎？'))return;
+ if((drop.audio||drop.add||drop.prim)&&!confirm('預設清單不包含：老師的錄音（'+drop.audio+' 個）、老師上傳的圖片（'+drop.add+' 張）'+(drop.prim?'、指向老師上傳圖的主要圖片設定（'+drop.prim+' 個）':'')+'。\n這些請用「教材與資料管理」的匯出入，或把圖片放進網站 vocab/images 後更新詞彙庫。\n\n仍要匯出嗎？'))return;
+ const b=new Blob([JSON.stringify(o,null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='default-library.json';document.body.appendChild(a);a.click();a.remove();LIB.log('匯出預設清單（啟用 '+o.counts.enabled+'）');save();LIB.defMsg='已下載 default-library.json。請放進網站的 vocab 資料夾（和 vocabulary.json 同一層）並推送到 GitHub。';LIB.re()};
+LIB.defFetch=async()=>{const r=await fetch(LIB.DIR+'default-library.json?t='+Date.now(),{cache:'no-store'});if(r.status===404)return null;if(!r.ok)throw new Error('default-library.json HTTP '+r.status);
+ let j;try{j=await r.json()}catch(e){throw new Error('default-library.json 不是有效的 JSON')}const c=LIB.defClean(j);if(!c)throw new Error('default-library.json 格式不正確');return c};
+LIB.defSnap=c=>({hash:c.hash,en:Object.keys(c.en),ovh:Object.fromEntries(Object.entries(c.ov).map(([k,v])=>[k,LIB.hash(JSON.stringify(v))])),ts:Date.now()});
+LIB.defApplyAll=(c,onlyMissing)=>{const s=LIB.st();let a=0,b=0;
+ Object.keys(c.en).forEach(id=>{if(!s.en[id]){s.en[id]=1;a++}});
+ Object.entries(c.ov).forEach(([id,v])=>{if(!onlyMissing||!s.ov[id]){if(!s.ov[id]||!onlyMissing){s.ov[id]={...(s.ov[id]||{}),...JSON.parse(JSON.stringify(v))};b++}}});
+ return{a,b}};
+LIB.defDiff=c=>{const s=LIB.st(),p=s.def||{en:[],ovh:{}},pe=new Set(p.en),d={addEn:[],newOv:[],conflict:[]};
+ Object.keys(c.en).forEach(id=>{if(!pe.has(id)&&!s.en[id])d.addEn.push(id)});
+ Object.entries(c.ov).forEach(([id,v])=>{const h=LIB.hash(JSON.stringify(v));if(p.ovh[id]===h)return;if(s.ov[id])d.conflict.push(id);else d.newOv.push(id)});return d};
+LIB.defBoot=async()=>{LIB.defInfo={state:'none'};if(!LIB.base)return;
+ try{const c=await LIB.defFetch();if(!c)return;const s0=S.lib,empty=!s0||(!Object.keys(s0.en||{}).length&&!Object.keys(s0.ov||{}).length&&!s0.def);
+  if(empty){const r=LIB.defApplyAll(c,false),s=LIB.st();s.def=LIB.defSnap(c);if(c.mode&&!(LRN.cur().ext||{}).lib)LIB.ext().mode=c.mode;LIB.log('自動套用網站預設清單：啟用 '+r.a+'、設定 '+r.b);LIB.defInfo={state:'applied',a:r.a,b:r.b};await save();return}
+  const s=LIB.st();if(!s.def){s.def=LIB.defSnap(c);LIB.defInfo={state:'baseline'};LIB.defC=c;await save();return}
+  LIB.defC=c;if(s.def.hash===c.hash){LIB.defInfo={state:'same'};return}
+  const d=LIB.defDiff(c);if(!d.addEn.length&&!d.newOv.length&&!d.conflict.length){s.def=LIB.defSnap(c);LIB.defInfo={state:'same'};await save();return}
+  if(s.def.skip===c.hash){LIB.defInfo={state:'skipped'};return}
+  LIB.defPend={c,d};LIB.defInfo={state:'pending'}}
+ catch(e){LIB.defInfo={state:'err',msg:String(e&&e.message||e)}}};
+LIB.defOk=()=>{const p=LIB.defPend;if(!p)return;const s=LIB.st();p.d.addEn.forEach(id=>{s.en[id]=1});p.d.newOv.forEach(id=>{s.ov[id]=JSON.parse(JSON.stringify(p.c.ov[id]))});
+ s.def=LIB.defSnap(p.c);delete s.def.skip;LIB.log('套用預設清單更新：新增啟用 '+p.d.addEn.length+'、新設定 '+p.d.newOv.length+'；本機已有設定而保留 '+p.d.conflict.length);LIB.defPend=null;LIB.defInfo={state:'same'};LIB.sync();save();LIB.re()};
+LIB.defSkip=()=>{const p=LIB.defPend;if(!p)return;LIB.st().def.skip=p.c.hash;LIB.defPend=null;LIB.defInfo={state:'skipped'};save();LIB.re()};
+LIB.defFill=async()=>{try{const c=LIB.defC||await LIB.defFetch();if(!c)return alert('網站上沒有 vocab/default-library.json');const r=LIB.defApplyAll(c,true),s=LIB.st();s.def=LIB.defSnap(c);LIB.log('手動補入預設清單：新增啟用 '+r.a+'、新設定 '+r.b);LIB.sync();await save();LIB.defMsg='已補入預設清單：新增啟用 '+r.a+' 個詞彙、'+r.b+' 項設定。本機原有的設定都沒有被改動。';LIB.re()}catch(e){alert('讀取預設清單失敗：'+(e.message||e))}};
+/* 無圖詞彙與 CSV */
+LIB.setF=o=>{Object.assign(LIB.ui,o);LIB.ui.pg=0;LIB.re()};
+LIB.csv=kind=>{if(!LIB.base)return;const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"',ck=new Map(LIB.cats.map((c,i)=>[c.id,i]));
+ let L=kind==='noimg'?LIB.base.map(b=>LIB.eff(b.id)).filter(w=>!w.imgs.length):LIB.list();
+ L=L.slice().sort((a,b)=>(ck.get(a.catId)||0)-(ck.get(b.catId)||0)||a.id.localeCompare(b.id));
+ const rows=[['編號','詞彙','注音','分類','圖片數','是否啟用','圖片審核','注音狀態']].concat(L.map(w=>[w.id,w.text,w.zy,w.cat,w.imgs.length,w.en?'是':'否',LIB.RV[w.rv],LIB.ZR[w.zyRev]]));
+ const blob=new Blob(['﻿'+rows.map(r=>r.map(q).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=kind==='noimg'?'無圖詞彙清單.csv':'詞彙庫篩選結果.csv';document.body.appendChild(a);a.click();a.remove();return L.length};
+LIB.noImgByCat=()=>{const m=new Map();LIB.base.forEach(b=>{const w=LIB.eff(b.id);if(!w.imgs.length)m.set(w.catId,(m.get(w.catId)||0)+1)});return LIB.cats.map(c=>({id:c.id,name:c.name,n:m.get(c.id)||0,total:c.count})).filter(x=>x.n)};
+LIB.extra=()=>{if(!LIB.base)return{top:'',bot:''};const s=LIB.st(),i=LIB.defInfo||{state:'none'},p=LIB.defPend,nb=LIB.noImgByCat(),tot=nb.reduce((a,x)=>a+x.n,0);
+ const stt={none:'網站上沒有 vocab/default-library.json（還沒發布預設清單）。',applied:'這台裝置第一次開啟，已自動套用網站預設清單。',baseline:'網站有預設清單；這台裝置已有自己的設定，所以沒有改動。要把預設清單裡本機沒有的項目補進來，請按下方「補入」。',same:'與網站預設清單一致，沒有待處理的差異。',skipped:'網站預設清單有更新，你選擇暫時略過。',pending:'網站預設清單有更新，等你確認。',err:'讀取預設清單失敗：'+esc(i.msg||'')}[i.state]||'';
+ const top=p?`<div class="panel" style="border:2px solid #e0a020;background:#fff7e6"><b>網站的預設詞彙清單有更新</b>：新增 ${p.d.addEn.length} 個啟用詞彙、${p.d.newOv.length} 項新設定；另有 ${p.d.conflict.length} 項你這台已有自己的設定，會<b>保留你的設定</b>。<br><small>只會加入你這台還沒有的項目，不會覆蓋或停用你已做的設定。</small><br><button class="btn go" onclick="LIB.defOk()">確認套用</button> <button class="btn alt" onclick="LIB.defSkip()">暫時略過</button></div>`:'';
+ const bot=`<div class="panel"><h4 style="margin:0 0 4px">📌 預設詞彙清單（讓每個裝置自動有同一批詞彙）</h4><p><small>${stt}</small></p>
+ <p><small>做法：在一台裝置把詞彙啟用、審核好 → 按「匯出預設清單」→ 把下載的 default-library.json 放進網站的 vocab 資料夾並推送 → 其他裝置第一次開啟網站時自動套用；已有自己設定的裝置不會被覆蓋，之後預設清單更新時會提示差異。預設清單不含錄音、老師上傳的圖片、學生姓名與學習紀錄；學生個別的詞彙範圍也不包含。</small></p>
+ <button class="btn go" onclick="LIB.defDl()">⬇ 匯出預設清單</button> <button class="btn alt" onclick="LIB.defFill()">補入網站預設清單中本機沒有的項目</button> ${LIB.defMsg?`<p style="color:#237a3b"><b>${esc(LIB.defMsg)}</b></p>`:''}</div>
+ <div class="panel"><h4 style="margin:0 0 4px">🖼 無圖詞彙（共 ${tot} 個）</h4><p><small>沒有圖片的詞彙不會出現在看圖題。各分類數量（點一下只看該分類的無圖詞彙；補圖請點詞彙 →「新增圖片」）：</small></p>
+ <p>${nb.map(x=>`<button class="btn alt sm" onclick="LIB.setF({img:'none',cat:'${x.id}'})">${esc(x.name)}（${x.n}／${x.total}）</button>`).join(' ')}</p>
+ <p><button class="btn sm" onclick="LIB.setF({img:'none',cat:''})">只看全部無圖詞彙</button> <button class="btn alt sm" onclick="LIB.csv('noimg')">⬇ 匯出全部無圖詞彙（CSV，依分類排序）</button> <button class="btn alt sm" onclick="LIB.csv('cur')">⬇ 匯出目前篩選結果（CSV）</button> <small>CSV 可用 Excel 開啟。</small></p></div>`;
+ return{top,bot}};
+{const _v=LIB.view;LIB.view=function(){const h=_v.apply(this,arguments),x=LIB.extra();return x.top+h+x.bot}}
+/*P13-END*/
+/*P14-BEGIN 第05階段（新版規範）：家長專區——今日推薦、學習成果、待複習詞彙、直接複習、能力說明、陪伴建議、生活口語觀察、權限
+  資料來源全部是個案的實際紀錄（S.recs／詞彙履歷 VP／生活觀察 S.ob）；沒有資料就顯示「尚未觀察」「資料不足」，不用假資料、不把星星當語言進步 */
+const PAR={D:864e5,ui:{sec:'today',rng:'7',from:'',to:'',sel:{},msg:'',cat:'',ok:''}};
+PAR.st=()=>{const s=S.par=S.par||{};if(!Array.isArray(s.tpl))s.tpl=[];return s};
+PAR.auth=()=>Array.isArray(S.par&&S.par.auth)?S.par.auth:null;
+PAR.allowed=id=>{const a=PAR.auth();return a===null?id===S.lrn.cur:a.includes(id)};
+PAR.ok=()=>PAR.allowed(S.lrn.cur);
+PAR.log=t=>{try{ACL.log('家長：'+t)}catch(e){}};
+PAR.x=()=>{const p=LRN.cur();p.ext=p.ext||{};if(!p.ext.par)p.ext.par={runs:[]};if(!Array.isArray(p.ext.par.runs))p.ext.par.runs=[];return p.ext.par};
+PAR.re=()=>{try{home()}catch(e){}};
+PAR.LIMIT='本機測試階段的權限說明：目前沒有獨立的家長帳號或登入密碼。「只看被授權的個案、不能改教師的評量標準、不能刪除作答紀錄」是這個畫面功能上的限制，並不是資訊安全保護——知道操作方式的人仍可進入教師區（教師區有設定密碼才會受保護）。正式提供多個家庭使用前，需要加入帳號驗證與雲端權限。';
+PAR.MODE={quiet:'聽讀練習',oral:'口語練習',integ:'整合練習'};
+PAR.fd=t=>t?new Date(t).toLocaleDateString('zh-TW'):'—';
+PAR.day=t=>{const d=new Date(t);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+PAR.valid=r=>r&&r.outcome!=='tech_error'&&r.outcome!=='skipped';
+/* ---------- 日期範圍 ---------- */
+PAR.range=()=>{const u=PAR.ui,D=PAR.D,e=new Date();e.setHours(23,59,59,999);let to=e.getTime(),from;
+ if(u.rng==='custom'){const f=Date.parse(u.from+'T00:00:00'),t=Date.parse(u.to+'T23:59:59');if(f>0&&t>0&&t>=f){from=f;to=t}else{const s=new Date();s.setHours(0,0,0,0);from=s.getTime()-6*D}}
+ else{const n=u.rng==='30'?30:7,s=new Date();s.setHours(0,0,0,0);from=s.getTime()-(n-1)*D}
+ return{from,to,len:to-from+1,days:Math.round((to-from+1)/D)}};
+/* 只比較「相近題型、難度、練習目的」的紀錄：每個條件組合在前後兩段都有足夠題數才納入；否則不比較 */
+PAR.cmp=(prev,cur,succ,minN)=>{minN=minN||3;const key=r=>[r.game,r.stage,r.purpose].join('|'),g=a=>{const m={};a.forEach(r=>{(m[key(r)]=m[key(r)]||[]).push(r)});return m},P=g(prev),C=g(cur);let pn=0,ps=0,cn=0,cs=0;
+ Object.keys(C).forEach(k=>{if(P[k]&&P[k].length>=minN&&C[k].length>=minN){pn+=P[k].length;ps+=P[k].filter(succ).length;cn+=C[k].length;cs+=C[k].filter(succ).length}});
+ if(!pn||!cn)return{ok:false};const a=ps/pn*100,b=cs/cn*100;return{ok:true,prev:Math.round(a),cur:Math.round(b),delta:Math.round(b-a),n:cn}};
+PAR.hintOf=r=>Array.isArray(r.hints)?r.hints.length:0;
+PAR.indep=r=>r.outcome==='correct'&&r.independent===true&&!(r.ext&&r.ext.vp&&r.ext.vp.imm);
+/* ---------- 近期學習成果 ---------- */
+PAR.stats=()=>{const R=PAR.range(),all=RE.rows().filter(PAR.valid),cur=all.filter(r=>r.ts>=R.from&&r.ts<=R.to),prev=all.filter(r=>r.ts>=R.from-R.len&&r.ts<R.from);
+ const sess=new Set(cur.map(r=>(r.session&&r.session.id)||('d'+PAR.day(r.ts)))),ms=cur.reduce((a,r)=>a+Math.min(+r.durMs||0,18e4),0),words=new Set(cur.filter(r=>r.itemKind==='word').map(r=>r.itemId));
+ let famNew=new Set(),first={};
+ try{const st=s=>String(s||'').replace(/[!?]/g,'');(VP.ext().log||[]).filter(l=>l.w&&l.ts>=R.from&&l.ts<=R.to&&l.ab!=='dl').forEach(l=>{if(['fa','st'].includes(st(l.to))&&!['fa','st'].includes(st(l.from)))famNew.add(l.w)})}catch(e){}
+ all.filter(r=>r.game==='speak'&&r.itemKind==='word'&&PAR.indep(r)&&!PAR.hintOf(r)).forEach(r=>{if(first[r.itemId]==null||r.ts<first[r.itemId])first[r.itemId]=r.ts});
+ const spont=Object.keys(first).filter(id=>first[id]>=R.from&&first[id]<=R.to);
+ const sp=a=>a.filter(r=>r.game==='speak'),ind=PAR.cmp(sp(prev),sp(cur),PAR.indep),hn=(()=>{const ok=r=>r.outcome==='correct',P=sp(prev).filter(ok),C=sp(cur).filter(ok);return PAR.cmp(P,C,r=>PAR.hintOf(r)>0)})();
+ /* 需要持續加強的能力：這段期間練習過的詞彙中，哪一項能力最多詞彙還在「認識中／練習中／近期不穩」 */
+ const cnt={};try{[...words].forEach(id=>{const P=VP.prof(id);VP.AB.forEach(a=>{if(a.k==='dl'||a.k==='se')return;const x=P.ab[a.k];if(!x||!x.n)return;if(['kn','pr'].includes(x.state)||x.regressed)cnt[a.k]=(cnt[a.k]||0)+1})})}catch(e){}
+ const weak=Object.entries(cnt).filter(([k,n])=>n>=2).sort((a,b)=>b[1]-a[1]).slice(0,2).map(([k,n])=>({k,n,name:VP.abName(k)}));
+ const lastT=all.length?Math.max(...all.map(r=>r.ts)):null;
+ return{R,n:cur.length,last:lastT,sess:sess.size,min:Math.round(ms/6e4),words:words.size,famNew:famNew.size,spont:spont.length,ind,hn,weak}};
+PAR.trendTxt=(c,good)=>!c.ok?'資料還不夠，或前後兩段的題型、難度不同，暫時不做比較。':(c.delta>=10?'比前一段期間 '+good+'（'+c.prev+'％ → '+c.cur+'％）。':c.delta<=-10?'這段期間需要的協助較多（'+c.prev+'％ → '+c.cur+'％），這是持續練習中的正常起伏，可以多給一點支持。':'和前一段期間大致相同（'+c.prev+'％ → '+c.cur+'％）。');
+/* ---------- 家長版七項能力 ---------- */
+PAR.CORE=[
+ {k:'comp',n:'語意理解',say:'聽得懂詞彙',sel:r=>r.game==='pick',succ:r=>PAR.indep(r)},
+ {k:'retr',n:'詞彙提取',say:'自己想起並說出詞彙',sel:r=>r.game==='speak',succ:r=>PAR.indep(r)},
+ {k:'org',n:'語意組織',say:'將詞彙組合起來',sel:r=>/^cb/.test(r.game||''),succ:r=>r.outcome==='correct'},
+ {k:'flex',n:'組合彈性',say:'說出不同的短語',sel:r=>/^cb/.test(r.game||'')&&r.novelCombo===true,succ:r=>PAR.indep(r)},
+ {k:'indp',n:'表達獨立性',say:'減少大人的協助',sel:r=>r.game==='speak'&&r.outcome==='correct',succ:r=>PAR.hintOf(r)===0},
+ {k:'gen',n:'語言類化',say:'換圖片或情境也會使用',sel:r=>(r.game==='pick'&&r.pk&&r.pk.sub==='same')||r.newImage===true,succ:r=>r.outcome==='correct'},
+ {k:'init',n:'溝通主動性',say:'在生活中主動說話',life:true}];
+PAR.abil=()=>{const now=Date.now(),D=PAR.D,all=RE.rows().filter(PAR.valid),ob=OB.all().filter(r=>r.learnerId===LRN.cur().id);
+ return PAR.CORE.map(a=>{let n,n30,st,det;
+  if(a.life){n=ob.length;const c=ob.filter(r=>r.ts>=now-30*D),p=ob.filter(r=>r.ts>=now-60*D&&r.ts<now-30*D);n30=c.length;
+   st=!n?'尚未觀察':n<3?'資料不足':(c.filter(r=>r.initiated==='y').length>p.filter(r=>r.initiated==='y').length&&p.length?'近期有進步':'持續練習中');det=n?'大人記錄的生活口語觀察共 '+n+' 筆（最近 30 天 '+n30+' 筆）；遊戲內的表現不會算進這一項。':'還沒有生活口語觀察紀錄，可以在「生活口語觀察」記下孩子在生活中主動說話的時刻。'}
+  else{const A=all.filter(a.sel),c=A.filter(r=>r.ts>=now-14*D),p=A.filter(r=>r.ts>=now-28*D&&r.ts<now-14*D),k=PAR.cmp(p,c,a.succ,3);n=A.length;n30=A.filter(r=>r.ts>=now-30*D).length;
+   st=!n?'尚未觀察':n<5?'資料不足':(k.ok&&k.delta>=10?'近期有進步':'持續練習中');det=n?'相關練習共 '+n+' 題（最近 30 天 '+n30+' 題）。'+(st==='近期有進步'?'最近兩週比前兩週更常自己完成。':st==='資料不足'?'題數還不多，先多累積幾次。':''):'還沒有這一項的練習紀錄，所以還不知道孩子的狀況（不代表表現不好）。'}
+  return{...a,st,det,cnt:n,n30}})};
+/* ---------- 待複習詞彙 ---------- */
+PAR.FR={R1:['已能拼打，但仍需要練習自己說出。','oral','看圖說詞：先等幾秒，讓孩子自己說','cross'],R2:['已能自己說出，但注音拼打還需要練習。','quiet','看圖＋注音打字','cross'],R3:['能跟著說，但還不能自己說出。','oral','看圖說詞：需要時給部分提示','cross'],R4:['目前只在固定圖片認過，需要練習不同圖片的辨認。','quiet','不同圖片的辨認','cross'],R5:['這個詞已經熟悉，可以練習和別的詞組合成短語。','quiet','短語組合','rec'],R6:['短語已熟悉，可以練習換不同的詞。','quiet','詞彙替換','rec'],R7:['之前學會了，最近表現不穩定，需要再複習。','integ','複習這個詞','rec'],R8:['複習的日子到了。','integ','複習這個詞','rec'],R9:['練習紀錄還不夠，先多練習幾次。','quiet','基礎練習','rec'],R10:['老師指定優先練習。','integ','複習這個詞','rec']};
+PAR.review=()=>{const m=new Map(),now=Date.now(),D=PAR.D,rows=RE.rows().filter(PAR.valid),lastOf={};rows.forEach(r=>{if(r.itemKind==='word'&&(lastOf[r.itemId]||0)<r.ts)lastOf[r.itemId]=r.ts});
+ const add=(id,kind,why,mode,how,pri)=>{const c=byId(id);if(!c||c.part)return;let w=m.get(id);if(!w){w={id,text:c.text,img:c.img||'',kinds:new Set(),why:[],mode:null,how:null,pri:0,last:lastOf[id]||null};m.set(id,w)}w.kinds.add(kind);if(!w.why.includes(why))w.why.push(why);if(!w.mode){w.mode=mode;w.how=how}w.pri=Math.max(w.pri,pri)};
+ try{VP.recAll().forEach(r=>{const d=PAR.FR[r.rule];if(d)add(r.wid,d[3],d[0],d[1],d[2],r.pri)})}catch(e){console.warn('PAR rec',e)}
+ const rc=rows.filter(r=>r.itemKind==='word'&&r.ts>=now-14*D);
+ rc.filter(r=>r.outcome==='wrong'||(r.tries>0&&r.outcome!=='correct')).forEach(r=>add(r.itemId,'wrong','最近答錯過（'+PAR.fd(r.ts)+'）。',r.game==='speak'?'oral':'quiet',r.game==='speak'?'看圖說詞':'看圖練習',4));
+ rc.filter(r=>r.outcome==='correct'&&PAR.hintOf(r)>0).forEach(r=>add(r.itemId,'hint',r.game==='speak'?'需要部分語音提示才說出來。':'最近需要提示才完成。',r.game==='speak'?'oral':'quiet',r.game==='speak'?'看圖說詞：慢慢減少提示':'看圖練習',3));
+ return[...m.values()].sort((a,b)=>b.pri-a.pri||(a.last||0)-(b.last||0))};
+/* ---------- 直接建立實際遊戲任務（不是跳回首頁讓家長重選）---------- */
+PAR.start=(ids,opt)=>{opt=opt||{};if(!PAR.ok())return false;const lm=['quiet','oral','integ'].includes(opt.mode)?opt.mode:null;
+ try{if(lm){S.set.lm=lm;UI.mode=lm}const mode=FL.modeOf(),allow=VP.QAB[mode]||VP.QAB.integ,T=VP.day(VP.now()),cands=[],skip=[];
+  ids.slice(0,40).forEach(id=>{const c=byId(id);if(!c||c.part)return;const P=VP.prof(id);let best=null;allow.forEach((k,i)=>{const st=VP.stepFor(c,k);if(!st)return;const x=P.ab[k],sc=(x.regressed?5:0)+(4-VP.rank(x))+(x.sch&&x.sch.due!=null&&x.sch.due<=T+VP.D-1?3:0)-i*.01;if(!best||sc>best.sc)best={c,ab:k,st,sc,rk:VP.rank(x)}});if(best)cands.push(best);else skip.push(c.text)});
+  if(!cands.length){PAR.ui.msg='這些詞彙目前沒有可用的題型（例如圖片尚未審核，或沒有注音）。'+(mode==='oral'?'口語練習需要有圖片的詞彙。':'');PAR.re();return false}
+  const n=Math.max(1,Math.min(20,cands.length));cands.sort((a,b)=>b.rk-a.rk);const first=cands.shift(),rest=shuffle(cands).slice(0,n-1),pick=[first,...rest];
+  const items=pick.map(q=>({...q.c,_step:q.st.step,_sub:q.st.sub,_rt:{of:null,n:1,from:'review'}}));
+  PAR.x().runs.push({ts:Date.now(),kind:opt.kind||'',mode:mode,n:items.length,ids:items.map(i=>i.id)});if(PAR.x().runs.length>50)PAR.x().runs.splice(0,PAR.x().runs.length-50);
+  PAR.last={kind:opt.kind,ids:items.map(i=>i.id),skipped:skip,over:Math.max(0,cands.length+1-n)};PAR.log('開始複習（'+(opt.kind||'')+'，'+items.length+' 個詞彙）');PAR.ui.msg='';
+  PH.m0=(G&&G.flow&&PH.m0)?PH.m0:S.set.mode;S.set.mix=false;S.set.mode='listen';PH.qq={items,flow:true};save();startRound();return true}
+ catch(e){console.error('PAR.start',e);PAR.ui.msg='無法建立複習任務：'+(e&&e.message||e);PAR.re();return false}};
+PAR.pickWords=kind=>{const L=PAR.review(),sel=PAR.ui.sel;
+ if(kind==='sel')return L.filter(w=>sel[w.id]);if(kind==='wrong'||kind==='hint'||kind==='cross')return L.filter(w=>w.kinds.has(kind));
+ if(kind==='cat')return L.filter(w=>((byId(w.id)||{}).cats||[]).includes(PAR.ui.cat));return L};
+PAR.go=(kind,mode)=>{const ws=PAR.pickWords(kind);
+ if(!ws.length){PAR.ui.msg=({sel:'請先勾選要複習的詞彙。',wrong:'最近 14 天沒有答錯的詞彙。',hint:'最近 14 天沒有需要提示的詞彙。',cross:'目前沒有「其他模式已學過、這個模式尚未熟悉」的詞彙。',cat:'這個分類目前沒有待複習的詞彙。'})[kind]||'目前沒有待複習的詞彙，先多練習幾次。';PAR.re();return false}
+ return PAR.start(ws.map(w=>w.id),{mode,kind})};
+/* ---------- 家長可調整的日常輔助 ---------- */
+PAR.setMins=v=>{if(!PAR.ok())return;const m=RC.setMins(v);PAR.log('練習時間 '+m+' 分鐘');PAR.re()};
+PAR.setWait=v=>{if(!PAR.ok())return;const p=LRN.cur(),o=p.wait;v=Math.max(4,Math.min(10,Math.round(+v)||6));if(v===o)return;S.set.ow=v;p.wait=v;p.ext=p.ext||{};p.ext.cfgLog=(p.ext.cfgLog||[]).concat([{ts:Date.now(),field:'wait',from:o,to:v,by:'家長'}]);PAR.log('提示前等待 '+v+' 秒');save();PAR.re()};
+PAR.setLit=on=>{if(!PAR.ok())return;RC.setCfg('lit',!!on);PAR.log('拼打／聽打 '+(on?'開':'關'));PAR.re()};
+PAR.confirm=(id,choice)=>{if(!PAR.ok())return false;const r=RE.rows().find(x=>x.id===id);if(!r||r.learnerId&&r.learnerId!==LRN.cur().id||!['correct','partial','attempt','wrong','none'].includes(choice))return false;const ok=RE.revise(id,choice,'家長');if(ok){PAR.log('確認口語表現：'+choice);PAR.re()}return ok};
+/* ---------- 陪伴建議（規則式；老師可預先建立生活情境模板）---------- */
+PAR.tips=()=>{const now=Date.now(),D=PAR.D,rows=RE.rows().filter(PAR.valid).filter(r=>r.ts>=now-30*D),sp=rows.filter(r=>r.game==='speak'),hint=sp.filter(r=>PAR.hintOf(r)>0||r.outcome==='wrong'),ws=[...new Set(rows.filter(r=>r.itemKind==='word').sort((a,b)=>b.ts-a.ts).map(r=>r.itemText))].filter(Boolean).slice(0,3),out=[],none=!rows.length,rv=PAR.review().slice(0,1)[0];
+ const add=(t,b)=>out.push({t,b});
+ if(sp.length)add('先等待幾秒，再給提示。給孩子一點時間自己想。','最近 30 天有 '+sp.length+' 題口語練習');
+ if(hint.length)add('不直接說出完整答案；先給第一個音或一小段，孩子接得上再慢慢減少。','最近 30 天有 '+hint.length+' 題需要提示或還沒說對');
+ if(sp.length||OB.all().some(r=>r.learnerId===LRN.cur().id&&r.mode==='oral'))add('接受孩子目前能完成的口語長度：說一個詞、兩個詞都是進步，不急著要求完整句子。','依孩子目前的口語練習與生活觀察');
+ if(rv)add('用簡短語句示範：例如說「'+rv.text+'」，再配一個動作或用途（一次示範一個短句就好）。','「'+rv.text+'」目前在待複習清單');
+ if(ws.length)add('把詞彙帶進生活：今天一起找找「'+ws.join('」「')+'」，看到時說一次、讓孩子也試著說。','最近練習過的詞彙：'+ws.join('、'));
+ if(sp.length)add('孩子有開口嘗試就鼓勵，不需要等到完全正確。','最近有口語練習');
+ if(none)add('先等待幾秒，再給提示。','一般性建議（還沒有練習紀錄）');
+ const head=out.slice(0,6);head.push({t:'不因為孩子還沒說出答案，就延遲必要的協助（例如他需要休息、需求沒被滿足時，先回應需求）。',b:none?'一般性建議（還沒有練習紀錄）':'一般性提醒'});return head};
+PAR.tpls=()=>{const T=PAR.st().tpl;if(!T.length)return[];const rows=RE.rows().filter(PAR.valid).filter(r=>r.ts>=Date.now()-30*PAR.D),ws=[...new Set(rows.filter(r=>r.itemKind==='word').sort((a,b)=>b.ts-a.ts).map(r=>r.itemId))].slice(0,12),cats=new Set();ws.forEach(id=>((byId(id)||{}).cats||[]).forEach(c=>cats.add(c)));
+ let weak=[];try{weak=PAR.stats().weak.map(w=>w.k)}catch(e){}const names=ws.slice(0,2).map(id=>(byId(id)||{}).text).filter(Boolean);
+ return T.map(t=>{const a=t.ab&&weak.includes(t.ab),c=t.cat&&cats.has(t.cat),g=!t.ab&&!t.cat;const sc=(a?2:0)+(c?2:0)+(g?1:0);return{t,sc,why:a?'依據：目前需要加強「'+VP.abName(t.ab)+'」':c?'依據：最近練習過「'+((S.cats.find(x=>x.id===t.cat)||{}).name||'')+'」類的詞彙':'通用情境'}}).filter(x=>x.sc>0).sort((a,b)=>b.sc-a.sc).slice(0,3).map(x=>({title:x.t.title,text:String(x.t.text||'').replace(/\{詞\}/g,names[0]||'詞彙'),why:x.why}))};
+/* ---------- 生活口語觀察（S.ob，與遊戲紀錄分開保存）---------- */
+PAR.HOW={spont:'自己主動說出',asked:'大人問了之後自己說出',partial:'部分提示後說出',imitate:'模仿大人說出'};
+PAR.obSave=()=>{if(!PAR.ok())return;const g=k=>(document.getElementById('par_'+k)||{}).value||'',dt=g('date'),ts=dt?Date.parse(dt+'T'+(g('time')||'12:00')):0,txt=g('txt').trim(),how=g('how');
+ if(!(ts>0)||ts>Date.now()+864e5){PAR.ui.ok='';alert('請確認發生日期');return}
+ if(!txt&&g('mode')==='oral'){alert('請寫下孩子實際說出的詞彙或句子（如果只用手勢或圖卡，請改選「溝通方式」）');return}
+ const rec={id:'OB'+uid(),learnerId:LRN.cur().id,ts,iso:new Date(ts).toISOString(),text:txt,setting:g('set')||'home',settingNote:g('place').trim(),partner:g('who').trim(),purpose:g('pur')||'other',
+  initiated:how==='spont'?'y':'n',prompted:how==='partial'?'partial':how==='imitate'?'full':'none',how,mode:g('mode')||'oral',observer:'家長',note:g('note').trim(),newContext:false,created:Date.now(),src:'real_life',by:'parent'};
+ OB.all().push(rec);PAR.log('新增生活口語觀察');save();PAR.ui.ok='已儲存 ✔　這是真實生活觀察，會和遊戲成績、星星分開保存。';PAR.re()};
+PAR.obForm=()=>{const sel=(id,m,v)=>`<select id="par_${id}">${Object.entries(m).map(([k,t])=>`<option value="${k}" ${v===k?'selected':''}>${t}</option>`).join('')}</select>`,now=new Date(),t=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+ return `<p><small>發現孩子有新的生活口語表現時，記一筆就好，不需要每天填寫。</small></p>
+ <p>孩子實際說出的詞彙或句子<br><input id="par_txt" style="width:96%" placeholder="照實寫；沒有說話可留白（只用手勢或圖卡時）"></p>
+ <p>是怎麼說出來的？ ${sel('how',PAR.HOW,'spont')}</p>
+ <p>日期 <input type="date" id="par_date" value="${PAR.day(Date.now())}"> 時間 <input type="time" id="par_time" value="${t}"></p>
+ <p>地點 ${sel('set',OB.SET,'home')} <input id="par_place" placeholder="地點補充（選填，例如：客廳）" style="width:10em">　互動對象 <input id="par_who" placeholder="例：媽媽、同學" style="width:8em"></p>
+ <p>溝通目的 ${sel('pur',OB.PUR,'request')}　溝通方式 ${sel('mode',OB.MODE,'oral')}</p>
+ <p>備註（選填） <input id="par_note" style="width:90%"></p>
+ <p><button class="btn go" onclick="PAR.obSave()">💾 儲存這筆觀察</button> <b style="color:#237a3b">${esc(PAR.ui.ok||'')}</b></p>`};
+/* ---------- 頁面 ---------- */
+PAR.sec={};
+PAR.name=id=>((S.lrn.list.find(x=>x.id===id)||{}).name||id);
+PAR.guard=()=>{if(PAR.ok())return '';const ok=S.lrn.list.filter(x=>!x.archived&&PAR.allowed(x.id));
+ return `<div class="box" style="width:min(640px,96%)"><h2>👪 家長專區</h2><p>這位個案目前沒有開放給家長查看。</p>${ok.length?`<p>請選擇有授權的個案：<select onchange="LRN.switchTo(this.value);home()"><option value="">選擇…</option>${ok.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select></p>`:'<p>目前沒有任何授權的個案。請老師在教師區的「👪 家長專區設定」授權。</p>'}<small>${esc(PAR.LIMIT)}</small></div>`};
+PAR.sec.today=()=>{const pg=RC.progress(),d=pg.d,todo=d.items.filter(i=>i.state==='todo'),nq=todo.reduce((a,i)=>a+RC.tg(i),0),p=LRN.cur(),x=RC.xr();
+ return RC.pHtml()+`<div class="box" style="width:min(720px,96%);text-align:left"><h3 style="margin:0">⚙ 今天的練習設定</h3><p style="margin:4px 0">建議題數：<b>${todo.length?'約 '+nq+' 題':'今天沒有待做項目'}</b>　預計時間：<b>${d.mins} 分鐘</b></p>
+ <p>練習時間 <select onchange="PAR.setMins(this.value)">${[6,8,10,12,14,16,20].map(m=>`<option value="${m}" ${d.mins===m?'selected':''}>${m} 分鐘</option>`).join('')}</select>　
+ 提示前先等 <select onchange="PAR.setWait(this.value)">${[4,5,6,8,10].map(m=>`<option value="${m}" ${(+p.wait||6)===m?'selected':''}>${m} 秒</option>`).join('')}</select>　
+ <label><input type="checkbox" ${x.lit!==false?'checked':''} onchange="PAR.setLit(this.checked)"> 安排拼打／聽打</label></p>
+ <small>家長可以調整的是練習時間與日常輔助；評量標準和推薦規則由老師設定。${PAR.ui.msg?'':''}</small></div>`};
+PAR.sec.res=()=>{const s=PAR.stats(),u=PAR.ui,R=s.R,pend=RE.rows().filter(r=>r.game==='speak'&&r.outcome==='unconfirmed'&&!r.confirm&&r.ts>=Date.now()-14*PAR.D).sort((a,b)=>b.ts-a.ts).slice(0,5),row=(a,b)=>`<tr><td>${a}</td><td><b>${b}</b></td></tr>`;
+ return `<div class="box" style="width:min(720px,96%);text-align:left"><h3 style="margin:0">📈 近期學習成果</h3>
+ <p>看哪一段 <button class="btn ${u.rng==='7'?'go':'alt'} sm" onclick="PAR.ui.rng='7';home()">近 7 天</button> <button class="btn ${u.rng==='30'?'go':'alt'} sm" onclick="PAR.ui.rng='30';home()">近 30 天</button> <button class="btn ${u.rng==='custom'?'go':'alt'} sm" onclick="PAR.ui.rng='custom';PAR.ui.from=PAR.ui.from||PAR.day(Date.now()-6*864e5);PAR.ui.to=PAR.ui.to||PAR.day(Date.now());home()">自選日期</button>
+ ${u.rng==='custom'?`<input type="date" value="${u.from}" onchange="PAR.ui.from=this.value;home()"> ～ <input type="date" value="${u.to}" onchange="PAR.ui.to=this.value;home()">`:''}</p>
+ <p><small>${PAR.fd(R.from)} ～ ${PAR.fd(R.to)}（${R.days} 天）</small></p>
+ ${s.n?'':'<p style="background:#fff4d6;padding:6px;border-radius:8px">這段期間沒有練習紀錄。</p>'}
+ <table style="width:100%">${row('最近練習日期',s.last?PAR.fd(s.last):'還沒有練習紀錄')}${row('練習次數',s.sess+' 次')}${row('累積練習時間','約 '+s.min+' 分鐘')}${row('練習過的詞彙',s.words+' 個')}${row('新增熟悉的詞彙',s.famNew+' 個')}${row('新增「自己說出」的詞彙',s.spont+' 個')}</table>
+ <p><b>自己說出的表現：</b>${esc(PAR.trendTxt(s.ind,'更常自己說出'))}</p>
+ <p><b>需要提示的情況：</b>${s.hn.ok?(s.hn.delta<=-10?'需要提示的比例比前一段期間減少（'+s.hn.prev+'％ → '+s.hn.cur+'％）。':s.hn.delta>=10?'需要提示的比例比前一段期間多（'+s.hn.prev+'％ → '+s.hn.cur+'％），可以多給一點支持。':'需要提示的比例大致相同（'+s.hn.prev+'％ → '+s.hn.cur+'％）。'):'資料還不夠，或前後兩段的題型、難度不同，暫時不做比較。'}</p>
+ <p><b>近期需要持續加強：</b>${s.weak.length?s.weak.map(w=>esc(w.name)+'（'+w.n+' 個詞彙）').join('、'):'目前沒有明確需要加強的項目，或資料還不夠。'}</p>
+ <p><small>比較只用題型、難度、練習目的相近的紀錄。星星是遊戲獎勵，不代表語言能力進步，這裡不使用。「新增熟悉」依系統的詞彙判定規則，狀態變更紀錄最多保留 400 筆。</small></p>
+ ${pend.length?`<h4 style="margin:8px 0 2px">🗣 請幫忙確認孩子說得怎麼樣</h4>${pend.map(r=>`<div style="border-top:1px solid #eee;padding:4px 0"><b>${esc(r.itemText||'')}</b> <small>${PAR.fd(r.ts)}</small><br>${['correct','partial','attempt','wrong','none'].map(c=>`<button class="btn alt sm" onclick="PAR.confirm('${r.id}','${c}')">${FL.CFN[c]}</button>`).join(' ')}</div>`).join('')}<small>確認會保留原本的辨識結果，只是加上你的確認。</small>`:''}</div>`};
+PAR.sec.rev=()=>{const L=PAR.review(),u=PAR.ui,cats=S.cats.filter(c=>S.cards.some(x=>x.cats&&x.cats.includes(c.id)&&!x.part)),n=k=>PAR.pickWords(k).length,sel=Object.keys(u.sel).filter(id=>L.some(w=>w.id===id)).length,disp=L.slice(0,30);
+ return `<div class="box" style="width:min(720px,96%);text-align:left"><h3 style="margin:0">🔁 待複習詞彙</h3>${u.msg?`<p style="background:#fff4d6;padding:6px;border-radius:8px">${esc(u.msg)}</p>`:''}
+ ${L.length?'':'<p>目前沒有待複習的詞彙。先多練習幾次，之後這裡會列出需要再練習的詞彙和原因。</p>'}
+ ${L.length?`<div style="background:#eef6ff;border-radius:10px;padding:8px;margin:6px 0"><b>直接開始複習</b>（按下去就會開始，不需要再選設定）<br>
+ <button class="btn go" onclick="PAR.go('all')">▶ 一鍵複習全部待加強（${Math.min(20,L.length)} 個）</button>
+ <button class="btn alt" ${sel?'':'disabled'} onclick="PAR.go('sel')">複習勾選的（${sel}）</button>
+ <button class="btn alt" ${n('wrong')?'':'disabled'} onclick="PAR.go('wrong')">最近答錯的（${n('wrong')}）</button>
+ <button class="btn alt" ${n('hint')?'':'disabled'} onclick="PAR.go('hint')">最近需要提示的（${n('hint')}）</button>
+ <button class="btn alt" ${n('cross')?'':'disabled'} onclick="PAR.go('cross')">其他模式學過、這裡還不熟的（${n('cross')}）</button><br>
+ 依學習模式：${['quiet','oral','integ'].map(m=>`<button class="btn alt sm" onclick="PAR.go('all','${m}')">${PAR.MODE[m]}</button>`).join(' ')}　
+ 依教材分類：<select onchange="PAR.ui.cat=this.value;home()"><option value="">選擇分類…</option>${cats.map(c=>`<option value="${c.id}" ${u.cat===c.id?'selected':''}>${esc(c.name)}</option>`).join('')}</select> <button class="btn alt sm" ${u.cat?'':'disabled'} onclick="PAR.go('cat')">複習這個分類（${u.cat?n('cat'):0}）</button></div>`:''}
+ ${disp.map(w=>`<div style="display:flex;gap:8px;align-items:center;border-top:1px solid #eee;padding:6px 0"><input type="checkbox" ${u.sel[w.id]?'checked':''} onchange="PAR.tog('${w.id}',this.checked)">${w.img?`<img src="${esc(w.img)}" style="width:56px;height:56px;object-fit:cover;border-radius:8px">`:'<span style="width:56px;height:56px;line-height:56px;text-align:center;background:#f1f1f1;border-radius:8px;color:#999;font-size:11px">無圖</span>'}
+ <div style="flex:1"><b style="font-size:18px">${esc(w.text)}</b>　<small>最近練習：${PAR.fd(w.last)}</small><br><span>${esc(w.why.slice(0,2).join(' '))}</span><br><small>建議：${PAR.MODE[w.mode]||''}｜${esc(w.how||'')}</small></div></div>`).join('')}
+ ${L.length>30?`<small>只列出最需要的前 30 個（共 ${L.length} 個）。</small>`:''}
+ <p><small>這份清單只依孩子的實際紀錄產生，沒有紀錄的詞彙不會出現。「容易和別的詞混淆」需要每次選項的紀錄，目前不會判斷。</small></p></div>`};
+PAR.tog=(id,on)=>{if(on)PAR.ui.sel[id]=1;else delete PAR.ui.sel[id];PAR.re()};
+PAR.sec.ab=()=>{const A=PAR.abil(),col={'近期有進步':'#c7efc9','持續練習中':'#cfe8ff','尚未觀察':'#eceff3','資料不足':'#fde2c8'};
+ return `<div class="box" style="width:min(720px,96%);text-align:left"><h3 style="margin:0">🌱 孩子的七項溝通能力</h3><p><small>「尚未觀察」代表還沒有相關練習或觀察，<b>不代表表現不好</b>；「資料不足」代表題數還太少，先不下判斷。</small></p>
+ ${A.map(a=>`<div style="border-left:6px solid ${col[a.st]};background:${col[a.st]}55;border-radius:8px;padding:6px 10px;margin:6px 0"><b>${a.n}</b>：${a.say}　<b style="float:right">${a.st}</b><br><small>${esc(a.det)}</small></div>`).join('')}
+ <small>這是給家長閱讀的說明；正式的語言能力評量由老師在教師區進行。</small></div>`};
+PAR.sec.tip=()=>{const T=PAR.tips(),L=PAR.tpls();
+ return `<div class="box" style="width:min(720px,96%);text-align:left"><h3 style="margin:0">💡 陪伴小建議</h3><p><small>依孩子最近的練習挑選，每一項都附上依據。</small></p>
+ ${T.map(t=>`<div style="border-left:5px solid #2f6fe4;background:#eef6ff;border-radius:8px;padding:6px 10px;margin:6px 0"><b>${esc(t.t)}</b><br><small>依據：${esc(t.b)}</small></div>`).join('')}
+ <h4 style="margin:10px 0 2px">🏠 生活練習情境</h4>${L.length?L.map(t=>`<div style="border-left:5px solid #43a047;background:#eef8ee;border-radius:8px;padding:6px 10px;margin:6px 0"><b>${esc(t.title)}</b><br>${esc(t.text)}<br><small>${esc(t.why)}</small></div>`).join(''):'<p><small>老師還沒有建立生活情境模板，或目前沒有符合孩子最近學習的模板。</small></p>'}</div>`};
+PAR.sec.ob=()=>{const my=OB.all().filter(r=>r.learnerId===LRN.cur().id).sort((a,b)=>b.ts-a.ts).slice(0,8);
+ return `<div class="box" style="width:min(720px,96%);text-align:left"><h3 style="margin:0">📝 生活口語觀察</h3>${PAR.obForm()}
+ <h4 style="margin:8px 0 2px">最近的紀錄</h4>${my.length?my.map(r=>`<div style="border-top:1px solid #eee;padding:3px 0"><small>${PAR.fd(r.ts)}｜${esc(OB.SET[r.setting]||'')}${r.settingNote?'・'+esc(r.settingNote):''}｜${esc(r.partner||'')}｜${esc(PAR.HOW[r.how]||({y:'主動',n:'',u:''}[r.initiated]||''))}｜${esc(OB.MODE[r.mode]||'')}</small><br><b>${esc(r.text||'（沒有說話）')}</b>${r.note?' <small>'+esc(r.note)+'</small>':''}</div>`).join(''):'<p><small>還沒有紀錄。</small></p>'}
+ <small>家長頁面不提供刪除或修改已儲存的紀錄；需要更正請告訴老師。</small></div>`};
+PAR.TABS=[['today','今天練習'],['res','學習成果'],['rev','待複習詞彙'],['ab','能力說明'],['tip','陪伴建議'],['ob','生活觀察']];
+PAR.page=()=>{RC.ctx='p';const g=PAR.guard();if(g)return g;RC.sync();const u=PAR.ui,p=LRN.cur(),body=(PAR.sec[u.sec]||PAR.sec.today)();
+ return `<div class="box" style="width:min(720px,96%)"><h2 style="margin:0">👪 家長專區　<small style="font-weight:400">孩子：<b>${esc(p.name)}</b></small></h2><p style="margin:6px 0">${PAR.TABS.map(([k,t])=>`<button class="btn ${u.sec===k?'go':'alt'} sm" onclick="PAR.ui.sec='${k}';PAR.ui.msg='';home()">${t}</button>`).join(' ')}</p></div>${body}
+ <div class="box" style="width:min(720px,96%);text-align:left"><small>${esc(PAR.LIMIT)}</small></div>`};
+UI.parent=()=>PAR.page();
+/* 只讓介面列出「有授權」的個案；生活觀察的快速表單同理 */
+/* ---------- 教師區：家長專區設定（授權個案、生活情境模板）---------- */
+PAR.tAdd=()=>{const g=k=>(document.getElementById('pt_'+k)||{}).value||'',t=g('title').trim(),x=g('text').trim();if(!t||!x)return alert('請填寫標題與內容');PAR.st().tpl.push({id:'T'+uid(),title:t.slice(0,40),text:x.slice(0,300),ab:g('ab'),cat:g('cat')});save();tch()};
+PAR.tDel=id=>{PAR.st().tpl=PAR.st().tpl.filter(t=>t.id!==id);save();tch()};
+PAR.tAuth=(id,on)=>{const s=PAR.st();let a=Array.isArray(s.auth)?s.auth.slice():[S.lrn.cur];a=a.filter(x=>x!==id);if(on)a.push(id);s.auth=a;PAR.log('授權個案：'+a.length+' 位');save();tch()};
+PAR.tReset=()=>{PAR.st().auth=null;save();tch()};
+function tPAR(){const s=PAR.st(),lr=S.lrn.list.filter(x=>!x.archived),au=PAR.auth(),ab=VP.AB.filter(a=>!['dl','se'].includes(a.k));
+ $('#sp').innerHTML=`<div class="panel"><h3 style="margin:0">👪 家長專區設定</h3><p><small>${esc(PAR.LIMIT)}</small></p>
+ <h4 style="margin:8px 0 2px">授權家長查看的個案</h4><p><small>${au===null?'目前是預設：家長只能看到「目前選取的個案」。勾選後改為自訂授權。':'自訂授權中：家長只能查看、切換下列個案。'}</small></p>
+ ${lr.map(x=>`<label style="margin-right:12px"><input type="checkbox" ${(au===null?x.id===S.lrn.cur:au.includes(x.id))?'checked':''} onchange="PAR.tAuth('${x.id}',this.checked)"> ${esc(x.name)}</label>`).join('')}
+ ${au!==null?' <button class="btn alt sm" onclick="PAR.tReset()">恢復預設（只有目前個案）</button>':''}
+ <h4 style="margin:12px 0 2px">生活練習情境模板（家長陪伴建議會依孩子的學習資料自動挑選）</h4>
+ <p><small>內容可用 {詞} 代表孩子最近練習的詞彙。指定「對應能力」或「對應分類」才會依孩子資料挑選；都不指定＝通用情境。</small></p>
+ ${s.tpl.length?s.tpl.map(t=>`<div style="border-top:1px solid #eee;padding:4px 0"><b>${esc(t.title)}</b>　<small>${t.ab?'能力：'+esc(VP.abName(t.ab)):''} ${t.cat?'分類：'+esc((S.cats.find(c=>c.id===t.cat)||{}).name||'?'):''}</small> <button class="btn red sm" onclick="PAR.tDel('${t.id}')">刪除</button><br>${esc(t.text)}</div>`).join(''):'<p><small>（尚未建立）</small></p>'}
+ <p>標題 <input id="pt_title" style="width:12em"> 對應能力 <select id="pt_ab"><option value="">不指定</option>${ab.map(a=>`<option value="${a.k}">${a.n}</option>`).join('')}</select> 對應分類 <select id="pt_cat"><option value="">不指定</option>${S.cats.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select><br>
+ 內容 <input id="pt_text" style="width:90%" placeholder="例：吃飯時請孩子拿{詞}，先等他自己說，再給第一個音提示"> <button class="btn go" onclick="PAR.tAdd()">＋新增模板</button></p>
+ <h4 style="margin:12px 0 2px">家長最近的操作（最近 10 筆）</h4>${((S.acl&&S.acl.audit)||[]).filter(a=>/^家長/.test(a.action)).slice(-10).reverse().map(a=>`<div><small>${new Date(a.ts).toLocaleString()}｜${esc(a.action)}</small></div>`).join('')||'<small>（尚無）</small>'}</div>`}
+/*P14-END*/
+/*P15-BEGIN 新版第06階段：六站語言學習活動完善（補齊題型、題型與學習目標／評量指標對照、各管道分開紀錄）*/
+const P15={};
+/* ---------- 一、詞彙分類（聽分類名稱選圖）與新圖片說詞：新增兩個題型，沿用既有選圖／說詞引擎 ---------- */
+P15.members=cat=>S.cards.filter(x=>!x.part&&x.img&&(x.cats||[]).includes(cat.id));
+P15.catsOf=c=>(c.cats||[]).map(id=>S.cats.find(x=>x.id===id)).filter(Boolean).filter(cat=>{const m=P15.members(cat);return m.length>=2&&S.cards.some(x=>!x.part&&x.img&&!(x.cats||[]).includes(cat.id))});
+P15.newImgs=c=>(cxOf(c).gimgs||[]).filter(g=>g.img);
+{const _ok=PH.ok;PH.ok=function(c,m,sub){
+  if(m==='pick'&&sub==='cat')return !!c.img&&P15.catsOf(c).length>0;
+  if(m==='speak'&&sub==='newimg')return P15.newImgs(c).length>0&&_ok.call(this,c,'speak','obj');
+  return _ok.apply(this,arguments)}}
+PH.need.cat='有圖片、且所屬分類（至少 2 張有圖的圖卡）的圖卡';PH.need.newimg='已上傳「類化圖片」（同一個詞的不同圖片）的圖卡';
+{const _b=PICK.build;PICK.build=function(c){const sub=c._sub||S.set.pks;if(sub!=='cat')return _b.apply(this,arguments);
+  const cats=P15.catsOf(c);if(!cats.length)return null;const cat=cats[Math.random()*cats.length|0],n=Math.max(2,Math.min(4,+PS().pkN||2));
+  const out=S.cards.filter(x=>!x.part&&x.img&&x.id!==c.id&&!(x.cats||[]).includes(cat.id)),scope=new Set((LRN.words(pool())||[]).map(x=>x.id));
+  const dis=[...shuffle(out.filter(x=>scope.has(x.id))),...shuffle(out.filter(x=>!scope.has(x.id)))].slice(0,n-1);if(!dis.length)return null;
+  const opts=shuffle([{cid:c.id,img:c.img,imgId:WD.imgId(c),correct:true,gen:false},...dis.map(d=>({cid:d.id,img:d.img,imgId:WD.imgId(d),correct:false,gen:false}))]);
+  return{sub:'cat',cat:cat.id,catName:cat.name,opts,ci:opts.findIndex(o=>o.correct),ch:[],dis:new Set(),replays:0,newImg:false}}}
+{const _i=PICK.item;PICK.item=function(c){if(G.pk&&G.pk.sub==='cat')return{k:'CATQ:'+G.pk.catName,tts:'哪一個是'+G.pk.catName+'？',src:'tts',st:'ai'};return _i.apply(this,arguments)}}
+{const _s=PICK.show;PICK.show=function(reveal){_s.apply(this,arguments);try{const pk=G.pk;if(pk&&pk.sub==='cat'){const q=$('#mid .pkq');if(q&&!$('#catq'))q.insertAdjacentHTML('afterbegin','<div id="catq" style="font-size:26px;font-weight:700;margin:4px 0">哪一個是「'+esc(pk.catName)+'」？</div>')}}catch(e){}}}
+{const _p=PH.pre;PH.pre=function(){G.ni=null;const r=_p.apply(this,arguments);try{const c=G.q[G.i];
+  if(c&&S.set.mode==='speak'&&((G.flow&&c._step&&c._sub)||S.set.sps)&&((c._sub||S.set.sps)==='newimg')){const g=P15.newImgs(c),seen=PICK.seen(),un=g.filter(x=>!seen.has(x.id)),p=(un.length?un:g)[Math.random()*(un.length?un.length:g.length)|0];if(p)G.ni={id:p.id,img:p.img,fresh:!seen.has(p.id)}}}catch(e){console.error('P15pre',e)}return r}}
+{const _s=showS;showS=function(){const r=_s.apply(this,arguments);try{if(G.ni&&G.cur&&!G.cur._cb&&S.set.mode==='speak'&&PH.sub()==='newimg'){const im=$('#pic');if(im)im.src=G.ni.img;else $('#mid').insertAdjacentHTML('afterbegin','<img id="pic" src="'+G.ni.img+'" alt="">')}}catch(e){}return r}}
+{const _c=RE.close;RE.close=function(){const r0=RE.cur,ni=G.ni,pk=G.pk,rec=_c.apply(this,arguments);try{if(rec&&r0){
+  if(r0.mode==='speak'&&r0.sub==='newimg'&&ni){rec.qImgId=ni.id;rec.newImage=!!ni.fresh}
+  if(r0.mode==='pick'&&pk&&pk.sub==='cat'){rec.ext=rec.ext||{};rec.ext.catQ=pk.catName}}}catch(e){console.error('P15close',e)}return rec}}
+/* ---------- 二、新增可自選的題型（放在各站「進階：題型」；星級固定，不能用簡單題拿高星） ---------- */
+P15.cfg={
+ pk:(sub,t,star,n)=>({t,star,...FL.cPick(sub,t,{pkN:n||3,pkDist:'mix'})}),
+ sp:(sub,t,star)=>({t,star,...FL.cSpeak(sub,t,{auto:'off',sw:15})}),
+ cb:(rel,t,star)=>({t,star,...FL.cCB('cbm',t,{rel}),k:'rel:'+rel}),
+ se:(g,pat,t,star)=>({t,star,k:'se:'+g,ok:()=>{const L=SE.avail(g,{pat});return L.length?{ok:true}:{ok:false,msg:SE.why||'目前沒有可用教材'}},go:()=>SE.start(g,{pat})})};
+{const _e=FL.extras;FL.extras=function(st,mode){const base=_e.apply(this,arguments)||[],P=P15.cfg,add=[];
+  if(st===1){add.push(P.pk('verb','聽動作詞選圖：動詞理解（3 張圖）',2),P.pk('feat','聽特徵詞選圖：形容詞／特徵詞理解（3 張圖）',2),P.pk('use','聽功能選圖：物品功能辨認（3 張圖）',3))}
+  if(st===2&&mode!=='quiet'){add.push(P.sp('feat','看圖說特徵詞（自主）',3),P.sp('newimg','新圖片說詞：換一張沒看過的圖說出同一個詞（自主）',4))}
+  if(st===3){add.push(P.pk('cat','詞彙分類：聽分類名稱，選出屬於這一類的圖（3 張圖）',2),
+    P.cb('act_obj','物品與功能配對：動作與物品（例：喝—水、刷—牙齒）',2),P.cb('person_act','人物與動作配對',3),P.cb('obj_loc','物品與場所配對',3),P.cb('feat_obj','特徵與物品配對',3),P.cb('state','感受與情境配對',4))}
+  if(st===5){const g=mode==='oral'?'sxs':'sxo',gn=mode==='oral'?'說':'排列';
+    add.push(P.se(g,'p_act_obj','人物、動作、物品組合：'+gn+'句子',3),P.se(g,'act_place','加入地點：'+gn+'句子',3),P.se(g,'feat_obj','加入特徵：'+gn+'句子',3),P.se(g,'p_feel','感受表達：'+gn+'句子',3),P.se(g,'need_act_obj','需求表達：'+gn+'句子',3))}
+  return [...base,...add]}}
+/* ---------- 三、每個題型對應的學習目標與評量指標、紀錄管道 ---------- */
+P15.GOAL={1:'語意理解（聽得懂詞彙）',2:'詞彙提取及表達獨立性（自己想起並說出詞彙，逐步減少協助）',3:'語意關係及語意組織（詞彙之間怎麼連在一起）',4:'語意組織及組合彈性（把詞彙組合成短語）',5:'語句組織及彈性表達（把短語擴展成句子）',6:'功能性語言、語言類化及溝通主動性（在生活情境中表達）'};
+P15.CH={cmp:'語言理解',oral:'口語表達',arr:'圖片／車廂排列',spell:'拼打',listen:'聽打',mix:'依步驟分別紀錄',pick:'語言理解',life:'情境口語表達'};
+P15.OBJ={
+ 'pick:word':['語意理解：認識名詞','聽詞後選對圖片；提示後答對、重聽次數、選項數','cmp'],'pick:verb':['語意理解：動詞（動作詞）','聽動作詞後選對動作圖片','cmp'],'pick:feat':['語意理解：形容詞／特徵詞','聽特徵詞後選對圖片','cmp'],
+ 'pick:use':['語意理解：物品功能辨認','聽功能描述後選對物品','cmp'],'pick:same':['語意理解、語言類化（跨圖片）','同一個詞的不同圖片（未看過的圖另外標記）','cmp'],'pick:cat':['語意組織：詞彙分類','聽分類名稱選出屬於該類的圖片（每筆紀錄會記下分類名稱）','cmp'],
+ 'expose':['語意理解：先聽、先看（不評分）','不計入作答率','cmp'],
+ 'speak:obj':['詞彙提取、表達獨立性','自主說出率、提示後說出、完整示範後仿說','oral'],'speak:act':['詞彙提取：動詞','看動作圖片自主說出','oral'],'speak:feat':['詞彙提取：特徵詞','看圖自主說出特徵詞','oral'],'speak:scene':['詞彙提取、語言類化（模擬情境）','看生活情境說出詞彙','oral'],
+ 'speak:newimg':['詞彙提取、語言類化（跨圖片）','換一張沒看過的圖說出同一個詞；第一次看到的圖另外標記','oral'],
+ 'typed:key':['詞彙提取（拼打）：看圖打出注音','注音提示需求逐步減少','spell'],'typed:spell':['拼音與詞彙形音連結：看字拼打','提示層級','spell'],'typed:listen':['聽辨詞彙：聽音打字','聽打正確率與提示層級','listen'],
+ 'flow':['整合：認識→提取→拼打→聽打→延後重新提取','每一步分開紀錄；延後提取另外計算','mix'],
+ 'rel:act_obj':['語意關係：物品與功能、動作與物品配對（例：喝—水、刷—牙齒、蓋—棉被）','選對合理的搭配；錯誤類型分開記錄','cmp'],'rel:person_act':['語意關係：人物與動作配對','選對合理的搭配','cmp'],'rel:obj_loc':['語意關係：物品與場所配對','選對合理的搭配','cmp'],'rel:feat_obj':['語意關係：特徵與物品配對','選對合理的搭配','cmp'],'rel:state':['語意關係：感受與情境配對','選對合理的搭配','cmp'],
+ 'cb:cbt':['語意組織：短語示範（不評分）','不計入作答率','cmp'],'cb:cbm':['語意關係：詞彙配對','選對搭配；選錯時記錄是哪一類錯誤','cmp'],'cb:cbc':['語意關係：選擇適切車廂','選對合理的搭配','cmp'],
+ 'cb:sub_v':['組合彈性：固定動詞，更換物品','同一個動詞搭配不同物品','cmp'],'cb:sub_o':['組合彈性：固定物品，更換動詞','同一個物品搭配不同動詞','cmp'],
+ 'cb:cbo':['語意組織：排列雙詞短語','排列正確率','arr'],'cb:cbs':['短語口語表達（有圖片線索）','說出短語；新組合與已教組合分開計算','oral'],'cb:cbx':['短語口語表達（無答案線索）','自主說出短語；新組合與已教組合分開計算','oral'],'cb:cbp':['短語拼打','拼打正確率與提示層級','spell'],'cb:cbl':['短語聽打','聽打正確率與提示層級','listen'],
+ 'mx:order':['組合彈性：沒直接教過的組合（排列）','只有第一次看到、且沒有看過完整示範才算「未教首次」','arr'],'mx:say':['組合彈性：沒直接教過的組合（口說）','只有第一次看到、且沒有看過完整示範才算「未教首次」','oral'],
+ 'se:sxt':['語句組織：語句擴展示範（不評分）','不計入作答率','cmp'],'se:sxc':['語句組織：句型填補（選出合適的下一節車廂）','選對下一層語句','cmp'],'se:sxo':['語句組織：排列句子車廂','排列正確率；合理的不同答案可由大人確認','arr'],
+ 'se:sxe':['語句擴展：由短到長（口說）','口說達到的層級（層級不是唯一的能力指標）','oral'],'se:sxs':['語句表達：看情境說句子','說出語意相符的句子（不強制特定人稱代名詞）','oral'],'se:sxx':['語句表達：不顯示答案','自主說句子','oral'],
+ 'se:sxp':['句子拼打','拼打正確率與提示層級','spell'],'se:sxl':['句子聽打','聽打正確率與提示層級','listen'],
+ 'se:scc':['功能性語言：選擇適合的說法','選擇適合情境的說法（不是口語）','cmp'],'se:scq':['功能性語言：被問時回答','大人或系統提問後回答（與主動發起分開）','life'],
+ 'se:scn':['溝通主動性：先等待，自己說','沒有提問、沒有答案提示下的主動發起（遊戲內情境，非真實生活）','life']};
+P15.objOf=cfg=>(cfg&&P15.OBJ[cfg.k])||null;
+{const w=(n,pre)=>{const _x=FL[n];FL[n]=function(a){const r=_x.apply(this,arguments);if(r&&!r.k)r.k=pre(a);return r}};
+ w('cPick',s=>'pick:'+s);w('cSpeak',s=>'speak:'+s);w('cTyped',m=>'typed:'+m);w('cExpose',()=>'expose');w('cFlow',()=>'flow');w('cCB',g=>'cb:'+(g==='cbm'?'cbm':g));w('cSE',g=>'se:'+g);w('cMX',k=>'mx:'+k)}
+P15.objHtml=(st,mode)=>{try{const lad=FL.ladder(st,mode),ex=FL.extras(st,mode);let cfg;
+  if(FL.actSel&&/^x\d+$/.test(FL.actSel))cfg=ex[+FL.actSel.slice(1)];else cfg=lad[FL.starFor(st,mode)-1];const o=P15.objOf(cfg);if(!o)return '';
+  return `<p class="fobj" style="margin:4px 0;font-size:.9em;background:#f4f8ff;border-radius:8px;padding:6px 10px"><b>這個題型在練習：</b>${esc(o[0])}<br><b>觀察的指標：</b>${esc(o[1])}<br><b>紀錄的類別：</b>${esc(P15.CH[o[2]]||'')}（和其他類別分開紀錄）</p>`}catch(e){return ''}};
+{const _s=FL.setupHtml;FL.setupHtml=function(){const h=_s.apply(this,arguments);return h.replace(/(<p class="fdesc" id="fdesc">[\s\S]*?<\/p>)/,'$1'+P15.objHtml(FL.st,FL.modeOf()).replace(/\$/g,'$$$$'))}}
+Object.keys(P15.GOAL).forEach(s=>{['quiet','oral','integ'].forEach(m=>{if(FL.SD[s]&&FL.SD[s][m]&&!/主要目標/.test(FL.SD[s][m]))FL.SD[s][m]+='　主要目標：'+P15.GOAL[s]+'。'})});
+P15.audit=()=>{const out=[];[1,2,3,4,5,6].forEach(st=>['quiet','oral','integ'].forEach(m=>{[...FL.ladder(st,m),...FL.extras(st,m)].forEach(c=>{if(c.na)return;if(!P15.objOf(c))out.push(st+'/'+m+'/'+(c.t||'?')+'/'+(c.k||'無k'))})}));return out};
+/*P15-END*/
+/*P16-BEGIN 新版第07階段：教師專區補齊（學習總覽、語文延伸顯示、指標計算說明、熱力表熟悉度／複習日期、報表內容、錯誤分類拆分）*/
+const P16={};
+DSH.famTxt=P=>{if(!P||!P.touched)return '尚未學習';const a=['lc','pi'].map(k=>P.ab[k]).filter(x=>x&&x.state).sort((x,y)=>VP.rank(y)-VP.rank(x))[0],b=P.ab.si;
+ return '理解：'+(a?VP.label(a):'尚未評量')+'／說詞：'+(b?VP.label(b):'尚未評量')};
+DSH.nextTxt=P=>P&&P.next!=null?new Date(P.next).toLocaleDateString('zh-TW'):'—';
+/* ---------- 學習總覽：全部個案一張表（只用各個案自己的紀錄；沒有紀錄就寫沒有，不補數字） ---------- */
+P16.recsOf=p=>p.id===S.lrn.cur?S.recs:((S.lrn.store||{})[p.id]||{}).recs||[];
+P16.row=p=>{const R=P16.recsOf(p),now=Date.now(),ok=R.filter(r=>r.outcome!=='tech_error'),d7=ok.filter(r=>now-r.ts<=7*864e5).length,d30=ok.filter(r=>now-r.ts<=30*864e5).length,last=ok.reduce((m,r)=>Math.max(m,r.ts||0),0)||null,
+ pend=R.filter(r=>r.outcome==='unconfirmed').length,ob=(S.ob||[]).filter(x=>x.learnerId===p.id&&now-x.ts<=30*864e5).length,rs=((p.ext||{}).recSt||[]).filter(x=>x>=1&&x<=6);
+ return{p,last,d7,d30,pend,ob,rs,n:ok.length}};
+DSH.v.ovw=()=>{const L=S.lrn.list.filter(x=>!x.archived).map(P16.row),f=t=>t?new Date(t).toLocaleDateString('zh-TW'):'—';
+ return `<div class="panel"><h3 style="margin:0">📋 學習總覽（全部個案）</h3><p class="rtnote">這裡只列「紀錄次數與日期」等直接數得出來的資料，<b>不計算能力分數</b>；要看七大能力、詞彙與錯誤分析，請按「開啟分析」切換到該個案。沒有紀錄的欄位顯示「—」，不代表表現不好。</p>
+ <div style="overflow:auto"><table class="hm"><tr><th>個案</th><th>目前站別</th><th>第一優先目標</th><th>第二優先目標</th><th>老師推薦站</th><th>最近練習</th><th>近 7 天作答</th><th>近 30 天作答</th><th>待確認口語</th><th>近 30 天生活觀察</th><th></th></tr>
+ ${L.map(x=>`<tr><td class="w">${esc(x.p.name)}${x.p.id===S.lrn.cur?' <small>（目前）</small>':''}</td><td>第 ${x.p.stage} 站</td><td style="text-align:left">${esc(x.p.goal1)||'—'}</td><td style="text-align:left">${esc(x.p.goal2)||'—'}</td><td>${x.rs.length?x.rs.map(s=>'第 '+s+' 站').join('、'):'—'}</td><td>${f(x.last)}</td><td>${x.n?x.d7:'—'}</td><td>${x.n?x.d30:'—'}</td><td>${x.n?x.pend:'—'}</td><td>${x.ob||'—'}</td><td><button class="btn go sm" onclick="DSH.sw('${x.p.id}');DSH.ui.view='dash';tch()">開啟分析</button></td></tr>`).join('')||'<tr><td colspan="11">還沒有個案</td></tr>'}</table></div>
+ <p><small>個案管理（輔助設定、學習路徑、推薦站、教材範圍）在「👤 個案與學習路徑」；共用教材只建立一次，各個案用「教材範圍」分配，不需要重複上傳圖片與錄音。</small></p></div>`};
+/* ---------- 儀表板：語文延伸（獨立呈現，不計入口語）＋指標計算說明 ---------- */
+P16.HINTC={c3:'一次選對／排對，沒有提示（非口語）；口語另列',c1:'獨立理解＝沒有使用任何提示就選對',c2:'自主命名＝沒有答案提示（P3 首音、P4 完整示範以外）',c3a:'一次選對／排對，沒有提示',c3b:'沒有提示，自己說出',c4:'未教組合的首次作答，且沒有提示',c5:'P0（沒有提示）；P1–P4 分開呈現，不併入',c6:'依各項類化指標分別計算（新圖片、新情境、新組合）',c7:'分開呈現：無問句主動、被問後回答、部分提示後、示範後仿說'};
+P16.litRows=L=>[['symbol','注音辨識'],['zy','注音拼組'],['tone','聲調辨識及輸入'],['wordSpell','詞彙拼打'],['wordListen','詞彙聽打'],['phraseSpell','短語／句子拼打'],['phraseListen','短語／句子聽打']].map(([k,n])=>{const m=L[k]||{};return{k,n,m}});
+P16.fm=m=>!m||m.status==='none'?'尚未評量':m.status==='low'?'資料不足（'+m.num+'／'+m.den+' 題）':m.pct+'%（'+m.num+'／'+m.den+' 題）';
+{const _d=DSH.v.dash;DSH.v.dash=function(){const h=_d.apply(this,arguments);try{const d=DSH.dash(),L=d.rep.lit,span=d.rng.lab;
+  const lit=`<div class="panel"><h3 style="margin:0">語文延伸能力（獨立分析，不計入七大核心，也不計入自主口語）</h3><p><small>評量期間：${esc(span)}。這些是打字（拼打、聽打）的結果，只代表注音拼打與聽打，不能當作口語表達能力。</small></p>
+   <table><tr><th>項目</th><th>結果</th><th>說明</th></tr>${P16.litRows(L).map(x=>`<tr><td>${x.n}</td><td>${P16.fm(x.m)}${x.m.unc?'；未確認 '+x.m.unc+' 題':''}</td><td><small>${esc(x.m.note||x.m.label||'')}</small></td></tr>`).join('')}</table>
+   <p><small>注音提示使用情形：${L.hintUse.status==='none'?'尚未評量':'有使用提示的題數 '+L.hintUse.withHint+'／注音打字題數 '+L.hintUse.n+'（這是使用情形，不是能力高低）'}</small></p></div>`;
+  const calc=`<div class="panel"><h3 style="margin:0">📐 指標計算說明（每項指標怎麼算的）</h3><p class="rtnote">分母是「符合該評量條件的有效作答機會」（真正答錯、有效機會中沒有出現反應都算在分母）；技術異常、跳過、尚未確認的辨識結果<b>不算錯誤</b>，另外列出；教學題與評量題分開，只計評量題；資料不足就寫資料不足，不會顯示成 0 分；七項能力<b>不加總</b>成單一分數。</p>
+   <div style="overflow:auto"><table class="hm"><tr><th>能力／指標</th><th>計算方式</th><th>分子</th><th>分母</th><th>有效資料筆數</th><th>評量日期範圍</th><th>題型及難度</th><th>提示條件</th><th>資料來源</th><th>待確認</th></tr>
+   ${d.cards.map(x=>{const m=x.m;return `<tr><td style="text-align:left"><b>${esc(x.ab.n)}</b><br><small>${esc(m.label||'')}</small></td><td style="text-align:left"><small>${esc(m.note||'')}</small></td><td>${m.status==='none'?'—':m.num}</td><td>${m.status==='none'?'—':m.den}</td><td>${m.den||0}</td><td><small>${esc(x.span)}</small></td><td style="text-align:left"><small>${esc(x.src)}<br>難度：依每題記錄的設定；和前期比較時只比相近難度</small></td><td style="text-align:left"><small>${esc(P16.HINTC[x.ab.id]||P16.HINTC[(x.ab.id||'').slice(0,2)]||'')}</small></td><td style="text-align:left"><small>${esc(x.src)}${x.srcN?'（'+esc(x.srcN)+'）':''}</small></td><td>${m.unc||0}</td></tr>`}).join('')}</table></div>
+   <p><small>溝通主動性：生活觀察只呈現「紀錄次數」。沒有完整觀察機會次數時，不計算百分比。</small></p></div>`;
+  return h+lit+calc}catch(e){console.error('P16 dash',e);return h}}}
+/* ---------- 列印報表／Excel 補齊 ---------- */
+P16.fam=()=>{const c={lc:{},si:{}};let n=0;S.cards.filter(x=>!x.part).forEach(x=>{const P=VP.prof(x.id);if(!P.touched)return;n++;[['lc',(['lc','pi'].map(k=>P.ab[k]).filter(a=>a&&a.state).sort((a,b)=>VP.rank(b)-VP.rank(a))[0])],['si',P.ab.si]].forEach(([k,a])=>{const t=a&&a.state?VP.ST[a.state]:'尚未評量';c[k][t]=(c[k][t]||0)+1})});return{n,c}};
+P16.recs=()=>{try{return (RC.current({}).recs||[]).filter(r=>r&&r.rule&&RC.RULES[r.rule]&&r.rule!=='SUP').slice(0,2)}catch(e){return[]}};
+P16.html=()=>{const d=DSH.dash(),p=LRN.cur(),L=d.rep.lit,F=P16.fam(),e=esc,now=Date.now(),R=P16.recs(),
+ ob=(S.ob||[]).filter(x=>x.learnerId===p.id&&x.ts>=d.rng.from&&x.ts<=d.rng.to).sort((a,b)=>a.ts-b.ts).slice(-12);
+ const t=(hd,rows)=>`<table class="rt"><tr>${hd.map(x=>`<th>${e(x)}</th>`).join('')}</tr>${rows.map(r=>`<tr>${r.map(x=>`<td>${e(x)}</td>`).join('')}</tr>`).join('')}</table>`;
+ const prog=d.cards.filter(c=>c.cmp&&c.cmp.text).map(c=>[c.ab.n,c.cmp.text]),weak=d.cards.filter(c=>c.m.status==='ok'&&c.m.pct!=null&&c.m.pct<((()=>{try{return RC.R().weak}catch(e){return 60}})()||60)).map(c=>[c.ab.n,c.m.pct+'%（'+c.m.num+'／'+c.m.den+' 題）']);
+ return `<h3>基本識別資料</h3><p>個案：${e(p.name)}　年齡／年級：${e(p.age)||'（未填）'}　個案代碼：${e(p.id)}　評量期間：${e(d.rng.lab)}</p>
+ <h3>語文延伸能力（獨立計算，不計入七大核心，也不計入自主口語）</h3>${t(['項目','結果','說明'],P16.litRows(L).map(x=>[x.n,P16.fm(x.m),x.m.note||'']))}
+ <h3>詞彙熟悉度（各能力分開，不加總）</h3><p>已有學習紀錄的詞彙 ${F.n} 個。理解：${e(Object.entries(F.c.lc).map(([k,v])=>k+' '+v).join('、')||'—')}。自主說詞：${e(Object.entries(F.c.si).map(([k,v])=>k+' '+v).join('、')||'—')}。</p>
+ <h3>近期學習進步（只比較相近難度）</h3>${prog.length?t(['能力','與前期比較'],prog):'<p>目前沒有可比較的前期資料。</p>'}
+ <h3>待加強能力</h3>${weak.length?t(['能力','目前結果'],weak):'<p>目前沒有資料足夠且明顯偏低的能力；資料不足的能力不列為待加強。</p>'}
+ <h3>建議教學方式（規則式，教師可修改）</h3>${R.length?t(['優先順序','建議站別／目標','具體練習方式'],R.map((r,i)=>[i?'第二優先':'第一優先',RC.RULES[r.rule].n,RC.RULES[r.rule].practice||''])):'<p>資料還不足以個別化推薦；請參考教師設定的目標。</p>'}
+ <h3>生活觀察紀錄（最近 ${ob.length} 筆，來自家長與教師）</h3>${ob.length?t(['日期','說出的內容','主動發起','提示','記錄者'],ob.map(x=>[new Date(x.ts).toLocaleDateString('zh-TW'),x.text||'',x.initiated==='y'?'是':x.initiated==='n'?'否':'—',x.prompted==='none'?'無':x.prompted==='partial'?'部分提示':x.prompted==='full'?'完整示範':'—',x.observer||''])):'<p>期間內沒有生活觀察紀錄。</p>'}`};
+{const _h=RPT.html;RPT.html=function(){const h=_h.apply(this,arguments);try{return h.replace('<h3>教師觀察與備註</h3>',P16.html().replace(/\$/g,'$$$$')+'<h3>教師觀察與備註</h3>')}catch(e){console.error('P16 rpt',e);return h}}}
+{const _s=RPT.sheets;RPT.sheets=function(){const sh=_s.apply(this,arguments);try{const d=DSH.dash(),p=LRN.cur(),L=d.rep.lit,F=P16.fam(),R=P16.recs();
+  const s1=sh.find(x=>x.name==='摘要'),s2=sh.find(x=>x.name==='七大能力');
+  s2.rows.push([],['語文延伸能力（獨立計算，不計入七大核心，也不計入自主口語）'],['項目','結果','分子','分母','未確認題數','說明'],...P16.litRows(L).map(x=>[x.n,P16.fm(x.m),x.m.status==='none'?'':x.m.num,x.m.status==='none'?'':x.m.den,x.m.unc||0,x.m.note||'']));
+  s1.rows.push([],['基本識別資料'],['個案',p.name],['年齡／年級',p.age||''],['個案代碼',p.id],[],['詞彙熟悉度（各能力分開，不加總）'],['已有學習紀錄的詞彙',F.n],['理解',Object.entries(F.c.lc).map(([k,v])=>k+' '+v).join('；')],['自主說詞',Object.entries(F.c.si).map(([k,v])=>k+' '+v).join('；')],[],['近期學習進步（只比較相近難度）'],...d.cards.filter(c=>c.cmp&&c.cmp.text).map(c=>[c.ab.n,c.cmp.text]),[],['建議教學方式（規則式）'],...R.map((r,i)=>[i?'第二優先':'第一優先',RC.RULES[r.rule].n,RC.RULES[r.rule].practice||'']),[],['說明','本報表由系統依作答紀錄計算，僅供教學紀錄與 IEP 目標討論參考，不是標準化語言能力診斷報告']);
+  }catch(e){console.error('P16 sheets',e)}return sh}}
+/*P16-END*/
+/*P17-BEGIN 新版第08階段：本機資料安全、備份完整性、個案資料隔離檢查、雲端架構預留（預留，不啟用任何雲端功能）*/
+const CLD={VER:1};
+CLD.st=()=>S.cloud=S.cloud||{schema:1,enabled:false,devId:null};
+CLD.devId=()=>{const c=CLD.st();if(!c.devId)c.devId='dev_'+ACL.rnd(8);return c.devId};          /* 這台裝置的識別（不匯出，換裝置就是新的） */
+CLD.sidOf=p=>(p&&p.ext&&p.ext.cloud&&p.ext.cloud.sid)||null;
+CLD.sid=p=>{if(!p)return null;p.ext=p.ext||{};p.ext.cloud=p.ext.cloud||{};if(!p.ext.cloud.sid)p.ext.cloud.sid='stu_'+ACL.rnd(8);return p.ext.cloud.sid};   /* 未來雲端「學生ID」；本機個案 ID（L001…）只在這台裝置內唯一 */
+CLD.ensureSids=()=>{try{(S.lrn&&S.lrn.list||[]).forEach(CLD.sid)}catch(e){}};
+CLD.ROLES={teacher:'教師',parent:'家長',admin:'系統管理者'};
+CLD.IDS={user:'usr_',teacher:'tch_',parent:'par_',student:'stu_',device:'dev_'};
+CLD.RESERVED=[
+ ['正式使用者帳號ID／教師ID／家長ID','格式已定（usr_／tch_／par_），本機沒有帳號，未建立任何帳號資料'],
+ ['學生ID','每位個案已有永久的 stu_ 編號（個案資料的 ext.cloud.sid），備份會帶著走；本機個案 ID（L001…）只在這台裝置內有效'],
+ ['使用者角色','教師、家長、系統管理者（預留名稱）；目前的「教師密碼」與「家長專區授權」只是本機介面限制'],
+ ['個案授權關係','預留：使用者×學生×權限範圍（檢視／練習／觀察）×起迄日期；目前只有 S.par.auth（本機介面限制）'],
+ ['家長邀請碼及綁定','預留：由教師為單一學生產生、有期限、一次使用的邀請碼。目前沒有，也不顯示任何假的邀請按鈕'],
+ ['雲端教材資料庫、圖片及音檔儲存','預留：教材與媒體以編號和修改時間識別（現有 id／modified）；目前教材與錄音只在本機，以 ZIP 搬移'],
+ ['學習紀錄同步介面','已有可用的資料面：每筆作答紀錄有唯一 id；CLD.changeSet() 可列出某時間後的變動、CLD.merge() 依 id 合併並回報衝突；SYNC.register() 可掛上未來的雲端連線（預設不啟用）'],
+ ['跨裝置同步、同步衝突處理','預留規則（見下）；尚未實作任何同步，也不連任何服務'],
+ ['帳號存取紀錄','本機已有教師區存取紀錄（S.acl.audit，不含學生姓名）；雲端版需要伺服器端紀錄']];
+CLD.POLICY=['作答紀錄、生活觀察：只增不改，以 id 合併；相同 id 但內容不同 → 保留較早建立者並列入衝突清單，交由教師確認。','個案設定、教材：以修改時間較新者為準；時間相同時以裝置編號較小者為準，並保留另一份供教師比較。','刪除：以「刪除標記」同步，不直接消失；個案資料刪除必須由教師確認。','這些規則目前只用於「備份匯入合併」，尚未用於任何網路同步。'];
+CLD.merge=(local,remote,key)=>{key=key||(x=>x.id);const have=new Map((local||[]).map(x=>[key(x),x])),r={add:[],same:0,conflict:[]};(remote||[]).forEach(x=>{const k=key(x);if(!have.has(k)){r.add.push(x);have.set(k,x)}else if(JSON.stringify(have.get(k))===JSON.stringify(x))r.same++;else r.conflict.push({id:k,local:have.get(k),remote:x})});return r};
+CLD.changeSet=(learnerId,since)=>{since=+since||0;const p=LRN.get(learnerId);if(!p)return null;LRN.sync();const recs=learnerId===S.lrn.cur?S.recs:((S.lrn.store[learnerId]||{}).recs||[]);
+ return{studentId:CLD.sid(p),localId:learnerId,device:CLD.devId(),since,recs:recs.filter(r=>(r.ts||0)>since).map(r=>({id:r.id,ts:r.ts,h:SHA.str(JSON.stringify(r)).slice(0,16)})),obs:(S.ob||[]).filter(o=>o.learnerId===learnerId&&(o.ts||0)>since).map(o=>({id:o.id,ts:o.ts}))}};
+/* ---------- 備份／還原輔助 ---------- */
+const BK={saved:0};
+{const _s=save;save=async function(){BK.saved=Date.now();CLD.ensureSids();return _s.apply(this,arguments)}}
+{const _a=LRN.add;LRN.add=function(){const p=_a.apply(this,arguments);if(p)CLD.sid(p);return p}}
+BK.days=()=>S.lastFullBackupAt?Math.floor((Date.now()-S.lastFullBackupAt)/864e5):null;
+BK.hasData=()=>{try{LRN.sync();return S.lrn.list.some(p=>((p.id===S.lrn.cur?S.recs:((S.lrn.store[p.id]||{}).recs||[])).length>0))||(S.ob||[]).length>0}catch(e){return false}};
+BK.remind=()=>{if(!BK.hasData())return '';const d=BK.days();return d==null||d>=7?`<div class="panel" style="background:#fff0e0;border:2px solid #d9822b"><b>💾 提醒：${d==null?'還沒有做過完整備份':'距離上次完整備份已 '+d+' 天'}</b>。學習紀錄只存在這個瀏覽器裡，請到「📦 教材與資料管理」按「匯出完整備份」。</div>`:''};
+BK.audit=()=>{const out=[];try{LRN.sync()}catch(e){}const seen=new Map(),sids=new Map();let nr=0;
+ S.lrn.list.forEach(p=>{const recs=p.id===S.lrn.cur?S.recs:((S.lrn.store[p.id]||{}).recs||[]);nr+=recs.length;recs.forEach(r=>{if(r.learnerId&&r.learnerId!==p.id)out.push('作答紀錄 '+r.id+' 屬於 '+r.learnerId+'，卻存放在「'+p.name+'」的資料裡');if(seen.has(r.id))out.push('作答紀錄編號重複：'+r.id);seen.set(r.id,p.id)});
+  const sd=CLD.sidOf(p);if(sd){if(sids.has(sd))out.push('兩位個案有相同的學生編號：'+p.name);sids.set(sd,p.id)}});
+ (S.ob||[]).forEach(o=>{if(!LRN.get(o.learnerId))out.push('生活觀察 '+o.id+' 找不到對應的個案')});
+ if(S.par&&Array.isArray(S.par.auth))S.par.auth.forEach(id=>{if(!LRN.get(id))out.push('家長授權清單中的個案不存在：'+id)});
+ return{problems:out,learners:S.lrn.list.length,records:nr,obs:(S.ob||[]).length}};
+BK.env=async()=>{const o={persisted:null,quota:null,usage:null};try{if(navigator.storage&&navigator.storage.persisted)o.persisted=await navigator.storage.persisted();if(navigator.storage&&navigator.storage.estimate){const e=await navigator.storage.estimate();o.quota=e.quota;o.usage=e.usage}}catch(e){}return o};
+BK.askPersist=async()=>{try{if(navigator.storage&&navigator.storage.persist)return await navigator.storage.persist()}catch(e){}return null};
+BK.undoInfo=async()=>{try{return await kvGet('backup-before-import-meta')}catch(e){return null}};
+BK.undo=async()=>{const b=await kvGet('backup-before-import');if(!b||!b.lrn)return alert('沒有可以回復的「還原前資料」');if(!confirm('要把資料回復成「最近一次匯入／還原之前」的樣子嗎？\n目前這台裝置上之後新增的紀錄會消失（自訂錄音檔不在此範圍）。'))return;
+ S=b;LRN.guard();LRN.apply(LRN.cur());await save();ioMsg&&ioMsg('已回復到匯入前的資料。');try{home()}catch(e){}tch()};
+/* ---------- 匯入：個案 ID 衝突、套用教材／觀察／評量修正 ---------- */
+const P17={};
+P17.conflicts=P=>{const o=[];if(!P.lrn)return o;P.lrn.list.forEach(p=>{const e=LRN.get(p.id);if(!e)return;const sa=CLD.sidOf(e),sb=CLD.sidOf(p),same=sa&&sb?sa===sb:e.name===p.name;if(!same)o.push({id:p.id,inName:p.name,localName:e.name})});return o};
+P17.remap=(P,R)=>{if(!P.lrn)return;const bad=new Set(P17.conflicts(P).map(x=>x.id));P.lrn.list.forEach(p=>{if(!bad.has(p.id))return;const old=p.id,nid='L'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);p.id=nid;P.lrn.data[nid]=P.lrn.data[old];delete P.lrn.data[old];((P.lrn.data[nid]||{}).recs||[]).forEach(r=>{if(r.learnerId===old)r.learnerId=nid});(P.ob||[]).forEach(o=>{if(o.learnerId===old)o.learnerId=nid});if(P.lrn.cur===old)P.lrn.cur=nid;(R.remap=R.remap||[]).push(p.name)})};
+P17.apply=(P,mode,R)=>{
+ if(P.teach){['cb','mx','se','sc'].forEach(k=>{const inc=P.teach[k]||[];if(mode==='merge'){S[k]=S[k]||[];const h=new Set(S[k].map(x=>x.id));let n=0;inc.forEach(x=>{if(!h.has(x.id)){S[k].push(x);n++}});R['t_'+k]=n}else S[k]=inc.slice()})}
+ if(P.ob){S.ob=S.ob||[];if(mode==='full')S.ob=P.ob.slice();else if(mode==='merge'){const m=CLD.merge(S.ob,P.ob);m.add.forEach(x=>S.ob.push(x));R.ob=m.add.length;R.obDup=m.same+m.conflict.length}}
+ if(P.as){if(mode==='full')S.as=P.as;else if(mode==='merge'){S.as=S.as||{};Object.entries(P.as).forEach(([k,v])=>{if(v&&typeof v==='object'&&!Array.isArray(v)){S.as[k]=S.as[k]&&typeof S.as[k]==='object'?S.as[k]:{};Object.entries(v).forEach(([kk,vv])=>{if(!(kk in S.as[k]))S.as[k][kk]=vv})}else if(!(k in S.as))S.as[k]=v})}}
+ CLD.ensureSids()};
+P17.sum=R=>{const a=[];if(R.t_cb||R.t_se||R.t_sc||R.t_mx)a.push('新增詞彙組合 '+(R.t_cb||0)+'、語句 '+(R.t_se||0)+'、生活情境 '+(R.t_sc||0));if(R.ob!=null)a.push('新增生活觀察 '+R.ob+'（重複略過 '+R.obDup+'）');if(R.remap&&R.remap.length)a.push('個案編號衝突，已當成不同個案另外加入：'+R.remap.join('、'));return a.length?'；'+a.join('；'):''};
+{const _p=ioPreview;ioPreview=function(){_p.apply(this,arguments);try{const P=IOP.P,e=$('#iopv'),pn=e&&e.querySelector('.panel p');if(!pn||!P)return;const nr=P.lrn?Object.values(P.lrn.data).reduce((n,d)=>n+((d&&d.recs)||[]).length,0):0,cf=P17.conflicts(P),bad=P.warn.some(w=>/完整性檢查/.test(w)),t=P.teach||{};
+  pn.insertAdjacentHTML('afterend',`<p><b>完整性檢查：</b>${bad?'<b style="color:#b8322b">未通過（檔案可能損毀或被修改，請不要還原，改用另一份備份）</b>':'通過（每個檔案的大小與校驗碼都吻合）'}　<b>內容：</b>${P.lrn?'個案 '+P.lrn.list.length+' 位、作答紀錄 '+nr+' 筆；':''}${P.ob?'生活觀察 '+P.ob.length+' 筆；':''}${P.teach?'詞彙組合 '+(t.cb||[]).length+'、語句 '+(t.se||[]).length+'、生活情境 '+(t.sc||[]).length+'；':''}${P.kind==='full'&&!P.ob&&!P.teach?'<small>（這是較舊的備份，不含生活觀察與組合／語句；還原時會保留目前裝置上的這些資料）</small>':''}</p>${cf.length?`<p style="color:#b8322b"><b>個案編號衝突：</b>${cf.map(x=>esc(x.inName)+'（備份）與 '+esc(x.localName)+'（本機）編號相同但不是同一位').join('；')}。「合併」時會當成不同的個案另外加入，不會把紀錄混在一起。</p>`:''}<p><small>同一份備份重複匯入「合併」是安全的：相同編號的作答紀錄、生活觀察、教材會略過，不會重複。</small></p>`)}catch(e){console.error('P17 preview',e)}}}
+/* ---------- 教師頁：資料安全與雲端預留 ---------- */
+PAR.LIMIT+=' 另外，目前所有學習紀錄只存在「這台裝置的這個瀏覽器」，手機、平板、電腦即使都能打開同一個網站，學習紀錄也不會自動同步；家長在這裡只能看到這個瀏覽器裡的資料。';
+function tSEC(){const a=S.acl||{},aud=BK.audit(),rs=(()=>{try{return UI.rsGet()}catch(e){return null}})(),ls=BK.saved?new Date(BK.saved).toLocaleTimeString('zh-TW',{hour12:false}):'（本次開啟後還沒有儲存動作）',fb=S.lastFullBackupAt?new Date(S.lastFullBackupAt).toLocaleString('zh-TW',{hour12:false}):'尚未做過完整備份';
+ const tb=(h,r)=>`<table><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${r.map(x=>`<tr>${x.map(c=>`<td style="text-align:left">${c}</td>`).join('')}</tr>`).join('')}</table>`;
+ $('#sp').innerHTML=`${BK.remind()}<div class="panel"><h3 style="margin:0">🛡 資料安全、備份與雲端預留</h3><p class="rtnote">這是「本機測試版」：所有資料只存在這台裝置的這個瀏覽器，沒有帳號系統、沒有伺服器、沒有雲端，也沒有把任何資料傳給第三方服務。</p></div>
+ <div class="panel"><h3 style="margin:0">一、教師入口保護（本機原型）</h3><p>目前：${ACL.has()?'<b style="color:#2d7a2d">已設定教師密碼</b>（離開教師區自動上鎖、閒置 15 分鐘自動上鎖、連續輸錯 5 次暫停 60 秒、匯出與刪除要再輸入密碼）':'<b style="color:#b8322b">尚未設定密碼：任何人都能打開教師區</b>'}</p>
+ <p>${ACL.has()?'<button class="btn alt" onclick="ACL.lock();tab(1)">🔒 登出（重新上鎖並離開）</button> ':''}<button class="btn alt" onclick="sub='acl';tab(2)">到「存取與隱私」設定密碼</button></p>
+ <p class="rtnote"><b>重要：</b>這個密碼只是原型測試用的本機入口保護，用來避免孩子或旁人從畫面誤入。資料仍以未加密的方式存在瀏覽器，能直接操作這台裝置的人可以繞過。它<b>不能取代正式的帳號驗證與伺服器端權限控制</b>；也不能只靠「藏起按鈕」當作安全機制——所有教師功能在程式內都會檢查是否已解鎖。</p></div>
+ <div class="panel"><h3 style="margin:0">二、儲存、進度恢復與備份</h3><ul>
+ <li>自動儲存：每次作答、設定變更都會立即存到這個瀏覽器的資料庫（IndexedDB）。本次開啟後最近一次儲存：${ls}。</li>
+ <li>練習進度恢復：中途離開練習，回到首頁可以「繼續上次的練習」。${rs?'<b>目前有一個可繼續的練習。</b>':'目前沒有可繼續的練習。'}</li>
+ <li>最近一次完整備份：<b>${fb}</b>　<button class="btn go sm" onclick="sub='io';tab(2)">到「教材與資料管理」匯出／還原</button></li>
+ <li>備份內容：圖卡、分類、圖片、錄音、教學設定、詞彙庫設定、<b>詞彙組合、語句、生活情境、生活觀察、評量修正</b>、各個案的作答紀錄與熟悉度、家長專區設定。<b>不含</b>教師密碼與存取紀錄（避免密碼外流；還原到新裝置後請重新設定密碼）。</li>
+ <li>完整性檢查：備份內每個檔案都有大小與校驗碼（CRC32；資料檔另有 SHA-256），匯入時先檢查，不通過會警告並計入失敗；比目前程式新的資料版本會被拒絕。</li>
+ <li>匯入前確認：顯示預覽（新增／相同／衝突筆數、個案與紀錄數、完整性結果）；匯入前自動在本機另存「還原前資料」，失敗不會改動原資料。同一份備份重複「合併」匯入不會產生重複紀錄。</li>
+ <li>程式更新後的資料遷移：資料版本 ${DV}；舊版資料升級時會保留升級前備份，並在資料中留下遷移紀錄。</li></ul>
+ <p id="bk_undo"></p><p id="bk_env"><small>讀取儲存空間狀態…</small></p>
+ <h4 style="margin:6px 0">限制（請務必了解）</h4><ul><li>清除瀏覽器資料、重灌、更換瀏覽器或換電腦，這裡的資料<b>就會消失</b>；沒有備份就無法找回。</li><li>私人／無痕瀏覽模式：關閉視窗後資料通常會消失，不適合正式記錄學習。</li><li>換裝置：必須先匯出完整備份，再到新裝置匯入還原。</li><li>自訂錄音檔另外存放，「回復到還原前」只回復一般資料，不含錄音檔。</li></ul></div>
+ <div class="panel"><h3 style="margin:0">三、個案資料隔離檢查</h3><p>作答紀錄、熟悉度、複習清單、設定都按個案分開保存，切換個案時整份切換；生活觀察與報表按個案編號篩選。下面是即時檢查：</p>
+ <p>${aud.problems.length?'<b style="color:#b8322b">發現 '+aud.problems.length+' 個問題：</b><br>'+aud.problems.slice(0,10).map(esc).join('<br>'):'<b style="color:#2d7a2d">檢查通過</b>'}（個案 ${aud.learners} 位、作答紀錄 ${aud.records} 筆、生活觀察 ${aud.obs} 筆）</p></div>
+ <div class="panel" style="background:#fff7d6"><h3 style="margin:0">四、跨裝置：介面相容 ≠ 資料同步</h3><p>手機、平板、電腦都能打開這個網站，只代表<b>畫面可以使用</b>。目前學習紀錄<b>不會</b>在不同裝置、不同瀏覽器之間自動同步：每個瀏覽器各有一份獨立的資料。家長與教師只能看到「目前這個瀏覽器」裡的資料。要在別台裝置看到同樣的資料，必須用「匯出完整備份」→「匯入還原」手動搬移，而且搬完之後兩邊又各自獨立。</p></div>
+ <div class="panel"><h3 style="margin:0">五、未來雲端架構預留（目前全部未啟用）</h3>${tb(['項目','目前狀態'],CLD.RESERVED.map(x=>[esc(x[0]),esc(x[1])]))}
+ <p>這台裝置編號：<code>${esc(CLD.devId())}</code>　目前個案的學生編號：<code>${esc(CLD.sid(LRN.cur()))}</code>　雲端同步：<b>未啟用</b></p>
+ <h4 style="margin:6px 0">同步衝突處理規則（預留）</h4><ul>${CLD.POLICY.map(x=>'<li>'+esc(x)+'</li>').join('')}</ul></div>
+ <div class="panel"><h3 style="margin:0">六、正式上線前必須完成（尚未完成，需要未來雲端開發）</h3>
+ <p class="rtnote">未完成以下項目前，<b>不可</b>讓多個家庭與教師遠端使用，也不可把真實學生資料放到網路上。</p>${tb(['要求','狀態'],['可靠的帳號驗證','尚未完成','伺服器端權限檢查','尚未完成','家長與個案授權','尚未完成（目前只是介面限制）','教師資料存取授權','尚未完成','安全的資料傳輸及儲存（加密）','尚未完成（目前瀏覽器資料未加密）','個人資料保護','尚未完成','語音資料使用同意（正式版）','尚未完成（目前語音只在裝置上處理，預設不保存原始錄音、不上傳）','資料刪除及保留政策','尚未完成（目前只有教師手動刪除個案）','備份及復原機制（伺服器端）','尚未完成（目前只有手動匯出入）'].reduce((a,x,i,arr)=>i%2?a:[...a,[esc(x),esc(arr[i+1])]],[]))}
+ <ul><li>不得把真實學生資料或密碼放進公開的 GitHub 儲存庫（備份檔、匯出的 CSV／Excel 都不要上傳）。</li><li>不得未經授權把學生資料傳送到任何新的第三方服務。</li></ul></div>`;
+ BK.undoInfo().then(m=>{const e=$('#bk_undo');if(e)e.innerHTML=m?`<small>最近一次匯入／還原前自動另存：${new Date(m.at).toLocaleString('zh-TW',{hour12:false})}（${m.cards} 張圖卡、${m.recs} 筆目前個案紀錄）</small> <button class="btn alt sm" onclick="BK.undo()">↩ 回復到那時的資料</button>`:'<small>目前沒有匯入或還原前的自動備份。</small>'});
+ BK.env().then(o=>{const e=$('#bk_env');if(!e)return;const mb=x=>x==null?'—':(x/1048576).toFixed(0)+' MB';e.innerHTML='瀏覽器儲存空間：'+(o.persisted===true?'<b>已設為「持久保存」</b>（瀏覽器較不會自動清除）':o.persisted===false?'<b style="color:#a0522d">尚未設為持久保存</b>（空間不足時瀏覽器可能自動清除）　<button class="btn alt sm" onclick="BK.askPersist().then(tSEC)">要求持久保存</button>':'這個瀏覽器無法查詢')+'　已用 '+mb(o.usage)+' ／ 可用上限約 '+mb(o.quota)+'（僅供參考）'})}
+/* 備份提醒也顯示在「教材與資料管理」頁最上方 */
+{const _t=tIO;tIO=function(){_t.apply(this,arguments);try{const r=BK.remind();if(r)$('#sp').insertAdjacentHTML('afterbegin',r)}catch(e){}}}
+CLD.ensureSids();
+/*P17-END*/
+/*P18-BEGIN 真人操作引導語音（GV）：六個老師錄音（請找找看／請跟我說一次／請仔細聽／請大聲一點點喔／換你說囉／這是什麼）。
+  共用 AM 語音管理（優先序、不重疊、背景音樂降低）；每題各語音有次數上限與冷卻；口語收音期間先暫停辨識、播完再恢復；
+  不改變提示分類（只記錄在 rec.ext.guide，不呼叫 RE.hint）。關閉開關 S.set.gv=false 時完全不播放，其他功能不受影響。*/
+const GV={tm:[],s:null,rid:null,qm:{},lastEv:null,mp:0,
+ META:{
+  find_it:{v:'gv_find',t:'請找找看',dur:1.88,ic:'🔍',lb:'找找看',cls:'operation',max:1,gap:2500,mic:false},
+  repeat_after_me:{v:'gv_rep',t:'請跟我說一次',dur:2.05,ic:'🗣',lb:'跟我說',cls:'imitation_cue',max:1,gap:2500,mic:true},
+  listen_carefully:{v:'gv_listen',t:'請仔細聽',dur:1.67,ic:'👂',lb:'仔細聽',cls:'attention',max:2,gap:2500,mic:false},
+  speak_louder:{v:'gv_louder',t:'請大聲一點點喔',dur:2.43,ic:'🎤',lb:'輕輕大聲一點點',cls:'volume_assist',max:2,gap:8000,mic:true},
+  your_turn:{v:'gv_turn',t:'換你說囉',dur:1.7,ic:'🎤',lb:'換你說',cls:'invite',max:2,gap:2500,mic:true},
+  what_is_this:{v:'gv_what',t:'這是什麼',dur:1.66,ic:'🖼',lb:'這是什麼',cls:'operation',max:1,gap:2500,mic:false}}};
+Object.values(GV.META).forEach(m=>{VOICE[m.v]=[m.t,m.dur,3,'voice/guidance/'+Object.keys(GV.META).find(k=>GV.META[k]===m)+'.m4a']});
+/* 適用題型：選擇／配對類 → 請找找看；聽打 → 請仔細聽；看圖說詞（命名）→ 這是什麼 */
+GV.SEL=['pick','cbm','cbc','cbo','sxc','sxo','scc'];
+GV.on=()=>S.set.gv!==false&&vOn();
+GV.key=()=>G.rid+':'+G.i+':'+S.set.mode;
+GV.q=()=>{const k=GV.key();if(!GV.s||GV.s.k!==k){GV.clear();if(GV.rid!==G.rid){GV.rid=G.rid;GV.qm={}}const m=S.set.mode;GV.qm[m]=(GV.qm[m]||0)+1;GV.s={k,n:{},qi:GV.qm[m],cool:0,low:0}}return GV.s};
+GV.clear=()=>{GV.tm.forEach(clearTimeout);GV.tm=[];if(GV.mp){GV.mp=0;try{ASR.paused=false}catch(e){}}GV.vis(null)};
+GV.tmo=(f,ms)=>{const t=setTimeout(()=>{GV.tm=GV.tm.filter(x=>x!==t);f()},ms);GV.tm.push(t);return t};
+GV.micOK=()=>!!(V2.micAllowed()&&!V2.noMic&&MIC.st&&MIC.st.active!==false&&!MIC.err);
+GV.busy=()=>!!(AM.cur||ZQ.busy||SP.speaking||MIC.state==='speaking'||(typeof MV!=='undefined'&&MV.lastVoice&&MV.lastVoice())||document.querySelector('.ov'));
+GV.naming=()=>{const sub=PH.sub();return S.set.mode==='speak'&&(sub==='obj'||sub==='newimg')};
+/* 視覺回饋：一個小標籤＋對應區塊輕微強調；音波本身仍由真實收音驅動（不加假動畫） */
+GV.vis=(id)=>{document.body.classList.remove('gv-find','gv-turn','gv-soft');let b=document.getElementById('gvb');
+ if(!id){if(b)b.remove();const mb=document.getElementById('micbox');if(mb)mb.classList.remove('gvturn','gvsoft');MIC.msgLock=0;return}
+ const m=GV.META[id];if(!b){b=document.createElement('div');b.id='gvb';b.setAttribute('role','status');(document.getElementById('scene')||document.body).appendChild(b)}
+ b.className='gvb '+(FX()?'anim':'');b.textContent=m.ic+' '+m.lb;
+ if(id==='find_it')document.body.classList.add('gv-find');
+ const mb=document.getElementById('micbox');
+ if(id==='your_turn'||id==='what_is_this'||id==='repeat_after_me'){document.body.classList.add('gv-turn');if(mb&&S.set.mode==='speak'&&id!=='repeat_after_me')mb.classList.add('gvturn')}
+ if(id==='speak_louder'&&mb){mb.classList.add('gvsoft');document.body.classList.add('gv-soft');const w=document.getElementById('wst');if(w){MIC.msgLock=1;w.textContent='🎤 再大聲一點點，我在聽'}}};
+GV.logEv=(id,o)=>{const r=RE.cur;if(!r)return;r.guide=r.guide||[];r.guide.push({id,cls:GV.META[id].cls,at:Date.now()-r.t0,...(o&&o.info||{})})};
+GV.wait=(f,key,ms,fail)=>{const t0=Date.now();const poll=()=>{if(!G.on||G.lock||G.paused||GV.key()!==key){if(fail)fail();return}
+  if(!GV.busy()){f();return}if(Date.now()-t0>ms){if(fail)fail();return}GV.tmo(poll,250)};poll()};
+/* 播放入口：after(played) 一定只會被呼叫一次（沒播也會呼叫，讓呼叫端接續原本流程） */
+GV.say=(id,o)=>{o=o||{};let fin=0;const done=p=>{if(fin)return;fin=1;try{o.after&&o.after(!!p)}catch(e){console.warn(e)}},m=GV.META[id];
+ if(!m||!GV.on()||!G.on||G.lock||G.paused||document.hidden||!G.cur){done(0);return false}
+ const s=GV.q(),key=s.k;if((s.n[id]||0)>=(o.max||m.max)||Date.now()<s.cool){done(0);return false}
+ if(m.mic&&!GV.micOK()){done(0);return false}
+ const run=()=>{if(GV.key()!==key||!G.on||G.lock||G.paused){done(0);return}
+   const pa=(S.set.mode==='speak'&&(m.mic||id==='what_is_this')&&ASR.on);if(pa){GV.mp=1;ASR.paused=true;micBreath(1)}   /* 只暫停「接收結果」，不中斷辨識工作階段（避免 iOS 重複詢問麥克風權限） */
+   const back=()=>{if(pa&&GV.mp){GV.mp=0;ASR.paused=false;ASR.skipUntil=Date.now()+700;if(G.on&&!G.lock&&GV.key()===key&&S.set.mode==='speak'&&!ASR.on&&!ASR.r&&!ASR.gave&&!ASR.fatal){try{asrStart()}catch(e){}}setTimeout(()=>micBreath(0),1500)}
+     /* 不在這裡主動啟動麥克風：啟動時機由既有流程負責（回合開始集中取得一次），避免被拒絕後重複跳出權限詢問 */};
+   if(!AM.say(m.v)){back();done(0);return}
+   s.n[id]=(s.n[id]||0)+1;s.cool=Date.now()+m.gap;GV.vis(id);GV.logEv(id,o);let ended=0;
+   const end=()=>{if(ended)return;ended=1;GV.vis(null);back();done(1)};
+   AM.after(end);GV.tmo(end,(m.dur/V2.rr()+1.2)*1000)};
+ const go=()=>{if(GV.busy())GV.wait(run,key,o.wait||6000,()=>done(0));else run()};
+ if(o.delay)GV.tmo(go,o.delay);else go();return true};
+/* ---- 掛接（每一個都包 try，失敗時退回原本行為） ---- */
+{const _s=showQ;showQ=function(){const r=_s.apply(this,arguments);try{if(G.on&&G.cur){const s=GV.q();const m=S.set.mode;if(m!=='speak'&&ASR.on)stopAsr();
+  if(!s.init){s.init=1;
+   if(m==='speak'&&GV.naming()&&s.qi<=3)GV.say('what_is_this',{delay:300})
+   else if(GV.SEL.includes(m)&&s.qi===1&&m!=='pick')GV.say('find_it',{delay:600})}}}catch(e){console.error('GV.showQ',e)}return r}}
+{const _a=PICK.auto;PICK.auto=function(){const r=_a.apply(this,arguments);try{const s=GV.q();if(GV.on()&&s.qi===1&&!s.pk){s.pk=1;GV.say('find_it',{delay:1300})}}catch(e){console.error('GV.pick',e)}return r}}
+{const _a=V2.auto;V2.auto=function(){const a=arguments,self=this;try{if(S.set.mode==='listen'&&GV.on()&&G.cur){const s=GV.q();if(s.qi===1&&!s.n.listen_carefully){GV.say('listen_carefully',{after:()=>_a.apply(self,a)});return}}}catch(e){console.error('GV.auto',e)}return _a.apply(this,arguments)}}
+{const _t=V2.turn;V2.turn=function(){const s=V2.stp,a=arguments,self=this;
+  try{if(s&&!s.gvd&&s.miss===0&&GV.on()&&G.cur){s.gvd=1;const pic=s.sp.kind==='pic',id=pic?'what_is_this':'repeat_after_me';const sid=s.id;if(pic&&GV.q().qi>3){return _t.apply(this,arguments)}
+   GV.say(id,{after:()=>{if(V2.stp&&V2.stp.id===sid)_t.apply(self,a)}});return}}catch(e){console.error('GV.turn',e)}return _t.apply(this,arguments)}}
+{const _k=SK.tick;SK.tick=function(){const sk=G&&G.sk,a=arguments,self=this;
+  try{if(sk&&G.on&&S.set.mode==='speak'&&!sk.gvT&&GV.on()&&GV.micOK()&&!G.paused&&!AM.cur&&!ZQ.busy&&!SP.speaking&&!document.querySelector('.ov')){sk.gvT=1;
+   GV.say('your_turn',{after:p=>{if(G.sk!==sk)return;if(p)SK.arm();else _k.apply(self,a)}});return}}catch(e){console.error('GV.tick',e)}return _k.apply(this,arguments)}}
+{const _g=SK.give;SK.give=function(id){const r=_g.apply(this,arguments);
+  try{if(r&&S.set.mode==='speak'&&GV.on()){const nid={P4v:'repeat_after_me',P1:'your_turn',P2:'your_turn',P3v:'your_turn'}[id];if(nid)GV.say(nid,{wait:9000,info:{after_hint:id}})}}catch(e){console.error('GV.give',e)}return r}}
+{const _w=wrongHit;wrongHit=function(){const r=_w.apply(this,arguments);
+  try{if(typed()&&S.set.mode!=='speak'&&G.wc===3&&GV.on()){const key=GV.key();GV.say('listen_carefully',{wait:5000,after:p=>{if(p&&GV.key()===key&&G.on&&!G.lock)V2.playQ(false)}})}}catch(e){console.error('GV.wrong',e)}return r}}
+{const _p=pushNudge;pushNudge=function(){
+  try{const m=S.set.mode;if(G.on&&!G.lock&&!G.vf.push&&GV.on()&&(GV.SEL.includes(m)||m==='key'||m==='spell')){const key=GV.key(),vf=G.vf;
+   const ok=GV.say('find_it',{after:p=>{if(!p){if(GV.key()===key&&!vf.push)_p();return}vf.push=1;fxNudge();
+     if((m==='key'||m==='spell')&&GV.key()===key&&G.on&&!G.lock&&typeof K!=='undefined'&&K&&!K.hp&&!K.hf&&S.set.hl&&S.set.hl.p)kHint('p',{auto:1})}});if(ok)return}}catch(e){console.error('GV.push',e)}return _p.apply(this,arguments)}}
+{const _o=MV.onEnd;MV.onEnd=function(ev){GV.lastEv=ev;return _o.apply(this,arguments)};
+ const _v=MV.voiceNoAsr;MV.voiceNoAsr=function(){const a=arguments,self=this;
+  try{const ev=GV.lastEv,v=MV.vad;
+   if(GV.on()&&G.on&&!G.lock&&S.set.mode==='speak'&&GV.micOK()&&v&&v.calibrated&&(ASR.on||ASR.r)&&ev&&!ev.rejected&&ev.reason!=='gate'&&!MV.musicOn()){
+    const raw=ev.avgDb-MV.gdb,pk=ev.peakDb-MV.gdb,s=GV.q();
+    if(raw<-38&&pk<-28&&ev.avgDb-ev.floor>=4.5){s.low++;
+     if(s.low>=2){const sk=G.sk;GV.say('speak_louder',{info:{rawDb:+raw.toFixed(1),floor:+ev.floor.toFixed(1)},after:p=>{if(p){if(sk&&G.sk===sk)SK.arm()}else _v.apply(self,a)}});return}}}}catch(e){console.error('GV.louder',e)}
+  return _v.apply(this,arguments)}}
+{const _c=RE.close;RE.close=function(){const r=RE.cur,g=r&&r.guide,rec=_c.apply(this,arguments);try{if(rec&&g&&g.length){rec.ext=rec.ext||{};rec.ext.guide=g;rec.ext.guideN=g.length}}catch(e){}return rec}}
+{const _s=AM.stop;AM.stop=function(){try{GV.clear()}catch(e){}return _s.apply(this,arguments)}}
+{const st=document.createElement('style');st.textContent='.gvb{position:absolute;left:50%;top:6px;transform:translateX(-50%);z-index:30;background:#fff8d8;border:2px solid #f0c040;border-radius:18px;padding:4px 14px;font-size:20px;font-weight:700;color:#5a4300;pointer-events:none;box-shadow:0 2px 6px #0002}.gvb.anim{animation:gvin .35s ease-out}@keyframes gvin{from{opacity:0;transform:translateX(-50%) translateY(-8px)}to{opacity:1}}.gv-find .pko,.gv-find .sxo,.gv-find .cbo{outline:4px solid #f0c040;outline-offset:2px}.gvturn{transform:scale(1.12);transition:transform .25s}.gvsoft{box-shadow:0 0 0 6px #f0c04066;border-radius:18px}@media (prefers-reduced-motion:reduce){.gvturn{transform:none}.gvb.anim{animation:none}}';document.head.appendChild(st)}
+/*P18-END*/
+
 
 
 
@@ -4999,7 +5560,7 @@ LIB.chkSel=async()=>{const ids=LIB.selIds();if(!ids.length||ids.length>60)return
 
 
 (async()=>{let s=await load();if(s&&s.decks&&!s.v){await kvPut('backup-pre-v2',s);s=migrate(s)}const mb=await kvGet('music').catch(()=>null);if(mb)mus.url=URL.createObjectURL(mb);if(s)S={...DEF(),...s,set:{...DEF().set,...s.set}};if(s&&s.set&&s.set.vs==null&&s.set.vol!=null)S.set.vs=s.set.vol;
-await zaLoad();await LRN.ensure();try{if(S.lib&&Object.keys(S.lib.en||{}).length){await LIB.load();LIB.sync()}else LIB.load().catch(()=>0)}catch(e){console.warn('LIB boot',e)}if(S.set.stuName===undefined)S.set.stuName='';if(S.set.musSrc==='project'&&!S.set.musPicked)S.set.musSrc='builtin';if(!['key','listen','spell','speak'].includes(S.set.mode))S.set.mode='key';if(S.set.ttsMig!==3){S.set.ttsMig=3;S.set.ttsRate=.75;S.set.recRate=1.25;S.set.aiGain=1.5}if(!S.bankMap)S.bankMap={};if((S.banks||[]).some(b=>!(b.id in S.bankMap))||/^b:/.test(S.set.src||'')){if(!(await kvGet('backup-pre-bankmig')))await kvPut('backup-pre-bankmig',JSON.parse(JSON.stringify(S)));migrateBanks()}if(!S.set.musMig){S.set.musMig=1;S.set.musSrc='project';save()}FL.recover();try{FL.applyPref()}catch(e){}save();UI.init();home();mtLbl();packLoad();
+await zaLoad();await LRN.ensure();try{if(await LIB.load()){await LIB.defBoot();LIB.sync()}}catch(e){console.warn('LIB boot',e)}if(S.set.stuName===undefined)S.set.stuName='';if(S.set.musSrc==='project'&&!S.set.musPicked)S.set.musSrc='builtin';if(!['key','listen','spell','speak'].includes(S.set.mode))S.set.mode='key';if(S.set.ttsMig!==3){S.set.ttsMig=3;S.set.ttsRate=.75;S.set.recRate=1.25;S.set.aiGain=1.5}if(!S.bankMap)S.bankMap={};if((S.banks||[]).some(b=>!(b.id in S.bankMap))||/^b:/.test(S.set.src||'')){if(!(await kvGet('backup-pre-bankmig')))await kvPut('backup-pre-bankmig',JSON.parse(JSON.stringify(S)));migrateBanks()}if(!S.set.musMig){S.set.musMig=1;S.set.musSrc='project';save()}FL.recover();try{FL.applyPref()}catch(e){}save();UI.init();home();mtLbl();packLoad();
  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();
  addEventListener('resize',()=>{try{scene()}catch(e){}});try{const mq=matchMedia('(prefers-reduced-motion: reduce)');(mq.addEventListener?mq.addEventListener('change',()=>scene()):mq.addListener&&mq.addListener(()=>scene()))}catch(e){}})();
 </script></body></html>

@@ -53,8 +53,11 @@ const {mk,R,T,sleep}=require('./t30h.js');
  const st0=E('S.rw.stars');await startSc('scn','sc_open');const s1=E('S.rw.stars');E('SE.help()');await sleep(250);r=rec();T('H7 adult help: need met, no_response (not wrong), star still given, no penalty',r.comm.adultHelped&&r.comm.needMet&&r.outcome==='no_response'&&r.comm.type==='none'&&E('S.rw.stars')>s1);
  await startSc('scn','sc_help');await sleep(200);T('H8 no auto question / answer shown before waiting ends',E('!G.sk.q')&&q('#msg')&&!/幫/.test(q('#word').textContent)&&(q('.spq')?q('.spq').textContent:'')==='');
  // 自然等待：第一次只給溫和 P1，沒有問句；第二次不自動提問（預設）
- E('S.lrn.list[0].ps.sw=2');E('SK.arm()');await sleep(2300);T('H9 after the wait only gentle P1 (no question, no answer)',E('!G.sk.q')&&E('G.sk.used.join()')==='P1');
- await sleep(2300);T('H10 never auto-asks by default; offers adult help / gesture instead',E('!G.sk.q')&&/大人|手勢/.test(q('#msg').textContent));
+ E('S.lrn.list[0].ps.sw=2');E('SK.arm()');await sleep(2300);
+ /* v18：第一次等待先播真人「換你說囉」（邀請，不是提示），下一次等待才進入提示階梯 */
+ if(E('G.sk.gvT')===1)await sleep(3200);
+ T('H9 after the wait only gentle P1 (no question, no answer)',E('!G.sk.q')&&E('G.sk.used.join()')==='P1');
+ await sleep(2600);T('H10 never auto-asks by default; offers adult help / gesture instead',E('!G.sk.q')&&/大人|手勢/.test(q('#msg').textContent));
  // ---- I 語句口說與擴展 ----
  await go('sxs');const se2=E('SE.get(G.cur._se)');fire(se2.chain[0]+'');await sleep(250);r=rec();
  T('I1 short but situation-appropriate expression accepted (shortest level)',r.outcome==='correct'&&r.comm.lvReached===0&&r.sentence.pattern);
