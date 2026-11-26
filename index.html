@@ -1098,7 +1098,7 @@ async function ioExport(kind){const full=kind==='full',files=[],warn=[],j=(n,o)=
   j('records.json',{schemaVersion:1,logs:S.logs,quits:S.quits,rounds:S.rounds});
   j('progress.json',{schemaVersion:1,rw:S.rw,mst:S.mst,mflag:MF()});
   LRN.sync();{const data={};S.lrn.list.forEach(p=>{data[p.id]=p.id===S.lrn.cur?LRN.slice():(S.lrn.store[p.id]||perDef())});j('learners.json',{schemaVersion:1,dataVersion:DV,cur:S.lrn.cur,list:S.lrn.list,data,mig:S.mig,note:'各個案的星星、紀錄與作答紀錄彼此獨立'})}}
- const man={format:'詞彙特快車',schemaVersion:1,dataVersion:DV,kind:full?'full':'materials',exportedAt:new Date().toISOString(),appVersion:'詞彙特快車 v3',build:'v22.0',
+ const man={format:'詞彙特快車',schemaVersion:1,dataVersion:DV,kind:full?'full':'materials',exportedAt:new Date().toISOString(),appVersion:'詞彙特快車 v3',build:'v22.1',
   counts:{cards:cards.length,libraryWords:S.cards.filter(c=>c.lib).length,categories:S.cats.filter(c=>!c.lib).length,images:nImg,audio:nAud,logs:full?S.logs.length:0,settings:Object.keys(portableSet(S.set)).length,learners:full?S.lrn.list.length:0,records:full?S.lrn.list.reduce((n,p)=>n+(p.id===S.lrn.cur?S.recs.length:((S.lrn.store[p.id]||{}).recs||[]).length),0):0,observations:full?(S.ob||[]).length:0,combos:(S.cb||[]).length,sentences:(S.se||[]).length,scenes:(S.sc||[]).length},
   files:Object.fromEntries(files.map(f=>[f.name,{size:f.data.length,crc32:crc32(f.data),...(/\.json$/.test(f.name)?{sha256:SHA.hex(SHA.hash(f.data))}:{})}]))};
  files.unshift({name:'manifest.json',data:U8(JSON.stringify(man,null,1))});
@@ -5932,6 +5932,81 @@ INT.panel=()=>{const r=INT.report(),o=INT.open,sc=INT.scanRes,row=(a,b)=>`<tr><t
  ${r.legacy.cats.length?`<div class="panel" style="background:#fff7e6"><b>舊版內建教材分類（${r.legacy.cats.map(c=>esc(c.name)+' '+c.words+' 個').join('、')}）</b><p><small>這些來自網站舊版 materials 資料夾，目前和正式教材分開顯示在「教師自訂教材」。可由您確認後整理：只移除分類，圖卡、圖片、錄音、學習紀錄都保留，且整理前會先備份、可復原。</small></p><button class="btn alt sm" onclick="INT.legacyDo()">整理舊版分類（先確認）</button></div>`:(S.legacyClean?`<p><small>舊版分類已於 ${new Date(S.legacyClean.ts).toLocaleString('zh-TW',{hour12:false})} 整理。</small> <button class="btn alt sm" onclick="INT.legacyUndo()">復原舊版分類整理</button></p>`:'')}</div>`};
 {const _v=LIB.view;LIB.view=function(){let h='';try{h=INT.panel()}catch(e){console.warn('INT.panel',e)}return h+_v.apply(this,arguments)}}
 /*P22-END*/
+/*P23-BEGIN v22.1 語音播放修復（TTSX）、語音備援與文字備援（VF）、語音診斷（VDX） */
+const TTSX={errs:[],n:0,okN:0,voiceTs:0};
+TTSX.ss=()=>{try{return window.speechSynthesis||null}catch(e){return null}};
+TTSX.voices=()=>{try{const s=TTSX.ss();return s?(s.getVoices()||[]):[]}catch(e){return[]}};
+/* 中文語音挑選：zh-TW 優先，其次 zh-Hant／其他 zh；沒有任何中文語音時回傳 null（仍以 lang=zh-TW 交給系統）*/
+TTSX.voice=()=>{const v=TTSX.voices();return v.find(x=>/^zh[-_]TW$/i.test(x.lang))||v.find(x=>/^zh[-_](TW|Hant)/i.test(x.lang))||v.find(x=>/^zh/i.test(x.lang))||null};
+TTSX.init=()=>{const s=TTSX.ss();if(!s)return;try{s.addEventListener?s.addEventListener('voiceschanged',()=>{TTSX.voiceTs=Date.now()}):0}catch(e){}try{s.getVoices()}catch(e){}};
+/* 取消：只在真的有排隊／播放時才呼叫 cancel（iOS Safari：連續 cancel→speak 會讓新的語音被吃掉） */
+TTSX.busy=()=>{const s=TTSX.ss();return!!(s&&(s.speaking||s.pending||s.paused||(s.speaking===undefined&&s.pending===undefined)))};
+TTSX.cancel=()=>{const s=TTSX.ss();if(!s)return;try{if(TTSX.busy())s.cancel()}catch(e){}};
+TTSX.unlock=()=>{const s=TTSX.ss();if(!s||TTSX.ul||!window.SpeechSynthesisUtterance)return;TTSX.ul=1;try{const u=new SpeechSynthesisUtterance('');u.volume=0;u.lang='zh-TW';s.speak(u)}catch(e){}try{s.resume&&s.resume()}catch(e){}};
+/* 播放一段合成語音：回傳取消函式。成功＝onend；失敗（不支援／錯誤／一直沒開始）＝onfail(原因)。*/
+TTSX.say=(text,o={})=>{const s=TTSX.ss();let fin=false,started=false,ws=null,wd=null,retried=false,cur=null;
+ const clr=()=>{clearTimeout(ws);clearTimeout(wd)};
+ const done=ok=>{if(fin)return;fin=true;clr();if(ok)TTSX.okN++;ok?o.onend&&o.onend():o.onfail&&o.onfail(ok===false?'unknown':ok)};
+ const fail=r=>{if(fin)return;fin=true;clr();TTSX.errs.push({r,t:Date.now(),text:String(text).slice(0,20)});if(TTSX.errs.length>30)TTSX.errs.shift();o.onfail&&o.onfail(r)};
+ if(!s||!window.SpeechSynthesisUtterance){setTimeout(()=>fail('unsupported'),0);return()=>{fin=true}}
+ const run=()=>{if(fin)return;try{try{s.resume&&s.resume()}catch(e){}const u=new SpeechSynthesisUtterance(text);u.lang='zh-TW';u.rate=o.rate||.75;u.volume=o.volume==null?1:o.volume;const v=TTSX.voice();if(v)u.voice=v;cur=u;
+   u.onstart=()=>{started=true;clearTimeout(ws)};
+   u.onend=()=>{if(!fin&&cur===u){started=true;done(true)}};
+   u.onerror=e=>{const er=(e&&e.error)||'error';if(fin)return;if(er==='interrupted'||er==='canceled'){fin=true;clr();return}fail('tts-'+er)};
+   TTSX.n++;
+   ws=setTimeout(()=>{if(started||fin)return;if(!retried){retried=true;try{s.cancel()}catch(e){}setTimeout(run,150)}else fail(o.manual?'no-start':'blocked')},o.startMs||2500);
+   wd=setTimeout(()=>{if(started)done(true);else fail('timeout')},o.max||9000);
+   s.speak(u)}catch(e){fail('exception')}};
+ if(TTSX.busy()&&s.speaking!==undefined){try{s.cancel()}catch(e){}setTimeout(run,70)}else run();
+ return()=>{if(fin)return;fin=true;clr();TTSX.cancel()}};
+TTSX.init();
+{const _u=AM.unlock;AM.unlock=function(){try{TTSX.unlock()}catch(e){}return _u.apply(this,arguments)}}
+/* ---- 失敗統一入口：記錄原因、必要時自動顯示文字（不扣星、不算答錯）---- */
+const VF={log:[]};
+VF.fail=(r,it)=>{VF.log.push({r,t:Date.now(),k:it&&it.k});if(VF.log.length>50)VF.log.shift();
+ if(!G||!G.on)return;const pk=G.pk;
+ if(S.set.mode==='pick'&&pk){pk.vErr=pk.vErr||r;
+  if(r==='blocked'&&!ZQ.man){VF.note('請按「🔊 聽題目」聽聽看')}   /* 自動播放被瀏覽器擋下：先請學生按鈕（使用者操作後即可播放） */
+  else{pk.aidA=r;pk.txt=1;PICK.txtDom();VF.note('語音暫時無法播放，請看文字選圖片。')}}
+ else VF.note('語音暫時無法播放')};
+VF.note=t=>{const m=$('#msg');if(m){m.style.color='#2f6fe4';m.textContent=t}};
+/* ---- ZQ：單段語音（真人錄音→合成語音→文字）---- */
+{const _w=ZQ.word;ZQ.word=function(c){const r=_w.apply(this,arguments);if(r&&!r.tts)r.tts=c.text;return r}}
+ZQ.one=(it,my,done)=>{let fired=false,wd,ws;const clr=()=>{clearTimeout(wd);clearTimeout(ws)},d=()=>{if(fired)return;fired=true;clr();if(ZQ.id===my)done()};
+ const tts=why=>{if(fired)return;if(!it.tts){VF.fail(why||'no-source',it);return d()}clr();ZQ.on=false;ZQ.tts=true;ZQ.cx=TTSX.say(it.tts,{rate:V2.ar(),volume:V2.av(),manual:!!ZQ.man,onend:d,onfail:r=>{if(ZQ.id!==my){fired=true;return}VF.fail(r,it);d()}})};
+ if(it.url){const a=ZQ.a=AM.audio();ZQ.on=true;let began=false;a.onplaying=()=>{began=true;clearTimeout(ws)};a.onended=d;a.onerror=()=>{if(began)return d();it.fail&&it.fail();tts('audio-error')};
+  wd=setTimeout(()=>{began?d():tts('audio-timeout')},it.max||7000);ws=setTimeout(()=>{if(!began&&!fired)tts('audio-nostart')},3000);
+  try{a.muted=false;a.src=it.url;a.volume=Math.min(1,VV());a.currentTime=0;V2.setRate(a)}catch(e){}
+  try{const p=a.play();if(p&&p.catch)p.catch(e=>{it.fail&&it.fail();tts(e&&e.name==='NotAllowedError'?'blocked':'audio-play')})}catch(e){it.fail&&it.fail();tts('audio-exc')}}
+ else{wd=setTimeout(()=>{if(!fired){VF.fail('timeout',it);d()}},(it.max||7000)+3000);tts()}};
+{const _s=ZQ.stop;ZQ.stop=function(){try{if(ZQ.cx){ZQ.cx();ZQ.cx=null}}catch(e){}return _s.apply(this,arguments)}}
+stopSpeak=function(){const was=SP.speaking;SP.id++;clearTimeout(SP.timer);clearTimeout(SP.wd);if(SP.audio){try{SP.audio.pause()}catch(e){}SP.audio=null}try{TTSX.cancel()}catch(e){}dk(0);if(was)sayBusy(false);else SP.speaking=false};
+/* ---- 聽詞選圖：手動／自動顯示文字，並留下紀錄 ---- */
+PICK.txtDom=()=>{const pk=G&&G.pk,e=document.getElementById('pkw'),b=document.getElementById('pkt');if(!pk)return;if(e){e.textContent=G.cur?G.cur.text:'';e.classList.toggle('hide',!pk.txt)}if(b)b.textContent=pk.txt?'🙈 隱藏文字':'👁 顯示文字'};
+PICK.txt=()=>{const pk=G.pk;if(!G.on||!pk||G.lock)return;pk.txt=pk.txt?0:1;if(pk.txt)pk.aidM=1;try{RE.input()}catch(e){}PICK.txtDom()};
+{const _sh=PICK.show;PICK.show=function(reveal){_sh.apply(this,arguments);const pk=G.pk,q=document.querySelector('#mid .pkq>.rep');if(!pk||!q||document.getElementById('pkt'))return;
+ q.insertAdjacentHTML('afterend','<div class="row" style="justify-content:center;margin:0"><button class="btn alt sm" id="pkt" onclick="PICK.txt()" aria-label="顯示或隱藏題目文字">👁 顯示文字</button></div><div id="pkw" class="hide" style="font-size:40px;font-weight:800;text-align:center;margin:4px 0" aria-live="polite"></div>');PICK.txtDom()}}
+{const _p=PICK.play;PICK.play=function(manual){ZQ.man=manual?1:0;try{return _p.apply(this,arguments)}finally{}}}
+/* 語音異常後的錯誤選擇不算學生答錯（不增加嘗試次數）；紀錄標示資料來源 */
+{const _c=PICK.choose;PICK.choose=function(i){const pk=G.pk;if(pk&&pk.aidA&&G.on&&!G.lock&&!G.paused&&pk.opts&&pk.opts[i]&&!pk.opts[i].correct&&!pk.dis.has(i)&&RE.cur){const t=G.tries;const r=_c.apply(this,arguments);G.tries=t;pk.techWrong=(pk.techWrong||0)+1;return r}return _c.apply(this,arguments)}}
+{const _c=RE.close;RE.close=function(){const pk=G&&G.pk,rec=_c.apply(this,arguments);try{if(rec&&pk&&(pk.aidM||pk.aidA||pk.vErr)){rec.ext=rec.ext||{};rec.ext.tx={m:pk.aidM?1:0,a:pk.aidA||null,v:pk.aidA?1:0,e:pk.vErr||null,tw:pk.techWrong||0}}}catch(e){}return rec}}
+/* 學習分析：語音異常（v）的作答不納入能力判定；文字輔助作答不計為「純聽覺」證據 */
+{const _e=VP.evOf;VP.evOf=function(r){const x=r&&r.ext&&r.ext.tx;if(x&&x.v)return[];const out=_e.apply(this,arguments);return x&&x.m?out.filter(e=>e.ab!=='pi'&&e.ab!=='lc'):out}}
+/* ---- 語音診斷（教師在學生的 iPhone／iPad 上按一下，立即看到實際原因）---- */
+const VDX={res:null,busy:0};
+VDX.run=async()=>{if(VDX.busy)return;VDX.busy=1;const r={ts:Date.now(),ua:navigator.userAgent,items:[]},add=(k,v,ok)=>r.items.push({k,v:String(v),ok});
+ const s=TTSX.ss();add('瀏覽器支援語音合成',!!s&&!!window.SpeechSynthesisUtterance,!!s&&!!window.SpeechSynthesisUtterance);
+ const vs=TTSX.voices();add('語音清單數量',vs.length,vs.length>0);const zh=vs.filter(x=>/^zh/i.test(x.lang));add('中文語音',zh.map(x=>x.lang+' '+x.name).slice(0,4).join('；')||'沒有',zh.length>0);
+ add('音量設定',(+S.set.vol||.7)+'；AI 增益 '+(+S.set.aiGain||1.5),(+S.set.vol||.7)>0);add('語音提示是否開啟',vOn(),vOn());
+ const AC=window.AudioContext||window.webkitAudioContext;if(AC){try{const c=ac||(ac=new AC());if(c.resume)await c.resume().catch(()=>{});add('AudioContext 狀態',c.state,c.state==='running')}catch(e){add('AudioContext','錯誤 '+e.message,false)}}else add('AudioContext','不支援',false);
+ await new Promise(ok=>{let fin=false;const f=(v,t)=>{if(fin)return;fin=true;add('真人錄音檔播放（voice/ok.m4a）',t,v);ok()};try{const a=new Audio('voice/ok.m4a');a.volume=.01;a.onplaying=()=>{try{a.pause()}catch(e){}f(true,'可以播放')};a.onerror=()=>f(false,'讀取或解碼失敗');const p=a.play();if(p&&p.catch)p.catch(e=>f(false,'被拒絕：'+(e&&e.name)));setTimeout(()=>f(false,'3 秒內沒有開始（可能被靜音開關／自動播放限制擋住）'),3000)}catch(e){f(false,'例外：'+e.message)}});
+ await new Promise(ok=>{let t0=Date.now();TTSX.say('蘋果',{rate:.75,volume:1,manual:true,startMs:3000,onend:()=>{add('合成語音實際念出「蘋果」','成功（'+(Date.now()-t0)+' 毫秒）',true);ok()},onfail:e=>{add('合成語音實際念出「蘋果」','失敗：'+e,false);ok()}})});
+ r.hint=r.items.some(x=>!x.ok)?'請確認：① iPhone 側邊「靜音」開關／鈴聲模式 ② 音量 ③ 設定→輔助使用→語音內容有中文語音 ④ 不要在低耗電模式 ⑤ 這個畫面是按鈕按出來的（使用者操作）。':'沒有發現異常。';
+ VDX.res=r;VDX.busy=0;try{LIB.re()}catch(e){}};
+VDX.html=()=>{const r=VDX.res;return`<div class="panel"><h3 style="margin:0">🔊 語音診斷</h3><p><small>在有問題的 iPhone／iPad 上按下按鈕，會實際測試聲音並列出原因（不需要麥克風、不傳送任何資料）。</small></p><button class="btn go sm" onclick="VDX.run()" ${VDX.busy?'disabled':''}>${VDX.busy?'測試中…':'🔊 開始語音診斷'}</button>${r?`<table class="lat" style="margin-top:8px">${r.items.map(x=>`<tr><th style="text-align:left">${esc(x.k)}</th><td>${x.ok?'✅':'❌'} ${esc(x.v)}</td></tr>`).join('')}</table><p>${esc(r.hint)}</p><small>${esc(r.ua)}</small>`:''}${VF.log.length?`<p><small>最近的語音失敗紀錄：${VF.log.slice(-5).map(x=>esc(x.r)).join('、')}</small></p>`:''}</div>`};
+{const _v=INT.panel;INT.panel=function(){return VDX.html()+_v.apply(this,arguments)}}
+/*P23-END*/
+
 
 
 

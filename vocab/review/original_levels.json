@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 1,
+  "sourceVersion": "V077",
+  "levels": [
+    {
+      "id": "LV01",
+      "name": "基本生活與需求",
+      "label": "Level 01｜基本生活與需求",
+      "level": 1,
+      "count": 50,
+      "rankStart": 1,
+      "rankEnd": 50,
+      "missingImageCount": 8
+    },
+    {
+      "id": "LV02",
+      "name": "校園與日常互動",
+      "label": "Level 02｜校園與日常互動",
+      "level": 2,
+      "count": 50,
+      "rankStart": 51,
+      "rankEnd": 100,
+      "missingImageCount": 12
+    },
+    {
+      "id": "LV03",
+      "name": "家庭與生活情境",
+      "label": "Level 03｜家庭與生活情境",
+      "level": 3,
+      "count": 50,
+      "rankStart": 101,
+      "rankEnd": 150,
+      "missingImageCount": 3
+    },
+    {
+      "id": "LV04",
+      "name": "基礎認知與動作",
+      "label": "Level 04｜基礎認知與動作",
+      "level": 4,
+      "count": 50,
+      "rankStart": 151,
+      "rankEnd": 200,
+      "missingImageCount": 0
+    },
+    {
+      "id": "LV05",
+      "name": "日常飲食與用品",
+      "label": "Level 05｜日常飲食與用品",
+      "level": 5,
+      "count": 50,
+      "rankStart": 201,
+      "rankEnd": 250,
+      "missingImageCount": 0
+    },
+    {
+      "id": "LV06",
+      "name": "學習與物品操作",
+      "label": "Level 06｜學習與物品操作",
+      "level": 6,
+      "count": 50,
+      "rankStart": 251,
+      "rankEnd": 300,
+      "missingImageCount": 3
+    },
+    {
+      "id": "LV07",
+      "name": "社區與交通生活",
+      "label": "Level 07｜社區與交通生活",
+      "level": 7,
+      "count": 50,
+      "rankStart": 301,
+      "rankEnd": 350,
+      "missingImageCount": 7
+    },
+    {
+      "id": "LV08",
+      "name": "自然與生活觀察",
+      "label": "Level 08｜自然與生活觀察",
+      "level": 8,
+      "count": 50,
+      "rankStart": 351,
+      "rankEnd": 400,
+      "missingImageCount": 0
+    },
+    {
+      "id": "LV09",
+      "name": "感官與特徵描述",
+      "label": "Level 09｜感官與特徵描述",
+      "level": 9,
+      "count": 50,
+      "rankStart": 401,
+      "rankEnd": 450,
+      "missingImageCount": 0
+    },
+    {
+      "id": "LV10",
+      "name": "情緒與人際關係",
+      "label": "Level 10｜情緒與人際關係",
+      "level": 10,
+      "count": 50,
+      "rankStart": 451,
+      "rankEnd": 500,
+      "missingImageCount": 16
+    },
+    {
+      "id": "LV11",
+      "name": "居家與自理活動",
+      "label": "Level 11｜居家與自理活動",
+      "level": 11,
+      "count": 50,
+      "rankStart": 501,
+      "rankEnd": 550,
+      "missingImageCount": 0
+    },
+    {
+      "id": "LV12",
+      "name": "飲食與餐廚生活",
+      "label": "Level 12｜飲食與餐廚生活",
+      "level": 12,
+      "count": 50,
+      "rankStart": 551,
+      "rankEnd": 600,
+      "missingImageCount": 0
+    },
+    {
+      "id": "LV13",
+      "name": "休閒與運動活動",
+      "label": "Level 13｜休閒與運動活動",
+      "level": 13,
+      "count": 50,
+      "rankStart": 601,
+      "rankEnd": 650,
+      "missingImageCount": 1
+    },
+    {
+      "id": "LV14",
+      "name": "職業與社會生活",
+      "label": "Level 14｜職業與社會生活",
+      "level": 14,
+      "count": 50,
+      "rankStart": 651,
+      "rankEnd": 700,
+      "missingImageCount": 0
+    },
+    {
+      "id": "LV15",
+      "name": "工具與進階動作",
+      "label": "Level 15｜工具與進階動作",
+      "level": 15,
+      "count": 50,
+      "rankStart": 701,
+      "rankEnd": 750,
+      "missingImageCount": 0
+    },
+    {
+      "id": "LV16",
+      "name": "情緒與狀態延伸",
+      "label": "Level 16｜情緒與狀態延伸",
+      "level": 16,
+      "count": 50,
+      "rankStart": 751,
+      "rankEnd": 800,
+      "missingImageCount": 0
+    },
+    {
+      "id": "LV17",
+      "name": "動植物知識延伸",
+      "label": "Level 17｜動植物知識延伸",
+      "level": 17,
+      "count": 50,
+      "rankStart": 801,
+      "rankEnd": 850,
+      "missingImageCount": 0
+    },
+    {
+      "id": "LV18",
+      "name": "自然與空間延伸",
+      "label": "Level 18｜自然與空間延伸",
+      "level": 18,
+      "count": 50,
+      "rankStart": 851,
+      "rankEnd": 900,
+      "missingImageCount": 0
+    },
+    {
+      "id": "LV19",
+      "name": "多元生活詞彙",
+      "label": "Level 19｜多元生活詞彙",
+      "level": 19,
+      "count": 50,
+      "rankStart": 901,
+      "rankEnd": 950,
+      "missingImageCount": 0
+    },
+    {
+      "id": "LV20",
+      "name": "進階詞彙拓展",
+      "label": "Level 20｜進階詞彙拓展",
+      "level": 20,
+      "count": 50,
+      "rankStart": 951,
+      "rankEnd": 1000,
+      "missingImageCount": 0
+    }
+  ]
+}

@@ -1,18 +1,25 @@
 {
- "version": "V077_merged",
- "words": 1000,
- "withImages": 950,
- "images": 961,
- "categories": 16,
- "pronunciationChanges": 9,
- "pngPreviewCount": 0,
- "missingImageWords": 50,
- "sourceVersions": [
-  "V073",
-  "V074-V077"
- ],
- "imageSizes": {
-  "(512, 512)": 961
- },
- "levels": 20
+  "version": "V085",
+  "words": 1000,
+  "withImages": 985,
+  "images": 996,
+  "categories": 16,
+  "missingImageWords": 15,
+  "levelsStatus": "V084 mapping retained; LV identifiers for app compatibility",
+  "sources": [
+    "V084",
+    "uploaded V077 vocab.zip"
+  ],
+  "levels": 20,
+  "wordsPerLevel": 50,
+  "levelIndex": "levels.json",
+  "legacyReviewImages": 64,
+  "totalStoredImages": 1060,
+  "imageSizes": {
+    "(512, 512)": 980,
+    "(302, 302)": 4,
+    "(301, 302)": 4,
+    "(302, 301)": 4,
+    "(301, 301)": 4
+  }
 }
