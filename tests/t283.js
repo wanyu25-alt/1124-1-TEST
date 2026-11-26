@@ -54,6 +54,9 @@ const ready=async(E,n=1000)=>{const t0=Date.now();while(Date.now()-t0<15000&&!E(
  T('G 水果蔬菜×20：20 個不同詞彙、全屬於該主題、都有圖片（可用 '+cn+'）',EB('G.on')&&g.length===20&&new Set(g.map(x=>x.id)).size===20&&g.every(x=>catIds.has(x.id)&&x.img),g.slice(0,3));
  console.log('  抽樣：',g.slice(0,5).map(x=>x.id+' '+x.t+' '+x.img).join(' | '));
  EB('FL.end();G.on=false');
+ /* v22.3（第02批）：教師自訂教材預設不使用；先確認未啟用時不出題，教師啟用後才出題 */
+ T('G0 教師自訂教材未啟用時不進入題庫',EB(`(()=>{const o=S.set.src;S.set.src='all';try{return pool().some(c=>/^(CUS|NEW)/.test(c.id))}finally{S.set.src=o}})()`)===false);
+ EB(`S.matSrc={custom:1};MAT.bump()`);
  EB(`FL.setDim('custom');FL.selNone('custom');FL.togCat('custom','T-CUS',true);FL.setW('all')`);EB('FL.go()');await sleep(400);
  const g2=J(EB,'G.q.map(c=>c.id)');T('G 教師自訂分類也能出題（自訂詞彙沒有圖片時依題型排除）',EB('FL.cur().chk.ok')===true&&g2.length>=1&&g2.every(id=>/^(CUS|NEW)/.test(id)),g2);
  EB('FL.end();G.on=false');

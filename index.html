@@ -379,6 +379,7 @@ body.aid-calm #scene{max-height:90px;overflow:hidden}body.aid-calm .stc .ste{dis
 <script src="lib/pinyin-pro.js"></script>
 <script>
 /* ===== 基本工具 ===== */
+const APP={build:'v22.3'};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -1098,7 +1099,7 @@ async function ioExport(kind){const full=kind==='full',files=[],warn=[],j=(n,o)=
   j('records.json',{schemaVersion:1,logs:S.logs,quits:S.quits,rounds:S.rounds});
   j('progress.json',{schemaVersion:1,rw:S.rw,mst:S.mst,mflag:MF()});
   LRN.sync();{const data={};S.lrn.list.forEach(p=>{data[p.id]=p.id===S.lrn.cur?LRN.slice():(S.lrn.store[p.id]||perDef())});j('learners.json',{schemaVersion:1,dataVersion:DV,cur:S.lrn.cur,list:S.lrn.list,data,mig:S.mig,note:'各個案的星星、紀錄與作答紀錄彼此獨立'})}}
- const man={format:'詞彙特快車',schemaVersion:1,dataVersion:DV,kind:full?'full':'materials',exportedAt:new Date().toISOString(),appVersion:'詞彙特快車 v3',build:'v22.1',
+ const man={format:'詞彙特快車',schemaVersion:1,dataVersion:DV,kind:full?'full':'materials',exportedAt:new Date().toISOString(),appVersion:'詞彙特快車 v3',build:APP.build,
   counts:{cards:cards.length,libraryWords:S.cards.filter(c=>c.lib).length,categories:S.cats.filter(c=>!c.lib).length,images:nImg,audio:nAud,logs:full?S.logs.length:0,settings:Object.keys(portableSet(S.set)).length,learners:full?S.lrn.list.length:0,records:full?S.lrn.list.reduce((n,p)=>n+(p.id===S.lrn.cur?S.recs.length:((S.lrn.store[p.id]||{}).recs||[]).length),0):0,observations:full?(S.ob||[]).length:0,combos:(S.cb||[]).length,sentences:(S.se||[]).length,scenes:(S.sc||[]).length},
   files:Object.fromEntries(files.map(f=>[f.name,{size:f.data.length,crc32:crc32(f.data),...(/\.json$/.test(f.name)?{sha256:SHA.hex(SHA.hash(f.data))}:{})}]))};
  files.unshift({name:'manifest.json',data:U8(JSON.stringify(man,null,1))});
@@ -4955,7 +4956,7 @@ const LIB={base:null,cats:null,man:null,err:'',loading:null,ui:{q:'',cat:'',img:
 /* 題目開始時才選圖；同一題重問不換圖 */
 {const _ask=ask;ask=function(){try{const q=G&&G.q&&G.q[G.i];if(q&&q.lib)LIB.pick(q)}catch(e){console.warn('LIB.pick',e)}return _ask.apply(this,arguments)}}
 /* 沒有圖片（或圖片尚未審核）的內建詞彙，不進入需要圖片的題型；只有「看文字拼注音」可用 */
-{const _p=pool;pool=function(){let x=_p.apply(this,arguments);const sel=(LRN.cur().ext||{}).libSel;
+{const _p=pool;pool=function(){let x=_p.apply(this,arguments);const sel=LIB.selEff?LIB.selEff():(LRN.cur().ext||{}).libSel;
   if(sel){const h=new Set(sel);x=x.filter(c=>!c.lib||h.has(c.id))}
   if(S.set.mode!=='spell')x=x.filter(c=>!c.lib||c.img);return x}}
 /* 圖片載入失敗：不顯示破圖，改成不用圖片（並記錄）*/
@@ -5070,7 +5071,7 @@ LIB.csv=kind=>{if(!LIB.base)return;const q=v=>'"'+String(v==null?'':v).replace(/
 LIB.noImgByCat=()=>{const m=new Map();LIB.base.forEach(b=>{const w=LIB.eff(b.id);if(!w.imgs.length)m.set(w.catId,(m.get(w.catId)||0)+1)});return LIB.cats.map(c=>({id:c.id,name:c.name,n:m.get(c.id)||0,total:c.count})).filter(x=>x.n)};
 LIB.extra=()=>{if(!LIB.base)return{top:'',bot:''};const s=LIB.st(),i=LIB.defInfo||{state:'none'},p=LIB.defPend,nb=LIB.noImgByCat(),tot=nb.reduce((a,x)=>a+x.n,0);
  const stt={none:'網站上沒有 vocab/default-library.json（還沒發布預設清單）。',applied:'這台裝置第一次開啟，已自動套用網站預設清單。',baseline:'網站有預設清單；這台裝置已有自己的設定，所以沒有改動。要把預設清單裡本機沒有的項目補進來，請按下方「補入」。',same:'與網站預設清單一致，沒有待處理的差異。',skipped:'網站預設清單有更新，你選擇暫時略過。',pending:'網站預設清單有更新，等你確認。',err:'讀取預設清單失敗：'+esc(i.msg||'')}[i.state]||'';
- const mv=(LIB.man&&LIB.man.version)||'未記錄',dv=(s.def&&s.def.ver)||(s.def?'舊版（未記錄版本）':'尚未套用'),vtxt=`<div class="panel"><b>📚 教材版本</b>（程式版本 v20.0）：網站目前 <b>${esc(mv)}</b>（${LIB.base.length} 詞、${LIB.cats.length} 個主題、${(LIB.lvs||[]).length} 個 Level）；這台裝置上次套用的預設清單版本：<b>${esc(dv)}</b>。${s.def&&s.def.ver&&s.def.ver!==mv&&!p?'<br><small>網站教材已更新，但沒有需要你確認的差異。</small>':''}${p?'<br><small>網站教材有更新，請看下方確認。</small>':''}<br><small>更新只會「加入」本機還沒有的啟用與設定，不會刪除教師自訂詞彙、自訂分類、錄音、學習紀錄、星星與成就；詞彙編號不變，所以學習紀錄不會失去對應。套用前會自動備份，也可以按 <button class="btn alt sm" onclick="LIB.defUndo()">回復到更新前</button>。</small></div>`;
+ const mv=(LIB.man&&LIB.man.version)||'未記錄',dv=(s.def&&s.def.ver)||(s.def?'舊版（未記錄版本）':'尚未套用'),vtxt=`<div class="panel"><b>📚 教材版本</b>（程式版本 ${APP.build}）：網站目前 <b>${esc(mv)}</b>（${LIB.base.length} 詞、${LIB.cats.length} 個主題、${(LIB.lvs||[]).length} 個 Level）；這台裝置上次套用的預設清單版本：<b>${esc(dv)}</b>。${s.def&&s.def.ver&&s.def.ver!==mv&&!p?'<br><small>網站教材已更新，但沒有需要你確認的差異。</small>':''}${p?'<br><small>網站教材有更新，請看下方確認。</small>':''}<br><small>更新只會「加入」本機還沒有的啟用與設定，不會刪除教師自訂詞彙、自訂分類、錄音、學習紀錄、星星與成就；詞彙編號不變，所以學習紀錄不會失去對應。套用前會自動備份，也可以按 <button class="btn alt sm" onclick="LIB.defUndo()">回復到更新前</button>。</small></div>`;
  const top=vtxt+(p?`<div class="panel" style="border:2px solid #e0a020;background:#fff7e6"><b>網站的預設詞彙清單有更新</b>：新增 ${p.d.addEn.length} 個啟用詞彙、${p.d.newOv.length} 項新設定；另有 ${p.d.conflict.length} 項你這台已有自己的設定，會<b>保留你的設定</b>。<br><small>只會加入你這台還沒有的項目，不會覆蓋或停用你已做的設定。</small><br><button class="btn go" onclick="LIB.defOk()">確認套用</button> <button class="btn alt" onclick="LIB.defSkip()">暫時略過</button></div>`:'');
  const bot=`<div class="panel"><h4 style="margin:0 0 4px">📌 預設詞彙清單（讓每個裝置自動有同一批詞彙）</h4><p><small>${stt}</small></p>
  <p><small>做法：在一台裝置把詞彙啟用、審核好 → 按「匯出預設清單」→ 把下載的 default-library.json 放進網站的 vocab 資料夾並推送 → 其他裝置第一次開啟網站時自動套用；已有自己設定的裝置不會被覆蓋，之後預設清單更新時會提示差異。預設清單不含錄音、老師上傳的圖片、學生姓名與學習紀錄；學生個別的詞彙範圍也不包含。</small></p>
@@ -5893,7 +5894,7 @@ INT.report=()=>{const base=LIB.base||[],s=LIB.st(),cards=S.cards.filter(c=>!c.pa
  const byT={};base.forEach(w=>{(byT[w.word]=byT[w.word]||[]).push(w)});
  const legSame=leg.map(c=>({id:c.id,text:c.text,same:(byT[c.text]||[]).map(w=>({id:w.id,zy:w.zhuyin,same:w.zhuyin===c.zy}))})).filter(x=>x.same.length);
  const th=MAT.dims(),pk=S.packCats||[];
- return{ts:Date.now(),version:(LIB.man&&LIB.man.version)||'未記錄',app:'v22.0',v22:!!s.v22,v22from:s.v22from||0,
+ return{ts:Date.now(),version:(LIB.man&&LIB.man.version)||'未記錄',app:APP.build,v22:!!s.v22,v22from:s.v22from||0,
   builtinWords:base.length,builtinActive:bc.length,builtinOff:Object.keys(s.off||{}).length,localWords:lc.length,legacyWords:leg.length,customWords:cus.length,unifiedWords:new Set(cards.map(c=>c.id)).size,
   builtinImgs:fImgs,builtinWithImg:fWith,localImgs:lImgs,unifiedImgs:allImgs,
   themes:(LIB.cats||[]).length,levels:(LIB.lvs||[]).length,customCats:S.cats.filter(c=>!c.lib).length,legacyCats:pk.filter(id=>S.cats.some(c=>c.id===id)).length,
@@ -6006,18 +6007,6 @@ VDX.run=async()=>{if(VDX.busy)return;VDX.busy=1;const r={ts:Date.now(),ua:naviga
 VDX.html=()=>{const r=VDX.res;return`<div class="panel"><h3 style="margin:0">🔊 語音診斷</h3><p><small>在有問題的 iPhone／iPad 上按下按鈕，會實際測試聲音並列出原因（不需要麥克風、不傳送任何資料）。</small></p><button class="btn go sm" onclick="VDX.run()" ${VDX.busy?'disabled':''}>${VDX.busy?'測試中…':'🔊 開始語音診斷'}</button>${r?`<table class="lat" style="margin-top:8px">${r.items.map(x=>`<tr><th style="text-align:left">${esc(x.k)}</th><td>${x.ok?'✅':'❌'} ${esc(x.v)}</td></tr>`).join('')}</table><p>${esc(r.hint)}</p><small>${esc(r.ua)}</small>`:''}${VF.log.length?`<p><small>最近的語音失敗紀錄：${VF.log.slice(-5).map(x=>esc(x.r)).join('、')}</small></p>`:''}</div>`};
 {const _v=INT.panel;INT.panel=function(){return VDX.html()+_v.apply(this,arguments)}}
 /*P23-END*/
-/*P23B-BEGIN v22.1 舊版網站教材（materials/）完全移除：不再讀取、裝置上未修改的舊版圖卡與分類一次性清除（先備份、可還原）*/
-const LEG={on:/legacypack=1/.test(location.search)};
-LEG.purge=async()=>{if(LEG.on||S.legacyGone)return 0;
- const ids=new Set(S.packIds||[]),cats=new Set(S.packCats||[]);if(!ids.size&&!cats.size){S.legacyGone={ts:Date.now(),n:0};await save();return 0}
- const snap=S.packSnap||{},rm=S.cards.filter(c=>!c.lib&&ids.has(c.id)&&sigC(c)===snap[c.id]);
- try{await kvPut('pre-legacy-remove',{ts:Date.now(),cards:JSON.parse(JSON.stringify(rm)),cats:JSON.parse(JSON.stringify(S.cats.filter(k=>cats.has(k.id)))),catRefs:S.cards.filter(c=>(c.cats||[]).some(x=>cats.has(x))).map(c=>({id:c.id,cats:c.cats.slice()}))})}catch(e){return 0}
- const rid=new Set(rm.map(c=>c.id));S.cards=S.cards.filter(c=>!rid.has(c.id));S.cats=S.cats.filter(k=>!cats.has(k.id));S.cards.forEach(c=>{if(c.cats)c.cats=c.cats.filter(x=>!cats.has(x))});
- S.packIds=[];S.packCats=[];S.packSnap={};S.packKSnap='';S.packVer=undefined;MAT._pk=null;S.legacyGone={ts:Date.now(),n:rm.length,kept:ids.size-rm.length};
- try{MAT.bump()}catch(e){}await save();return rm.length};
-LEG.undo=async()=>{const b=await kvGet('pre-legacy-remove');if(!b)return alert('沒有可復原的紀錄');b.cats.forEach(k=>{if(!S.cats.some(c=>c.id===k.id))S.cats.push(k)});b.cards.forEach(c=>{if(!S.cards.some(x=>x.id===c.id))S.cards.push(c)});b.catRefs.forEach(r=>{const c=S.cards.find(x=>x.id===r.id);if(c)c.cats=[...new Set([...(c.cats||[]),...r.cats])]});delete S.legacyGone;try{MAT.bump()}catch(e){}await save();LIB.re()};
-if(!LEG.on){const _l=packLoad;packLoad=async function(){await LEG.purge();PK.state='ok';PK.busy=false;try{pkUi()}catch(e){}};packPanel=function(){return''}}
-/*P23B-END*/
 
 
 
@@ -6031,7 +6020,139 @@ if(!LEG.on){const _l=packLoad;packLoad=async function(){await LEG.purge();PK.sta
 
 
 
-
+/*P24-BEGIN v22.2 第01批：教材讀取修復
+  已確認的「正式教材變成 0 個可用詞彙」原因（見 BATCH01-REPORT.md）：
+  ① 個案的練習範圍（ext.fl.sel）存的是分類 ID；分類被刪除後沒有清除，導致聯集為 0 個詞彙，而且 FL.migDim 在 m.dim 已存在時直接返回，永遠不會修正。
+  ② 個別學生詞彙範圍（ext.libSel）若是舊版（只啟用少數詞時）留下或為空陣列，正式詞彙會全部被排除。
+  ③ 圖片審核預設值（LIB.defRv）只在當次成功下載 default-library.json 時存在；下載失敗時，有本機設定但沒有審核欄位的詞彙全部變成沒有圖片。
+  修復原則：不刪除任何教材、紀錄、星星、收藏、個案設定；教師明確停用（off）與明確退回待審（ov.rv）一律保留。 */
+const MATFIX={ver:'v22.2',log:[],DIMS:['theme','level','custom']};
+/* ---- ① 練習範圍：移除已不存在的分類；全部失效時改回目前可用的分類 ---- */
+MATFIX.defSel=d=>{const D=MAT.dims();if(d==='theme')return[...(D.theme||[]).filter(x=>x.words>0).map(x=>x.id),...(D.custom||[]).filter(x=>x.words>0&&x.id!=='__none').map(x=>x.id)];return(D[d]||[]).filter(x=>x.words>0).map(x=>x.id)};
+MATFIX.selFix=()=>{let m;try{m=FL.mem()}catch(e){return null}if(!m||!m.sel||!Array.isArray(S.cats)||!S.cats.length)return null;
+ const live=new Set(S.cats.map(c=>c.id));live.add('__none');let gone=0,reset=null;
+ MATFIX.DIMS.forEach(d=>{const a=m.sel[d];if(!Array.isArray(a))return;const k=a.filter(id=>live.has(id));if(k.length===a.length)return;gone+=a.length-k.length;
+  if(!k.length){m.sel[d]=MATFIX.defSel(d);if(m.dim===d)reset=d}else m.sel[d]=k});
+ if(m.dim==='custom'&&reset==='custom'&&!(m.sel.custom||[]).length){m.dim='theme';m.sel.theme=MATFIX.defSel('theme');reset='theme'}
+ if(m.selAuto&&MATFIX.DIMS.includes(m.dim)){const ds=MATFIX.defSel(m.dim);if(ds.length&&ds.join()!==(m.sel[m.dim]||[]).join()){m.sel[m.dim]=ds;gone=gone||0;MATFIX.dirty=1}}
+ if(gone){m.selFix={at:Date.now(),gone,reset};MATFIX.log.push({t:'selFix',gone,reset,at:Date.now()})}
+ if(gone||MATFIX.dirty){MATFIX.dirty=0;try{save()}catch(e){}}return gone?m.selFix:null};
+/* 系統自動選的範圍（第一次進入、或選「全部」）標記 selAuto：教材初始化完成後會依實際教材重新計算；使用者自己勾選後就不再自動改 */
+{const _m=FL.migDim;FL.migDim=function(){let m=null,had=true;try{m=FL.mem();had=!!m.dim}catch(e){}const r=_m.apply(this,arguments);try{if(m&&!had&&MATFIX.DIMS.includes(m.dim)&&(m.cat||'all')==='all')m.selAuto=1}catch(e){}MATFIX.selFix();return r}}
+MATFIX.manual=()=>{try{const m=FL.mem();delete m.selAuto;delete m.selFix}catch(e){}};
+['togCat','selAll','selNone','setDim','setSp'].forEach(k=>{const f=FL[k];if(typeof f!=='function')return;FL[k]=function(){MATFIX.manual();return f.apply(this,arguments)}});
+{const f=FL.setCat;FL.setCat=function(v){MATFIX.manual();const r=f.apply(this,arguments);try{if(v==='all'||v==null){const m=FL.mem();m.selAuto=1;MATFIX.selFix()}}catch(e){}return r}}
+/* 範圍提示：分類已失效而自動調整時，在選擇畫面說明一次 */
+{const f=FL.catHtml;FL.catHtml=function(){const h=f.apply(this,arguments);let n='';try{const m=FL.mem(),x=m.selFix;if(x&&x.gone)n=`<p class="fdesc" style="background:#fff7e0;border-radius:8px;padding:6px 10px">ⓘ 原本選擇的 ${x.gone} 個分類已經不存在（可能已被刪除），${x.reset?'已改為目前所有可用的分類':'已從範圍中移除'}。教材、學習紀錄都沒有改動。</p>`}catch(e){}return n+h}}
+/* ---- 可用性訊息：分清楚「沒有選分類」「還沒有學過的詞」與「教材條件不符」 ---- */
+{const f=FL.chk;FL.chk=function(cfg,range,cat){if(range==='pick')MATFIX.selFix();const r=f.apply(this,arguments);if(!r||r.ok||!cfg||cfg.na)return r;
+ try{if(range==='pick'){const m=FL.mem();if(MATFIX.DIMS.includes(m.dim)&&!MAT.sel().length)return{ok:false,msg:'還沒有選擇教材分類：請勾選分類，或按「全部選取」'}}
+  if(range==='rv'&&!S.cards.some(c=>!c.part&&FL.learned(c)))return{ok:false,msg:'還沒有已經學會的詞彙可以複習：請先用「系統推薦」或「自行選擇教材」練習'}}catch(e){}return r}}
+/* ---- ② 個別學生詞彙範圍：只取目前仍存在的正式詞彙；一個都不剩時視為「使用全部正式詞彙」（原設定保留不刪） ---- */
+LIB.selEff=()=>{let a=null;try{a=(LRN.cur().ext||{}).libSel}catch(e){}if(!Array.isArray(a))return null;const on=new Set();S.cards.forEach(c=>{if(c.lib)on.add(c.id)});const v=a.filter(id=>on.has(id));return v.length?v:null};
+/* ---- ③ 圖片審核預設值：成功下載時保存一份；下載失敗時沿用上次成功的版本 ---- */
+{const f=LIB.v22Boot;LIB.v22Boot=async function(){const r=await f.apply(this,arguments);try{const s=LIB.st();
+ if(LIB.defRv&&Object.keys(LIB.defRv).length){const h=LIB.hash(JSON.stringify(LIB.defRv));if(s.defRvH!==h){s.defRv=LIB.defRv;s.defRvH=h;await save()}}
+ else if(s.defRv&&Object.keys(s.defRv).length){LIB.defRv=s.defRv;MATFIX.log.push({t:'defRvCache',at:Date.now()})}}catch(e){}return r}}
+/* ---- 教材同步後重新計算分類與題庫統計（避免使用同步前的快取） ---- */
+{const f=LIB.sync;LIB.sync=function(){const r=f.apply(this,arguments);try{MAT.bump()}catch(e){}return r}}
+/* ---- 唯讀診斷：只讀取、不寫入、不輸出學生姓名。Console 執行 MATFIX.diag() ---- */
+MATFIX.diag=()=>{const o={build:APP.build,at:new Date().toISOString()};try{
+ const cards=S.cards||[],lib=cards.filter(c=>c.lib),live=new Set((S.cats||[]).map(c=>c.id)),L=(S.lrn&&S.lrn.list)||[],cur=L.find(p=>p.id===(S.lrn&&S.lrn.cur))||L[0]||{},e=cur.ext||{},fl=e.fl||{},s=S.lib||{};
+ o.a_正式教材={已讀取詞彙庫:!!LIB.base,詞彙庫詞數:(LIB.base||[]).length,讀取錯誤:LIB.err||'',v22遷移:!!s.v22,教師停用:Object.keys(s.off||{}).length,審核預設值:LIB.defRv?Object.keys(LIB.defRv).length:0,審核預設值快取:s.defRv?Object.keys(s.defRv).length:0,明確退回待審:Object.values(s.ov||{}).filter(v=>v&&v.rv==='pending').length};
+ o.b_本機教材={圖卡總數:cards.length,正式:lib.length,正式有圖:lib.filter(c=>c.img).length,舊版內建:cards.filter(c=>!c.lib&&(S.packIds||[]).includes(c.id)).length,教師自訂:cards.filter(c=>!c.lib&&!c.part&&!(S.packIds||[]).includes(c.id)).length,詞彙零件:cards.filter(c=>c.part).length,分類總數:(S.cats||[]).length,正式主題:(S.cats||[]).filter(c=>c.lib&&!c.lvl).length,Level:(S.cats||[]).filter(c=>c.lvl).length};
+ o.c_目前個案={個案數:L.length,目前是第幾位:L.indexOf(cur)+1,個別詞彙範圍:Array.isArray(e.libSel)?e.libSel.length:'未設定',個別詞彙範圍仍有效:Array.isArray(e.libSel)?e.libSel.filter(id=>lib.some(c=>c.id===id)).length:'—',排除詞彙:(e.excl||[]).length,練習範圍:fl.range||'rec',範圍類型:fl.dim||'未設定',已選分類:fl.dim&&fl.sel?((fl.sel[fl.dim]||[]).length):'—',已選分類仍存在:fl.dim&&fl.sel?((fl.sel[fl.dim]||[]).filter(id=>live.has(id)||id==='__none').length):'—',自動範圍:!!fl.selAuto};
+ const ids=fl.dim&&fl.sel?(fl.sel[fl.dim]||[]):[],u=typeof MAT!=='undefined'&&MAT.union?MAT.union(ids):[];
+ o.d_範圍內詞彙={已選分類內詞彙:u.length,其中有圖:u.filter(c=>c.img).length,全部有圖詞彙:cards.filter(c=>!c.part&&c.img).length,設定src:(S.set||{}).src||'all',設定mode:(S.set||{}).mode||''};
+ const k=[];if(!LIB.base)k.push('正式詞彙庫沒有讀到（網路或 vocab 資料夾問題）');if(lib.length&&!lib.some(c=>c.img))k.push('正式詞彙都沒有圖片（審核預設值未讀到，或圖片被退回待審）');
+ if(Array.isArray(e.libSel)&&!e.libSel.filter(id=>lib.some(c=>c.id===id)).length)k.push('個別學生詞彙範圍沒有有效詞彙');if(fl.range==='pick'&&fl.dim&&fl.dim!=='sp'&&!u.length)k.push('「自行選擇教材」選到的分類沒有詞彙（分類可能已刪除）');
+ o.e_可能原因=k.length?k:['沒有發現會造成 0 個詞彙的設定']}catch(x){o.錯誤=String(x&&x.message||x)}return o};
+/*P24-END*/
+/*P25-BEGIN v22.3 第02批：教材來源管理
+  三種來源：builtin（正式內建，一律使用，不可整批停用；個別詞彙仍由詞彙庫「停用」）／legacy（舊版內建 materials/ 18 張）／custom（教師自訂）。
+  legacy、custom 預設「不使用」；教師可在「教材來源管理」啟用。停用＝不進入學生練習，不刪除任何圖卡、圖片、錄音或學習紀錄。
+  正式教材無法使用（例如詞彙庫讀取失敗、沒有任何正式詞彙）時，未設定過的來源自動作為備援，避免學生端完全無法練習。 */
+const SRC={K:{builtin:'正式內建教材',legacy:'舊版內建教材（materials/）',custom:'教師自訂教材'}};
+SRC.st=()=>S.matSrc&&typeof S.matSrc==='object'?S.matSrc:null;
+SRC.explicit=k=>{const s=SRC.st();return !!(s&&Object.prototype.hasOwnProperty.call(s,k))};
+SRC.formalOk=()=>S.cards.some(c=>c.lib);
+SRC.on=k=>{if(k==='builtin')return true;if(SRC.explicit(k))return !!SRC.st()[k];return !SRC.formalOk()};
+SRC.cardOn=c=>!!c&&(c.lib?true:SRC.on(MAT.origin(c)));
+SRC.catOrg=id=>{const k=S.cats.find(c=>c.id===id);if(!k)return null;return k.lib?'builtin':(S.packCats||[]).includes(id)?'legacy':'custom'};
+SRC.catOn=id=>{if(id==='__none')return S.cards.some(c=>!c.part&&!c.lib&&SRC.cardOn(c)&&!(c.cats||[]).some(x=>S.cats.some(k=>k.id===x)));const o=SRC.catOrg(id);return !!o&&SRC.on(o)};
+SRC.set=async(k,on)=>{if(k==='builtin')return;S.matSrc={...(SRC.st()||{}),[k]:on?1:0};(S.matSrc.log=S.matSrc.log||[]).push({ts:Date.now(),k,on:on?1:0});if(S.matSrc.log.length>50)S.matSrc.log=S.matSrc.log.slice(-50);
+ MAT.bump();(S.lrn&&S.lrn.list||[]).forEach(p=>{try{MATFIX.selFixM(p.ext&&p.ext.fl)}catch(e){}});await save();SRC.rows=null;try{LIB.re()}catch(e){}};
+SRC.count=()=>{const o={builtin:{w:0,img:0},legacy:{w:0,img:0},custom:{w:0,img:0}};S.cards.forEach(c=>{if(c.part)return;const k=c.lib?'builtin':MAT.origin(c);o[k].w++;if(c.img)o[k].img++});return o};
+/* ---- 學生練習題庫：排除停用來源（所有練習範圍：系統推薦、複習、自選、錯題集、注音加強、分析推薦都經過 pool）---- */
+{const f=pool;pool=function(){return f.apply(this,arguments).filter(SRC.cardOn)}}
+/* 前臺分類清單：「教師自訂教材」只列出已啟用來源；預設範圍只選正式主題（不混入） */
+MAT.dimsOn=()=>{const D=MAT.dims();return{theme:D.theme,level:D.level,custom:(D.custom||[]).filter(x=>SRC.catOn(x.id))}};
+MAT.withOn=fn=>{const o=MAT.dims,d=MAT.dimsOn();MAT.dims=()=>d;try{return fn()}finally{MAT.dims=o}};
+['catHtml','selAll'].forEach(k=>{const f=FL[k];if(typeof f!=='function')return;FL[k]=function(){const a=arguments;return MAT.withOn(()=>f.apply(this,a))}});
+{const f=FL.catHtml;FL.catHtml=function(){let h=f.apply(this,arguments);try{const m=FL.mem();if((m.dim||'theme')==='custom'&&!SRC.on('legacy')&&!SRC.on('custom'))h=h.replace(/<p>目前沒有教師自訂教材[^<]*<\/p>/,'<p>教師自訂教材與舊版內建教材目前<b>沒有啟用</b>（老師可在「教師專區 → 📖 詞彙庫 → 教材來源管理」啟用）。正式主題與 Level 不受影響。</p>')}catch(e){}return h}}
+MATFIX.defSel=d=>{const D=MAT.dimsOn();if(d==='theme')return(D.theme||[]).filter(x=>x.words>0).map(x=>x.id);return(D[d]||[]).filter(x=>x.words>0).map(x=>x.id)};
+/* 失效範圍修正擴充：分類存在但來源已停用，也視為「不可用」；全部不可用時改回正式主題（只移除真正已刪除的分類 ID，停用來源的選擇保留，重新啟用後恢復） */
+MATFIX.selFixM=m=>{if(!m||!m.sel||!Array.isArray(S.cats)||!S.cats.length)return null;const live=new Set(S.cats.map(c=>c.id));live.add('__none');let gone=0,reset=null;
+ MATFIX.DIMS.forEach(d=>{const a=m.sel[d];if(!Array.isArray(a))return;const k=a.filter(id=>live.has(id));if(k.length!==a.length){gone+=a.length-k.length;m.sel[d]=k}});
+ const D=m.dim;if(MATFIX.DIMS.includes(D)){const use=(m.sel[D]||[]).filter(id=>SRC.catOn(id));
+  if(!use.length&&(gone||(m.sel[D]||[]).length)){let nd=D,ns=MATFIX.defSel(D);if(!ns.length){nd='theme';ns=MATFIX.defSel('theme')}if(nd!==D)m.dim=nd;m.sel[nd]=nd===D&&(m.sel[D]||[]).length?[...new Set([...m.sel[D],...ns])]:ns;reset=nd}
+  if(m.selAuto&&!reset){const ds=MATFIX.defSel(D);if(ds.length&&ds.join()!==(m.sel[D]||[]).join()){m.sel[D]=ds;MATFIX.dirty=1}}}
+ if(gone||reset){m.selFix={at:Date.now(),gone,reset};MATFIX.log.push({t:'selFix',gone,reset,at:Date.now()})}return gone||reset?m.selFix:null};
+MATFIX.selFix=()=>{let m;try{m=FL.mem()}catch(e){return null}const r=MATFIX.selFixM(m);if(r||MATFIX.dirty){MATFIX.dirty=0;try{save()}catch(e){}}return r};
+{const f=FL.catHtml;FL.catHtml=function(){let h=f.apply(this,arguments);try{const x=FL.mem().selFix;if(x&&!x.gone&&x.reset)h=`<p class="fdesc" style="background:#fff7e0;border-radius:8px;padding:6px 10px">ⓘ 原本選擇的分類目前沒有啟用（教材來源已停用），已改用正式教材。重新啟用後可再選回。</p>`+h}catch(e){}return h}}
+/* 錯題集／注音加強／分析推薦的數量只算已啟用來源 */
+{const f=MAT.special;MAT.special=function(){const r=f.apply(this,arguments);try{const cnt=k=>{const o=S.set.src;S.set.src=k;try{return deck().cards.length}finally{S.set.src=o}};r.forEach(x=>{x.w=cnt(x.k)})}catch(e){}return r}}
+/* 家長「直接開始複習」也不使用停用來源 */
+{const f=PAR.review;PAR.review=function(){return f.apply(this,arguments).filter(w=>SRC.cardOn(byId(w.id)))}}
+{const f=PAR.start;PAR.start=function(ids,opt){return f.call(this,(ids||[]).filter(id=>SRC.cardOn(byId(id))),opt)}}
+/* ---- 保護正式詞彙、主題、Level ---- */
+{const f=cardDel;cardDel=function(id){const c=byId(id);if(c&&c.lib){alert('「'+c.text+'」是正式內建詞彙，不能在這裡刪除（刪除後重新整理也會再出現）。\n如果不想讓學生練習這個詞，請到「📖 詞彙庫」把它「停用」；停用不會刪除資料，之後可以再啟用。');return}return f.apply(this,arguments)}}
+{const f=catDelIds;catDelIds=async function(ids){const lib=(ids||[]).filter(i=>{const c=S.cats.find(k=>k.id===i);return c&&c.lib});const rest=(ids||[]).filter(i=>!lib.includes(i));
+ if(lib.length){alert('其中 '+lib.length+' 個是正式主題或 Level（'+lib.map(i=>(S.cats.find(k=>k.id===i)||{}).name).slice(0,5).join('、')+(lib.length>5?'…':'')+'），不能刪除，已略過。\n正式主題與 Level 由網站詞彙庫自動維護。');lib.forEach(i=>{try{catSel.delete(i)}catch(e){}})}
+ if(!rest.length){try{tCats()}catch(e){}return}return f.call(this,rest)}}
+/* ---- 六站實際可用題數（目前個案、目前已啟用的來源、全部教材範圍）---- */
+SRC.MODES=[['quiet','聽讀練習'],['oral','口語練習'],['integ','綜合練習']];
+SRC.calc=()=>{const out={},o=S.set.src;try{SRC.MODES.forEach(([md])=>{out[md]={};for(let st=1;st<=6;st++){out[md][st]=(FL.ladder(st,md)||[]).map(cfg=>{if(!cfg)return{ok:false,msg:'這個難度目前沒有題型'};if(cfg.na)return{ok:false,msg:cfg.na};
+  const r=FL.withSrc('all',()=>{try{return cfg.ok()}catch(e){return{ok:false,msg:'目前無法使用'}}});return r&&r.ok?{ok:true,n:r.n==null?null:r.n}:{ok:false,msg:(r&&r.msg)||'目前沒有可用教材'}})}})}finally{S.set.src=o}SRC.rows={at:Date.now(),out};return SRC.rows};
+SRC.tbl=()=>{const R=SRC.rows;if(!R)return'';const STN=['詞彙認識','詞彙練習','詞彙連結','短語組合','語句表達','生活溝通'];
+ return SRC.MODES.map(([md,nm])=>`<h4 style="margin:8px 0 4px">${nm}</h4><div style="overflow:auto"><table class="lat" style="font-size:.88em"><tr><th>學習站</th>${[1,2,3,4,5].map(i=>`<th>${'★'.repeat(i)}</th>`).join('')}</tr>${[1,2,3,4,5,6].map(st=>`<tr><th style="text-align:left;white-space:nowrap">${st} ${STN[st-1]}</th>${[0,1,2,3,4].map(i=>{const c=(R.out[md][st]||[])[i];if(!c)return'<td>—</td>';return c.ok?`<td style="color:#1b7a3a">✅ ${c.n==null?'可用（依教材題數）':c.n+' 個詞彙'}</td>`:`<td style="color:#a33"><small>✗ ${esc(c.msg)}</small></td>`}).join('')}</tr>`).join('')}</table></div>`).join('')+`<p><small>計算時間 ${new Date(R.at).toLocaleString('zh-TW',{hour12:false})}；以目前個案的設定與已啟用的教材來源、「全部教材」範圍計算。第3～6站需要組合／語句／情境教材（第06、07批處理）。</small></p>`};
+/* ---- 教材安全修復：先備份、只修復可確認的關聯；不刪除教材、圖片、錄音、學習紀錄、星星、收藏 ---- */
+SRC.fix=async()=>{if(!confirm('要執行「教材安全修復」嗎？\n\n會做：重新讀取正式詞彙庫、補回正式主題與 Level、移除圖卡上已不存在的分類、修正每位個案練習範圍中已刪除的分類、重建索引。\n不會刪除：任何圖卡、圖片、錄音、學習紀錄、星星、收藏、教師停用設定。\n\n執行前會自動備份，可以復原。'))return;
+ const L=(S.lrn&&S.lrn.list)||[],bk={ts:Date.now(),build:APP.build,cards:JSON.parse(JSON.stringify(S.cards)),cats:JSON.parse(JSON.stringify(S.cats)),lib:JSON.parse(JSON.stringify(S.lib||null)),fl:L.map(p=>({id:p.id,fl:JSON.parse(JSON.stringify((p.ext&&p.ext.fl)||null))}))};
+ try{await kvPut('backup-pre-safefix',bk)}catch(e){alert('備份失敗，沒有執行修復：'+e);return}
+ const r={at:Date.now(),before:{cards:S.cards.length,lib:S.cards.filter(c=>c.lib).length,libImg:S.cards.filter(c=>c.lib&&c.img).length,cats:S.cats.length},deadCatRefs:0,learners:0,libSelBad:0,notes:[]};
+ try{if(!LIB.base){try{await LIB.load(true)}catch(e){}}if(!LIB.base)r.notes.push('正式詞彙庫讀取失敗（請確認網路後再試）；其他項目照常修復');
+  const live=new Set(S.cats.map(c=>c.id));S.cards.forEach(c=>{const n0=(c.cats||[]).length;c.cats=(c.cats||[]).filter(x=>live.has(x));r.deadCatRefs+=n0-c.cats.length});
+  if(LIB.base){const s=LIB.st();if(!LIB.defRv&&s.defRv)LIB.defRv=s.defRv;LIB.catSync();LIB.sync()}
+  L.forEach(p=>{const fl=p.ext&&p.ext.fl;if(fl&&MATFIX.selFixM(fl))r.learners++;const ls=p.ext&&p.ext.libSel;if(Array.isArray(ls)&&!ls.some(id=>S.cards.some(c=>c.lib&&c.id===id)))r.libSelBad++});
+  if(r.libSelBad)r.notes.push(r.libSelBad+' 位個案的「個別詞彙範圍」沒有有效詞彙，練習時自動改用全部正式詞彙（設定保留，可在詞彙庫調整）');
+  MAT.bump();await save()}catch(e){r.notes.push('修復中斷：'+(e&&e.message||e)+'（已備份，可按「復原」）')}
+ r.after={cards:S.cards.length,lib:S.cards.filter(c=>c.lib).length,libImg:S.cards.filter(c=>c.lib&&c.img).length,cats:S.cats.length};S.matFix={at:r.at,r};await save();SRC.rows=null;try{LIB.re()}catch(e){}};
+SRC.undo=async()=>{const bk=await kvGet('backup-pre-safefix').catch(()=>null);if(!bk)return alert('沒有可以復原的修復備份');
+ if(!confirm('要復原到 '+new Date(bk.ts).toLocaleString('zh-TW',{hour12:false})+' 修復前的教材狀態嗎？\n只還原圖卡、分類、詞彙庫設定與練習範圍；修復之後新增的學習紀錄、星星都會保留。'))return;
+ S.cards=bk.cards;S.cats=bk.cats;if(bk.lib)S.lib=bk.lib;(bk.fl||[]).forEach(x=>{const p=(S.lrn.list||[]).find(q=>q.id===x.id);if(p){p.ext=p.ext||{};if(x.fl)p.ext.fl=x.fl;else delete p.ext.fl}});delete S.matFix;MAT.bump();await save();SRC.rows=null;try{LIB.re()}catch(e){}alert('已復原到修復前的教材狀態')};
+/* ---- 教師後臺面板（📖 詞彙庫頂端）---- */
+SRC.html=()=>{const n=SRC.count(),row=(k,extra)=>{const on=SRC.on(k),c=n[k];return`<tr><th style="text-align:left">${SRC.K[k]}</th><td>${c.w} 個詞彙｜${c.img} 個有圖片</td><td>${k==='builtin'?'<b style="color:#1b7a3a">一律使用</b>':on?'<b style="color:#1b7a3a">使用中</b>':'<b style="color:#888">未使用</b>'}${k!=='builtin'&&!SRC.explicit(k)?'<small>（預設）</small>':''}</td><td>${extra}</td></tr>`};
+ const tg=k=>`<button class="btn ${SRC.on(k)?'alt':''} sm" onclick="SRC.set('${k}',${SRC.on(k)?0:1})">${SRC.on(k)?'停用':'啟用'}</button>`;const fx=S.matFix;
+ return`<div class="panel" id="srcp"><h3 style="margin:0">📚 教材來源管理</h3><p><small>學生練習預設只使用正式內建教材。舊版內建教材與教師自訂教材可以在這裡啟用。<b>停用不等於刪除</b>：圖卡、圖片、錄音、學習紀錄都保留，重新啟用就恢復。正式教材的個別詞彙請在下方詞彙庫停用。</small></p>
+ <table class="lat">${row('builtin','<small>正式主題 '+S.cats.filter(c=>c.lib&&!c.lvl).length+' 個、Level '+S.cats.filter(c=>c.lvl).length+' 個（受保護，不能在分類管理刪除）</small>')}${row('legacy',tg('legacy'))}${row('custom',tg('custom'))}</table>
+ ${!SRC.formalOk()?'<p style="color:#b8610b"><small>⚠ 目前沒有可用的正式詞彙，未設定過的來源暫時自動使用，避免學生無法練習。</small></p>':''}
+ <p><button class="btn go sm" onclick="SRC.fix()">🛠 教材安全修復（先備份）</button> <button class="btn alt sm" onclick="SRC.undo()">復原上次修復</button> <button class="btn alt sm" onclick="SRC.calc();LIB.re()">📊 計算六站可用題數</button></p>
+ ${fx?`<div style="background:#f3f8f3;border-radius:8px;padding:6px 10px"><small>上次安全修復 ${new Date(fx.at).toLocaleString('zh-TW',{hour12:false})}：正式詞彙 ${fx.r.before.lib}→${fx.r.after.lib}（有圖 ${fx.r.before.libImg}→${fx.r.after.libImg}）、分類 ${fx.r.before.cats}→${fx.r.after.cats}、移除失效分類連結 ${fx.r.deadCatRefs} 個、修正個案練習範圍 ${fx.r.learners} 位。${(fx.r.notes||[]).map(x=>'<br>・'+esc(x)).join('')}</small></div>`:''}
+ ${SRC.tbl()}</div>`};
+{const f=INT.panel;INT.panel=function(){let h='';try{h=SRC.html()}catch(e){console.warn('SRC.html',e)}return h+f.apply(this,arguments)}}
+/* 完整性檢查補強：來源狀態、個案範圍與個別詞彙範圍有效性 */
+{const f=INT.report;INT.report=function(){const r=f.apply(this,arguments);try{const n=SRC.count(),L=(S.lrn&&S.lrn.list)||[],live=new Set(S.cats.map(c=>c.id));live.add('__none');
+ r.app=APP.build;r.sources={builtin:{on:true,...n.builtin},legacy:{on:SRC.on('legacy'),explicit:SRC.explicit('legacy'),...n.legacy},custom:{on:SRC.on('custom'),explicit:SRC.explicit('custom'),...n.custom}};
+ r.learnerRangeDead=L.filter(p=>{const fl=p.ext&&p.ext.fl;return fl&&fl.dim&&fl.sel&&(fl.sel[fl.dim]||[]).some(id=>!live.has(id))}).length;
+ r.libSelInvalid=L.filter(p=>Array.isArray(p.ext&&p.ext.libSel)&&!p.ext.libSel.some(id=>S.cards.some(c=>c.lib&&c.id===id))).length;
+ r.deadCatRefs=S.cards.reduce((a,c)=>a+(c.cats||[]).filter(x=>!live.has(x)).length,0);r.reviewPending=Object.values((S.lib||{}).ov||{}).filter(v=>v&&v.rv==='pending').length}catch(e){}return r}}
+{const f=INT.panel;INT.panel=function(){let h=f.apply(this,arguments);try{const r=INT.report(),row=(a,b)=>`<tr><th style="text-align:left;width:15em">${a}</th><td>${b}</td></tr>`;
+ const add=row('教材來源',`正式 ${r.sources.builtin.w} 個（使用中）｜舊版 ${r.sources.legacy.w} 個（${r.sources.legacy.on?'使用中':'未使用'}）｜自訂 ${r.sources.custom.w} 個（${r.sources.custom.on?'使用中':'未使用'}）`)+row('個案練習範圍含已刪除分類',r.learnerRangeDead+' 位'+(r.learnerRangeDead?'（可按上方「教材安全修復」）':''))+row('個別詞彙範圍沒有有效詞彙',r.libSelInvalid+' 位')+row('圖卡上已不存在的分類連結',r.deadCatRefs+' 個')+row('教師退回待審的正式圖片',r.reviewPending+' 個');
+ h=h.replace('<h4>需要處理的項目</h4><table class="lat">','<h4>需要處理的項目</h4><table class="lat">'+add)}catch(e){}return h}}
+/* 唯讀診斷補上來源狀態 */
+{const f=MATFIX.diag;MATFIX.diag=function(){const o=f.apply(this,arguments);try{o.build=APP.build;o.f_教材來源={舊版內建:SRC.on('legacy')?'使用中':'未使用',教師自訂:SRC.on('custom')?'使用中':'未使用',已手動設定:!!SRC.st()}}catch(e){}return o}}
+/*P25-END*/
 (async()=>{let s=await load();if(s&&s.decks&&!s.v){await kvPut('backup-pre-v2',s);s=migrate(s)}const mb=await kvGet('music').catch(()=>null);if(mb)mus.url=URL.createObjectURL(mb);if(s)S={...DEF(),...s,set:{...DEF().set,...s.set}};if(s&&s.set&&s.set.vs==null&&s.set.vol!=null)S.set.vs=s.set.vol;
 await zaLoad();await LRN.ensure();try{if(await LIB.load()){await LIB.defBoot();LIB.sync()}}catch(e){console.warn('LIB boot',e)}if(S.set.stuName===undefined)S.set.stuName='';if(S.set.musSrc==='project'&&!S.set.musPicked)S.set.musSrc='builtin';if(!['key','listen','spell','speak'].includes(S.set.mode))S.set.mode='key';if(S.set.ttsMig!==3){S.set.ttsMig=3;S.set.ttsRate=.75;S.set.recRate=1.25;S.set.aiGain=1.5}if(!S.bankMap)S.bankMap={};if((S.banks||[]).some(b=>!(b.id in S.bankMap))||/^b:/.test(S.set.src||'')){if(!(await kvGet('backup-pre-bankmig')))await kvPut('backup-pre-bankmig',JSON.parse(JSON.stringify(S)));migrateBanks()}if(!S.set.musMig){S.set.musMig=1;S.set.musSrc='project';save()}FL.recover();try{FL.applyPref()}catch(e){}save();UI.init();home();mtLbl();packLoad();
  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();
