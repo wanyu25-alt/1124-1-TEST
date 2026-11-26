@@ -2,7 +2,7 @@ const {JSDOM}=require('jsdom');const fs=require('fs');const {IDBFactory}=require
 const html=fs.readFileSync((process.env.IDX||'/mnt/user-data/outputs/vocabulary-express/index.html'),'utf8').replace(/<script src[^>]*><\/script>/g,'').replace("lm:'quiet'","lm:'integ'").replace("or:30,","or:0,").replace("hz:{u:'once',cost:true,n:1,free:false}","hz:{u:'none',cost:false,n:1,free:true}").replace("ap:true,","ap:false,").replace("oj:'A'","oj:'B'").replace("prepDone:false","prepDone:true");
 const packSrc=fs.readFileSync('/mnt/user-data/outputs/vocabulary-express/materials/pack.js','utf8');
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));let P=0,F=0;const T=(n,c)=>{c?P++:F++;console.log(c?'PASS':'FAIL',n)};
-const mk=(idb,q='',pack=packSrc)=>new JSDOM(html,{url:'http://localhost/'+q,runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){w.indexedDB=idb;w.alert=()=>{};w.confirm=()=>true;w.AudioContext=function(){};w.speechSynthesis={getVoices:()=>[],cancel(){}};if(pack)w.eval(pack)}}).window;
+const mk=(idb,q='',pack=packSrc)=>new JSDOM(html,{url:'http://localhost/'+(q?q+'&legacypack=1':'?legacypack=1'),runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){w.indexedDB=idb;w.alert=()=>{};w.confirm=()=>true;w.AudioContext=function(){};w.speechSynthesis={getVoices:()=>[],cancel(){}};if(pack)w.eval(pack)}}).window;
 (async()=>{const idb=new IDBFactory();let w=mk(idb);await sleep(600);let E=s=>w.eval(s);
  T('first open: pack loaded (18 cards, 4 categories)',E('S.cards.length')===18&&E('S.cats.length')===4);
  T('cards keep original ids/text/zhuyin, images are data URLs',E('S.cards.find(c=>c.id==="88ywvqo").text')==='火車'&&E('S.cards.find(c=>c.id==="88ywvqo").zy')==='ㄏㄨㄛˇ ㄔㄜ'&&E('S.cards.every(c=>/^data:image\\/jpeg/.test(c.img))'));

@@ -6006,6 +6006,19 @@ VDX.run=async()=>{if(VDX.busy)return;VDX.busy=1;const r={ts:Date.now(),ua:naviga
 VDX.html=()=>{const r=VDX.res;return`<div class="panel"><h3 style="margin:0">🔊 語音診斷</h3><p><small>在有問題的 iPhone／iPad 上按下按鈕，會實際測試聲音並列出原因（不需要麥克風、不傳送任何資料）。</small></p><button class="btn go sm" onclick="VDX.run()" ${VDX.busy?'disabled':''}>${VDX.busy?'測試中…':'🔊 開始語音診斷'}</button>${r?`<table class="lat" style="margin-top:8px">${r.items.map(x=>`<tr><th style="text-align:left">${esc(x.k)}</th><td>${x.ok?'✅':'❌'} ${esc(x.v)}</td></tr>`).join('')}</table><p>${esc(r.hint)}</p><small>${esc(r.ua)}</small>`:''}${VF.log.length?`<p><small>最近的語音失敗紀錄：${VF.log.slice(-5).map(x=>esc(x.r)).join('、')}</small></p>`:''}</div>`};
 {const _v=INT.panel;INT.panel=function(){return VDX.html()+_v.apply(this,arguments)}}
 /*P23-END*/
+/*P23B-BEGIN v22.1 舊版網站教材（materials/）完全移除：不再讀取、裝置上未修改的舊版圖卡與分類一次性清除（先備份、可還原）*/
+const LEG={on:/legacypack=1/.test(location.search)};
+LEG.purge=async()=>{if(LEG.on||S.legacyGone)return 0;
+ const ids=new Set(S.packIds||[]),cats=new Set(S.packCats||[]);if(!ids.size&&!cats.size){S.legacyGone={ts:Date.now(),n:0};await save();return 0}
+ const snap=S.packSnap||{},rm=S.cards.filter(c=>!c.lib&&ids.has(c.id)&&sigC(c)===snap[c.id]);
+ try{await kvPut('pre-legacy-remove',{ts:Date.now(),cards:JSON.parse(JSON.stringify(rm)),cats:JSON.parse(JSON.stringify(S.cats.filter(k=>cats.has(k.id)))),catRefs:S.cards.filter(c=>(c.cats||[]).some(x=>cats.has(x))).map(c=>({id:c.id,cats:c.cats.slice()}))})}catch(e){return 0}
+ const rid=new Set(rm.map(c=>c.id));S.cards=S.cards.filter(c=>!rid.has(c.id));S.cats=S.cats.filter(k=>!cats.has(k.id));S.cards.forEach(c=>{if(c.cats)c.cats=c.cats.filter(x=>!cats.has(x))});
+ S.packIds=[];S.packCats=[];S.packSnap={};S.packKSnap='';S.packVer=undefined;MAT._pk=null;S.legacyGone={ts:Date.now(),n:rm.length,kept:ids.size-rm.length};
+ try{MAT.bump()}catch(e){}await save();return rm.length};
+LEG.undo=async()=>{const b=await kvGet('pre-legacy-remove');if(!b)return alert('沒有可復原的紀錄');b.cats.forEach(k=>{if(!S.cats.some(c=>c.id===k.id))S.cats.push(k)});b.cards.forEach(c=>{if(!S.cards.some(x=>x.id===c.id))S.cards.push(c)});b.catRefs.forEach(r=>{const c=S.cards.find(x=>x.id===r.id);if(c)c.cats=[...new Set([...(c.cats||[]),...r.cats])]});delete S.legacyGone;try{MAT.bump()}catch(e){}await save();LIB.re()};
+if(!LEG.on){const _l=packLoad;packLoad=async function(){await LEG.purge();PK.state='ok';PK.busy=false;try{pkUi()}catch(e){}};packPanel=function(){return''}}
+/*P23B-END*/
+
 
 
 

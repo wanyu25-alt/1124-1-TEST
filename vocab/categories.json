@@ -1,130 +1,114 @@
 [
-  {
-    "id": "CAT01",
-    "name": "人物",
-    "count": 43,
-    "withImages": 28,
-    "imageCount": 28,
-    "folder": "images"
-  },
-  {
-    "id": "CAT02",
-    "name": "身體",
-    "count": 43,
-    "withImages": 43,
-    "imageCount": 43,
-    "folder": "images"
-  },
-  {
-    "id": "CAT03",
-    "name": "水果蔬菜",
-    "count": 51,
-    "withImages": 51,
-    "imageCount": 56,
-    "folder": "images"
-  },
-  {
-    "id": "CAT04",
-    "name": "食物飲料",
-    "count": 85,
-    "withImages": 85,
-    "imageCount": 89,
-    "folder": "images"
-  },
-  {
-    "id": "CAT05",
-    "name": "動物昆蟲",
-    "count": 85,
-    "withImages": 85,
-    "imageCount": 87,
-    "folder": "images"
-  },
-  {
-    "id": "CAT06",
-    "name": "植物自然",
-    "count": 55,
-    "withImages": 55,
-    "imageCount": 55,
-    "folder": "images"
-  },
-  {
-    "id": "CAT07",
-    "name": "交通",
-    "count": 43,
-    "withImages": 43,
-    "imageCount": 43,
-    "folder": "images"
-  },
-  {
-    "id": "CAT08",
-    "name": "衣物",
-    "count": 43,
-    "withImages": 43,
-    "imageCount": 43,
-    "folder": "images"
-  },
-  {
-    "id": "CAT09",
-    "name": "居家用品",
-    "count": 68,
-    "withImages": 68,
-    "imageCount": 68,
-    "folder": "images"
-  },
-  {
-    "id": "CAT10",
-    "name": "餐廚衛生",
-    "count": 43,
-    "withImages": 43,
-    "imageCount": 43,
-    "folder": "images"
-  },
-  {
-    "id": "CAT11",
-    "name": "學校休閒",
-    "count": 68,
-    "withImages": 68,
-    "imageCount": 68,
-    "folder": "images"
-  },
-  {
-    "id": "CAT12",
-    "name": "職業場所",
-    "count": 68,
-    "withImages": 68,
-    "imageCount": 68,
-    "folder": "images"
-  },
-  {
-    "id": "CAT13",
-    "name": "動作",
-    "count": 111,
-    "withImages": 111,
-    "imageCount": 111,
-    "folder": "images"
-  },
-  {
-    "id": "CAT14",
-    "name": "顏色形狀數量",
-    "count": 44,
-    "withImages": 44,
-    "imageCount": 44,
-    "folder": "images"
-  },
-  {
-    "id": "CAT15",
-    "name": "時間方位",
-    "count": 44,
-    "withImages": 44,
-    "imageCount": 44,
-    "folder": "images"
-  },
-  {
-    "id": "CAT16",
-    "name": "狀態情緒需求",
-    "count": 106,
-    "withImages": 106,
-    "imageCount": 106,
-    "folder": "images"
-  }
+ {
+  "id": "CAT01",
+  "name": "人物",
+  "count": 43,
+  "withImages": 21,
+  "imageCount": 21
+ },
+ {
+  "id": "CAT02",
+  "name": "身體",
+  "count": 43,
+  "withImages": 43,
+  "imageCount": 43
+ },
+ {
+  "id": "CAT03",
+  "name": "水果蔬菜",
+  "count": 51,
+  "withImages": 51,
+  "imageCount": 56
+ },
+ {
+  "id": "CAT04",
+  "name": "食物飲料",
+  "count": 85,
+  "withImages": 85,
+  "imageCount": 89
+ },
+ {
+  "id": "CAT05",
+  "name": "動物昆蟲",
+  "count": 85,
+  "withImages": 85,
+  "imageCount": 87
+ },
+ {
+  "id": "CAT06",
+  "name": "植物自然",
+  "count": 55,
+  "withImages": 55,
+  "imageCount": 55
+ },
+ {
+  "id": "CAT07",
+  "name": "交通",
+  "count": 43,
+  "withImages": 43,
+  "imageCount": 43
+ },
+ {
+  "id": "CAT08",
+  "name": "衣物",
+  "count": 43,
+  "withImages": 43,
+  "imageCount": 43
+ },
+ {
+  "id": "CAT09",
+  "name": "居家用品",
+  "count": 68,
+  "withImages": 68,
+  "imageCount": 68
+ },
+ {
+  "id": "CAT10",
+  "name": "餐廚衛生",
+  "count": 43,
+  "withImages": 43,
+  "imageCount": 43
+ },
+ {
+  "id": "CAT11",
+  "name": "學校休閒",
+  "count": 68,
+  "withImages": 68,
+  "imageCount": 68
+ },
+ {
+  "id": "CAT12",
+  "name": "職業場所",
+  "count": 68,
+  "withImages": 68,
+  "imageCount": 68
+ },
+ {
+  "id": "CAT13",
+  "name": "動作",
+  "count": 111,
+  "withImages": 109,
+  "imageCount": 109
+ },
+ {
+  "id": "CAT14",
+  "name": "顏色形狀數量",
+  "count": 44,
+  "withImages": 44,
+  "imageCount": 44
+ },
+ {
+  "id": "CAT15",
+  "name": "時間方位",
+  "count": 44,
+  "withImages": 44,
+  "imageCount": 44
+ },
+ {
+  "id": "CAT16",
+  "name": "狀態情緒需求",
+  "count": 106,
+  "withImages": 80,
+  "imageCount": 80
+ }
 ]
