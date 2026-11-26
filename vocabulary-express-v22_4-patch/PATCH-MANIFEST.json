@@ -1,0 +1,126 @@
+{
+ "schemaVersion": 1,
+ "project": "詞彙特快車 Vocabulary Express",
+ "batch": "03",
+ "fromVersion": "v22.3",
+ "toVersion": "v22.4",
+ "requires": {
+  "version": "v22.3",
+  "howToGet": "v22.1 完整 ZIP（sha256 8b5a66a1208b29175279e12ed61da84a8fc516f63efa20d8c24feec2f6bef9ce）＋ v22_2-patch（fbe1b226781927dd8df3a0446779274d4e6ef32c3a17bd044486678ebd698492）＋ v22_3-patch（b506e40de2e7a6e00847b4559bb57ddc56e6f14064862e4aa4fee8bb7cedf63d）"
+ },
+ "dataMigration": {
+  "formatChange": false,
+  "notes": "一次性：個案設定 ext.pref.ttsRate 剛好為 0.5 者改為 0.75（旗標 S.set.ttsFix224）；新增紀錄欄位 v2.zg（可缺省）；不清除任何資料"
+ },
+ "behaviorChange": "設定畫面移除任務摘要；打字題單一步驟逐音引導；聲調改念國字讀音；輕聲最後輸入；舊版教材不再覆蓋語音速度",
+ "overwrite": [
+  {
+   "path": "index.html",
+   "sha256": "dc7f02ccc95a43da85513d02f49fbee6fffc79a66fae02d72d753e88fa757dc5",
+   "bytes": 987072,
+   "previousSha256": "b01a0c6e9a44d4b26e83fac20cfeea422dd4ce95d71901d92e2707bdcd2fe5d2"
+  },
+  {
+   "path": "CHANGELOG.md",
+   "sha256": "fa5a2a29e41f07ed8bd833b028c29d145d0f03e99b4ca74790bb6b1325257aa5",
+   "bytes": 69661,
+   "previousSha256": "8cefd6ca8f6d170ee5a079340d72eb47b2e17bd5c81a6e1f85184a345c35d322"
+  },
+  {
+   "path": "KNOWN_ISSUES.md",
+   "sha256": "d3edb8774c1f38a81a2ebafaacf2adc83f5639b90934ce8a485278ede5bb780f",
+   "bytes": 11156,
+   "previousSha256": "98719aa04bc2e8262240d5101c9d648f17bd641e6d2c5daa23b28819b5bf953a"
+  },
+  {
+   "path": "PROJECT-HANDOFF.md",
+   "sha256": "37b85e9bf0191aa66188705f02e59c80f6605e2cb07147b83539ec2ec6c6c947",
+   "bytes": 15661,
+   "previousSha256": "91239b8ae104b227ed6f726515aa0842dd1708b18bfef861a07f0c905ffa1e0f"
+  },
+  {
+   "path": "DEVELOPMENT-ROADMAP.md",
+   "sha256": "e50409b31765c4770d6d829a0379d3041ccc09b1c701580e5c374abee5471e0b",
+   "bytes": 9043,
+   "previousSha256": "38768d2a6bd206c727bec8c4d9d41cd9cad846a7ac309a725fa762e96065d1d7"
+  },
+  {
+   "path": "PATCH-README.md",
+   "sha256": "82883c5a6188bc9263efad9a79b99722b69544f02b30fd694cb1a438ae737943",
+   "bytes": 2379,
+   "previousSha256": "46df97f7151a52918a0307b89b59e62b762494e0d2ae08964fb26dbe17810bcf"
+  },
+  {
+   "path": "tests/t17.js",
+   "sha256": "610e7aba431ea3a1f0716ff8801dbc6b4858f2ebbb30c46393de4ca02482072e",
+   "bytes": 7965,
+   "previousSha256": "29ee8f0b8f590fff5eea75bb818af4db58e2d7428fa8b0c2aa8dd55adf2a2c44"
+  },
+  {
+   "path": "tests/t19b.js",
+   "sha256": "26ce483340ac14b5087627fabe37797d4503669c66a421e5698b3b6577ec5ba3",
+   "bytes": 9256,
+   "previousSha256": "089abb4c0d238202544484e6b53271d5c7c74c0f4fba987fb6e8da43e640d662"
+  },
+  {
+   "path": "tests/t30.js",
+   "sha256": "8bcdb4dee15217a321a63056b456f6dfb3c9c1b71f84ccafc1ef24ba9ec5dfd3",
+   "bytes": 9164,
+   "previousSha256": "b0d50ed4f5c2da10eef1bfceb7101a90457a00596b11d87cf756d5884cee0343"
+  },
+  {
+   "path": "tests/t230.js",
+   "sha256": "0aa0bb676cab5358aa0d38305d6d026a237fafc51378f597e7a299c67cad94d2",
+   "bytes": 11461,
+   "previousSha256": "8eb0cc312d847e7497bf690724e587d20c44d8662d2e91c0dc6f70c8eee38cd0"
+  },
+  {
+   "path": "tests/e2e/phase14-setup-v21.js",
+   "sha256": "e906161da6a5eaf759f10c15c0edcfc9c0436f84d85eab3c2c0ca55babf1abcf",
+   "bytes": 4685,
+   "previousSha256": "c8e06d0e6d2bf838f7be4210955c525c52c8caaaed6cda782128c9a0a81cf8b9"
+  },
+  {
+   "path": "tests/e2e/batch01-material.js",
+   "sha256": "da4dab929359f1a8c3ea4c5f80754042d354b7b8fb9e7ff6f6088bbc520d7661",
+   "bytes": 9720,
+   "previousSha256": "17d267cfa9e0c43b178e7f52abafd937e56baec9d1a0d70c18e6bbaed1f8f9b1"
+  },
+  {
+   "path": "tests/e2e/batch02-source.js",
+   "sha256": "6d7bd93791bf4364ba4ac946a6750872ba7bb3fde414f9ca79d763ffe376036a",
+   "bytes": 11675,
+   "previousSha256": "0b75662b5321ff736efb9a968ac1c6b74ba4787ca4f10872b8b3414e39fbed2b"
+  },
+  {
+   "path": "PATCH-MANIFEST.json",
+   "sha256": "（本檔案，不自我校驗）"
+  }
+ ],
+ "add": [
+  {
+   "path": "BATCH03-REPORT.md",
+   "sha256": "23d2a70441b6f3365ad96057fdd723ff3e003ed629c2ecd56305f2f039cc3d56",
+   "bytes": 11187
+  },
+  {
+   "path": "TONE-READING-REVIEW.csv",
+   "sha256": "cc047b82bffa273f1ecd87fc653f17541b9f2f3e05745de74e0bcf498fd889d9",
+   "bytes": 66049
+  },
+  {
+   "path": "tests/e2e/batch03-guide.js",
+   "sha256": "7ce5a0a016c7b6056aeabbce4fa5d6119b77c56b593d7d96dcf6c79c37349c8a",
+   "bytes": 14219
+  },
+  {
+   "path": "tests/e2e/lib/audio-stub.js",
+   "sha256": "0417132b2440bf954c25b11f437c7e1774831a15c659d4b09b155de8481bddfd",
+   "bytes": 2554
+  }
+ ],
+ "delete": [],
+ "deleteNote": "沒有需要刪除的檔案",
+ "unchangedAssets": "vocab/、materials/、voice/、voice-original/、music/、lib/ 皆未修改",
+ "pushedToGitHub": false
+}

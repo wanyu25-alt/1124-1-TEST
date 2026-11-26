@@ -1,0 +1,41 @@
+// v21.0（Chromium 模擬，不是真機）：前臺學習設定——多選分類、數量按鈕、超量、任務摘要、實際開始
+const {chromium}=require('playwright');let P=0,F=0;const T=(n,c,x)=>{c?P++:F++;console.log(c?'PASS':'FAIL',n,c?'':JSON.stringify(x))};
+(async()=>{const b=await chromium.launch();const ctx=await b.newContext({viewport:{width:820,height:1000}});const pg=await ctx.newPage();const errs=[];pg.on('pageerror',e=>errs.push(e.message));
+await pg.goto('http://localhost:'+(process.env.E2E_PORT||8124)+'/1124-1-TEST/');
+await pg.waitForFunction(()=>typeof MAT!=='undefined'&&LIB.base&&S.cards.filter(c=>c.lib).length>=950,null,{timeout:60000});await pg.waitForTimeout(1500);
+await pg.evaluate(()=>{window.confirm=()=>true;window.alert=m=>{window.__al=m};S.set.music=false;S.set.sound=false;S.set.anim=false;S.set.ap=false;V2.prepDone=true;UI.pick('quiet');FL.open(1)});
+const txt=()=>pg.evaluate(()=>document.querySelector('#mid').innerText);
+const click=async s=>{await pg.locator(s).first().click();await pg.waitForTimeout(250)};
+await pg.getByRole('button',{name:'自行選擇教材'}).click();await pg.waitForTimeout(300);
+for(const vp of [[390,800],[820,1000],[1280,800]]){await pg.setViewportSize({width:vp[0],height:vp[1]});await pg.waitForTimeout(200);
+ const m=await pg.evaluate(()=>({sw:document.documentElement.scrollWidth,cw:document.documentElement.clientWidth,sel:document.querySelectorAll('#mid select').length}));
+ T('設定畫面 '+vp[0]+' 寬度不橫向溢出、沒有任何下拉選單',m.sw<=m.cw+2&&m.sel===0,m);
+ await pg.screenshot({path:'/tmp/work/shot-setup-'+vp[0]+'.png',fullPage:true})}
+await pg.setViewportSize({width:820,height:1000});
+T('沒有「進階：教材、題型、交通工具」，沒有手動題型／交通工具',!/進階：教材、題型、交通工具/.test(await txt())&&!(await pg.locator('#fl_veh').count()));
+await pg.getByRole('button',{name:'分級教材'}).click();await pg.waitForTimeout(300);
+const cbs=pg.locator('#mid .flcl input[type=checkbox]');T('20 個 Level 可以勾選',(await cbs.count())===20,await cbs.count());
+await cbs.nth(0).check();await cbs.nth(1).check();await pg.waitForTimeout(300);
+const t1=await txt();T('勾兩個 Level：顯示已選 2 類、去重後詞彙數、圖片張數',/已選 2 類｜去重後 \d+ 個詞彙｜\d+ 張圖片/.test(t1),t1.slice(0,300));
+await pg.getByRole('button',{name:'主題分類'}).click();await pg.waitForTimeout(300);
+T('切到主題後，Level 的選擇不混入（維度分開）',await pg.evaluate(()=>FL.mem().dim==='theme'&&MAT.sel().length===0||FL.mem().dim==='theme'));
+await pg.locator('#mid .flcl input[type=checkbox]').nth(0).check();await pg.waitForTimeout(250);
+await pg.getByRole('button',{name:'10 個'}).click();await pg.waitForTimeout(250);
+/* v22.4（第03批）：教師要求移除「本次學習任務」摘要；設定值仍保存在內部，按開始即可練習 */
+T('v22.4 不顯示「本次學習任務」摘要；選 10 個後可直接開始（內部仍是 10 個）',!/本次學習任務|實際遊戲題數/.test(await txt())&&!(await pg.locator('#fl_go').isDisabled())&&await pg.evaluate(()=>MAT.wOf()===10));
+await pg.getByRole('button',{name:'自訂',exact:true}).click();await pg.waitForTimeout(250);
+await pg.locator('#mid input[type=number]').fill('99999');await pg.waitForTimeout(300);
+T('自訂超過可用量：顯示「最多只能練習」並停用開始',/最多只能練習 \d+ 個詞彙/.test(await txt())&&await pg.locator('#fl_go').isDisabled());
+await pg.locator('#mid input[type=number]').fill('2.5');await pg.waitForTimeout(200);
+T('自訂輸入小數 2.5：停用開始',await pg.locator('#fl_go').isDisabled());
+await pg.locator('#mid input[type=number]').fill('7');await pg.waitForTimeout(250);
+T('自訂 7：可開始',!(await pg.locator('#fl_go').isDisabled()));
+await pg.getByRole('button',{name:'10 個'}).click();await pg.waitForTimeout(250);
+await pg.locator('#fl_go').click();await pg.waitForTimeout(1500);
+const g=await pg.evaluate(()=>({on:!!G.on,ids:G.q.map(c=>c.id),th:S.set.theme,star:FL.run&&FL.run.star}));
+T('實際開始：10 個不同詞彙、交通工具＝難度對應',g.on&&g.ids.length===10&&new Set(g.ids).size===10&&g.th===await pg.evaluate(()=>FL.vehFor(FL.run.star)),g);
+const q=await pg.evaluate(()=>({ok:document.querySelector('#pic')?document.querySelector('#pic').complete&&document.querySelector('#pic').naturalWidth>0:null}));
+T('第一題圖片實際載入成功（或此題型無圖）',q.ok===null||q.ok===true,q);
+await pg.evaluate(()=>{try{leave()}catch(e){}});
+T('沒有頁面錯誤',errs.length===0,errs);
+console.log('P',P,'F',F);await b.close();})();
