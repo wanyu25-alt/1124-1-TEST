@@ -1,22 +1,23 @@
 # PROJECT-HANDOFF｜詞彙特快車（Vocabulary Express）
 
 > 給下一個 Claude 對話的交接文件。新對話請同時提供「最新版網站 ZIP」與本文件。
-> 本文件依實際程式與文件撰寫，最近更新：**v22.3（第02批）2026-11-26**。開發採 12 批增量更新，進度見 DEVELOPMENT-ROADMAP.md。
+> 本文件依實際程式與文件撰寫，最近更新：**v22.4（第03批）2026-11-26**。開發採 12 批增量更新，進度見 DEVELOPMENT-ROADMAP.md。
 > 新對話請提供：最新完整網站（v22.1 ZIP＋之後各批增量包，或已更新的專案資料夾）＋本文件＋DEVELOPMENT-ROADMAP.md。
 
 ## 1. 專案目的
 國小特殊需求學生（自閉症、ADHD、低口語、詞彙提取困難、仿說等）的遊戲化詞彙學習網站：聽覺理解、圖詞連結、詞彙提取、注音輸入、口語表達、語意組織、短語／語句組合、生活溝通。教師端提供學習歷程分析，家長端提供家庭複習。系統紀錄是教學參考，**不是臨床評估或診斷**。
 
 ## 2. 目前版本
-- 程式 build：`v22.3`。**版本唯一來源**：index.html 主程式開頭 `const APP={build:'v22.3'}`（備份清單、教師後臺、完整性檢查、診斷都讀它；升版只改這一處）。
-- 開發方式：分批增量更新；v22.3＝v22.1 完整 ZIP＋第01批增量包＋第02批增量包（依序覆蓋）。線上 GitHub Pages 仍為 v22.1（使用者確認，兩批預定一起推送）。
+- 程式 build：`v22.4`。**版本唯一來源**：index.html 主程式開頭 `const APP={build:'v22.4'}`（備份清單、教師後臺、完整性檢查、診斷都讀它；升版只改這一處）。
+- 開發方式：分批增量更新；v22.4＝v22.1 完整 ZIP＋第01、02、03批增量包（依序覆蓋）。線上 GitHub Pages 仍為 v22.1（使用者確認，兩批預定一起推送）。
 - 正式教材：V077_merged（1000 詞／16 主題／20 Level／961 張 WebP／950 有圖詞／50 缺圖詞）。
 - v22.1 基準 ZIP SHA-256：`8b5a66a1208b29175279e12ed61da84a8fc516f63efa20d8c24feec2f6bef9ce`；各批檔案校驗見 PATCH-MANIFEST.json。
 
 ## 3. 系統架構
 - 純靜態網站，GitHub Pages：`wanyu25-alt/1124-1-TEST` → `https://wanyu25-alt.github.io/1124-1-TEST/`。無後端、無 Service Worker。
 - `index.html`（約 950 KB，全部程式在單一檔案，以 `/*Pxx*/` 區段標記模組）。
-- 主要模組：`S`（全域狀態，存 IndexedDB／localStorage）、`UI`、`FL`（六站流程：`FL.ladder`／`FL.chk`／`FL.extras`／`FL.setAct`）、`LIB`（正式詞彙庫）、`MAT`（前臺教材統一存取層，`MAT.origin()` 判斷來源）、`SNAP`（練習快照）、`CB`（詞彙組合）、`SE`／`SCN`（語句／生活情境）、`LA`（學習分析）、`VP`（五階段學習履歷，保留）、`GV`（真人引導語音）、`AM`（語音管理）、`TTSX`／`VF`／`VDX`（v22.1 合成語音備援、文字備援、語音診斷）、`ACL`（教師入口鎖）、`MATFIX`（v22.2 教材讀取修復與唯讀診斷，`/*P24*/`，包裝 FL.chk／FL.migDim／LIB.sync／LIB.v22Boot）、`SRC`（v22.3 教材來源管理、安全修復、六站可用題數，`/*P25*/`）。P24、P25 都位於開機程式之前，是最後一層包裝；新批次的包裝請放在 P25 之後。
+- 主要模組：`S`（全域狀態，存 IndexedDB／localStorage）、`UI`、`FL`（六站流程：`FL.ladder`／`FL.chk`／`FL.extras`／`FL.setAct`）、`LIB`（正式詞彙庫）、`MAT`（前臺教材統一存取層，`MAT.origin()` 判斷來源）、`SNAP`（練習快照）、`CB`（詞彙組合）、`SE`／`SCN`（語句／生活情境）、`LA`（學習分析）、`VP`（五階段學習履歷，保留）、`GV`（真人引導語音）、`AM`（語音管理）、`TTSX`／`VF`／`VDX`（v22.1 合成語音備援、文字備援、語音診斷）、`ACL`（教師入口鎖）、`MATFIX`（v22.2 教材讀取修復與唯讀診斷，`/*P24*/`，包裝 FL.chk／FL.migDim／LIB.sync／LIB.v22Boot）、`SRC`（v22.3 教材來源管理、安全修復、六站可用題數，`/*P25*/`）、`ZG`（v22.4 單一步驟逐音引導，`/*P26*/`）。P24～P26 都位於開機程式之前，是最後一層包裝；新批次的包裝請放在 P26 之後。
+- 打字題語音流程（v22.4）：`ask()`→`V2.ask`→`V2.auto`（延遲 `S.set.apd`）→`V2.playQ`→（打字題）`ZG.start`＝念詞＋依層級的目前一個注音。按鍵：`kPress`（最外層 ZG 包裝）→KV 按鍵回音→原 kPress（判斷、`wrongHit` 鼓勵語音）→`ZG.after` 等 KV 與 AM 語音結束再 `ZG.prompt`。聲調提示用 `ZG.charPlan`（上傳音節錄音＞單字合成＞同音字＞整個詞）。完成：`V2.word` 先排隊念詞，`AM.say`／`AM.after` 在 `ZG.wp` 期間排隊。層級：`ZG.level()` 依 `FL.run.star`。紀錄：`v2.zg`。所有聲音共用 ZQ（單一 Audio＋序號），新播放會中止舊的。
 - 題庫篩選鏈（重要）：`deck()`→`LRN.words(pool())`；`pool()` 依 `S.set.src` 取來源（`sel`＝`MAT.selPool`＝個案範圍 `ext.fl.sel` 的分類聯集），再依序經過：排除詞彙零件 `part`→個案排除 `ext.excl`→個別學生詞彙範圍 `LIB.selEff()`→非拼音模式排除沒有圖片的正式詞→**停用來源 `SRC.cardOn`**（v22.3）。
 - 教材來源：`S.matSrc={legacy:0|1,custom:0|1,log[]}`，未設定＝預設不使用（正式教材無法使用時自動備援）；`SRC.on(k)`、`SRC.cardOn(card)`、`SRC.catOn(catId)`；來源依 `MAT.origin`（builtin／legacy／custom）。`FL.chk` 以 `FL.withSrc` 暫時切換來源計算各站可用數。
 - 入口：首頁（聽讀／口語／綜合三入口）、家長專區（6 分頁）、設定、教師專區（19 分頁）。
@@ -42,6 +43,9 @@
 
 ## 5-2. v22.3（第02批）已完成
 - 教材來源管理（舊版／自訂預設不使用、可啟用停用）、所有練習範圍與家長直接複習排除停用來源、正式詞彙／主題／Level 刪除保護、教材安全修復（備份＋復原）、六站可用題數、完整性檢查補強、版本字樣統一。詳見 BATCH02-REPORT.md。
+
+## 5-3. v22.4（第03批）已完成
+- 設定畫面移除任務摘要；單一步驟逐音引導與星級引導層級；聲調改播國字讀音；輕聲輸入順序改為最後；AI 語音速度被舊版教材改成 0.5 的錯誤已修；語音佇列避免重疊與過時提示。詳見 BATCH03-REPORT.md。
 
 ## 6. 尚未完成的功能
 - 延伸活動入口（K-44）：`FL.extras` 程式存在，畫面無入口。
@@ -79,6 +83,11 @@
 - 不把清除網站資料當修復方法；資料遷移須備份、保留穩定 ID、可回復。
 
 ## 10. 最新測試結果
+### v22.4（第03批）
+- 新增 e2e `batch03-guide.js` 39 通過（音訊以 `tests/e2e/lib/audio-stub.js` 替身記錄播放順序，非真實聲音）。
+- jsdom 1905 通過，失敗項與基準相同；e2e 23 檔 321 通過／0 失敗。
+- 因規格調整：t30、t19b、t17、phase14、batch01、batch02、t230。
+
 ### v22.3（第02批）
 - 新增 e2e `batch02-source.js` 32 通過；`batch01-material.js` 29 通過。
 - jsdom 完整回歸 1905 通過，失敗項與基準相同（t180 9、t33 1；t190／t19a 無法執行）。
@@ -99,7 +108,7 @@
 - **沒有任何 iPhone／iPad／Android／Windows／macOS 實機或真實學生測試。**
 
 ## 11. 下一階段開發建議
-下一批＝**第03批 語音播放修復（v22.4）**，以 v22.3 為基礎。v22.1 已有 TTSX／VF／VDX，以檢查、實機驗證、補修為主，不要重寫；需要 iPhone／iPad 語音診斷結果。升版只改 `APP.build`。
+下一批＝**第04批 麥克風與語音辨識優化（v22.5）**，以 v22.4 為基礎。口語模式與整合模式口說步驟走 V2.run／V2.gate（第03批未改）；保留「題目語音播完才開始辨識」（ZQ／KV 會設定 MIC.deafUntil）。待教師確認：輕聲輸入順序（已改為最後）。升版只改 `APP.build`。
 
 （以下為接手時的整體建議，已併入 DEVELOPMENT-ROADMAP.md 12 批規劃）
 1. 實機驗證 v22.1 iPhone／iPad 語音（後臺「語音診斷」回報）。
@@ -114,6 +123,7 @@
 - 規則：未經使用者確認不得推送。使用者以 GitHub Desktop 自行更新。
 
 ## 13. 最近一次修改的檔案及原因
+- v22.4 第03批（2026-11-26）：`index.html`（P26 區段、`V2.pass` 等待條件、`APP.build`）；新增 `TONE-READING-REVIEW.csv`、`tests/e2e/batch03-guide.js`、`tests/e2e/lib/audio-stub.js`；調整 `tests/t30.js`、`t19b.js`、`t17.js`、`t230.js`、`e2e/phase14-setup-v21.js`、`e2e/batch01-material.js`、`e2e/batch02-source.js`；文件 CHANGELOG、KNOWN_ISSUES、PROJECT-HANDOFF、DEVELOPMENT-ROADMAP、BATCH03-REPORT、PATCH-README、PATCH-MANIFEST。原因：教師實測回饋（設定畫面、聽覺記憶負荷、聲調引導）。
 - v22.3 第02批（2026-11-26）：`index.html`（新增 P25 區段、`APP.build`、移除 3 處寫死版本）；`tests/e2e/batch02-source.js`（新增）；`tests/t283.js`、`tests/t180.js`、`tests/t230.js`、`tests/e2e/batch01-material.js`（依新規格調整）；文件：CHANGELOG、KNOWN_ISSUES、PROJECT-HANDOFF、DEVELOPMENT-ROADMAP、BATCH02-REPORT、PATCH-README、PATCH-MANIFEST。原因：教材來源管理。
 - v22.2 第01批（2026-11-26）：`index.html`（新增 P24 區段、`pool` 個別詞彙範圍改用 `LIB.selEff`、build 字串）；`tests/e2e/batch01-material.js`（新增）；`tests/t230.js`（版本字串）；文件：CHANGELOG、KNOWN_ISSUES、PROJECT-HANDOFF、DEVELOPMENT-ROADMAP、BATCH01-REPORT、DIAG-CONSOLE、PATCH-README、PATCH-MANIFEST。原因：修復刪除分類後正式教材 0 詞。
 - 接手檢查（2026-11-26）：未修改程式，只新增本文件。

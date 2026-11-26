@@ -21,7 +21,8 @@ await pg.getByRole('button',{name:'主題分類'}).click();await pg.waitForTimeo
 T('切到主題後，Level 的選擇不混入（維度分開）',await pg.evaluate(()=>FL.mem().dim==='theme'&&MAT.sel().length===0||FL.mem().dim==='theme'));
 await pg.locator('#mid .flcl input[type=checkbox]').nth(0).check();await pg.waitForTimeout(250);
 await pg.getByRole('button',{name:'10 個'}).click();await pg.waitForTimeout(250);
-T('本次學習任務摘要：難度、範圍、本次練習 10 個不同詞彙、交通工具自動',/本次學習任務/.test(await txt())&&/10 個不同的詞彙/.test(await txt())&&/由難度自動安排/.test(await txt()));
+/* v22.4（第03批）：教師要求移除「本次學習任務」摘要；設定值仍保存在內部，按開始即可練習 */
+T('v22.4 不顯示「本次學習任務」摘要；選 10 個後可直接開始（內部仍是 10 個）',!/本次學習任務|實際遊戲題數/.test(await txt())&&!(await pg.locator('#fl_go').isDisabled())&&await pg.evaluate(()=>MAT.wOf()===10));
 await pg.getByRole('button',{name:'自訂',exact:true}).click();await pg.waitForTimeout(250);
 await pg.locator('#mid input[type=number]').fill('99999');await pg.waitForTimeout(300);
 T('自訂超過可用量：顯示「最多只能練習」並停用開始',/最多只能練習 \d+ 個詞彙/.test(await txt())&&await pg.locator('#fl_go').isDisabled());

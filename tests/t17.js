@@ -7,7 +7,8 @@ const mk=(red)=>new JSDOM(html,{url:'http://localhost/?noseed',runScripts:'dange
  E(`S=DEF();S.cards=[{id:'a',text:'火車',zy:'ㄏㄨㄛˇ ㄔㄜ',img:'data:image/png;base64,AAA',audio:'',cats:['fr']},{id:'b',text:'蘋果',zy:'ㄆㄧㄥˊ ㄍㄨㄛˇ',img:'data:image/png;base64,AAA',audio:'',cats:['fr']},{id:'c',text:'公車',zy:'ㄍㄨㄥ ㄔㄜ',img:'data:image/png;base64,AAA',audio:'',cats:['tr']}];S.cats=[{id:'fr',name:'水果'},{id:'tr',name:'交通工具'}];S.set.sound=false;S.set.music=false;S.set.n=4;S.asrDecl=1;save();RC.ui.classic=true;home()`);
  E('UI.pick("integ");FL.open(1)');/* v21.0：交通工具依難度自動安排，不再手動下拉；仍保留五種交通工具資產 */const cards=E('FL.VEH.map(k=>TH[k].e+" "+TH[k].n)');
  T('home: five vehicle cards in order 腳踏車→汽車→火車→高鐵→飛機',cards.length===5&&['腳踏車','汽車','火車','高鐵','飛機'].every((n,i)=>cards[i].includes(n)));
- T('setup shows the auto-assigned vehicle (no manual vehicle select)',!d.querySelector('#fl_veh')&&/交通工具[\s\S]*由難度自動安排/.test(d.querySelector('#mid').textContent));
+ /* v22.4（第03批）：教師要求移除「本次學習任務」摘要（原本在摘要中顯示交通工具）；交通工具仍依難度自動安排，沒有手動選單 */
+ T('setup: no manual vehicle select; vehicle is auto-assigned by difficulty (summary block removed in v22.4)',!d.querySelector('#fl_veh')&&!/本次學習任務/.test(d.querySelector('#mid').textContent)&&!!E('TH[FL.vehFor(1)]')&&E('FL.vehFor(1)')!==E('FL.vehFor(5)'));
  const mid=d.querySelector('#mid').textContent;T('no separate 旅程 / mode buttons / 開始旅程 on home',!mid.includes('旅程')&&!mid.includes('開始旅程')&&!/🧩|👂/.test(d.querySelector('#mid').innerHTML.replace(/<svg.*?<\/svg>/gs,'')));
  E('UI.pick("quiet");FL.open(1)');E('FL.setRange("pick");FL.setDim("custom")');T('v21.0 category multi-select in setup (checkbox, counts)',!!d.querySelector('#mid input[type=checkbox]')&&/水果[\s\S]{0,40}2 個詞彙/.test(d.querySelector('#mid').textContent));E('UI.view="mode";UI.mode="integ";home()');
  // each vehicle → mode

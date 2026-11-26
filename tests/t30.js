@@ -39,9 +39,10 @@ const L=w=>(w.__aud.log||[]).map(x=>x.src.replace(/^voice\//,'').replace(/\.m4a$
  T('no audio before 1 s auto-play delay',L(w).filter(s=>s.startsWith('zhuyin')).length===0);
  await sleep(4000);
  const zl=(w.__aud.log||[]).filter(x=>/zhuyin/.test(x.src));
- T('auto-play played symbol clips for first question',zl.length>=4);
+ /* v22.4（第03批）：題目開始改為「完整詞彙 → 只播第一個需要輸入的注音」，不再一次念整串注音 */
+ const sym0=E('ZG.norm(zyToks(G.cur.zy))[0][0]');T('v22.4 auto-play: word first, then ONLY the first needed symbol (no full symbol chain)',zl.length===1&&zl[0].src.endsWith('zy_'+E('ZMAP["'+sym0+'"]')+'.m4a'),zl.map(x=>x.src));
  const gaps=E('ZQ.log').filter(x=>x.s!==undefined),en=E('ZQ.log').filter(x=>x.e!==undefined);let gm=[];for(let i=1;i<gaps.length&&i<en.length+1;i++)if(en[i-1]&&gaps[i])gm.push(gaps[i].s-en[i-1].e);
- const ks=E('ZQ.log').map(x=>x.k);T('silence between clips ≈0.3 s in total (program gap + 0.3 s lead of next file ÷ rate)',gm.length>3&&gm.every((g,i)=>{const nxt=(E('ZQ.log').filter(x=>x.s!==undefined)[i+1]||{}).k||'';return nxt.startsWith('S:')?(g>=30&&g<=200):(g>=270&&g<=420)}));
+ const ks=E('ZQ.log').map(x=>x.k);T('silence between word and the single symbol ≈0.3 s in total (program gap + 0.3 s lead of next file ÷ rate)',gm.length>=1&&gm.every((g,i)=>{const nxt=(E('ZQ.log').filter(x=>x.s!==undefined)[i+1]||{}).k||'';return nxt.startsWith('S:')?(g>=30&&g<=200):(g>=270&&g<=420)}));
  const first=(w.__aud.log||[]).filter(x=>/zhuyin/.test(x.src))[0];
  T('auto-play started ≥ ~1 s after question',first&&first.at-t0>=950);
  const n1=zl.length;await sleep(1200);T('auto-play only once per question',(w.__aud.log||[]).filter(x=>/zhuyin/.test(x.src)).length===n1);

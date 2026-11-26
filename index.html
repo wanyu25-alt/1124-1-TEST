@@ -379,7 +379,7 @@ body.aid-calm #scene{max-height:90px;overflow:hidden}body.aid-calm .stc .ste{dis
 <script src="lib/pinyin-pro.js"></script>
 <script>
 /* ===== 基本工具 ===== */
-const APP={build:'v22.3'};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
+const APP={build:'v22.4'};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -1578,7 +1578,7 @@ V2.rec=()=>{const o=G.o||{},h=G.h||{};return{lm:V2.lm(),oral:{sched:o.sched?1:0,
 function celebSfx(){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.resume)ac.resume();
  [[523,0],[659,.14],[784,.28],[1047,.42],[784,.64],[1047,.78],[1319,.92]].forEach(([f,t],i)=>tn(f,t,i>=6?.7:.3,{g:.15,a:.015,ty:'triangle'}));tn(262,0,1.3,{g:.07,a:.05,lp:900});tn(1568,1.0,.5,{g:.05,a:.02});return 1650}catch(e){return 0}}
 V2.pass=r=>{const fire=()=>AM.later(200,()=>{if(!G.on||G.rid!==r)return;const d=(S.set.sound!==false&&S.set.cs!==false)?celebSfx():0;V2.celeb={t:Date.now(),d};AM.later(d+150,()=>{if(G.on&&G.rid===r)arrive()})});
- AM.later(450,()=>{if(!G.on||G.rid!==r)return;if(AM.cur||(typeof KV!=='undefined'&&KV.q))AM.after(fire);else fire()})};
+ AM.later(450,()=>{if(!G.on||G.rid!==r)return;if(AM.cur||(typeof KV!=='undefined'&&KV.q)||(typeof ZG!=='undefined'&&ZG.wp))AM.after(fire);else fire()})};/* v22.4：也等「完成時念完整詞彙」的佇列 */
 
 /* ===== 啟動前裝置準備（口語訓練／聽說打字整合）===== */
 V2.prep=cb=>{if($('#prep'))return;const o=document.createElement('div');o.className='ov';o.id='prep';V2.cb=cb;
@@ -6153,6 +6153,93 @@ SRC.html=()=>{const n=SRC.count(),row=(k,extra)=>{const on=SRC.on(k),c=n[k];retu
 /* 唯讀診斷補上來源狀態 */
 {const f=MATFIX.diag;MATFIX.diag=function(){const o=f.apply(this,arguments);try{o.build=APP.build;o.f_教材來源={舊版內建:SRC.on('legacy')?'使用中':'未使用',教師自訂:SRC.on('custom')?'使用中':'未使用',已手動設定:!!SRC.st()}}catch(e){}return o}}
 /*P25-END*/
+/*P26-BEGIN v22.4 第03批：練習設定畫面簡化、單一步驟逐音引導、聲調改播國字讀音、語音佇列
+  原則：一次只播「目前需要輸入的一個注音」；聲調不念「一聲／二聲」，改播該國字在本詞中的讀音；
+  系統依難度自動提供的引導不算學生主動提示、不扣星（記錄在 v2.zg，與 G.h 手動提示分開）。 */
+/* ---- 一、設定畫面：移除「本次學習任務」摘要；只在無法開始時顯示原因 ---- */
+FL.sumHtml=function(){let c;try{c=FL.cur()}catch(e){return''}if(!c||!c.cfg)return'';
+ if(!c.chk.ok)return`<p class="fwarn" style="color:#b8322b;font-weight:bold;margin:6px 0">目前無法開始：${esc(c.chk.msg||'目前沒有可用教材')}</p>`;
+ if(c.chk.n==null)return'';const W=MAT.want(c.chk.n||0);
+ return W.err?`<p class="fwarn" style="color:#b8322b;font-weight:bold;margin:6px 0">${esc(W.err)}${W.over?` <button class="btn alt sm" onclick="FL.setW('all')">改為全部（${c.chk.n} 個）</button>`:''}</p>`:''};
+/* ---- 二、輕聲的輸入順序：先聲母／介音／韻母，最後聲調（與一般注音鍵盤打字順序相同；顯示也跟著輸入順序） ---- */
+const ZG={pend:null,pt:0,it:0,ic:{},fin:0,idx:null,src:{}};
+ZG.norm=seq=>(seq||[]).map(t=>t.length>1&&t[0]==='˙'?[...t.slice(1),'˙']:t);
+{const f=showK;showK=function(){if(K&&K.seq&&!K._zn){K.seq=ZG.norm(K.seq);K._zn=1}return f.apply(this,arguments)}}
+/* ---- 三、引導層級（依 FL.run 的星級；與第2站各星級的提示設計對應） ---- */
+ZG.LV={1:'full',2:'basic',3:'delay',4:'self',5:'indep'};
+ZG.NAME={full:'完整逐步引導',basic:'基本逐步引導',delay:'延遲逐步引導',self:'自主輸入優先',indep:'獨立完成優先'};
+ZG.level=()=>ZG.LV[(FL.run&&FL.run.star)||0]||'basic';
+ZG.on=()=>!!(G&&G.on&&typed()&&K&&K.seq&&K.seq.length&&!G.orq&&V2.lm()!=='oral'&&!V2.stp);
+ZG.autoNext=()=>{const l=ZG.level();return l==='full'||l==='basic'};
+ZG.idleMs=()=>({full:6000,basic:8000,delay:8000})[ZG.level()]||0;
+ZG.pos=()=>G.rid+':'+G.i+':'+(K?K.ci+':'+K.si:'');
+ZG.cnt=k=>{G.zg=G.zg||{};G.zg[k]=(G.zg[k]||0)+1};
+/* ---- 四、要播的聲音：單一注音、國字讀音（依本詞的注音） ---- */
+ZG.symItem=y=>({k:'S:'+y,url:ZQ.symUrl(y),src:ZA.urls['S:'+y]?'custom':'built-in'});
+ZG.chars=()=>[...G.cur.text].filter(x=>/[一-鿿]/.test(x));
+ZG.toneOf=t=>t.includes('ˊ')?'ˊ':t.includes('ˇ')?'ˇ':t.includes('ˋ')?'ˋ':t.includes('˙')?'˙':'';
+ZG.zyOf=t=>t.filter(isSym).join('')+ZG.toneOf(t);
+ZG.read=ch=>{try{const p=pinyinPro.pinyin(ch,{toneType:'num'});if(!p||/0$/.test(p))return null;return py2zy(p)}catch(e){return null}};
+ZG.poly=ch=>{try{const a=pinyinPro.pinyin(ch,{toneType:'num',multiple:true,type:'array'});return Array.isArray(a)&&a.length>1}catch(e){return true}};
+/* 同音字索引：只用教材內出現過、而且只有一種讀音的常用字 */
+ZG.index=()=>{if(ZG.idx)return ZG.idx;const m={};const seen=new Set();S.cards.forEach(c=>[...(c.text||'')].forEach(ch=>{if(!/[一-鿿]/.test(ch)||seen.has(ch))return;seen.add(ch);if(ZG.poly(ch))return;const z=ZG.read(ch);if(z&&!m[z])m[z]=ch}));return ZG.idx=m};
+/* 國字讀音來源優先順序：①老師上傳的音節錄音 ②合成語音念該字（預設讀音與本詞相同）③合成語音念「同音、只有一種讀音」的字 ④輕聲或找不到可靠讀音：念整個詞（在語境中聽到正確讀音） */
+ZG.charPlan=(ci,c,seq)=>{c=c||G.cur;seq=seq||ZG.norm(zyToks(c.zy||''));const t=seq[ci]||[],ch=[...c.text].filter(x=>/[一-鿿]/.test(x))[ci]||'',zy=ZG.zyOf(t),key='Y:'+sylKey(t);
+ if(ZA.urls[key])return{k:key,url:ZA.urls[key],src:'custom',how:'recorded',ch,zy};
+ if(ZG.toneOf(t)==='˙')return{k:'W:'+c.text,tts:c.text,src:'tts',how:'context',ch,zy};
+ if(ch&&ZG.read(ch)===zy&&!ZG.poly(ch))return{k:key,tts:ch,src:'tts',how:'direct',ch,zy};
+ if(ch&&ZG.read(ch)===zy)return{k:key,tts:ch,src:'tts',how:'direct-poly',ch,zy};
+ const h=ZG.index()[zy];if(h)return{k:key,tts:h,src:'tts',how:'homophone',ch,zy,via:h};
+ return{k:'W:'+c.text,tts:c.text,src:'tts',how:'context',ch,zy}};
+ZG.curItem=()=>{const x=K.seq[K.ci][K.si];if(isSym(x))return ZG.symItem(x);const it=ZG.charPlan(K.ci);ZG.cnt('tone');(G.zg.how=G.zg.how||{})[it.how]=(G.zg.how[it.how]||0)+1;return it};
+/* ---- 五、播放（單一佇列：ZQ；新的播放會中止舊的；按鍵時 KV 會中止提示） ---- */
+ZG.stopT=()=>{clearTimeout(ZG.pt);clearTimeout(ZG.it);ZG.pend=null};
+ZG.play=(items,why,end)=>{const pos=ZG.pos();ZG.cnt(why);ZQ.play(items,{end:ok=>{if(ZG.pos()!==pos||!G.on||G.lock)return;end&&end(ok);ZG.armIdle()}})};
+ZG.prompt=why=>{if(!ZG.on()||K.ci>=K.seq.length)return;ZG.play([ZG.curItem()],why)};
+/* 等按鍵回音（KV）唸完再播下一個提示；只保留最新的一個 */
+ZG.after=f=>{ZG.stopT();const pos=ZG.pos(),ok=()=>ZG.pos()===pos&&G.on&&!G.lock&&!G.paused,run=()=>{if(!ok())return;if(AM.cur){AM.after(()=>{if(ok())f()});return}f()};if(KV.cur){ZG.pend=run;ZG.pt=setTimeout(()=>{if(ZG.pend===run){ZG.pend=null;run()}},2800)}else ZG.pt=setTimeout(run,120)};
+{const f=KV.flush;KV.flush=function(){const r=f.apply(this,arguments);if(ZG.pend){const p=ZG.pend;ZG.pend=null;clearTimeout(ZG.pt);ZG.pt=setTimeout(p,60)}return r}}
+/* 長時間沒有操作：只重播目前這一個；第 2 次起目前的方格閃一下（不顯示答案、不算提示、不扣星）；每格最多 3 次 */
+ZG.armIdle=()=>{clearTimeout(ZG.it);const ms=ZG.idleMs();if(!ms||!ZG.on())return;const pos=ZG.pos();
+ ZG.it=setTimeout(function fire(){if(ZG.pos()!==pos||!ZG.on())return;if(G.paused||ZQ.busy||KV.cur||AM.cur||document.hidden||document.querySelector('.ov')){ZG.it=setTimeout(fire,1500);return}
+  const n=ZG.ic[pos]=(ZG.ic[pos]||0)+1;if(n>3)return;if(n>=2){const e=document.getElementById('z'+K.ci+'_'+K.si);if(e&&FX()){e.classList.remove('zgcue');void e.offsetWidth;e.classList.add('zgcue')}}ZG.prompt('idle')},ms)};
+/* 題目開始／再聽一次：先念完整詞彙；依層級再念目前需要的一個注音 */
+ZG.start=active=>{const key=G.rid+':'+G.i,l=ZG.level(),items=[ZQ.word(G.cur)];
+ const add=active?(l!=='indep'||(G.rep||0)>=2):ZG.autoNext();if(add&&K.ci<K.seq.length)items.push(ZG.curItem());
+ ZG.play(items,active?'replay':'start',()=>{if(G.rid+':'+G.i!==key)return;G.listened=true;if(active)G.repDone=(G.repDone||0)+1;V2.carDraw()})};
+{const f=V2.playQ;V2.playQ=function(active){if(ZG.on()){ZG.start(!!active);return}return f.apply(this,arguments)}}
+/* ---- 六、作答：正確→下一個；錯誤→（按鍵回音）→目前正確的提示 ---- */
+{const f=kPress;kPress=function(a,src){if(ZG.on()&&(K.ci>=K.seq.length||G.zgFin))return;const on=ZG.on(),exp=on?K.seq[K.ci][K.si]:null;if(on){ZG.stopT();clearTimeout(ZG.it)}
+ const r=f.apply(this,arguments);if(!on||!G.on||G.lock||!K||K.ci>=K.seq.length)return r;
+ if(a===exp){if(ZG.autoNext())ZG.after(()=>ZG.prompt('next'));else ZG.armIdle()}
+ else ZG.after(()=>{ZG.cnt('wrong');ZG.prompt('fix')});return r}}
+{const f=kBack;kBack=function(){if(ZG.on()&&G.zgFin)return;const r=f.apply(this,arguments);if(ZG.on()){ZG.stopT();ZG.armIdle()}return r}}
+/* 答錯時原有的鼓勵語音（再一次喔／再試試看／沒關係）與閒置引導都保留；ZG.after 會等它們播完才念正確提示，不重疊 */
+/* ---- 七、整個詞完成：立即完成作答（鎖定、紀錄、星星照舊），聲音順序改為「完整詞彙 → 成功回饋」；聲調完成後不重複念同一個字 ---- */
+ZG.wp=0;ZG.wq=null;ZG.wcb=[];
+ZG.wflush=()=>{if(!ZG.wp)return;ZG.wp=0;clearTimeout(ZG.wwd);const q=ZG.wq,cb=ZG.wcb;ZG.wq=null;ZG.wcb=[];if(q)AM.say(q.k,q.o);cb.forEach(f=>{try{AM.after(f)}catch(e){console.warn(e)}})};
+{const f=AM.say;AM.say=function(k,o){o=o||{};if(ZG.wp&&!o.test){ZG.wq={k,o};return true}return f.call(this,k,o)}}
+{const f=AM.after;AM.after=function(cb){if(ZG.wp){ZG.wcb.push(cb);return}return f.call(this,cb)}}
+{const f=V2.word;V2.word=function(){if(!(G&&G.on&&typed()&&!G.orq&&V2.lm()!=='oral'&&K&&K.ci>=K.seq.length)||G.zgFin)return f.apply(this,arguments);
+ G.zgFin=1;ZG.stopT();clearTimeout(ZG.it);const c=G.cur;ZG.wp=1;ZG.wwd=setTimeout(ZG.wflush,4500);
+ const say=()=>{if(!ZG.wp)return;ZG.cnt('word');ZQ.play([ZQ.word(c)],{end:()=>ZG.wflush()})};
+ if(KV.cur){ZG.pend=say;ZG.pt=setTimeout(()=>{if(ZG.pend===say){ZG.pend=null;say()}},2800)}else setTimeout(say,60);
+ return f.apply(this,arguments)}}
+/* ---- 八、換題／離開／暫停：停止所有提示與計時 ---- */
+{const f=ask;ask=function(){ZG.stopT();clearTimeout(ZG.it);ZG.ic={};if(ZG.wp)ZG.wflush();if(G){G.zgFin=0;G.zg={lv:null}}const r=f.apply(this,arguments);try{if(G.zg)G.zg.lv=ZG.on()?ZG.level():null}catch(e){}return r}}
+{const f=leave;leave=function(){ZG.stopT();clearTimeout(ZG.it);ZG.wp=0;ZG.wq=null;ZG.wcb=[];clearTimeout(ZG.wwd);return f.apply(this,arguments)}}
+{const f=AM.stop;AM.stop=function(){ZG.stopT();clearTimeout(ZG.it);return f.apply(this,arguments)}}
+/* ---- 九、紀錄：自動引導與學生主動提示分開（G.h 不變；v2.zg 另記） ---- */
+{const f=V2.rec;V2.rec=function(){const r=f.apply(this,arguments)||{};try{if(G.zg&&G.zg.lv)r.zg={...G.zg}}catch(e){}return r}}
+/* ---- 十、教師檢查用：列出教材中聲調讀音的來源（哪些需要補錄） ---- */
+ZG.audit=()=>{const out=[];S.cards.filter(c=>c.lib&&c.zy).forEach(c=>{const seq=ZG.norm(zyToks(c.zy));seq.forEach((t,ci)=>{const p=ZG.charPlan(ci,c,seq);if(p.how!=='direct'&&p.how!=='recorded')out.push({id:c.id,word:c.text,ch:p.ch,zy:p.zy,how:p.how,via:p.via||''})})});return out};
+(()=>{try{const st=document.createElement('style');st.textContent='.zs.zgcue{animation:zgcue 1.2s ease-in-out 2;box-shadow:0 0 0 4px #ffd54a}@keyframes zgcue{50%{box-shadow:0 0 0 8px #ffb300}}@media (prefers-reduced-motion:reduce){.zs.zgcue{animation:none}}';document.head.appendChild(st)}catch(e){}})();
+/* ---- 十一、語音速度：舊版內建教材（materials/settings.json）第一次載入時會把 AI 語音速度改成 0.5 倍，覆蓋已確認的 0.75 倍；改為不套用語音播放設定 ---- */
+ZG.KEEP=['ttsRate','recRate','aiGain'];
+{const f=packSync;packSync=function(){const keep={};ZG.KEEP.forEach(k=>{if(S.set[k]!==undefined)keep[k]=S.set[k]});const r=f.apply(this,arguments);ZG.KEEP.forEach(k=>{if(k in keep)S.set[k]=keep[k]});return r}}
+/* 第一次載入時若教師剛好在同一次操作中改過設定，0.5 倍會被存進個案設定：一次性把各個案「剛好 0.5」的語音速度改回 0.75（之後教師在設定頁調整的速度不受影響） */
+{const f=LRN.ensure;LRN.ensure=async function(){const r=await f.apply(this,arguments);try{if(S.set&&!S.set.ttsFix224){(S.lrn&&S.lrn.list||[]).forEach(p=>{const pr=p.ext&&p.ext.pref;if(pr&&+pr.ttsRate===0.5)pr.ttsRate=.75});S.set.ttsFix224=1}}catch(e){}return r}}
+/*P26-END*/
 (async()=>{let s=await load();if(s&&s.decks&&!s.v){await kvPut('backup-pre-v2',s);s=migrate(s)}const mb=await kvGet('music').catch(()=>null);if(mb)mus.url=URL.createObjectURL(mb);if(s)S={...DEF(),...s,set:{...DEF().set,...s.set}};if(s&&s.set&&s.set.vs==null&&s.set.vol!=null)S.set.vs=s.set.vol;
 await zaLoad();await LRN.ensure();try{if(await LIB.load()){await LIB.defBoot();LIB.sync()}}catch(e){console.warn('LIB boot',e)}if(S.set.stuName===undefined)S.set.stuName='';if(S.set.musSrc==='project'&&!S.set.musPicked)S.set.musSrc='builtin';if(!['key','listen','spell','speak'].includes(S.set.mode))S.set.mode='key';if(S.set.ttsMig!==3){S.set.ttsMig=3;S.set.ttsRate=.75;S.set.recRate=1.25;S.set.aiGain=1.5}if(!S.bankMap)S.bankMap={};if((S.banks||[]).some(b=>!(b.id in S.bankMap))||/^b:/.test(S.set.src||'')){if(!(await kvGet('backup-pre-bankmig')))await kvPut('backup-pre-bankmig',JSON.parse(JSON.stringify(S)));migrateBanks()}if(!S.set.musMig){S.set.musMig=1;S.set.musSrc='project';save()}FL.recover();try{FL.applyPref()}catch(e){}save();UI.init();home();mtLbl();packLoad();
  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();

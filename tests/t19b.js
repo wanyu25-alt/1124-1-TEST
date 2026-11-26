@@ -43,9 +43,10 @@ const {sleep,T,mk,mkSetup,res}=require('./t19h.js');
  await sleep(400);T('rapid: 3 quick completions of one question → one ok voice, ok() idempotent',V().filter(x=>x==='ok').length===1&&E('G.done')===1);
  await sleep(1200);endV();w.__log.length=0;
  for(let k=0;k<5;k++){wrong();await sleep(15)}
- await sleep(100);T('rapid: 5 wrong presses within 100ms → retry, then 沒關係 replaces it at the 3rd wrong (never overlapping)',V().join().replace('guidance/retry_try','retry')==='retry,guidance/slow'&&w.__viol===0);
+ await sleep(100);T('rapid: 5 wrong presses within 100ms → retry, then 沒關係 replaces it at the 3rd wrong (never overlapping)',V().filter(x=>!x.startsWith('zhuyin')).join().replace('guidance/retry_try','retry')==='retry,guidance/slow'&&w.__viol===0);
  endV();await sleep(60);endV();await sleep(60);
- T('rapid: no further voices after 沒關係; never overlapping',V().join().replace('guidance/retry_try','retry')==='retry,guidance/slow'&&w.__viol===0);
+ /* v22.4：鼓勵語音之後會再念「目前正確的一個注音」（逐音引導），所以這裡只比對鼓勵語音 */
+ T('rapid: no further encouragement voices after 沒關係; never overlapping',V().filter(x=>!x.startsWith('zhuyin')).join().replace('guidance/retry_try','retry')==='retry,guidance/slow'&&w.__viol===0);
  await finish();await sleep(1500);endV();
  for(let k=0;k<3;k++){const i0=E('G.i');await finish();await sleep(1450)}
  T('rapid: voices never overlap across fast progress',w.__viol===0);

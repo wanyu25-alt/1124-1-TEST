@@ -36,8 +36,8 @@ const tryStart=(p,st)=>p.evaluate(st=>{UI.mode='quiet';FL.open(st);const sum=(do
   T('B5 教師明確停用的詞彙仍停用',after.off&&!after.in5,after);T('B6 教師明確退回待審的圖片仍不出現',after.pend==='pending'&&!after.img2,after);
   T('B7 練習範圍已改為存在的分類（16 個正式主題）',after.live&&after.th===16,after);
   /* 選「全部」詞彙數量 */
-  const all=await c.p.evaluate(()=>{UI.mode='quiet';FL.open(1);FL.setW('all');const t=(document.getElementById('fl_sum')||{}).innerText||'';return{t,dis:!!(document.querySelector('.fgob')||{}).disabled}});
-  T('B8 練習數量選「全部」可以開始（950 有圖－1 停用－1 退回待審＝948）',!all.dis&&/948 個不同的詞彙/.test(all.t),all);
+  const all=await c.p.evaluate(()=>{UI.mode='quiet';FL.open(1);FL.setW('all');const t=(document.getElementById('fl_sum')||{}).innerText||'';return{t,n:FL.cur().chk.n,w:MAT.want(FL.cur().chk.n).k,dis:!!(document.querySelector('.fgob')||{}).disabled}});
+  T('B8 練習數量選「全部」可以開始（950 有圖－1 停用－1 退回待審＝948）',!all.dis&&all.n===948&&all.w===948,all);
   await c.ctx.close()}
  /* C：使用者自己取消全選 → 說明要選分類（不是誤導成缺圖） */
  {const c=await fresh(b);const r=await c.p.evaluate(()=>{UI.mode='quiet';FL.open(1);FL.setRange('pick');FL.selNone('theme');const x=FL.chk(FL.ladder(1,'quiet')[0],'pick','sel');return x});

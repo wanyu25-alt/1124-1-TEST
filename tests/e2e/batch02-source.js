@@ -19,7 +19,7 @@ const addCustom=p=>p.evaluate(async()=>{S.cats.push({id:'cuA',name:'老師的教
   const a=await poolOrg(c.p,'all'),r=await poolOrg(c.p,'rec');T('A2 全部／系統推薦題庫只有正式詞彙（950 有圖）',a.n===950&&a.leg===0&&r.lib===r.n&&r.leg===0,{a,r});
   const g=await start(c.p,1);T('A3 第1站實際出題全部是正式詞彙',g.on&&g.lib===g.n&&g.n>0,g);
   T('A4 教師後臺「教材來源管理」三種來源都列出',/教材來源管理/.test(s.html)&&/正式內建教材/.test(s.html)&&/舊版內建教材/.test(s.html)&&/教師自訂教材/.test(s.html),null);
-  T('A5 程式版本不再寫死（教材版本面板、完整性檢查都顯示 v22.3）',s.ver==='v22.3'&&/程式版本 v22\.3/.test(s.html)&&/（程式 v22\.3）/.test(s.html)&&!/v20\.0）/.test(s.html),s.html.match(/程式版本 [^）]*/));
+  T('A5 程式版本不再寫死（教材版本面板、完整性檢查都顯示目前版本 '+s.ver+'）',/^v22\.\d+$/.test(s.ver)&&+s.ver.split('.')[1]>=3&&s.html.includes('程式版本 '+s.ver)&&s.html.includes('（程式 '+s.ver+'）')&&!/v20\.0）/.test(s.html),s.html.match(/程式版本 [^）]*/));
   T('A6 沒有頁面錯誤',c.errs.length===0,c.errs);await c.ctx.close()}
  /* B：啟用／停用舊版內建教材；停用不刪除 */
  {const c=await fresh(b);const before=await c.p.evaluate(()=>({cards:S.cards.length,leg:S.cards.filter(x=>(S.packIds||[]).includes(x.id)).length,cats:S.cats.length}));
