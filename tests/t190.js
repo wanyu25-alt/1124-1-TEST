@@ -1,3 +1,4 @@
+process.env.LIBMODE='optin';/* v22.0：本測試驗證保留的「逐詞啟用」舊模式（相容路徑）；v22 新行為見 t283 */
 // 第06階段：預設詞彙清單、無圖詞彙清單與 CSV（jsdom；用暫存的 vocab 目錄模擬網站）
 const fs=require('fs');process.env.VDIR=require('child_process').execSync('bash '+__dirname+'/../tools/make-legacy-vocab.sh').toString().trim();const {mk,R,T,sleep}=require('./t30h.js');
 const VD=process.env.VDIR+'/vocab',DEF=VD+'/default-library.json',V=JSON.parse(fs.readFileSync(process.env.VDIR+'/vocab/vocabulary.json','utf8'));

@@ -41,7 +41,7 @@ await pg.setViewportSize({width:820,height:1000});
 await pg.waitForFunction(()=>typeof LIB!=='undefined'&&(!LIB.loading)&&LIB.base&&S.cards.length>=900,null,{timeout:40000}).catch(()=>{});await pg.waitForTimeout(1500);
 const snap=await pg.evaluate(()=>JSON.stringify({c:S.cards.filter(c=>!c.lib).length,r:S.recs.length,l:LRN.id()}));
 await pg.evaluate(()=>save());await pg.waitForTimeout(500);await pg.reload();await pg.waitForFunction(()=>typeof P17!=='undefined'&&S&&S.cards&&S.cards.length>=1,null,{timeout:40000});await pg.waitForFunction(()=>typeof LIB!=='undefined'&&!LIB.loading&&LIB.base,null,{timeout:40000}).catch(()=>{});await pg.waitForTimeout(2500);
-const aft=await pg.evaluate(()=>JSON.stringify({c:S.cards.filter(c=>!c.lib).length,r:S.recs.length,l:LRN.id()}));T('重新整理後自訂卡片數、紀錄數、目前個案不變',aft===snap,{snap,aft});T('重新整理後內建詞彙自動回到 950 張',await pg.evaluate(()=>S.cards.filter(c=>c.lib).length)===950);
+const aft=await pg.evaluate(()=>JSON.stringify({c:S.cards.filter(c=>!c.lib).length,r:S.recs.length,l:LRN.id()}));T('重新整理後自訂卡片數、紀錄數、目前個案不變',aft===snap,{snap,aft});T('重新整理後內建詞彙自動回到 1000 個（950 有圖）',await pg.evaluate(()=>S.cards.filter(c=>c.lib).length)===1000/*v22.0：正式 1000 詞一律載入（含 50 個尚無圖片）*/);
 // 中途離開再回來：不應留下進行中狀態
 await pg.evaluate(()=>{UI.pick('quiet');FL.open(1);FL.go()});await pg.waitForTimeout(500);await pg.evaluate(()=>{try{leave()}catch(e){}});await pg.waitForTimeout(300);
 T('中途離開後回到可用首頁（不在遊戲中、沒殘留 ig）',await pg.evaluate(()=>!G.on&&!document.body.classList.contains('ig')&&!!document.querySelector('#app,body')));

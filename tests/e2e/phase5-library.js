@@ -3,7 +3,7 @@ const {chromium}=require('playwright');let P=0,F=0;const T=(n,c,x)=>{c?P++:F++;c
 const fs=require('fs');
 (async()=>{const b=await chromium.launch();const ctx=await b.newContext({viewport:{width:1100,height:900}});const p=await ctx.newPage();const errs=[],imgReq=[],badRes=[];
 p.on('pageerror',e=>errs.push(e.message));p.on('request',r=>{if(/\/vocab\/images\//.test(r.url()))imgReq.push(r.url())});p.on('response',r=>{if(r.status()>=400&&!/favicon/.test(r.url()))badRes.push(r.status()+' '+r.url())});
-await p.goto('http://localhost:'+(process.env.E2E_PORT||8124)+'/1124-1-TEST/');await p.waitForFunction(()=>typeof LIB!=='undefined'&&S&&S.cards,null,{timeout:40000});await p.waitForTimeout(1200);
+await p.goto('http://localhost:'+(process.env.E2E_PORT||8124)+'/1124-1-TEST/?libmode=optin');await p.waitForFunction(()=>typeof LIB!=='undefined'&&S&&S.cards,null,{timeout:40000});await p.waitForTimeout(1200);
 await p.evaluate(()=>{window.confirm=()=>true;window.alert=m=>{window.__al=m};S.set.music=false;S.set.sound=false;V2.prepDone=true;S.set.ap=false;S.set.anim=false;save()});
 const before=await p.evaluate(()=>({cards:S.cards.length,cats:S.cats.length}));
 T('開啟網站時不會下載任何詞彙庫圖片（沒有啟用就不載入）',imgReq.length===0,imgReq.length);

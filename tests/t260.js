@@ -1,3 +1,4 @@
+process.env.LIBMODE='optin';/* v22.0：本測試驗證保留的「逐詞啟用」舊模式（相容路徑）；v22 新行為見 t283 */
 // v19.0：V077 詞彙 1000 / 16 分類 / 20 Level 匯入與練習範圍（jsdom；讀取 vocab/ 實際檔案）
 const fs=require('fs'),path=require('path');const {mk,T,sleep}=require('./t30h.js');
 const VD=path.join(process.env.VDIR||'/home/claude/repo','vocab');

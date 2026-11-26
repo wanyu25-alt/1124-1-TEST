@@ -40,7 +40,7 @@ const mk=()=>new JSDOM(html,{url:'http://localhost/?noseed',runScripts:'dangerou
  // game from category & all
  E('S.set.src="c:fr";S.set.n=4;S.set.mode="key";S.set.sound=false;S.set.music=false;RC.ui.classic=true;home();startRound()');T('game from 水果 only uses fruit',E('G.q.every(c=>["蘋果","香蕉"].includes(c.text))'));E('RC.ui.classic=true;leave()');
  E('S.set.src="all";RC.ui.classic=true;home();startRound()');T('全部圖卡 pool = 6 unique',E('pool().length')===6);E('RC.ui.classic=true;leave()');
- E('UI.pick("quiet");FL.open(1);FL.setRange("pick");FL.setDim("theme")');T('v21.0 setup lists 水果 with word count (multi-select)',/水果[\s\S]{0,40}2 個詞彙/.test(E('document.querySelector("#mid").innerHTML')));
+ E('UI.pick("quiet");FL.open(1);FL.setRange("pick");FL.setDim("custom")');T('v21.0 setup lists 水果 with word count (multi-select)',/水果[\s\S]{0,40}2 個詞彙/.test(E('document.querySelector("#mid").innerHTML')));
  // settings page has no vocab management
  E('tab(2);sub="set";tch()');T('settings has no card selection/bank/category management',!sp().textContent.includes('加入分類')&&!sp().textContent.includes('詞彙庫')&&sp().textContent.includes('每關題目數量'));
  // zip roundtrip keeps checkbox states

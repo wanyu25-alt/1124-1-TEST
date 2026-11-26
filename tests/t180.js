@@ -1,3 +1,4 @@
+process.env.LIBMODE='optin';/* v22.0：本測試驗證保留的「逐詞啟用」舊模式（相容路徑）；v22 新行為見 t283 */
 // 第05階段：內建詞彙庫整合（jsdom；讀取 vocab/ 實際檔案）
 const fs=require('fs'),path=require('path');const {mk,R,T,sleep}=require('./t30h.js');
 process.env.VDIR=process.env.VDIR||require('child_process').execSync('bash '+__dirname+'/../tools/make-legacy-vocab.sh').toString().trim();

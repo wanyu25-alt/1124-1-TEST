@@ -9,7 +9,7 @@ const mk=(red)=>new JSDOM(html,{url:'http://localhost/?noseed',runScripts:'dange
  T('home: five vehicle cards in order 腳踏車→汽車→火車→高鐵→飛機',cards.length===5&&['腳踏車','汽車','火車','高鐵','飛機'].every((n,i)=>cards[i].includes(n)));
  T('setup shows the auto-assigned vehicle (no manual vehicle select)',!d.querySelector('#fl_veh')&&/交通工具[\s\S]*由難度自動安排/.test(d.querySelector('#mid').textContent));
  const mid=d.querySelector('#mid').textContent;T('no separate 旅程 / mode buttons / 開始旅程 on home',!mid.includes('旅程')&&!mid.includes('開始旅程')&&!/🧩|👂/.test(d.querySelector('#mid').innerHTML.replace(/<svg.*?<\/svg>/gs,'')));
- E('UI.pick("quiet");FL.open(1)');E('FL.setRange("pick");FL.setDim("theme")');T('v21.0 category multi-select in setup (checkbox, counts)',!!d.querySelector('#mid input[type=checkbox]')&&/水果[\s\S]{0,40}2 個詞彙/.test(d.querySelector('#mid').textContent));E('UI.view="mode";UI.mode="integ";home()');
+ E('UI.pick("quiet");FL.open(1)');E('FL.setRange("pick");FL.setDim("custom")');T('v21.0 category multi-select in setup (checkbox, counts)',!!d.querySelector('#mid input[type=checkbox]')&&/水果[\s\S]{0,40}2 個詞彙/.test(d.querySelector('#mid').textContent));E('UI.view="mode";UI.mode="integ";home()');
  // each vehicle → mode
  const cfg=[['bike','key'],['car','listen'],['train','spell'],['hsr','speak']];
  for(const [k,m] of cfg){E(`S.set.src='all';goV('${k}')`);await sleep(150);

@@ -22,7 +22,7 @@ T('切到主題後，Level 的選擇不混入（維度分開）',await pg.evalua
 await pg.locator('#mid .flcl input[type=checkbox]').nth(0).check();await pg.waitForTimeout(250);
 await pg.getByRole('button',{name:'10 個'}).click();await pg.waitForTimeout(250);
 T('本次學習任務摘要：難度、範圍、本次練習 10 個不同詞彙、交通工具自動',/本次學習任務/.test(await txt())&&/10 個不同的詞彙/.test(await txt())&&/由難度自動安排/.test(await txt()));
-await pg.getByRole('button',{name:'自訂'}).click();await pg.waitForTimeout(250);
+await pg.getByRole('button',{name:'自訂',exact:true}).click();await pg.waitForTimeout(250);
 await pg.locator('#mid input[type=number]').fill('99999');await pg.waitForTimeout(300);
 T('自訂超過可用量：顯示「最多只能練習」並停用開始',/最多只能練習 \d+ 個詞彙/.test(await txt())&&await pg.locator('#fl_go').isDisabled());
 await pg.locator('#mid input[type=number]').fill('2.5');await pg.waitForTimeout(200);

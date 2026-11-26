@@ -1,3 +1,4 @@
+process.env.LIBMODE='optin';/* v22.0：本測試驗證保留的「逐詞啟用」舊模式（相容路徑）；v22 新行為見 t283 */
 // v20.0：學習分析介面（jsdom：畫面內容、篩選、展開、從分析建立練習範圍）
 const {mk,T,sleep}=require('./t30h.js');
 (async()=>{

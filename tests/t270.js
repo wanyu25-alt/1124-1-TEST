@@ -1,3 +1,4 @@
+process.env.LIBMODE='optin';/* v22.0：本測試驗證保留的「逐詞啟用」舊模式（相容路徑）；v22 新行為見 t283 */
 // v20.0：學習分析 LA 計算（三階段熟悉度、指標分母、範圍、複習推薦、舊紀錄、無 NaN）
 const fs=require('fs'),path=require('path');const {mk,T,sleep}=require('./t30h.js');
 const J=(E,c)=>JSON.parse(E('JSON.stringify('+c+')'));

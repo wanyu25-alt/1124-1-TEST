@@ -5,7 +5,7 @@
 const {chromium}=require('playwright');const fs=require('fs');const cp=require('child_process');let P=0,F=0;const T=(n,c,x)=>{c?P++:F++;console.log(c?'PASS':'FAIL',n,c?'':JSON.stringify(x))};
 const PNG='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',AUD='data:audio/mp4;base64,AAAAGGZ0eXBtcDQyAAAAAG1wNDJpc29t';
 (async()=>{const b=await chromium.launch();const A=await (await b.newContext({viewport:{width:1100,height:900},acceptDownloads:true})).newPage();const errs=[];A.on('pageerror',e=>errs.push('A:'+e.message));
-await A.goto('http://localhost:'+(process.env.E2E_PORT||8124)+'/1124-1-TEST/');await A.waitForFunction(()=>typeof LIB!=='undefined'&&S&&S.cards&&S.cards.length>=18&&LIB.base,null,{timeout:40000});await A.waitForTimeout(1200);
+await A.goto('http://localhost:'+(process.env.E2E_PORT||8124)+'/1124-1-TEST/?libmode=optin');await A.waitForFunction(()=>typeof LIB!=='undefined'&&S&&S.cards&&S.cards.length>=18&&LIB.base,null,{timeout:40000});await A.waitForTimeout(1200);
 await A.evaluate(([png,aud])=>{window.confirm=()=>true;window.alert=m=>{window.__al=m};S.cards.push({id:'mycard1',text:'我的自訂',zy:'ㄨㄛˇ ㄉㄜ˙ ㄗˋ ㄧㄥˇ',img:png,audio:aud,cats:[],created:1,modified:1});
  const ids=LIB.base.filter(w=>w.categoryId==='CAT05'&&w.images.length===1).slice(0,3).map(w=>w.id);LIB.setEn(ids,true);LIB.setRv(ids,'approved');LIB.setZy(ids[0],'ㄅㄅ ㄆㄆ');save();window.__ids=ids},[PNG,AUD]);
 const base=await A.evaluate(()=>S.cards.filter(c=>!c.lib).length);
@@ -26,7 +26,7 @@ fs.copyFileSync('/tmp/e2e-default.json','/tmp/site2/vocab/default-library.json')
 const srv=cp.spawn('node',['sv4.mjs','/tmp/site2','8125'],{cwd:'/tmp/e2e',stdio:'ignore'});await new Promise(r=>setTimeout(r,1200));
 // B 裝置：全新瀏覽器
 const Bc=await b.newContext({viewport:{width:900,height:900}});const B=await Bc.newPage();B.on('pageerror',e=>errs.push('B:'+e.message));
-await B.goto('http://localhost:8125/1124-1-TEST/');await B.waitForFunction(()=>typeof LIB!=='undefined'&&S&&S.cards&&S.cards.some(c=>c.id==='mycard1')&&S.cards.some(c=>c.lib),null,{timeout:40000});await B.waitForTimeout(800);
+await B.goto('http://localhost:8125/1124-1-TEST/?libmode=optin');await B.waitForFunction(()=>typeof LIB!=='undefined'&&S&&S.cards&&S.cards.some(c=>c.id==='mycard1')&&S.cards.some(c=>c.lib),null,{timeout:40000});await B.waitForTimeout(800);
 const r=await B.evaluate(()=>{const c=byId('mycard1');return{n:S.cards.filter(x=>!x.lib).length,lib:S.cards.filter(x=>x.lib).length,img:!!(c.img&&c.img.startsWith('data:image/')),aud:!!(c.audio&&c.audio.startsWith('data:audio/')),zy:c.zy,zyEdit:byId(__ids0()).zy,state:LIB.defInfo.state,imgs:S.cards.filter(x=>x.lib).every(x=>x.img.startsWith('vocab/images/'))};function __ids0(){return S.cards.find(x=>x.lib&&x.zy==='ㄅㄅ ㄆㄆ')?S.cards.find(x=>x.lib&&x.zy==='ㄅㄅ ㄆㄆ').id:S.cards.find(x=>x.lib).id}});
 T('B 裝置：自訂圖卡（圖片、錄音、注音）自動出現，原本 18 張也在',r.n===base&&r.img&&r.aud&&r.zy==='ㄨㄛˇ ㄉㄜ˙ ㄗˋ ㄧㄥˇ',r);
 T('B 裝置：預設詞彙清單自動套用（3 個詞彙、審核與注音修改帶過來、圖片是網站圖）',r.lib===3&&r.state==='applied'&&r.zyEdit==='ㄅㄅ ㄆㄆ'&&r.imgs,r);

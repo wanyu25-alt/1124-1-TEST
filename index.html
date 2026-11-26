@@ -1098,7 +1098,7 @@ async function ioExport(kind){const full=kind==='full',files=[],warn=[],j=(n,o)=
   j('records.json',{schemaVersion:1,logs:S.logs,quits:S.quits,rounds:S.rounds});
   j('progress.json',{schemaVersion:1,rw:S.rw,mst:S.mst,mflag:MF()});
   LRN.sync();{const data={};S.lrn.list.forEach(p=>{data[p.id]=p.id===S.lrn.cur?LRN.slice():(S.lrn.store[p.id]||perDef())});j('learners.json',{schemaVersion:1,dataVersion:DV,cur:S.lrn.cur,list:S.lrn.list,data,mig:S.mig,note:'各個案的星星、紀錄與作答紀錄彼此獨立'})}}
- const man={format:'詞彙特快車',schemaVersion:1,dataVersion:DV,kind:full?'full':'materials',exportedAt:new Date().toISOString(),appVersion:'詞彙特快車 v3',build:'v21.0',
+ const man={format:'詞彙特快車',schemaVersion:1,dataVersion:DV,kind:full?'full':'materials',exportedAt:new Date().toISOString(),appVersion:'詞彙特快車 v3',build:'v22.0',
   counts:{cards:cards.length,libraryWords:S.cards.filter(c=>c.lib).length,categories:S.cats.filter(c=>!c.lib).length,images:nImg,audio:nAud,logs:full?S.logs.length:0,settings:Object.keys(portableSet(S.set)).length,learners:full?S.lrn.list.length:0,records:full?S.lrn.list.reduce((n,p)=>n+(p.id===S.lrn.cur?S.recs.length:((S.lrn.store[p.id]||{}).recs||[]).length),0):0,observations:full?(S.ob||[]).length:0,combos:(S.cb||[]).length,sentences:(S.se||[]).length,scenes:(S.sc||[]).length},
   files:Object.fromEntries(files.map(f=>[f.name,{size:f.data.length,crc32:crc32(f.data),...(/\.json$/.test(f.name)?{sha256:SHA.hex(SHA.hash(f.data))}:{})}]))};
  files.unshift({name:'manifest.json',data:U8(JSON.stringify(man,null,1))});
@@ -4803,7 +4803,10 @@ DSH.v.vp=()=>{
 /*P12-BEGIN 第05階段：內建詞彙庫整合（詞彙數、分類數、圖片數一律讀自 vocab/ 資料，不寫死）。靜態資料放在 vocab/，教師資料另存於 S.lib，不放進 HTML、不用 Base64 */
 const LIB={base:null,cats:null,man:null,err:'',loading:null,ui:{q:'',cat:'',img:'',rv:'',en:'',zy:'',pg:0,sel:{},w:null,rvPg:0},
  DIR:'vocab/',
- st(){const s=S.lib||(S.lib={});if(!s.en)s.en={};if(!s.ov)s.ov={};if(!s.cm)s.cm={};if(!s.log)s.log=[];if(!s.ver)s.ver='1.0';return s},
+ st(){const s=S.lib||(S.lib={});if(!s.en)s.en={};if(!s.ov)s.ov={};if(!s.cm)s.cm={};if(!s.off)s.off={};if(!s.log)s.log=[];if(!s.ver)s.ver='1.0';return s},
+ /* v22.0：正式內建詞彙一律載入（v22 旗標），只有教師明確停用（off）的才排除；舊模式（未遷移）維持 en 白名單 */
+ on(id){const s=LIB.st();return s.v22?!s.off[id]:!!s.en[id]},
+ ids(){const s=LIB.st();return s.v22?(LIB.base||[]).map(w=>w.id).filter(id=>!s.off[id]):Object.keys(s.en).filter(id=>s.en[id])},
  /* ---- 載入靜態資料（失敗要明確回報，不假裝成功）---- */
  async load(force){if(LIB.base&&!force)return true;if(LIB.loading&&!force)return LIB.loading;
   return LIB.loading=(async()=>{try{const g=async n=>{const r=await fetch(LIB.DIR+n,{cache:'no-cache'});if(!r.ok)throw new Error(n+' HTTP '+r.status);return r.json()};
@@ -4828,7 +4831,7 @@ const LIB={base:null,cats:null,man:null,err:'',loading:null,ui:{q:'',cat:'',img:
   imgs=[...(b.images||[]).filter(p=>!hide.includes(p)),...(o.add||[]).map(a=>a.d)],
   prim=o.primary&&imgs.includes(o.primary)?o.primary:(b.primaryImage&&imgs.includes(b.primaryImage)?b.primaryImage:imgs[0]||'');
   return{id,text:b.word,zy:o.zy!=null?o.zy:b.zhuyin,zyOrig:b.zhuyin,catId:b.categoryId,cat:b.category,lvId:b.levelId||'',lvRank:b.levelRank||0,imgs,prim,
-   rv:o.rv||(b.reviewStatus==='approved'?'approved':'pending'),zyRev:o.zyRev||(b.pronunciationReview==='reviewed'?'ok':'pending'),extraCats:o.cats||[],en:!!LIB.st().en[id],ov:o}},
+   rv:o.rv||(LIB.defRv&&LIB.defRv[id])||(b.reviewStatus==='approved'?'approved':'pending'),zyRev:o.zyRev||(b.pronunciationReview==='reviewed'?'ok':'pending'),extraCats:o.cats||[],en:LIB.on(id),ov:o}},
  /* ---- 分類：由 categories.json 建立，不寫死；同名既有分類就合併 ---- */
  catSync(){const s=LIB.st();if(!LIB.cats)return;
   LIB.cats.forEach(k=>{if(s.cm[k.id]&&S.cats.some(c=>c.id===s.cm[k.id]))return;
@@ -4847,15 +4850,15 @@ const LIB={base:null,cats:null,man:null,err:'',loading:null,ui:{q:'',cat:'',img:
  sync(){const s=LIB.st();if(!LIB.base)return 0;LIB.catSync();let n=0;
   /* 保存要被拿掉的詞彙錄音，之後再啟用能還原 */
   S.cards.forEach(c=>{if(c.lib&&c.audio){(s.ov[c.id]=s.ov[c.id]||{}).audio=c.audio}});
-  S.cards=S.cards.filter(c=>!c.lib||s.en[c.id]);
-  Object.keys(s.en).forEach(id=>{if(!s.en[id])return;const w=LIB.eff(id);if(!w){return}const nc=LIB.card(w),i=S.cards.findIndex(c=>c.id===id);
+  S.cards=S.cards.filter(c=>!c.lib||LIB.on(c.id));
+  LIB.ids().forEach(id=>{const w=LIB.eff(id);if(!w){return}const nc=LIB.card(w),i=S.cards.findIndex(c=>c.id===id);
    if(i<0){if(S.cards.some(c=>c.id===id&&!c.lib))return;S.cards.push(nc);n++}
    else{const o=S.cards[i];S.cards[i]={...nc,audio:o.audio||nc.audio,created:o.created||nc.created,cats:[...new Set([...nc.cats,...(o.cats||[]).filter(x=>S.cats.some(k=>k.id===x)&&!LIB.isLibCat(x))])],img:nc.img}}});
   LIB.catSync();S.cats.forEach(c=>{if(c.lib){c.order=(c.order||[]).filter(x=>S.cards.some(k=>k.id===x))}});
   S.cards.forEach(c=>{c.cats=(c.cats||[]).filter(x=>S.cats.some(k=>k.id===x))});if(/^c:/.test(S.set.src||'')&&!S.cats.some(c=>'c:'+c.id===S.set.src))S.set.src='all';return n},
  isLibCat:id=>String(id).startsWith('LIB-'),
  /* ---- 啟用／停用 ---- */
- setEn(ids,on){const s=LIB.st();let n=0;ids.forEach(id=>{if(!LIB.idx.has(id))return;if(on&&!s.en[id]){s.en[id]=1;n++}else if(!on&&s.en[id]){delete s.en[id];n++}});LIB.sync();LIB.log((on?'啟用 ':'停用 ')+n+' 個詞彙');save();return n},
+ setEn(ids,on){const s=LIB.st();let n=0;ids.forEach(id=>{if(!LIB.idx.has(id))return;const cur=LIB.on(id);if(on&&!cur){s.en[id]=1;delete s.off[id];n++}else if(!on&&cur){delete s.en[id];s.off[id]=1;n++}});LIB.sync();LIB.log((on?'啟用 ':'停用 ')+n+' 個詞彙');save();return n},
  log(t){const s=LIB.st();s.log.push({ts:Date.now(),t});if(s.log.length>200)s.log=s.log.slice(-200)},
  /* ---- 多圖：固定／輪流／隨機；只在「新題目開始時」選圖，同一題不換圖 ---- */
  ext(){const e=LRN.cur();e.ext=e.ext||{};e.ext.lib=e.ext.lib||{mode:'random',rot:{},use:{}};return e.ext.lib},
@@ -4901,7 +4904,7 @@ const LIB={base:null,cats:null,man:null,err:'',loading:null,ui:{q:'',cat:'',img:
  addToCat(ids,cid){const s=LIB.st();ids.forEach(id=>{const o=s.ov[id]=s.ov[id]||{};o.cats=[...new Set([...(o.cats||[]),cid])]});LIB.log('加入分類 '+ids.length+' 個詞彙');LIB.sync();save()},
  /* 每位學生的詞彙範圍：libSel＝null 表示「所有已啟用的內建詞彙」*/
  sel(){const e=LRN.cur();e.ext=e.ext||{};return e.ext.libSel||null},
- setSel(ids,on){const e=LRN.cur();e.ext=e.ext||{};let a=e.ext.libSel;if(!a){if(on)return 0;a=Object.keys(LIB.st().en)}const h=new Set(a);ids.forEach(id=>on?h.add(id):h.delete(id));e.ext.libSel=[...h];LIB.log('個別學生詞彙範圍：'+(on?'加入 ':'移出 ')+ids.length);save();return ids.length},
+ setSel(ids,on){const e=LRN.cur();e.ext=e.ext||{};let a=e.ext.libSel;if(!a){if(on)return 0;a=LIB.ids()}const h=new Set(a);ids.forEach(id=>on?h.add(id):h.delete(id));e.ext.libSel=[...h];LIB.log('個別學生詞彙範圍：'+(on?'加入 ':'移出 ')+ids.length);save();return ids.length},
  clearSel(){const e=LRN.cur();e.ext=e.ext||{};delete e.ext.libSel;save()},
  /* ---- 更新：依原始 ID 比對，先預覽、確認後才套用；任何錯誤都不動現有資料 ---- */
  diff(nv,nc){const rep=LIB.check(nv,nc);if(rep.fatal)return{error:rep.fatal};if(rep.dupId.length||rep.badRec.length||rep.badPath.length)return{error:'新資料有錯誤：重複 ID '+rep.dupId.length+'、格式錯誤 '+rep.badRec.length+'、圖片路徑錯誤 '+rep.badPath.length+'。已停止，現有教材沒有被改動。',rep};
@@ -4928,10 +4931,10 @@ const LIB={base:null,cats:null,man:null,err:'',loading:null,ui:{q:'',cat:'',img:
    await LIB.load();const d=LIB.diff(nv,LIB.cats);LIB.pend={nv,d};if(d.error){if(msg)msg.innerHTML='<b style="color:#b8322b">'+esc(d.error)+'</b>';return}LIB.re()}catch(e){if(msg)msg.innerHTML='<b style="color:#b8322b">讀取失敗：'+esc(e.message||e)+'。現有教材沒有改動。</b>'}},
  doUpd(){const p=LIB.pend;if(!p||p.d.error)return;const opt={zy:{}};p.d.zy.forEach((x,i)=>{const e=document.getElementById('lib_zy'+i);opt.zy[x.id]=!!(e&&e.checked)});const r=LIB.applyUpd(p.nv,null,p.d,opt);LIB.done=r.error?{error:r.error}:{sum:{newW:p.d.newW.length,upd:p.d.zy.length+p.d.img.length+p.d.cat.length,img:p.d.img.reduce((a,x)=>a+x.add.length,0),dup:p.d.dupImg,err:0}};LIB.pend=null;LIB.re()},
  /* ---- 匯出入（內建詞彙庫的教師資料）---- */
- expo(){const s=LIB.st();S.cards.forEach(c=>{if(c.lib&&c.audio)(s.ov[c.id]=s.ov[c.id]||{}).audio=c.audio});return{schemaVersion:1,kind:'library',ver:s.ver,en:s.en,ov:s.ov,cm:s.cm,upd:s.upd||null,merged:s.merged||null}},
+ expo(){const s=LIB.st();S.cards.forEach(c=>{if(c.lib&&c.audio)(s.ov[c.id]=s.ov[c.id]||{}).audio=c.audio});return{schemaVersion:1,kind:'library',ver:s.ver,en:s.en,off:s.off||{},v22:s.v22||0,ov:s.ov,cm:s.cm,upd:s.upd||null,merged:s.merged||null}},
  impo(o,mode){if(!o||typeof o!=='object'||!o.en||typeof o.en!=='object')return 0;const s=LIB.st();const okId=k=>typeof k==='string'&&/^[\w-]{1,40}$/.test(k);let n=0;
   if(mode==='full'){s.en={};s.ov={}}
-  Object.keys(o.en).forEach(k=>{if(okId(k)&&!s.en[k]){s.en[k]=1;n++}});
+  Object.keys(o.en).forEach(k=>{if(okId(k)&&!s.en[k]){s.en[k]=1;n++}});if(o.off&&typeof o.off==='object'){if(mode==='full')s.off={};Object.keys(o.off).forEach(k=>{if(okId(k))s.off[k]=1})}
   Object.entries(o.ov||{}).forEach(([k,v])=>{if(okId(k)&&v&&typeof v==='object'&&(mode==='full'||!s.ov[k])){const x={};['zy','zyRev','rv','primary','audio','created'].forEach(f=>{if(typeof v[f]==='string'||typeof v[f]==='number')x[f]=v[f]});if(Array.isArray(v.hide))x.hide=v.hide.filter(p=>typeof p==='string');if(Array.isArray(v.cats))x.cats=v.cats.filter(p=>typeof p==='string');if(Array.isArray(v.add))x.add=v.add.filter(a=>a&&typeof a.d==='string'&&a.d.startsWith('data:image/'));s.ov[k]=x}});
   if(o.upd&&Array.isArray(o.upd.v)&&Array.isArray(o.upd.c)&&!s.upd)s.upd=o.upd;if(o.cm&&typeof o.cm==='object'&&mode==='full')s.cm={...o.cm};return n},
  dl(){const b=new Blob([JSON.stringify(LIB.expo(),null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='詞彙特快車_詞彙庫設定_'+ymd()+'.json';document.body.appendChild(a);a.click();a.remove()},
@@ -5593,7 +5596,7 @@ LA.evOf=(wid,f)=>{const a=(LA.idx().byW[wid]||[]),c=LA.cut(f&&f.days),cp=f&&f.ca
  const seen=new Set();return a.filter(e=>(!c||e.ts>=c)&&(!f||!f.st||e.st===+f.st)&&(!cp||cp.ab.includes(e.ab))&&!seen.has(e.rid)&&seen.add(e.rid))};  /* 一次作答只算一次（同一次作答可能同時對應多項能力） */
 /* ---------- 詞彙範圍：主題（LIB.cats＋教師自訂分類）、Level（LIB.lvs；日後新增 Level 自動納入） ---------- */
 LA.words=()=>{const out=[],seen=new Set(),on=id=>S.cards.some(c=>c.id===id&&!c.part);
- if(typeof LIB!=='undefined'&&LIB.base)LIB.base.forEach(b=>{seen.add(b.id);out.push({id:b.id,text:b.word,zy:b.zhuyin,cat:b.categoryId,lv:b.levelId||'',hasImg:(b.images||[]).length>0,on:on(b.id),lib:1,cats:[]})});
+ if(typeof LIB!=='undefined'&&LIB.base)LIB.base.forEach(b=>{seen.add(b.id);{const cd=S.cards.find(c=>c.id===b.id&&!c.part),hi=(b.images||[]).length>0||!!(cd&&(cd.img||(cd.imgs||[]).length));out.push({id:b.id,text:b.word,zy:b.zhuyin,cat:b.categoryId,lv:b.levelId||'',hasImg:hi,on:!!cd&&hi,lib:1,cats:[]})}});
  S.cards.forEach(c=>{if(c.part||seen.has(c.id))return;out.push({id:c.id,text:c.text,zy:c.zy||'',cat:'',lv:'',hasImg:!!c.img,on:true,lib:0,cats:(c.cats||[])})});
  return out};
 LA.groups=kind=>{const W=LA.words(),g=[];
@@ -5837,6 +5840,99 @@ FL.setRange=k=>{const m=FL.mem();m.range=k;if(k==='pick'){FL.migDim()}save();hom
 {const _h=home;home=function(){if(MAT.pend&&!(G&&G.on)){MAT.pend=0;MAT.refresh()}return _h.apply(this,arguments)}}
 MAT.listen();
 /*P20-END*/
+/*P22-BEGIN v22.0 正式內建教材＋本機自訂教材並存（教材來源辨識、完整性檢查、舊版分類整理） */
+/* ---- 正式教材一律載入的遷移（不清除任何本機資料；先備份）---- */
+LIB.v22Boot=async()=>{if(!LIB.base)return;const s=LIB.st();let c=null;try{c=await LIB.defFetch()}catch(e){}
+ if(c&&c.ov)LIB.defRv=Object.fromEntries(Object.entries(c.ov).filter(([k,v])=>v&&v.rv).map(([k,v])=>[k,v.rv]));
+ if(s.v22)return;if(/[?&]libmode=optin/.test(location.search))return;/* 測試／相容用：舊的「逐詞啟用」模式 */
+ const pre=JSON.parse(JSON.stringify({en:s.en,off:s.off,ov:s.ov,cm:s.cm,def:s.def||null}));try{await kvPut('lib-pre-v22',{ts:Date.now(),lib:pre})}catch(e){}
+ const n0=Object.keys(s.en).length;s.v22=1;s.v22at=Date.now();s.v22from=n0;s.off=s.off||{};
+ if(c){try{LIB.defApplyAll(c,true);s.def=LIB.defSnap(c)}catch(e){}}
+ LIB.log('v22.0：正式教材全部載入（原本啟用 '+n0+' 個，現在 '+LIB.ids().length+' 個）；本機自訂教材、學習紀錄沒有改動');await save()};
+{const _db=LIB.defBoot;LIB.defBoot=async function(){await LIB.v22Boot();if(LIB.base&&LIB.st().v22&&LIB.defInfo===undefined)LIB.defInfo={state:'same'};return _db.apply(this,arguments)}}
+/* ---- 教材來源辨識：builtin（正式內建）／legacy（舊版網站內建 materials/）／custom（教師自訂） ---- */
+MAT.origin=c=>c&&c.lib?'builtin':((MAT._pk||(MAT._pk=new Set(S.packIds||[]))).has(c&&c.id)?'legacy':'custom');
+{const _b=MAT.bump;MAT.bump=function(){_b.apply(this,arguments);MAT._pk=null}}
+MAT.dims=()=>{const k=[S.cards.length,S.cats.length,MAT.ver,S.cats.map(c=>c.id).join(',').length,(S.packCats||[]).length].join('|');if(MAT._d&&MAT._k===k)return MAT._d;
+ const by={};S.cards.forEach(c=>{if(c.part)return;(c.cats||[]).forEach(id=>{(by[id]=by[id]||[]).push(c)})});const pk=new Set(S.packCats||[]);
+ const mk=(c,org)=>{const a=by[c.id]||[],bw=a.filter(x=>x.lib).length;return{id:c.id,name:c.name,words:a.length,bw,lw:a.length-bw,imgs:a.reduce((s,x)=>s+MAT.imgN(x),0),withImg:a.filter(x=>x.img).length,noimg:a.filter(x=>!x.img).length,sort:c.sort||0,lib:c.lib?1:0,org:org||(c.lib?'builtin':pk.has(c.id)?'legacy':'custom')}};
+ const th=S.cats.filter(c=>c.lib&&!c.lvl).map(c=>mk(c)).sort((a,b)=>a.sort-b.sort),lv=S.cats.filter(c=>c.lvl).map(c=>mk(c)).sort((a,b)=>a.sort-b.sort),cu=S.cats.filter(c=>!c.lib).map(c=>mk(c)).sort((a,b)=>(a.org===b.org?0:a.org==='custom'?-1:1)||a.sort-b.sort);
+ const un=S.cards.filter(c=>!c.part&&!(c.cats||[]).some(id=>S.cats.some(k=>k.id===id)));
+ if(un.length)cu.push({id:'__none',name:'未分類（沒有放進任何分類的詞彙）',words:un.length,bw:un.filter(x=>x.lib).length,lw:un.filter(x=>!x.lib).length,imgs:un.reduce((s0,x)=>s0+MAT.imgN(x),0),withImg:un.filter(x=>x.img).length,noimg:un.filter(x=>!x.img).length,sort:9999,lib:0,org:'custom'});
+ MAT._k=k;return MAT._d={theme:th,level:lv,custom:cu}};
+MAT.sel=()=>{const m=FL.mem(),s=(SNAP.s&&SNAP.s.active&&SNAP.s.cats)||null;if(s)return s;const d=m.dim;return d==='theme'||d==='level'||d==='custom'?((m.sel||{})[d]||[]):[]};
+FL.migDim=()=>{const m=FL.mem(),c=m.cat||'all',cs=S.cats;m.sel=m.sel||{theme:[],level:[],custom:[]};m.sel.custom=m.sel.custom||[];if(c==='la'||c==='mk'||c==='wk'){m.dim='sp';m.sp=c;return}if(m.dim)return;
+ if(/^c:/.test(c)){const k=cs.find(x=>'c:'+x.id===c);if(k){m.dim=k.lvl?'level':k.lib?'theme':'custom';m.sel[m.dim]=[k.id];return}}
+ m.dim='theme';m.sel.theme=[...MAT.dims().theme.filter(x=>x.words>0).map(x=>x.id),...MAT.dims().custom.filter(x=>x.words>0).map(x=>x.id)]};
+FL.setCat=v=>{const m=FL.mem();m.range='pick';m.sel=m.sel||{theme:[],level:[],custom:[]};if(v==='la'||v==='mk'||v==='wk'){m.dim='sp';m.sp=v;m.cat=v}else if(/^c:/.test(v)){const k=S.cats.find(x=>'c:'+x.id===v);m.dim=k&&k.lvl?'level':k&&k.lib?'theme':'custom';m.sel[m.dim]=k?[k.id]:[];m.cat=v}else{m.dim='theme';m.sel.theme=MAT.dims().theme.map(x=>x.id);m.cat='all'}save();home()};
+FL.setDim=d=>{const m=FL.mem();m.range='pick';m.dim=d;m.sel=m.sel||{theme:[],level:[],custom:[]};m.sel[d]=m.sel[d]||[];m.cat=d==='sp'?(m.sp||'mk'):'sel';if(d==='sp'&&!m.sp)m.sp='mk';save();home()};
+FL.togCat=(d,id,on)=>{const m=FL.mem();m.sel=m.sel||{theme:[],level:[],custom:[]};const a=new Set(m.sel[d]||[]);on?a.add(id):a.delete(id);m.sel[d]=[...a];m.cat='sel';save();FL.part()};
+FL.selAll=d=>{const m=FL.mem();m.sel=m.sel||{theme:[],level:[],custom:[]};m.sel[d]=MAT.dims()[d].filter(x=>x.words>0).map(x=>x.id);m.cat='sel';save();home()};
+FL.catHtml=()=>{FL.migDim();const mm=FL.mem(),d=mm.dim||'theme',c0=FL.cur(),tabs=[['theme','主題分類'],['level','分級教材（Level）'],['custom','教師自訂教材'],['sp','錯題集／注音加強']].map(([k,t])=>`<button class="fn ${k===d?'on':''}" onclick="FL.setDim('${k}')" aria-pressed="${k===d}">${t}</button>`).join('');
+ const usable=id=>{if(!c0.cfg||id==='__none')return null;try{return FL.withSrc('c:'+id,()=>{const r=c0.cfg.ok();return r&&r.ok?(r.n==null?null:r.n):0})}catch(e){return null}};
+ let body='';
+ if(d==='sp'){const sp=MAT.special();body=sp.map(s=>`<label style="display:block;margin:4px 0"><input type="radio" name="flsp" ${mm.sp===s.k?'checked':''} onchange="FL.setSp('${s.k}')"> <b>${s.n}</b>（${s.w} 個詞彙）<small> ${esc(s.d)}（獨立於主題與 Level）</small></label>`).join('')}
+ else{const ds=MAT.dims()[d]||[],sel=new Set((mm.sel||{})[d]||[]);
+  body=ds.length?`<p><button class="btn alt sm" onclick="FL.selAll('${d}')">全部選取</button> <button class="btn alt sm" onclick="FL.selNone('${d}')">取消全選</button> <small id="fl_selc">${FL.selSum(d)}</small></p>
+  <div class="flcl" style="max-height:300px;overflow:auto;border:2px solid #cfd8e3;border-radius:10px;padding:6px">${ds.map(x=>{const u=usable(x.id);return`<label style="display:flex;gap:8px;align-items:center;padding:4px 2px;${x.words?'':'opacity:.55'}"><input type="checkbox" ${sel.has(x.id)?'checked':''} ${x.words?'':'disabled'} onchange="FL.togCat('${d}','${x.id}',this.checked)"> <span><b>${esc(x.name)}</b>${x.org==='legacy'?' <small style="color:#b8610b">［舊版內建教材・待確認］</small>':''}<br><small>${x.words} 個詞彙｜${x.imgs} 張圖片｜${x.withImg} 個有圖片｜${x.noimg} 個尚無圖片${u==null?'':'｜這個難度可用 '+u+' 個'}${d==='theme'&&x.lw?'｜正式 '+x.bw+'＋本機補充 '+x.lw:''}</small></span></label>`}).join('')}</div>`:'<p>'+(d==='custom'?'目前沒有教師自訂教材（到教師後臺新增分類後會出現在這裡）':'目前沒有此類教材（請稍候或到教師後臺檢查教材庫）')+'</p>'}
+ return`<div class="fseg">${tabs}</div>${body}`};
+{const _sh=FL.sumHtml;FL.sumHtml=function(){let h=_sh.apply(this,arguments);const m=FL.mem();if(m.dim==='custom')h=h.replace('分級教材（Level）：','教師自訂教材：').replace('主題分類：','教師自訂教材：');return h}}
+/* ---- 教材庫完整性檢查（數量全部由實際資料計算）---- */
+const INT={scanRes:null,busy:0,open:0};
+INT.report=()=>{const base=LIB.base||[],s=LIB.st(),cards=S.cards.filter(c=>!c.part),bset=new Set(base.map(w=>w.id));
+ const bc=cards.filter(c=>c.lib),lc=cards.filter(c=>!c.lib),leg=lc.filter(c=>MAT.origin(c)==='legacy'),cus=lc.filter(c=>MAT.origin(c)==='custom');
+ const fImgs=base.reduce((a,w)=>a+(w.images||[]).length,0),fWith=base.filter(w=>(w.images||[]).length).length;
+ const lImgs=lc.reduce((a,c)=>a+(c.img?1:0)+(c.imgs||[]).filter(x=>x&&x!==c.img&&/^data:/.test(x)).length,0)+Object.values(s.ov).reduce((a,o)=>a+((o.add||[]).length),0);
+ const allImgs=cards.reduce((a,c)=>a+MAT.imgN(c),0);
+ const noImg=base.filter(w=>!(w.images||[]).length).map(w=>({id:w.id,text:w.word,cat:w.category,lv:w.levelId||''}));
+ const noZy=cards.filter(c=>!String(c.zy||'').trim()).map(c=>({id:c.id,text:c.text,origin:MAT.origin(c)}));
+ const lvSet=new Set((LIB.lvs||[]).map(l=>l.id)),catSet=new Set((LIB.cats||[]).map(k=>k.id));
+ const noTheme=base.filter(w=>!catSet.has(w.categoryId)).map(w=>w.id),noLevel=base.filter(w=>!w.levelId||!lvSet.has(w.levelId)).map(w=>w.id);
+ const g={};cards.forEach(c=>{const k=String(c.text||'').trim()+'|'+String(c.zy||'').trim();(g[k]=g[k]||[]).push(c)});
+ const dupW=Object.values(g).filter(a=>a.length>1).map(a=>a.map(c=>({id:c.id,text:c.text,origin:MAT.origin(c)})));
+ const byT={};base.forEach(w=>{(byT[w.word]=byT[w.word]||[]).push(w)});
+ const legSame=leg.map(c=>({id:c.id,text:c.text,same:(byT[c.text]||[]).map(w=>({id:w.id,zy:w.zhuyin,same:w.zhuyin===c.zy}))})).filter(x=>x.same.length);
+ const th=MAT.dims(),pk=S.packCats||[];
+ return{ts:Date.now(),version:(LIB.man&&LIB.man.version)||'未記錄',app:'v22.0',v22:!!s.v22,v22from:s.v22from||0,
+  builtinWords:base.length,builtinActive:bc.length,builtinOff:Object.keys(s.off||{}).length,localWords:lc.length,legacyWords:leg.length,customWords:cus.length,unifiedWords:new Set(cards.map(c=>c.id)).size,
+  builtinImgs:fImgs,builtinWithImg:fWith,localImgs:lImgs,unifiedImgs:allImgs,
+  themes:(LIB.cats||[]).length,levels:(LIB.lvs||[]).length,customCats:S.cats.filter(c=>!c.lib).length,legacyCats:pk.filter(id=>S.cats.some(c=>c.id===id)).length,
+  noImg,noZy,noTheme,noLevel,dupWords:dupW,legacySame:legSame,legacy:{cats:S.cats.filter(c=>pk.includes(c.id)).map(c=>({id:c.id,name:c.name,words:MAT.dims().custom.find(x=>x.id===c.id)?.words||0})),cards:leg.map(c=>({id:c.id,text:c.text}))},
+  themeRows:th.theme.map(x=>({id:x.id,name:x.name,words:x.words,imgs:x.imgs,withImg:x.withImg,noimg:x.noimg})),levelRows:th.level.map(x=>({id:x.id,name:x.name,words:x.words,imgs:x.imgs,withImg:x.withImg,noimg:x.noimg})),
+  scan:INT.scanRes}};
+/* 圖片逐張實際檢查（按需執行）：區分「路徑錯誤／檔案遺失」與「無法解碼」 */
+INT.scan=async()=>{if(INT.busy||!LIB.base)return;INT.busy=1;INT.prog=0;const list=[];LIB.base.forEach(w=>(w.images||[]).forEach(p=>list.push({id:w.id,p})));const res={total:list.length,ok:0,missing:[],decode:[],at:Date.now()};LIB.re();
+ let i=0;const one=async()=>{while(i<list.length){const it=list[i++];try{const r=await fetch(LIB.url(it.p),{cache:'force-cache'});if(!r.ok){res.missing.push({...it,http:r.status})}else{const b=await r.blob();try{if(typeof createImageBitmap==='function'){const bm=await createImageBitmap(b);bm.close&&bm.close()}res.ok++}catch(e){res.decode.push(it)}}}catch(e){res.missing.push({...it,http:0})}INT.prog=i;if(i%60===0)LIB.re()}};
+ await Promise.all([one(),one(),one(),one(),one(),one()]);INT.scanRes=res;INT.busy=0;LIB.re()};
+/* 修復「可確認」的圖片路徑：只在原路徑失敗、且同檔名在站內另一個固定位置能成功載入時，才記錄修正（不猜測、不改原檔）*/
+INT.repair=async()=>{const r=INT.scanRes;if(!r||!r.missing.length)return alert('沒有可修復的圖片路徑錯誤');const s=LIB.st();s.pfix=s.pfix||{};let fixed=0;const un=[];
+ for(const it of r.missing){const f=it.p.split('/').pop(),alt=['images/'+f];let hit=null;for(const a of alt){if(a===it.p)continue;try{const x=await fetch(LIB.url(a));if(x.ok){hit=a;break}}catch(e){}}if(hit){s.pfix[it.p]=hit;fixed++}else un.push(it)}
+ LIB.log('圖片路徑修復：成功 '+fixed+'，無法確認 '+un.length);await save();LIB.sync();INT.scanRes=null;alert('已修復 '+fixed+' 筆；無法確認的 '+un.length+' 筆列在「待人工確認」。請再按一次「逐張檢查圖片」確認。');LIB.re()};
+{const _u=LIB.url;LIB.url=p=>{const f=LIB.st().pfix;return _u(f&&f[p]?f[p]:p)}}
+INT.rebuild=async()=>{MAT.bump();LIB.catSync();LIB.sync();await save();MAT.bump();LIB.re();alert('已重新建立教材索引與分類索引（沒有刪除任何資料）')};
+INT.exp=()=>{const r=INT.report();const b=new Blob([JSON.stringify(r,null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='教材檢查報告-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)};
+INT.list=k=>{INT.show=INT.show===k?null:k;LIB.re()};
+/* 舊版內建教材（materials/）分類整理：先備份、先預覽、確認後才執行；只移除「分類」，圖卡與錄音都保留 */
+INT.legacyDo=async()=>{const r=INT.report();if(!r.legacy.cats.length)return alert('沒有舊版分類需要整理');
+ if(!confirm('要整理這 '+r.legacy.cats.length+' 個舊版分類嗎？\n'+r.legacy.cats.map(c=>'・'+c.name+'（'+c.words+' 個詞彙）').join('\n')+'\n\n只會移除分類名稱，其中的圖卡、圖片、錄音和學習紀錄都會保留（移到「未分類」，可在「教師自訂教材」找到）。\n整理前會先備份目前教材。'))return;
+ try{await kvPut('pre-legacy-clean',{ts:Date.now(),cats:JSON.parse(JSON.stringify(S.cats)),cards:S.cards.map(c=>({id:c.id,cats:(c.cats||[]).slice()}))})}catch(e){return alert('備份失敗，已停止，沒有改動任何資料')}
+ const ids=new Set(r.legacy.cats.map(c=>c.id));S.cats=S.cats.filter(c=>!ids.has(c.id));S.cards.forEach(c=>{c.cats=(c.cats||[]).filter(x=>!ids.has(x))});
+ S.legacyClean={ts:Date.now(),ids:[...ids]};MAT.bump();await save();alert('已整理 '+ids.size+' 個舊版分類。備份已保存，可按「復原舊版分類整理」還原。');LIB.re()};
+INT.legacyUndo=async()=>{const b=await kvGet('pre-legacy-clean');if(!b||!b.cats)return alert('沒有可復原的整理紀錄');if(!confirm('要復原舊版分類整理嗎？'))return;
+ b.cats.forEach(k=>{if(!S.cats.some(c=>c.id===k.id))S.cats.push(k)});const m=new Map(b.cards.map(c=>[c.id,c.cats]));S.cards.forEach(c=>{const o=m.get(c.id);if(o)c.cats=[...new Set([...(c.cats||[]),...o.filter(x=>S.cats.some(k=>k.id===x))])]});delete S.legacyClean;MAT.bump();await save();LIB.re()};
+INT.panel=()=>{const r=INT.report(),o=INT.open,sc=INT.scanRes,row=(a,b)=>`<tr><th style="text-align:left;width:15em">${a}</th><td>${b}</td></tr>`;
+ const L=(k,t,a)=>`<button class="btn alt sm" onclick="INT.list('${k}')">${INT.show===k?'收合':'查看'}${t}（${a.length}）</button> `;
+ const lst=k=>{if(INT.show!==k)return'';const m={noImg:r.noImg.map(x=>`${esc(x.id)} ${esc(x.text)}（${esc(x.cat)}）`),miss:sc?sc.missing.map(x=>esc(x.id)+' '+esc(x.p)+' HTTP '+x.http):[],dec:sc?sc.decode.map(x=>esc(x.id)+' '+esc(x.p)):[],zy:r.noZy.map(x=>esc(x.id)+' '+esc(x.text)),dup:r.dupWords.map(a=>a.map(x=>esc(x.id)+'('+esc(x.text)+'・'+x.origin+')').join(' ＝ ')),leg:r.legacySame.map(x=>esc(x.id)+' '+esc(x.text)+' → 正式 '+x.same.map(y=>y.id+(y.same?'（注音相同）':'（注音不同）')).join('、'))};return'<div style="max-height:200px;overflow:auto;border:1px solid #ccd;padding:6px;font-size:.9em">'+((m[k]||[]).map(x=>'<div>'+x+'</div>').join('')||'沒有')+'</div>'};
+ return`<div class="panel" id="intp"><h3 style="margin:0">🧰 教材庫完整性檢查</h3><p><small>全部數字都由目前實際資料計算。正式內建教材與本機自訂教材同時存在、各自保存；這裡的修復不會刪除教材、圖片、錄音或學習紀錄。</small></p>
+ <table class="lat">${row('正式教材版本',esc(r.version)+'（程式 '+esc(r.app)+'）')}${row('正式內建詞彙',r.builtinWords+' 個（目前載入 '+r.builtinActive+' 個'+(r.builtinOff?'，教師停用 '+r.builtinOff+' 個':'')+'）')}${row('本機自訂詞彙',r.localWords+' 個（教師自訂 '+r.customWords+'、舊版內建教材 '+r.legacyWords+'）')}${row('整合去重後詞彙',r.unifiedWords+' 個')}${row('正式圖片',r.builtinImgs+' 張（'+r.builtinWithImg+' 個詞彙有圖片）')}${row('本機新增圖片',r.localImgs+' 張')}${row('整合後可用圖片',r.unifiedImgs+' 張')}${row('正式主題／Level',r.themes+' 個主題、'+r.levels+' 個 Level')}${row('教師自訂分類',r.customCats+' 個（其中舊版內建教材分類 '+r.legacyCats+' 個）')}</table>
+ <h4>需要處理的項目</h4><table class="lat">${row('尚未配置圖片的詞彙',r.noImg.length+' 個　'+L('noImg','缺圖詞彙',r.noImg))}${row('圖片路徑錯誤／檔案遺失',sc?sc.missing.length+' 張':'尚未逐張檢查　')}${row('圖片無法解碼',sc?sc.decode.length+' 張':'尚未逐張檢查')}${row('缺少注音',r.noZy.length+' 個　'+L('zy','詞彙',r.noZy))}${row('缺少主題分類',r.noTheme.length+' 個')}${row('缺少 Level',r.noLevel.length+' 個')}${row('重複詞彙（文字＋注音相同、ID 不同）',r.dupWords.length+' 組　'+L('dup','重複組',r.dupWords))}${row('舊版內建教材與正式詞彙文字相同',r.legacySame.length+' 個（不會自動合併，待您確認）　'+L('leg','清單',r.legacySame))}${row('舊版資料遷移狀態',r.v22?'已完成（正式教材全部載入；原本啟用 '+r.v22from+' 個；遷移前備份已保存）':'尚未遷移')}</table>
+ ${lst('noImg')}${lst('zy')}${lst('dup')}${lst('leg')}${sc?lst('miss')+lst('dec'):''}
+ ${sc?`<p><small>逐張檢查：共 ${sc.total} 張，正常 ${sc.ok}，路徑錯誤 ${sc.missing.length}，無法解碼 ${sc.decode.length}（${new Date(sc.at).toLocaleString('zh-TW',{hour12:false})}）</small> ${sc.missing.length?L('miss','路徑錯誤',sc.missing)+'<button class="btn alt sm" onclick="INT.repair()">修復可確認的圖片連結</button> ':''}${sc.decode.length?L('dec','無法解碼',sc.decode):''}</p>`:''}
+ <p><button class="btn go sm" onclick="INT.scan()" ${INT.busy?'disabled':''}>${INT.busy?'檢查中… '+INT.prog+' / '+(LIB.base||[]).reduce((a,w)=>a+(w.images||[]).length,0):'🔍 逐張檢查圖片（按需執行）'}</button> <button class="btn alt sm" onclick="INT.rebuild()">重新建立教材與分類索引</button> <button class="btn alt sm" onclick="LIB.re()">重新檢查</button> <button class="btn alt sm" onclick="INT.exp()">⬇ 匯出檢查報告</button></p>
+ ${r.legacy.cats.length?`<div class="panel" style="background:#fff7e6"><b>舊版內建教材分類（${r.legacy.cats.map(c=>esc(c.name)+' '+c.words+' 個').join('、')}）</b><p><small>這些來自網站舊版 materials 資料夾，目前和正式教材分開顯示在「教師自訂教材」。可由您確認後整理：只移除分類，圖卡、圖片、錄音、學習紀錄都保留，且整理前會先備份、可復原。</small></p><button class="btn alt sm" onclick="INT.legacyDo()">整理舊版分類（先確認）</button></div>`:(S.legacyClean?`<p><small>舊版分類已於 ${new Date(S.legacyClean.ts).toLocaleString('zh-TW',{hour12:false})} 整理。</small> <button class="btn alt sm" onclick="INT.legacyUndo()">復原舊版分類整理</button></p>`:'')}</div>`};
+{const _v=LIB.view;LIB.view=function(){let h='';try{h=INT.panel()}catch(e){console.warn('INT.panel',e)}return h+_v.apply(this,arguments)}}
+/*P22-END*/
+
 
 
 
