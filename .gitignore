@@ -7,3 +7,8 @@ backup/
 個案資料_*.json
 *.bundle.local
 test-logs/
+
+# 本機測試環境（第04批起；不上傳）
+.testenv/
+node_modules/
+dist/

@@ -1,197 +1,126 @@
 {
  "schemaVersion": 1,
  "project": "詞彙特快車 Vocabulary Express",
- "batch": "03-B",
- "fromVersion": "v22.3",
- "toVersion": "v22.4.1",
- "buildId": "20261126-03B",
- "cumulative": true,
+ "batch": "04",
+ "fromVersion": "v22.4.1",
+ "toVersion": "v22.5",
+ "buildId": "20261126-04",
  "base": {
   "github": "wanyu25-alt/1124-1-TEST",
-  "commit": "c1a272194f162bcd24a307ead9b3f1473f6484d0",
-  "indexSha256": "b01a0c6e9a44d4b26e83fac20cfeea422dd4ce95d71901d92e2707bdcd2fe5d2",
-  "note": "直接套用於 GitHub 目前根目錄；不需要任何舊增量包"
+  "commit": "78932bb67b7855802830d1837dd6c98845560f1d",
+  "indexSha256": "d4cc68e6eaa56403ff617bcf70f4bc59b1b3769a7cd4b43ae3c593c454d6cb73",
+  "note": "直接套用於 GitHub 目前根目錄（v22.4.1，已部署）"
  },
- "includes": [
-  "v22.4（第03批）全部修改",
-  "GitHub 提交 0adf0df 的 P23B（舊版教材移除，已補強）",
-  "第03-B批修復"
- ],
  "dataMigration": {
   "formatChange": false,
-  "notes": "每台裝置一次性移除未修改的舊版示範圖卡（本機備份 pre-legacy-remove，可復原；S.legacyGone 防重複）；新增可缺省欄位 S.set.ttsVoice（教師在語音診斷指定時才建立）"
+  "notes": "新增可缺省欄位 rec.ext.oral、S.expLogs、S.set.p28ow；口說等候仍為舊預設 6 秒者一次性改為 10 秒；不刪除任何資料"
  },
  "A_deploy": {
   "folder": "1_upload-to-github-root",
   "overwrite": [
    {
     "path": "index.html",
-    "sha256": "d4cc68e6eaa56403ff617bcf70f4bc59b1b3769a7cd4b43ae3c593c454d6cb73",
-    "bytes": 997739,
-    "previousSha256": "b01a0c6e9a44d4b26e83fac20cfeea422dd4ce95d71901d92e2707bdcd2fe5d2"
+    "sha256": "842128c02b04c28c1a3ec3859624ce32e77da116958bab6d4ebe5519ea078208",
+    "bytes": 1014256,
+    "previousSha256": "d4cc68e6eaa56403ff617bcf70f4bc59b1b3769a7cd4b43ae3c593c454d6cb73"
    }
-  ],
-  "add": []
+  ]
  },
- "B_devDocsTests": {
+ "B_optional": {
   "folder": "2_optional-dev-docs-tests",
   "overwrite": [
    {
+    "path": ".gitignore",
+    "sha256": "b8033c7e5a643de71a0484dbe18ed1db50695a38f6086069471e0fe52d0fbe23",
+    "bytes": 238,
+    "previousSha256": "10d59df0c2f0e1cda02cf5cb3fec8ce9a88542e779681a276b11a40bc6e87895"
+   },
+   {
     "path": "CHANGELOG.md",
-    "sha256": "a03e5fa641103388daae37536b16a7218e0961f5a424eaa65e0df1df490ef31b",
-    "bytes": 71413,
-    "previousSha256": "8cefd6ca8f6d170ee5a079340d72eb47b2e17bd5c81a6e1f85184a345c35d322"
+    "sha256": "439c7292cb18aedd619c8bf04f8d91ca34680c55ebf7eeeed0e2c8e9f26fa0ea",
+    "bytes": 73638,
+    "previousSha256": "a03e5fa641103388daae37536b16a7218e0961f5a424eaa65e0df1df490ef31b"
    },
    {
     "path": "DEVELOPMENT-ROADMAP.md",
-    "sha256": "e6e758c7e600d9c15aaa9940f51c06501f600fd8425403003d60481eabb1e9f1",
-    "bytes": 9836,
-    "previousSha256": "38768d2a6bd206c727bec8c4d9d41cd9cad846a7ac309a725fa762e96065d1d7"
-   },
-   {
-    "path": "KNOWN_ISSUES.md",
-    "sha256": "1f290f8804248cba3128119d59beddfdee9dd247a8da4739902bc720c2fb700e",
-    "bytes": 11803,
-    "previousSha256": "98719aa04bc2e8262240d5101c9d648f17bd641e6d2c5daa23b28819b5bf953a"
-   },
-   {
-    "path": "PROJECT-HANDOFF.md",
-    "sha256": "01df7e06800abd9d1fae224dc32b10dd435f72b57535e3aabbfd44fe687a85b4",
-    "bytes": 19139,
-    "previousSha256": "91239b8ae104b227ed6f726515aa0842dd1708b18bfef861a07f0c905ffa1e0f"
-   },
-   {
-    "path": "PATCH-README.md",
-    "sha256": "fc38b94526bff365ab4558bd691f2c72a78f772e009cc791c648d489d42220a7",
-    "bytes": 4927,
-    "previousSha256": "46df97f7151a52918a0307b89b59e62b762494e0d2ae08964fb26dbe17810bcf"
-   },
-   {
-    "path": "tests/t17.js",
-    "sha256": "610e7aba431ea3a1f0716ff8801dbc6b4858f2ebbb30c46393de4ca02482072e",
-    "bytes": 7965,
-    "previousSha256": "29ee8f0b8f590fff5eea75bb818af4db58e2d7428fa8b0c2aa8dd55adf2a2c44"
-   },
-   {
-    "path": "tests/t19b.js",
-    "sha256": "26ce483340ac14b5087627fabe37797d4503669c66a421e5698b3b6577ec5ba3",
-    "bytes": 9256,
-    "previousSha256": "089abb4c0d238202544484e6b53271d5c7c74c0f4fba987fb6e8da43e640d662"
-   },
-   {
-    "path": "tests/t22.js",
-    "sha256": "e7a8d22ba3e91ba1ae59afdf930538022221c459d91acc9413c513c45de5e7a1",
-    "bytes": 4960,
-    "previousSha256": "148786542203d0da704fd64a5dcf68900d1e13827023269f827f756803b24bdf"
-   },
-   {
-    "path": "tests/t230.js",
-    "sha256": "eeead648ce47ebea8f21e3a84b4a972beef2894254d191f4111526e130d48dca",
-    "bytes": 11463,
-    "previousSha256": "8eb0cc312d847e7497bf690724e587d20c44d8662d2e91c0dc6f70c8eee38cd0"
-   },
-   {
-    "path": "tests/t291.js",
-    "sha256": "c19f9d02216cab52d6c0866770bfa51826dfb5fc0ae443bc6664e063d91b758f",
-    "bytes": 2417,
-    "previousSha256": "02cdf4a5e947918d99d0f96c7b1592164914ef9b1ea2a4e770720830675a656d"
-   },
-   {
-    "path": "tests/t30.js",
-    "sha256": "8bcdb4dee15217a321a63056b456f6dfb3c9c1b71f84ccafc1ef24ba9ec5dfd3",
-    "bytes": 9164,
-    "previousSha256": "b0d50ed4f5c2da10eef1bfceb7101a90457a00596b11d87cf756d5884cee0343"
-   },
-   {
-    "path": "tests/e2e/batch01-material.js",
-    "sha256": "f2544e0be8258271ccf399a0164778b8e3b808b3b05cba2364dda4e04ad12a51",
-    "bytes": 9992,
-    "previousSha256": "17d267cfa9e0c43b178e7f52abafd937e56baec9d1a0d70c18e6bbaed1f8f9b1"
-   },
-   {
-    "path": "tests/e2e/batch02-source.js",
-    "sha256": "35d94603a8e47835a131db1ef1e88ca89c3ab8b57cf30786adc0779364ee9b79",
-    "bytes": 11266,
-    "previousSha256": "0b75662b5321ff736efb9a968ac1c6b74ba4787ca4f10872b8b3414e39fbed2b"
-   },
-   {
-    "path": "tests/e2e/phase14-setup-v21.js",
-    "sha256": "e906161da6a5eaf759f10c15c0edcfc9c0436f84d85eab3c2c0ca55babf1abcf",
-    "bytes": 4685,
-    "previousSha256": "c8e06d0e6d2bf838f7be4210955c525c52c8caaaed6cda782128c9a0a81cf8b9"
+    "sha256": "86e466d65719d098baad6de80a5b90b48d2e411832ec863faee7e3151f4670fc",
+    "bytes": 10178,
+    "previousSha256": "e6e758c7e600d9c15aaa9940f51c06501f600fd8425403003d60481eabb1e9f1"
    },
    {
     "path": "PATCH-MANIFEST.json",
-    "sha256": "（本檔案，不自我校驗）"
+    "sha256": "（本檔案，不自我校驗）",
+    "bytes": 4252,
+    "previousSha256": "23b7e343285e5a81b30aba12aea10bc312ee887a2a7f93faf6d3557c9aebfb30"
+   },
+   {
+    "path": "PATCH-README.md",
+    "sha256": "267d8fe2c5275982a8ff72c0f250a7442b9355bad746e0ad3b665f683d6a5fbf",
+    "bytes": 3129,
+    "previousSha256": "fc38b94526bff365ab4558bd691f2c72a78f772e009cc791c648d489d42220a7"
+   },
+   {
+    "path": "PROJECT-HANDOFF.md",
+    "sha256": "520a17a57d355bd020636b16e4c58125e76c475f6eb921d99914ee1d87c4b51c",
+    "bytes": 21376,
+    "previousSha256": "01df7e06800abd9d1fae224dc32b10dd435f72b57535e3aabbfd44fe687a85b4"
+   },
+   {
+    "path": "tests/e2e/batch03-guide.js",
+    "sha256": "18a81ec20b047a37551910440fca07e17cf1001592679a0468500b46087f2e84",
+    "bytes": 14253,
+    "previousSha256": "8cdf24c0940a2e23959070fb44614c56f0ab4b5ed4a38614abf83a1940bee31a"
+   },
+   {
+    "path": "tests/e2e/batch03b-deploy.js",
+    "sha256": "321d4c05c34f21f8488a2977da4b99b42c1e2eec31b619a425c628cec985ac2d",
+    "bytes": 13250,
+    "previousSha256": "f7ebf5ba4c3c5a4682e8cc1913ac0b15b5b6a4352860469705eec534253fcac6"
+   },
+   {
+    "path": "tests/t230.js",
+    "sha256": "7941293a82731a3c39f42b4662203069fcc9f6cb9b281791e00c6474e83ccd4e",
+    "bytes": 11461,
+    "previousSha256": "eeead648ce47ebea8f21e3a84b4a972beef2894254d191f4111526e130d48dca"
+   },
+   {
+    "path": "tests/t31.js",
+    "sha256": "a3a4ed8b1894882ff8685bde593a4c0a10dd25a1912df138e1e778861b430a75",
+    "bytes": 13973,
+    "previousSha256": "ed97ff1166540fe8a080e5d22be5387f244504b122343d3fd59008174aa61a9d"
    }
   ],
   "add": [
    {
-    "path": "BATCH01-REPORT.md",
-    "sha256": "a1b9df97cfb9108d6760c724489b145d47b81eaf5d1803eaa82282178fe3cf31",
-    "bytes": 8079
+    "path": "BATCH04-REPORT.md",
+    "sha256": "4f16d8e6999d71a2d8ea0e95f80eaced6b1a1bd3d6257c534871bddd5b0d9ceb",
+    "bytes": 19008
    },
    {
-    "path": "BATCH03-REPORT.md",
-    "sha256": "23d2a70441b6f3365ad96057fdd723ff3e003ed629c2ecd56305f2f039cc3d56",
-    "bytes": 11187
+    "path": "tests/e2e/batch04-oral.js",
+    "sha256": "7fa7562d1e519396549ad5e75c11315540d3d364920d1c297f165e950dc71771",
+    "bytes": 21424
    },
    {
-    "path": "BATCH03B-REPORT.md",
-    "sha256": "e1af155e94c31da3a1ed4bfddf98942aac7d7160f78ccb86a1fa5fb8d900b902",
-    "bytes": 9666
-   },
-   {
-    "path": "DIAG-CONSOLE.md",
-    "sha256": "d56ff359a35a0cc9a714c4c3b756d773e42c2fb748ec17bf74ae792e2f3024a2",
-    "bytes": 4533
-   },
-   {
-    "path": "TONE-READING-REVIEW.csv",
-    "sha256": "cc047b82bffa273f1ecd87fc653f17541b9f2f3e05745de74e0bcf498fd889d9",
-    "bytes": 66049
-   },
-   {
-    "path": "tests/e2e/batch03-guide.js",
-    "sha256": "8cdf24c0940a2e23959070fb44614c56f0ab4b5ed4a38614abf83a1940bee31a",
-    "bytes": 14241
-   },
-   {
-    "path": "tests/e2e/batch03b-deploy.js",
-    "sha256": "f7ebf5ba4c3c5a4682e8cc1913ac0b15b5b6a4352860469705eec534253fcac6",
-    "bytes": 13178
-   },
-   {
-    "path": "tests/e2e/lib/audio-stub.js",
-    "sha256": "0417132b2440bf954c25b11f437c7e1774831a15c659d4b09b155de8481bddfd",
-    "bytes": 2554
-   },
-   {
-    "path": "tests/e2e/lib/voice-stub.js",
-    "sha256": "9efeb95710942e07322a8c45b8b5d1ca8b62f86773ac5d29b31a2a9f3b5fdcc3",
-    "bytes": 1953
+    "path": "tests/e2e/lib/mic-stub.js",
+    "sha256": "3953bb8b06d489adec053a22e5b999066b76248be17fbedc0ea7a32cf1c131ab",
+    "bytes": 4562
    }
   ]
  },
  "deleteBeforeDeploy": [],
- "deleteAfterVerification": [
-  {
-   "path": "vocabulary-express-v22_2-patch/",
-   "reason": "誤上傳的增量包子資料夾，網站不讀取"
-  },
-  {
-   "path": "vocabulary-express-v22_3-patch/",
-   "reason": "誤上傳的增量包子資料夾，網站不讀取"
-  }
+ "notIncluded": [
+  ".testenv/（本機測試環境）",
+  "dist/",
+  ".git",
+  "node_modules",
+  "backup/",
+  "學生資料與錄音",
+  "舊增量包資料夾"
  ],
- "mustNotRestore": [
-  "materials/"
- ],
- "doNotUpload": [
-  "外層資料夾本身",
-  "1_／2_ 資料夾本身",
-  "任何備份或學生資料（本包沒有）"
- ],
- "unchangedAssets": "vocab/、voice/、voice-original/、music/、lib/、tools/ 皆未修改（與 GitHub 相同）",
- "pushedToGitHub": false
+ "tests": {
+  "jsdom": "1820 通過／10 失敗（與修改前逐檔相同）",
+  "e2e": "457 通過／0 失敗（含 batch04-oral Chromium 49＋WebKit 49）",
+  "device": "未進行（待教師 Chrome／Safari 真機口語驗收）"
+ }
 }

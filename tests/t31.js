@@ -57,7 +57,7 @@ const kinds=w=>{w.eval('window.__k=[];const _r=V2.run;V2.run=function(sp,cb){win
   w.__aud.log=[];await sleep(11000);
   const v=L(w);T('A silence: 「沒有聽清楚」 played (ASR/voice failure ≠ wrong)',v.includes('guidance/no_hear'));
   T('A silence: after max retries 「沒關係」 played',v.includes('guidance/slow'));
-  T('A silence: never infinite loop — step ended as skip, typing unblocked',E('G.o.skip')>=1&&!E('V2.block()')||E('G.o.skip')>=1);
+  T('A silence: never infinite loop — v22.5: stops at「請大人確認」, no auto skip (adult can finish/skip)',E('V2.stp&&V2.stp.state')==='stuck'&&E('G.o.skip')===0);
   T('failure is not wrong: tries=0, stars not reduced',E('G.tries')===0&&E('S.rw.stars')===st0);
   E('leave()')}
  {const {w,E,q}=await boot();w.__dur=100;E(CARDS+"S.set.lm='integ';S.set.or=100;S.set.oj='A';S.set.n=1;S.set.ow=3;S.set.mode='key';S.set.ot={A:true,B:false,C:false,D:false};S.set.apd=100;S.set.music=false;startRound()");await sleep(300);

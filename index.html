@@ -379,12 +379,12 @@ body.aid-calm #scene{max-height:90px;overflow:hidden}body.aid-calm .stc .ste{dis
 <script src="lib/pinyin-pro.js"></script>
 <script>
 /* ===== 基本工具 ===== */
-const APP={build:'v22.4.1',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
+const APP={build:'v22.5',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
 const DEF=()=>({v:2,rw:{stars:0,badges:[],veh:[],journeys:[]},cards:[],cats:[],banks:[],bankMap:{},mst:{},
- set:{n:5,sound:true,vol:.7,anim:true,hint:'full',showText:false,theme:'bike',mode:'key',src:'all',input:'phys',stEvery:3,micAnim:true,micSens:3,ttsRate:.75,recRate:1.25,aiGain:1.5,showRw:true,mix:false,order:'rand',music:true,mv:.3,musSrc:'builtin',musName:'',hl:{w:1,c:1,p:1,f:1,a:1},vs:.7,vv:.9,vf:true,fx:'full',stageMode:'daily',stageN:3,lm:'quiet',ot:{A:true,B:true,C:true,D:true},or:30,orQ:'',oj:'A',ow:6,omx:2,opb:true,ap:true,apd:1000,gap:300,apw:true,aps:true,apy:true,ape:true,gv:true,hz:{u:'once',cost:true,n:1,free:false},sa:{gain:true,spend:true,size:3},cs:true,rp:'teach',sk:true},logs:[],rounds:{started:0,completed:0},quits:[],dv:0,lrn:null,recs:[],rv:{},cx:{},cb:[],mx:[],mig:[]});
+ set:{n:5,sound:true,vol:.7,anim:true,hint:'full',showText:false,theme:'bike',mode:'key',src:'all',input:'phys',stEvery:3,micAnim:true,micSens:3,ttsRate:.75,recRate:1.25,aiGain:1.5,showRw:true,mix:false,order:'rand',music:true,mv:.3,musSrc:'builtin',musName:'',hl:{w:1,c:1,p:1,f:1,a:1},vs:.7,vv:.9,vf:true,fx:'full',stageMode:'daily',stageN:3,lm:'quiet',ot:{A:true,B:true,C:true,D:true},or:30,orQ:'',oj:'A',ow:10,omx:2,opb:true,ap:true,apd:1000,gap:300,apw:true,aps:true,apy:true,ape:true,gv:true,hz:{u:'once',cost:true,n:1,free:false},sa:{gain:true,spend:true,size:3},cs:true,rp:'teach',sk:true},logs:[],rounds:{started:0,completed:0},quits:[],dv:0,lrn:null,recs:[],rv:{},cx:{},cb:[],mx:[],mig:[]});
 let S=DEF();
 /* ===== IndexedDB 儲存（圖片、錄音、設定、紀錄都存在瀏覽器內） ===== */
 const idb=()=>new Promise((ok,no)=>{const r=indexedDB.open('trafficHero',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
@@ -6241,7 +6241,7 @@ ZG.KEEP=['ttsRate','recRate','aiGain'];
 {const f=LRN.ensure;LRN.ensure=async function(){const r=await f.apply(this,arguments);try{if(S.set&&!S.set.ttsFix224){(S.lrn&&S.lrn.list||[]).forEach(p=>{const pr=p.ext&&p.ext.pref;if(pr&&+pr.ttsRate===0.5)pr.ttsRate=.75});S.set.ttsFix224=1}}catch(e){}return r}}
 /*P26-END*/
 /*P27-BEGIN v22.4.1 第03-B批：舊版示範教材完全移除（併入 GitHub 15:30 的 P23B 並補強）、materials/ 依賴移除、跨瀏覽器語音備援、版本識別 */
-APP.id='20261126-03B';
+APP.id='20261126-04';
 /* ---- 一、舊版內建示範教材（materials/ 18 張、4 個分類）：備份後一次性移除 ----
    只移除「仍與網站原始版本完全相同」的舊版圖卡（以 packSnap 簽章比對，不看名稱）；老師改過的保留為自訂教材；
    舊版分類只有在裡面已經沒有任何保留下來的圖卡時才移除；學習紀錄全部保留；S.legacyGone 標記後不再重複執行。
@@ -6304,8 +6304,128 @@ VDX.list=()=>{const v=TTSX.voices().filter(x=>/^zh/i.test(x.lang||'')),cur=TTSX.
 /* 語音清單非同步載入（Chrome）：載入完成時若教師後臺開著，更新清單 */
 try{const ss=TTSX.ss();if(ss&&ss.addEventListener)ss.addEventListener('voiceschanged',()=>{try{if(document.getElementById('srcp'))LIB.re()}catch(e){}})}catch(e){}
 /*P27-END*/
+/*P28-BEGIN v22.5 第04批：口語練習、語音辨識、麥克風及過關機制修復
+  根本原因（實際追蹤學生端流程）：
+  ① 智慧出題把「沒有學習紀錄的新詞」只排「聽詞認識」（按「我知道了」就完成），口語練習整回合可能沒有口說題 → 看不到聲波、只能按「我知道了」；
+    而且「我知道了」被記成獨立完成（S.logs cat='ind'），連按 3 次會被當成已熟悉。
+  ② 單字詞以「包含」比對（「頭髮」也算說對「頭」）；同音比對對單字詞同樣過寬。
+  ③ 麥克風被拒絕後，每換一題又重新要求權限；聲波區在麥克風／辨識異常時沒有狀態。
+  ④ 大人確認後仍記為獨立完成；綜合練習口說步驟把「還沒開口（no-speech）」當失敗，連續 3 次後自動略過題目。
+  沿用既有 MIC／MV／ASR／SK／V2／RE，不另建語音系統；全部以包裝方式加在 P27 之後。 */
+const P28={denied:0,err:null,procUntil:0,nosigT:0,ticker:0};
+P28.oral=()=>{try{return V2.lm()==='oral'}catch(e){return false}};
+/* ---------- ① 出題：口語練習的新詞＝先聽示範（聽詞認識）→ 接著自己說（記為示範後仿說） ---------- */
+{const _f=FLOW.stepsFor;FLOW.stepsFor=function(c,b,steps){const r=_f.apply(this,arguments);try{if(P28.oral()&&b==='new'&&steps.includes('speak')&&r.length===1&&r[0]==='expose')return['expose','speak']}catch(e){}return r}}
+{const _p=SM.pre;SM.pre=function(){const r=_p.apply(this,arguments);try{const q=PH.qq;if(q&&q.items&&P28.oral()&&SM.stepOf(S.set.mode)==='speak'){const out=[];
+  q.items.forEach((it,i)=>{out.push(it);const nx=q.items[i+1];if(it._step==='expose'&&!(nx&&nx.id===it.id&&nx._step==='speak'))out.push({...it,_step:'speak',_sub:S.set.sps||'obj',_sm:{...(it._sm||{}),base:1}})});q.items=out}}catch(e){console.warn('P28 SM.pre',e)}return r}}
+/* 「聽詞認識」緊接著同一個詞的口說＝示範後仿說（不是自主提取） */
+{const _q=PH.qinit;PH.qinit=function(){const r=_q.apply(this,arguments);try{const q=G.q||[];for(let i=1;i<q.length;i++){const a=q[i-1],c=q[i];if(c&&a&&c._step==='speak'&&a._step==='expose'&&a.id===c.id)c._demo=1}}catch(e){}return r}}
+{const _c=SK.clsHints;SK.clsHints=function(h){const r=_c.apply(this,arguments);try{if(G&&G.cur&&G.cur._demo&&r==='ok_indep')return 'ok_imitated'}catch(e){}return r}}
+/* 「我知道了」只代表聽過：不寫入作答紀錄（S.logs 會被當成獨立完成、已熟悉或錯題），改存 S.expLogs；聽過次數仍在 S.rv[id].exposed */
+{const _ok=ok;ok=function(){const n=S.logs.length,m=S.set.mode;const r=_ok.apply(this,arguments);
+  try{if(m==='expose'&&S.logs.length>n){const l=S.logs.splice(n,1)[0];if(l){l.cat='exposed';S.expLogs=S.expLogs||[];S.expLogs.push(l);if(S.expLogs.length>3000)S.expLogs.splice(0,S.expLogs.length-3000)}}}catch(e){console.warn('P28 ok',e)}return r}}
+/* ---------- ② 答案判定：A 正確／B 同音／C 接近／D 有聲音但不可靠／E 沒有有效語音／F 技術異常 ---------- */
+P28.PART=/[啊阿呀喔哦噢了的嗯耶吧啦嘛呢欸唷]/g;
+P28.core=t=>nz(t).replace(P28.PART,'');
+P28.short=c=>!!c&&[...nz(c.text)].length===1;
+P28.same1=(t,tg)=>!!t&&(t===tg||[...t].every(ch=>ch===tg));   /* 「車」「車車」 */
+{const _m=SK.match;SK.match=function(alts){const c=G&&G.cur;if(!P28.short(c))return _m.apply(this,arguments);
+  const tg=nz(c.text),x=cxOf(c),L=a=>(a||[]).map(nz).filter(Boolean),cs=(alts||[]).map(P28.core);
+  if(cs.some(t=>P28.same1(t,tg)))return{by:'text'};if(L(x.alts).some(a=>cs.some(t=>t===a)))return{by:'alt'};if(L(x.approx).some(a=>cs.some(t=>t===a)))return{by:'approx'};return null}}
+{const _j=MV.judge;MV.judge=function(alts){const c=G&&G.cur;if(!P28.short(c))return _j.apply(this,arguments);
+  /* 單字詞：只有「單獨一個字」的辨識結果才可以做同音判定；包含目標字的其他詞（例：頭髮）只算接近，交給大人確認 */
+  const one=(alts||[]).map(P28.core).filter(t=>t&&[...t].length===1);const r=one.length?_j.call(this,one):null;if(r)return r;
+  return (alts||[]).some(t=>t&&nz(t).includes(nz(c.text)))?{near:true}:r}}
+/* 每一題的口語紀錄（掛在 RE.cur，結束時寫入 rec.ext.oral） */
+P28.o=()=>{const r=typeof RE!=='undefined'&&RE.cur;return r&&r.o28?r.o28:null};
+{const _o=RE.open;RE.open=function(){const r=_o.apply(this,arguments);try{if(RE.cur&&RE.cur.mode==='speak')RE.cur.o28={tries:0,voice:false,fv:null,fr:null,cls:null,by:null,near:0,other:0,vna:0,nv:0,ign:0,tech:[],teacher:false,skipped:false}}catch(e){}return r}}
+{const _t=RE.tech;RE.tech=function(code){try{const o=P28.o();if(o&&code&&!o.tech.includes(code))o.tech.push(code)}catch(e){}return _t.apply(this,arguments)}}
+{const _s=RE.skip;RE.skip=function(){try{const o=P28.o();if(o)o.skipped=true}catch(e){}return _s.apply(this,arguments)}}
+{const _v=MV.voiceNoAsr;MV.voiceNoAsr=function(){try{const o=P28.o();if(o)o.vna++}catch(e){}return _v.apply(this,arguments)}}
+{const _v=MV.noVoice;MV.noVoice=function(){try{const o=P28.o();if(o)o.nv++}catch(e){}return _v.apply(this,arguments)}}
+{const _h=SK.heardNo;SK.heardNo=function(){try{const o=P28.o();if(o)o.other++}catch(e){}return _h.apply(this,arguments)}}
+{const _c=SK.credit;SK.credit=function(by,m){try{const o=P28.o();if(o){if(by==='asr'){o.cls=m&&m.by==='homophone'?'B':'A';o.by=(m&&m.by)||'text'}else o.teacher=true}}catch(e){}return _c.apply(this,arguments)}}
+{const _m=SK.mark;SK.mark=function(cls){try{const o=P28.o();if(o&&cls!=='tech'&&cls!=='retry')o.teacher=true}catch(e){}return _m.apply(this,arguments)}}
+/* 辨識結果：系統聲音播放中被略過的次數、最後結果次數、接近讀音、暫時結果（「正在辨識」） */
+{const _a=asrRes;asrRes=function(e){const o=P28.o(),now=Date.now(),near0=G&&G.sp?(G.sp.near||0):0;let fin=0;try{for(let i=e.resultIndex||0;i<e.results.length;i++)if(e.results[i]&&e.results[i].isFinal)fin++}catch(x){}
+  const ign=!G.on||G.lock||G.paused||S.set.mode!=='speak'||!G.cur||SP.speaking||AM.cur||ZQ.busy||ASR.paused||now<ASR.skipUntil||now<ASR.lockUntil||!MV.gate();
+  if(ign){if(o&&fin&&G.on&&!G.lock){o.ign++;MV.cnt.gatedAsr=(MV.cnt.gatedAsr||0)+1}}
+  else{P28.procUntil=performance.now()+1500;if(o&&fin){o.tries+=fin;if(o.fr==null&&RE.cur)o.fr=now-RE.cur.t0}}
+  const r=_a.apply(this,arguments);try{if(o&&G.sp&&(G.sp.near||0)>near0)o.near+=G.sp.near-near0}catch(x){}return r}}
+P28.cls=o=>!o?null:o.cls?o.cls:o.near?'C':(o.other||o.vna||o.voice)?'D':o.tech.length?'F':'E';
+{const _c=RE.close;RE.close=function(out,x){const r=RE.cur,o=r&&r.o28,rec=_c.apply(this,arguments);
+  try{if(rec&&o){const man=(r.man||[]).filter(m=>m.choice!=='tech'&&m.choice!=='retry');const teacher=o.teacher||man.length>0,hint=(r.hints||[]).length>0,demo=!!(G&&G.cur&&G.cur._demo&&G.cur.id===r.cid);
+    /* 大人按「正確說出」＝大人判斷學生沒有提示就說對（沿用既有設計，仍算獨立說出；與電腦辨識成功以 ext.oral.by／teacher 分開）；示範後仿說不算獨立 */
+    if(demo)rec.independent=false;
+    rec.ext=rec.ext||{};rec.ext.oral={v:1,cls:P28.cls(o),by:o.by,tries:o.tries,voice:o.voice,near:o.near,other:o.other,voiceNoAsr:o.vna,noVoice:o.nv,ignored:o.ign,teacher,hint,afterDemo:demo,
+     tech:o.tech.length>0,techCodes:o.tech.slice(),skipped:o.skipped||rec.outcome==='skipped',rtMs:o.fv!=null?o.fv:o.fr,indep:!!rec.independent,asrIndep:!!rec.independent&&!!o.cls&&!teacher&&!hint,
+     note:'A 正確／B 同音／C 接近（不自動過關）／D 有聲音但辨識不可靠／E 沒有有效語音／F 技術異常；D、E、F 都不算答錯；不保存錄音'}}}catch(e){console.warn('P28 close',e)}return rec}}
+/* ---------- ③ 麥克風與辨識的生命週期 ---------- */
+/* 被拒絕後：同一次開啟期間不再自動要求權限（每題重問會造成干擾）；只在使用者按「🎤 啟用麥克風」時再試 */
+{const _s=micStart;micStart=async function(force){if(P28.denied&&force===1)return false;const r=await _s.apply(this,arguments);if(!r&&MIC.err==='denied')P28.denied=1;else if(r)P28.denied=0;return r}}
+/* 開始辨識一律在系統語音（題目、引導、示範）播完之後；辨識工作的事件記錄錯誤代碼 */
+{const _s=asrStart;asrStart=function(u){if(!u&&G.on&&S.set.mode==='speak'&&(MV.busy()||performance.now()<MV.quietUntil)){P28.bw=(P28.bw||0)+1;if(P28.bw<80){setTimeout(()=>{if(G.on&&!ASR.on&&!ASR.r)asrStart()},250);return}}P28.bw=0;
+  const r=_s.apply(this,arguments);try{const sr=ASR.r;if(sr&&!sr.__p28){sr.__p28=1;const oe=sr.onerror,os=sr.onstart;
+   sr.onstart=function(){return os&&os.apply(this,arguments)};   /* 錯誤狀態保留約 6 秒（自動重新聆聽後也讓大人看得到曾經發生異常） */
+   sr.onerror=function(e){try{const c=e&&e.error;if(c&&!/no-speech|aborted/.test(c))P28.err={code:c,t:performance.now()}}catch(x){}return oe&&oe.apply(this,arguments)}}}catch(e){}return r}}
+/* 收不到任何麥克風訊號（AudioContext 被暫停、裝置被占用或靜音）：顯示異常，點一下畫面時嘗試恢復 */
+P28.resume=()=>{try{if(ac&&ac.state==='suspended')ac.resume()}catch(e){}};
+P28.sig=now=>{if(!MIC.st||!MIC.an)return true;let muted=false;try{const t=MIC.st.getAudioTracks()[0];muted=!!(t&&(t.muted||t.readyState==='ended'))}catch(e){}
+  const dead=muted||(ac&&ac.state==='suspended')||MV.rawDb<=-120;if(!dead){P28.nosigT=0;return true}if(!P28.nosigT)P28.nosigT=now;
+  if(now-P28.nosigT>3000&&now-(MV.t0||0)>3000){if(!P28.nl){P28.nl=1;addEventListener('pointerdown',()=>{P28.nl=0;P28.resume()},{once:true,capture:true})}return false}return true};
+/* ---------- ④ 聲波區的狀態（全部依實際訊號與辨識事件；沒有裝飾用的假波動） ---------- */
+P28.TX={prep:'麥克風準備中…',listen:'正在聆聽，請說出來',voice:'我正在聽你說話…',after:'說完了嗎？讓老師確認吧！',proc:'正在辨識…',done:'辨識完成！',wait:'先聽一聽…',idle:'準備好就可以說話',
+ denied:'麥克風沒有開啟（權限被拒絕），可以請大人確認',none:'找不到麥克風，可以請大人確認',unsupported:'這個瀏覽器不能使用麥克風，可以請大人確認',fail:'麥克風啟動失敗，可以再試一次或請大人確認',
+ nosig:'收不到麥克風的聲音，點一下畫面再試，或請大人確認',asr:'語音辨識暫時無法使用，可以按「🎤 開始聆聽」或請大人確認'};
+P28.state=()=>{const now=performance.now(),sk=G&&G.sk;
+ if(G.lock&&sk&&sk.out==='correct'&&sk.by==='asr')return 'done';
+ if(MIC.err)return 'err:'+MIC.err;
+ if(MV.starting||(!MIC.st&&V2.micAllowed()&&!V2.noMic&&!P28.denied))return 'prep';
+ if(MIC.st&&!P28.sig(now))return 'err:nosig';
+ if(ASR.fatal||ASR.gave||(P28.err&&now-P28.err.t<6000))return 'err:asr';
+ if(MIC.st&&!MV.gate(now))return 'wait';
+ if(MIC.state==='speaking')return 'voice';
+ if(now<P28.procUntil||(MV.asrWait&&now<MV.asrWait))return 'proc';
+ if(MIC.state==='done')return 'after';   /* 剛說完（沿用原本的提示文字） */
+ return ASR.on?'listen':'idle'};
+P28.ui=()=>{try{if(!G||!G.on||S.set.mode!=='speak')return;const bx=$('#micbox');if(!bx)return;const s=P28.state(),k=s.split(':'),v=k[0],tx=P28.TX[k[1]||k[0]]||'';
+  if(bx.dataset.v!==v)bx.dataset.v=v;const w=$('#wst');if(w){if(w.style.display==='none')w.style.display='block';if(!MIC.msgLock&&w.textContent!==tx)w.textContent=tx}
+  const wv=$('#wave');if(wv&&wv.style.display==='none')wv.style.display='flex';
+  const o=P28.o();if(o&&v==='voice'&&!o.voice){o.voice=true;if(RE.cur)o.fv=Date.now()-RE.cur.t0}}catch(e){}};
+{const _l=micLoop;micLoop=function(){const r=_l.apply(this,arguments);P28.ui();return r}}
+P28.tick=()=>{if(!G||!G.on||S.set.mode!=='speak'){return}if(!MIC.raf)P28.ui()};
+{const _s=startRound;startRound=function(){clearInterval(P28.ticker);P28.ticker=setInterval(P28.tick,150);P28.err=null;P28.nosigT=0;return _s.apply(this,arguments)}}
+{const _l=leave;leave=function(){clearInterval(P28.ticker);P28.ticker=0;P28.err=null;return _l.apply(this,arguments)}}
+{const st=document.createElement('style');st.textContent='#micbox[data-v=prep] #wave{opacity:.4}#micbox[data-v=listen] #wst{color:#2f6fe4}#micbox[data-v=voice] #wst{color:#1b7a3a;font-weight:700}#micbox[data-v=done] #wst{color:var(--leaf);font-weight:700}#micbox[data-v=err] #wave{opacity:.35}#micbox[data-v=err] #wst{color:#b8322b}';document.head.appendChild(st)}
+/* ---------- ⑤ 等待：學生正在說話、詞語間停頓（2 秒內）、辨識中時不插入提示 ---------- */
+P28.PAUSE=2000;
+{const _t=SK.tick;SK.tick=function(){const sk=G&&G.sk;try{if(sk&&G.on&&!G.lock&&S.set.mode==='speak'&&RE.cur&&RE.cur.sk===sk){const now=performance.now();
+   let wait=0;if(MIC.state==='speaking'||now-(MIC.lastV||-1e9)<P28.PAUSE)wait=1000;else if(now<P28.procUntil)wait=800;
+   if(wait>0){clearTimeout(sk.t);sk.t=setTimeout(SK.tick,wait);return}}}catch(e){}return _t.apply(this,arguments)}}
+/* 六站內建的口說等候少於 10 秒者（二星「逾時自動給首音提示」原為 6 秒）改為 10 秒；老師在學生設定中自訂的時間不變 */
+{const _l=FL.ladder;FL.ladder=function(){const r=_l.apply(this,arguments);try{(r||[]).forEach(c=>{if(c&&c.ps&&c.ps.sw!=null&&+c.ps.sw<10)c.ps={...c.ps,sw:10}})}catch(e){}return r}}
+/* ---------- ⑥ 綜合練習口說步驟（V2）：還沒開口不算失敗、說話中不逾時、連續辨識不到停在大人確認（不自動略過） ---------- */
+{const _a=V2.asr;V2.asr=function(s,tid){const r=_a.apply(this,arguments);try{const sr=s&&s.r;if(!sr||sr.__p28)return r;sr.__p28=1;const live=()=>V2.stp===s&&s.tid===tid&&!s.settled&&s.r===sr;
+  const again=()=>{if(!live())return;s.r=null;s.rs=(s.rs||0)+1;if(s.rs>40){s.j='B';V2.panel();return}setTimeout(()=>{if(V2.stp===s&&s.tid===tid&&!s.settled&&!s.r)V2.asr(s,tid)},300)};
+  sr.onresult=e=>{if(!live())return;G.o.asrTry++;const alts=[];for(const res of e.results)for(const a of res)alts.push(nz(a.transcript));const c=G.cur;
+   const m=(()=>{const t=nz(s.sp.target);if(c&&nz(c.text)===t){const sm=SK.match(alts);if(sm)return sm;const j=MV.judge(alts);if(j)return j}return alts.some(a=>a&&a.includes(t))&&[...t].length>1?{by:'text'}:null})();
+   if(m&&m.by){G.o.asrOk++;V2.success('asr')}else{s.heard=alts[0]||'';if(m&&m.near)s.near=(s.near||0)+1;V2.miss(m&&m.near?'near':'asr')}};
+  sr.onerror=e=>{if(!live())return;const c=e&&e.error;if(/not-allowed|service-not-allowed/.test(c||'')){V2.asrBad=1;V2.stopJudge();s.j='B';V2.panel();return}
+   if(!c||/no-speech|aborted/.test(c)){again();return}   /* 還沒開口：不是失敗，安靜地繼續聆聽 */
+   try{RE.tech('asr_'+c)}catch(x){}V2.stopJudge();s.j='B';s.tech=c;V2.panel()};          /* 網路／收音等技術問題：不算失敗，改由大人確認 */
+  sr.onend=()=>{if(!live())return;again()}}catch(e){console.warn('P28 V2.asr',e)}return r}}
+{const _m=V2.miss;V2.miss=function(why){const s=V2.stp;try{if(s&&!s.settled&&why==='timeout'&&(MIC.state==='speaking'||performance.now()-(MIC.lastV||-1e9)<1500||performance.now()<P28.procUntil)){clearTimeout(s.tw);const tid=s.tid;s.tw=setTimeout(()=>{if(V2.stp===s&&s.tid===tid&&!s.settled)V2.miss('timeout')},1500);return}if(s)s.noAuto=1}catch(e){}return _m.apply(this,arguments)}}
+{const _t=V2.tc;V2.tc=function(k){try{const s=V2.stp;if(s&&k==='skip')s.userSkip=1;
+  /* 停在「請大人確認」時（原本會自動略過），按「✔ 完成」要能完成：先解除等待狀態 */
+  if(s&&k==='ok'&&s.settled&&s.state==='stuck'){clearTimeout(s.t2);s.settled=0}}catch(e){}return _t.apply(this,arguments)}}
+{const _f=V2.finish;V2.finish=function(res){const s=V2.stp;try{if(s&&res==='skip'&&s.noAuto&&!s.userSkip&&s.state==='stuck'){V2.panel();return}}catch(e){}return _f.apply(this,arguments)}}
+{const _p=V2.panel;V2.panel=function(){const r=_p.apply(this,arguments);try{const s=V2.stp,e=$('#orp');if(s&&e){const t=e.querySelector('.ot');
+   if(s.state==='stuck'&&t)t.textContent='沒關係，請大人幫忙確認';else if(s.state==='miss'&&s.near&&t)t.textContent='很接近了！再說一次';else if(s.tech&&s.j==='B'&&t)t.textContent='語音辨識暫時無法使用，請大人確認'}}catch(e){}return r}}
+/* 等待時間：預設改為 10 秒（原本 6 秒）；舊裝置仍是舊預設 6 秒者，只調整一次（之後老師自行修改的值不受影響） */
+P28.init=()=>{try{if(!S.set.p28ow){if(S.set.ow==null||+S.set.ow===6)S.set.ow=10;S.set.p28ow=1}}catch(e){}};
+/*P28-END*/
 (async()=>{let s=await load();if(s&&s.decks&&!s.v){await kvPut('backup-pre-v2',s);s=migrate(s)}const mb=await kvGet('music').catch(()=>null);if(mb)mus.url=URL.createObjectURL(mb);if(s)S={...DEF(),...s,set:{...DEF().set,...s.set}};if(s&&s.set&&s.set.vs==null&&s.set.vol!=null)S.set.vs=s.set.vol;
-await zaLoad();await LRN.ensure();try{if(await LIB.load()){await LIB.defBoot();LIB.sync()}}catch(e){console.warn('LIB boot',e)}if(S.set.stuName===undefined)S.set.stuName='';if(S.set.musSrc==='project'&&!S.set.musPicked)S.set.musSrc='builtin';if(!['key','listen','spell','speak'].includes(S.set.mode))S.set.mode='key';if(S.set.ttsMig!==3){S.set.ttsMig=3;S.set.ttsRate=.75;S.set.recRate=1.25;S.set.aiGain=1.5}if(!S.bankMap)S.bankMap={};if((S.banks||[]).some(b=>!(b.id in S.bankMap))||/^b:/.test(S.set.src||'')){if(!(await kvGet('backup-pre-bankmig')))await kvPut('backup-pre-bankmig',JSON.parse(JSON.stringify(S)));migrateBanks()}if(!S.set.musMig){S.set.musMig=1;S.set.musSrc='project';save()}FL.recover();try{FL.applyPref()}catch(e){}save();UI.init();home();mtLbl();packLoad();
+await zaLoad();await LRN.ensure();try{if(await LIB.load()){await LIB.defBoot();LIB.sync()}}catch(e){console.warn('LIB boot',e)}if(S.set.stuName===undefined)S.set.stuName='';try{P28.init()}catch(e){}if(S.set.musSrc==='project'&&!S.set.musPicked)S.set.musSrc='builtin';if(!['key','listen','spell','speak'].includes(S.set.mode))S.set.mode='key';if(S.set.ttsMig!==3){S.set.ttsMig=3;S.set.ttsRate=.75;S.set.recRate=1.25;S.set.aiGain=1.5}if(!S.bankMap)S.bankMap={};if((S.banks||[]).some(b=>!(b.id in S.bankMap))||/^b:/.test(S.set.src||'')){if(!(await kvGet('backup-pre-bankmig')))await kvPut('backup-pre-bankmig',JSON.parse(JSON.stringify(S)));migrateBanks()}if(!S.set.musMig){S.set.musMig=1;S.set.musSrc='project';save()}FL.recover();try{FL.applyPref()}catch(e){}save();UI.init();home();mtLbl();packLoad();
  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();
  addEventListener('resize',()=>{try{scene()}catch(e){}});try{const mq=matchMedia('(prefers-reduced-motion: reduce)');(mq.addEventListener?mq.addEventListener('change',()=>scene()):mq.addListener&&mq.addListener(()=>scene()))}catch(e){}})();
 </script></body></html>
