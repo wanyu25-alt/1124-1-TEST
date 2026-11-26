@@ -5,11 +5,11 @@ const mk=(red)=>new JSDOM(html,{url:'http://localhost/?noseed',runScripts:'dange
  w.navigator.mediaDevices={getUserMedia:async()=>({active:true,getTracks:()=>[{stop(){}}]})};if(red)w.matchMedia=q=>({matches:/reduce/.test(q),addListener(){},addEventListener(){}})}}).window;
 (async()=>{let w=mk();await sleep(500);const E=s=>w.eval(s),d=w.document;
  E(`S=DEF();S.cards=[{id:'a',text:'火車',zy:'ㄏㄨㄛˇ ㄔㄜ',img:'data:image/png;base64,AAA',audio:'',cats:['fr']},{id:'b',text:'蘋果',zy:'ㄆㄧㄥˊ ㄍㄨㄛˇ',img:'data:image/png;base64,AAA',audio:'',cats:['fr']},{id:'c',text:'公車',zy:'ㄍㄨㄥ ㄔㄜ',img:'data:image/png;base64,AAA',audio:'',cats:['tr']}];S.cats=[{id:'fr',name:'水果'},{id:'tr',name:'交通工具'}];S.set.sound=false;S.set.music=false;S.set.n=4;S.asrDecl=1;save();RC.ui.classic=true;home()`);
- E('UI.pick("integ");FL.open(1)');const cards=[...d.querySelectorAll('#fl_veh option')].map(c=>c.textContent);
+ E('UI.pick("integ");FL.open(1)');/* v21.0：交通工具依難度自動安排，不再手動下拉；仍保留五種交通工具資產 */const cards=E('FL.VEH.map(k=>TH[k].e+" "+TH[k].n)');
  T('home: five vehicle cards in order 腳踏車→汽車→火車→高鐵→飛機',cards.length===5&&['腳踏車','汽車','火車','高鐵','飛機'].every((n,i)=>cards[i].includes(n)));
- T('setup lists each vehicle with its original name',cards.length===5&&cards.every(c=>/^[^\s]+\s*\S+/.test(c)));
+ T('setup shows the auto-assigned vehicle (no manual vehicle select)',!d.querySelector('#fl_veh')&&/交通工具[\s\S]*由難度自動安排/.test(d.querySelector('#mid').textContent));
  const mid=d.querySelector('#mid').textContent;T('no separate 旅程 / mode buttons / 開始旅程 on home',!mid.includes('旅程')&&!mid.includes('開始旅程')&&!/🧩|👂/.test(d.querySelector('#mid').innerHTML.replace(/<svg.*?<\/svg>/gs,'')));
- E('UI.pick("quiet");FL.open(1)');T('category select now in setup 進階 (shared)',!!d.querySelector('#fl_cat')&&d.querySelector('#mid').textContent.includes('教材範圍')&&d.querySelector('#mid').textContent.includes('水果（2張）'));E('UI.view="mode";UI.mode="integ";home()');
+ E('UI.pick("quiet");FL.open(1)');E('FL.setRange("pick");FL.setDim("theme")');T('v21.0 category multi-select in setup (checkbox, counts)',!!d.querySelector('#mid input[type=checkbox]')&&/水果[\s\S]{0,40}2 個詞彙/.test(d.querySelector('#mid').textContent));E('UI.view="mode";UI.mode="integ";home()');
  // each vehicle → mode
  const cfg=[['bike','key'],['car','listen'],['train','spell'],['hsr','speak']];
  for(const [k,m] of cfg){E(`S.set.src='all';goV('${k}')`);await sleep(150);

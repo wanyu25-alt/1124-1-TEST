@@ -18,7 +18,7 @@ const {sleep,T,mk,mkSetup,res}=require('./t19h.js');
  T('level: pass voice never double-played; voices ≤1 concurrently',V().filter(x=>x==='pass').length===1&&w.__viol===viol0);
  T('level: records ok (round counted once, journey saved w/ vehicle)',E('S.rounds.completed')===1&&E('S.rw.journeys.length')===1&&E('S.rw.journeys[0].veh')==='car');
  // continue button
- [...o.querySelectorAll('button')].find(b=>b.textContent.includes('再玩一次')).click();await sleep(100);T('level: 繼續挑戰 starts a new round and silences voice',!q('#arr')&&E('G.on')&&E('G.done')===0&&E('AM.lv')===false&&E('AM.cur')===null);
+ [...o.querySelectorAll('button')].find(b=>/再玩一次|再練習一次/.test(b.textContent)).click();await sleep(100);T('level: 繼續挑戰 starts a new round and silences voice',!q('#arr')&&E('G.on')&&E('G.done')===0&&E('AM.lv')===false&&E('AM.cur')===null);
  // ===== 7. 完成整個階段 =====
  setup(2,'bike','S.set.stageN=2');await sleep(100);
  await finish();await sleep(1500);endV();await sleep(1000);
@@ -26,14 +26,14 @@ const {sleep,T,mk,mkSetup,res}=require('./t19h.js');
  T('stage: first round of N=2 gets 恭喜過關, not done',V().filter(x=>x==='pass'||x==='done').join()==='pass'&&E('S.rw.stageLog.length')===0);
  endV();await sleep(2500);w.__log.length=0;
  // run the second round
- await sleep(1500);endV();q('#arr')&&[...q('#arr').querySelectorAll('button')].find(b=>b.textContent.includes('再玩一次')).click();await sleep(100);
+ await sleep(1500);endV();q('#arr')&&[...q('#arr').querySelectorAll('button')].find(b=>/再玩一次|再練習一次/.test(b.textContent)).click();await sleep(100);
  w.__log.length=0;await finish();await sleep(1500);endV();await sleep(100);
  await finish();await sleep(1100);
- T('stage: round meeting daily goal plays 恭喜世杰完成啦 (not 恭喜過關)',V().includes('done')&&!V().includes('pass'));
+ T('stage: round meeting daily goal plays 恭喜小明完成啦 (not 恭喜過關)',V().includes('done')&&!V().includes('pass'));
  endV();await sleep(2400);const o2=q('#arr');
- T('stage: trophy/badge/stars/record screen, grander effects',!!o2&&o2.textContent.includes('恭喜世杰完成啦')&&o2.textContent.includes('🏆')&&o2.textContent.includes('🎖')&&o2.textContent.includes('今天的學習紀錄')&&o2.querySelectorAll('.rib').length>10);
+ T('stage: （v9.0 簡化後）階段完成仍顯示完成旅程畫面與學生姓名；舊版獎盃／今天的學習紀錄畫面已被取代',!!o2&&o2.textContent.includes('完成旅程')&&o2.textContent.includes('小明')&&!o2.textContent.includes('今天的學習紀錄'));
  T('stage: logged once (stageLog, trophies)',E('S.rw.stageLog.length')===1&&E('S.rw.trophies')===1&&E('S.rw.journeys.length')===2);
- endV();[...o2.querySelectorAll('button')].find(b=>b.textContent.includes('再玩一次')).click();await sleep(100);
+ endV();[...o2.querySelectorAll('button')].find(b=>/再玩一次|再練習一次/.test(b.textContent)).click();await sleep(100);
  await finish();await sleep(1500);endV();await finish();await sleep(1100);
  T('stage: same day 3rd round → normal 恭喜過關 only, done not repeated',V().filter(x=>x==='done').length===1&&V().includes('pass'));
  T('stage: done never played for ordinary questions',E('S.rw.stageLog.length')===1);

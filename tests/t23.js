@@ -28,7 +28,7 @@ const {sleep,T,mk,mkSetup,res}=require('./t19h.js');
    const osc0=w.__osc.length;[...o.querySelectorAll('button')].find(b=>b.textContent.includes('跳過動畫')).click();await sleep(1500);
    T('car: 跳過動畫 → final state, learning record & stars untouched, no arrival sfx afterwards',q('#arbx').classList.contains('sk')&&E('S.rw.stars')===st&&E('S.rw.journeys.length')===jn&&w.__osc.length===osc0&&!q('#arbx .skp').offsetParent!==undefined);
    // restart
-   [...o.querySelectorAll('button')].find(b=>b.textContent.includes('再玩一次')).click();await sleep(100);
+   [...o.querySelectorAll('button')].find(b=>/再玩一次|再練習一次/.test(b.textContent)).click();await sleep(100);
    T('car: 再玩一次 → overlay gone, new round, progress reset',ov()===0&&E('G.on')&&E('G.done')===0);
    await full();
    T('car: second journey → overlay again once, stars now 4, journeys 2',ov()===1&&E('S.rw.stars')===4&&E('S.rw.journeys.length')===2);
@@ -40,11 +40,11 @@ const {sleep,T,mk,mkSetup,res}=require('./t19h.js');
  T('five vehicles produce five different scenes',seen.size===5);
  // 選擇其他交通工具
  setup(2,'bike');await sleep(80);await full();
- [...q('#arr').querySelectorAll('button')].find(b=>b.textContent.includes('選擇其他交通工具')).click();await sleep(120);
- T('選擇其他交通工具 → home with vehicle picker',ov()===0&&!E('G.on')&&!!q('.vgrid'));
+ [...q('#arr').querySelectorAll('button')].find(b=>b.textContent.includes('選擇其他站')).click();await sleep(120);
+ T('選擇其他站 → 回到六站地圖（v9.0 起取代「選擇其他交通工具」）',ov()===0&&!E('G.on')&&E('FL.view')==='map');
  // hint info
  setup(2,'bike','S.set.vf=false');await sleep(80);E('kHint("p")');await full();
- T('hint info: one question used a hint → says 用了提示',/用了提示/.test(q('#arr .hintln').textContent));
+ T('hint info: （v9.0 簡化後）抵達畫面不顯示提示使用資訊，學生端不被提示細節干擾',!q('#arr .hintln')&&!/用了提示/.test(q('#arr').textContent));
  d.querySelectorAll('.ov').forEach(x=>x.remove());
  // animation settings
  setup(2,'plane','S.set.anim=false');await sleep(80);await full();

@@ -15,7 +15,7 @@ const boot=async(o={})=>{const w=mk(Object.assign({fresh:true},o));const t0=Date
  T('choice remembered per learner',E('FL.mem().n')===10&&E('FL.mem().star["quiet:1"]')===2);
  E('FL.setN(5);FL.setStar(2)');
  const ok=E('FL.go()');
- T('FL.go starts a round',ok!==false&&E('G.on')===true&&E('FL.run.star')===2&&E('G.n')===5);
+ T('FL.go starts a round',ok!==false&&E('G.on')===true&&E('FL.run.star')===2&&new Set(E('JSON.stringify(G.q.map(c=>c.id))')&&JSON.parse(E('JSON.stringify(G.q.map(c=>c.id))'))).size===5/*v21.0：5 個不同詞彙；新詞彙先教學再問，題數可大於詞彙數*/);
  // 完成一題
  E('G.cur&&0');
  const add=E('(()=>{const b=S.rw.stars;try{ok()}catch(e){return "ERR"+e.message}return S.rw.stars-b})()');

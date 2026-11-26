@@ -50,7 +50,7 @@ const {sleep,T,mk,mkSetup,res}=require('./t19h.js');
  // ===== 5. 停頓 15 秒 =====
  endV();await sleep(1600);setup(3,'bike','IDLE_MS=500');E('IDLE_MS=500');E('ask()');w.__log.length=0;
  await sleep(300);right();await sleep(300);T('idle: key activity resets the timer (no push at 600ms after activity)',V().filter(x=>x==='push').length===0);
- await sleep(500);T('idle: 世杰加油 once after pause; warm bubble + nudge; answer not shown',V().join()==='push'&&!!q('.enc')&&q('#train').classList.contains('nudge'));
+ await sleep(500);T('idle: 小明加油 once after pause; warm bubble + nudge; answer not shown',V().join()==='push'&&!!q('.enc')&&q('#train').classList.contains('nudge'));
  T('idle: no answer given (hint state unchanged)',E('G.h.f')===0&&E('K.hf')!==1);
  endV();await sleep(1600);T('idle: not repeated within the same question',V().filter(x=>x==='push').length===1);
  console.log(res.P+' pass, '+res.F+' fail');process.exit(0)})().catch(e=>{console.log('ERR',e);process.exit(1)});

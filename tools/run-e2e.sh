@@ -1,2 +1,0 @@
-cd /home/claude/repo; mkdir -p test-logs/e2e; : > /tmp/e2e.txt
-for f in tests/e2e/*.js; do out=$(cd /tmp/e2e && NODE_PATH=$(npm root -g):/tmp/e2e/node_modules timeout 280 node /home/claude/repo/$f 2>&1); echo "$out" > test-logs/e2e/$(basename $f).log; echo "$(basename $f) pass=$(echo "$out"|grep -c '^PASS') fail=$(echo "$out"|grep -c '^FAIL')" >> /tmp/e2e.txt; echo "$out"|grep '^FAIL'|sed "s|^|   |" >> /tmp/e2e.txt; done; echo finished >> /tmp/e2e.txt

@@ -12,7 +12,7 @@ const mkDef=(en,ov,mode)=>({schemaVersion:1,kind:'library-default',ver:'1.0',en:
   // ② 匯出：只含可攜設定
   E(`LIB.setEn(${JSON.stringify(fruit)},true);LIB.setRv(${JSON.stringify(fruit.slice(0,3))},'approved');LIB.setZy('${fruit[0]}','ㄅㄅ ㄆㄆ');LIB.setPrim('${fruit[1]}',LIB.eff('${fruit[1]}').prim);byId('${fruit[2]}').audio='data:audio/mp4;base64,AAAA';LIB.setEn(['${fruit[2]}'],false);LIB.setEn(['${fruit[2]}'],true);LIB.st().ov['${fruit[3]}']={...(LIB.st().ov['${fruit[3]}']||{}),add:[{d:'data:image/jpeg;base64,/9j/AAAA',ts:1}],primary:'data:image/jpeg;base64,/9j/AAAA'}`);
   const d=J(E,'LIB.defObj()'),o=d.o;
-  T('export holds enabled ids, review result, zhuyin edits, primary image, mode',Object.keys(o.en).length===6&&o.ov[fruit[0]].zy==='ㄅㄅ ㄆㄆ'&&o.ov[fruit[0]].zyRev==='edited'&&o.ov[fruit[0]].rv==='approved'&&o.ov[fruit[1]].primary&&o.mode==='fixed'&&o.kind==='library-default'&&/^[0-9a-f]+$/.test(o.hash));
+  T('export holds enabled ids, review result, zhuyin edits, primary image, mode',Object.keys(o.en).length===6&&o.ov[fruit[0]].zy==='ㄅㄅ ㄆㄆ'&&o.ov[fruit[0]].zyRev==='edited'&&o.ov[fruit[0]].rv==='approved'&&o.ov[fruit[1]].primary&&o.mode==='random'/*v21.0 新預設*/&&o.kind==='library-default'&&/^[0-9a-f]+$/.test(o.hash));
   T('export excludes recordings and teacher-uploaded (Base64) images, and reports what was left out',!JSON.stringify(o).includes('data:')&&d.drop.audio>=1&&d.drop.add===1&&d.drop.prim===1);
   fs.writeFileSync(DEF,JSON.stringify(o));fs.writeFileSync('/tmp/def1.json',JSON.stringify(o))}
  // ③ 另一台新裝置：自動套用
@@ -51,7 +51,7 @@ const mkDef=(en,ov,mode)=>({schemaVersion:1,kind:'library-default',ver:'1.0',en:
   T('broken default file → plain error message, nothing changed',E('LIB.defInfo.state')==='err'&&/JSON/.test(E('LIB.defInfo.msg'))&&E('Object.keys(LIB.st().en).length')===0);
   fs.writeFileSync(DEF,JSON.stringify({kind:'library-default',en:{'../x':1,'VOC0001':1,'NOPE':1},ov:{'VOC0001':{zy:'x',primary:'../../a.png',hide:['..','images/a.webp'],rv:'hacked'}},mode:'evil'}));
   const {E:E2}=await boot();
-  T('hostile default file is sanitized (unknown ids, unsafe paths, bad values dropped)',E2('Object.keys(LIB.st().en).join()')==='VOC0001'&&E2(`JSON.stringify(LIB.st().ov.VOC0001)`)==='{"zy":"x","hide":["images/a.webp"]}'&&E2('LIB.mode()')==='fixed');
+  T('hostile default file is sanitized (unknown ids, unsafe paths, bad values dropped)',E2('Object.keys(LIB.st().en).join()')==='VOC0001'&&E2(`JSON.stringify(LIB.st().ov.VOC0001)`)==='{"zy":"x","hide":["images/a.webp"]}'&&E2('LIB.mode()')==='random'/*v21.0 新預設*/);
   fs.unlinkSync(DEF)}
  // ⑧ 無圖清單與 CSV
  {const {w,E}=await boot();let blob=null;w.URL.createObjectURL=b=>{blob=b;return'blob:x'};

@@ -7,11 +7,12 @@ await p.evaluate(()=>{window.confirm=()=>true;window.alert=()=>{};S.set.music=fa
 await p.click('#n1');await p.click('.mc-quiet');await p.waitForTimeout(300);
 T('六站地圖：不在同一頁放題數／難度',(await p.$$('.stc')).length===6&&(await p.$$('.fstar')).length===0);
 await p.click('.stc >> nth=0 >> text=進入這一站');await p.waitForTimeout(300);
-T('設定頁：題數、五星、範圍、開始',(await p.$$('.fn')).length>=7&&(await p.$$('.fstar')).length===5&&!!(await p.$('.fgob')));
-await p.click('.fn >> text=10 題');await p.click('.fstar >> nth=1');await p.waitForTimeout(200);
+T('設定頁：題數、五星、範圍、開始',(await p.$$('.fn')).length>=11&&(await p.$$('.fstar')).length===5&&!!(await p.$('.fgob')));
+await p.click('.fn >> text=10 個');await p.click('.fstar >> nth=1');await p.waitForTimeout(200);
 const sel=await p.evaluate(()=>({n:FL.mem().n,star:FL.starFor(1,'quiet')}));T('選 10 題＋二星並記住',sel.n===10&&sel.star===2,sel);
 await p.click('.fgob');await p.waitForTimeout(1200);
-T('開始：10 題、二星',await p.evaluate(()=>G.on&&G.n===10&&FL.run.star===2));
+T('開始：10 題、二星',await p.evaluate(()=>G.on&&new Set(G.q.map(c=>c.id)).size===10&&G.n>=10&&FL.run.star===2));
+const gn=await p.evaluate(()=>G.n);
 const s0=await p.evaluate(()=>S.rw.stars);let prev=s0,dropped=false,wrongClicks=0;
 for(let i=0;i<120;i++){if(await p.$('#arr'))break;
  const st=await p.evaluate(()=>({lock:G.lock,n:document.querySelectorAll('.pko:not(.dis)').length,stars:S.rw.stars,dis:document.querySelectorAll('.pko.dis').length}));
@@ -25,7 +26,7 @@ const info=await p.evaluate(()=>{const a=document.getElementById('arr');return a
 T('完成畫面出現',!!info,info);
 if(info){T('完成畫面只有：完成旅程／完成題數／本次獲得星星',/完成旅程/.test(info.t)&&/完成題數/.test(info.t)&&/本次獲得星星/.test(info.t)&&!/錯|排名|扣/.test(info.t),info.t);
  T('三個按鈕',JSON.stringify(info.btns.map(x=>x.replace(/^\S+\s*/,'')))==='["再練習一次","選擇其他站","返回首頁"]',info.btns);
- T('本次星星 = 10題×2星 = 20（答錯不扣、鼓勵星不重複）',info.gain-s0===20&&/⭐ 20/.test(info.t),{gain:info.gain-s0,t:info.t});
+ T('本次星星 = 實際題數×2星（v21.0：10 個詞彙，新詞彙先教學再問，題數可大於 10）（答錯不扣、鼓勵星不重複）',info.gain-s0===gn*2&&new RegExp('⭐ '+gn*2).test(info.t),{gain:info.gain-s0,t:info.t});
  await p.click('#arr .btns button >> text=再練習一次');await p.waitForTimeout(1500);T('再練習一次：以同樣設定重新開始',await p.evaluate(()=>G.on&&G.n===10&&FL.run.star===2&&G.done===0));
  await p.evaluate(()=>{arrive()});await p.waitForTimeout(600);
  await p.click('#arr .btns button >> text=選擇其他站');await p.waitForTimeout(500);T('選擇其他站：回到六站地圖',(await p.$$('.stc')).length===6&&!(await p.$('#arr')),null);

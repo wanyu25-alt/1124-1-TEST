@@ -11,13 +11,13 @@ const boot=async(o={})=>{const w=mk(Object.assign({fresh:true},o));const t0=Date
   T('all six stations free to enter: no lock text',!/解鎖|鎖定|🔒/.test(q('#mid').textContent));
   T('map has no dead entry: every enter button is enabled and calls FL.open',qa('.stb .btn.go').every(b=>/FL\.open/.test(b.getAttribute('onclick')))&&qa('.stb .btn[disabled]').every(b=>q('.stw')));
   E('FL.open(1)');
-  T('setup: 5/10/15/20, five stars, range three choices, start; advanced collapsed by default',JSON.stringify(qa('.fseg')[0].children.length)==='4'&&qa('.fstar').length===5&&qa('.fseg')[1].children.length===3&&!q('.fadv').open&&!!q('.fgob'));
+  /* v21.0：數量改為 5/10/15/20/30/50/全部/自訂（詞彙個數），不再有「進階」區塊 */T('setup: 8 count buttons, five stars, range three choices, start; no 進階 block',qa('.fseg')[1].children.length===8&&qa('.fstar').length===5&&qa('.fseg')[0].children.length===3&&!q('.fadv')&&!!q('.fgob'));
   T('default range is 系統推薦 and default 5題／一星',E('FL.mem().range||"rec"')==='rec'&&qa('.fn.on').length>=2);
-  T('advanced section contains 教材範圍／交通工具 only inside <details>',!!q('details.fadv #fl_cat')&&!!q('details.fadv #fl_veh'));
+  T('v21.0: no manual question-type/vehicle/category dropdown in setup',!q('#fl_cat')&&!q('#fl_veh')&&!q('#mid select'));
   E('FL.setN(15);FL.setStar(3);FL.setRange("rv")');
   T('choices stored per learner (n,star per mode:station,range)',E('FL.mem().n')===15&&E('FL.mem().star["quiet:1"]')===3&&E('FL.mem().range')==='rv');
   E('FL.setRange("rec");FL.setN(5);FL.setStar(1)');
-  T('start runs a round with n=5 and returns to origin (map) on leave',E('FL.go()')!==false&&E('G.on')&&E('G.n')===5&&(E('leave()'),E('FL.run')===null&&E('!S.set.flbk')));
+  T('start runs a round with n=5 and returns to origin (map) on leave',E('FL.go()')!==false&&E('G.on')&&E('new Set(G.q.map(c=>c.id)).size')===5/*v21.0：5 個不同詞彙*/&&(E('leave()'),E('FL.run')===null&&E('!S.set.flbk')));
  }
  // ② 難度獨立：各站、各模式
  {const {w,E,q,qa}=await boot();
@@ -45,10 +45,10 @@ const boot=async(o={})=>{const w=mk(Object.assign({fresh:true},o));const t0=Date
   const over=[];for(const n of [5,10])for(const mode of ['quiet','oral','integ'])for(let st=1;st<=6;st++)for(let s=1;s<=5;s++){
    E(`UI.pick("${mode}");FL.open(${st});FL.mem().star["${mode}:${st}"]=${s};FL.mem().n=${n}`);
    if(!E(`FL.chk(FL.ladder(${st},"${mode}")[${s-1}],"rec","all").ok`))continue;
-   E('FL.go()');if(E('G.on')&&E('G.n')>n)over.push(`${mode} st${st} ★${s} n=${n} G.n=${E('G.n')}`);E('try{leave()}catch(e){};FL.end();G.on=false')}
-  T('actual question count never exceeds the chosen 5/10 (all available combinations)',over.length===0);if(over.length)console.log(over.slice(0,10).join('\n'));
+   E('FL.go()');if(E('G.on')&&E('new Set(G.q.map(c=>c.id)).size')>n)over.push(`${mode} st${st} ★${s} n=${n} G.n=${E('G.n')}`);E('try{leave()}catch(e){};FL.end();G.on=false')}
+  T('v21.0: distinct words never exceed the chosen 5/10 (all available combinations)',over.length===0);if(over.length)console.log(over.slice(0,10).join('\n'));
   // 提示褪除重測：固定題數時取代後面一題，不延長
-  E('UI.pick("quiet");FL.open(1);FL.mem().star["quiet:1"]=1;FL.mem().n=10;FL.mem().range="pick";FL.mem().cat="all";FL.go()');
+  E('UI.pick("quiet");FL.open(1);FL.mem().star["quiet:1"]=1;FL.mem().n=5;FL.mem().range="pick";FL.mem().cat="all";FL.go()');
   const q0=E('G.q.length'),n0=E('G.n');E('PH.hinted=()=>true;PH.sched()');
   T('fade retest in a fixed-count round replaces a later slot instead of extending the round',E('G.n')===n0&&E('G.q.length')===q0&&!!E('G.fs'));
   E('try{leave()}catch(e){};FL.end();G.on=false');

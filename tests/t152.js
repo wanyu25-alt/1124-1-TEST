@@ -83,8 +83,8 @@ const boot=async(o={})=>{const w=mk(Object.assign({fresh:true},o));const t0=Date
  {const {w,E,q,qa}=await boot();
   E('S.set.order="rand";save()');
   const before=JSON.stringify(E('({src:S.set.src,n:S.set.n,theme:S.set.theme,order:S.set.order})'));
-  E('UI.pick("quiet");FL.open(1);FL.mem().n=10;FL.go()');
-  T('during round: S.set overridden and flbk saved',!!E('S.set.flbk')&&E('S.set.n')===10);
+  E('UI.pick("quiet");FL.open(1);FL.mem().n=5;/*v21.0：詞彙數量不得超過可用詞彙（6 個）*/FL.go()');
+  T('during round: S.set overridden and flbk saved',!!E('S.set.flbk')&&E("S.set.n")===5);
   E('FLR=null;G.on=false'); // 模擬頁面直接關閉：flbk 留在已存檔狀態
   E('FL.recover()');
   T('boot recovery restores src/n/theme/order and clears flbk',JSON.stringify(E('({src:S.set.src,n:S.set.n,theme:S.set.theme,order:S.set.order})'))===before&&E('!S.set.flbk'));

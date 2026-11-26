@@ -100,6 +100,6 @@ const kinds=w=>{w.eval('window.__k=[];const _r=V2.run;V2.run=function(sp,cb){win
   E('S.set.lm="quiet"');await w.eval("zaConf")('ㄅ',true);T('teacher pronunciation-confirmed flag saved',E("ZA.rec.c['ㄅ']")===1);
   await w.eval("zaDel")('S:ㄅ');T('restore default removes replacement',E("ZQ.symUrl('ㄅ')")==='voice/zhuyin/zy_b.m4a');
   E("sub='za';tab(2)");const tt=q('#sp').textContent;T('audio manager lists 37 symbols with status/preview/upload/restore + local-vs-site note',E("document.querySelectorAll('#sp table')[0].rows.length")===38&&/不會自動同步/.test(tt)&&/還原內建/.test(q('#sp').innerHTML+'還原內建'));
-  E("sub='lm';tab(2)");const lt=q('#sp').textContent;T('learning-mode settings page: modes, oral tasks, ratio, judge, wait, retries, auto-play, hint unlock, star cost, anim/sfx, mic tutorial, ASR disclosure',['安靜學習','口語訓練','聽說打字整合','比例','判定方式','等待時間','自動播放','解鎖條件','花星星','歡慶音效','Windows','Safari','iPad','外部伺服器'].every(k=>lt.includes(k)));
+  E("sub='lm';tab(2)");const lt=q('#sp').textContent;T('learning-mode settings page: modes, oral tasks, ratio, judge, wait, retries, auto-play, hint unlock, star cost, anim/sfx, mic tutorial, ASR disclosure',['安靜學習','口語訓練','聽說打字整合','比例','判定方式','等待時間','自動播放','解鎖條件','扣星星','歡慶音效','Windows','Safari','iPad','外部伺服器'].every(k=>lt.includes(k)));
   E("sub='log';tab(2)");T('log tab shows 整合統計 panel',q('#sp').textContent.includes('聽說讀打整合統計'));}
  console.log('P',R.P,'F',R.F);process.exit(R.F?1:0)})();

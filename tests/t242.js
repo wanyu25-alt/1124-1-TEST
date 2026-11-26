@@ -34,7 +34,7 @@ const E=s=>w.eval(s);
  has('D 間隔複習資料 rv','typeof S.rv==="object"');
  // E 家長 F 教師
  has('E 家長專區模組','typeof PAR==="object"');
- E('ACL.unlocked=true;ACL.at=Date.now();tab(2)');await sleep(300);const tabs=E('[...document.querySelectorAll("#tch .sub button")].map(b=>b.textContent)');T('F 教師後台 18 個分頁（詞彙管理、儀表板、家長專區設定、資料安全…）',tabs.length===18&&tabs.some(t=>/儀表板/.test(t))&&tabs.some(t=>/資料安全/.test(t))&&tabs.some(t=>/生活觀察/.test(t)),tabs);
+ E('ACL.unlocked=true;ACL.at=Date.now();tab(2)');await sleep(300);const tabs=E('[...document.querySelectorAll("#tch .sub button")].map(b=>b.textContent)');T('F 教師後台 19 個分頁（詞彙管理、儀表板、家長專區設定、資料安全、學習分析…）',tabs.length===19&&tabs.some(t=>/學習分析/.test(t))&&tabs.some(t=>/儀表板/.test(t))&&tabs.some(t=>/資料安全/.test(t))&&tabs.some(t=>/生活觀察/.test(t)),tabs);
  has('F 七大能力評量與儀表板／報表','typeof AS==="object"&&typeof DSH==="object"&&typeof RPT==="object"&&IND.length>=7');
  has('F 錯誤類型分類（ERR）','typeof ERR==="object"&&ERR.CATS');
  has('F 多個案（新增／切換／封存）','typeof LRN.add==="function"&&typeof LRN.switchTo==="function"');

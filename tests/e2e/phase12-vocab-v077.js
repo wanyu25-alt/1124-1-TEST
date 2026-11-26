@@ -6,16 +6,16 @@ await pg.waitForFunction(()=>typeof LIB!=='undefined'&&LIB.base&&S&&S.cards.filt
 const r=await pg.evaluate(()=>({base:LIB.base.length,lv:LIB.lvs.length,cat:LIB.cats.length,en:S.cards.filter(c=>c.lib).length,noimg:S.cards.filter(c=>c.lib&&!(c.imgs&&c.imgs.length)).length,lvc:S.cats.filter(c=>c.lvl).length}));
 T('新詞彙自動啟用：1000 詞、16 分類、20 Level；啟用 950 張且都有圖',r.base===1000&&r.lv===20&&r.cat===16&&r.en===950&&r.noimg===0&&r.lvc===20,r);
 await pg.evaluate(()=>{window.confirm=()=>true;window.alert=m=>{window.__al=m};S.set.music=false;S.set.sound=false;S.set.anim=false;S.set.ap=false;V2.prepDone=true;save();UI.pick&&UI.pick('quiet')});
-await pg.evaluate(()=>{FL.open(1)});await pg.waitForSelector('#fl_cat',{state:'attached'});
-const o=await pg.$$eval('#fl_cat option',x=>x.map(e=>({t:e.textContent,d:e.disabled,v:e.value})));
-const iC=o.findIndex(e=>e.d&&/依分類/.test(e.t)),iL=o.findIndex(e=>e.d&&/依 Level/.test(e.t));
-T('同一個下拉選單分成「全部／依分類／依 Level」三段',o[0].v==='all'&&iC>0&&iL>iC&&o.slice(iC+1,iL).length>=16&&o.slice(iL+1).filter(e=>/^c:/.test(e.v)).length===20,o.length);
-T('Level 選項顯示名稱與張數（例：Level 01｜…（42張））',o.some(e=>/Level 01｜.+（\d+張）/.test(e.t)));
+await pg.evaluate(()=>{FL.open(1);FL.setRange('pick');FL.setDim('level')});await pg.waitForSelector('#mid .flcl input[type=checkbox]',{state:'attached'});
+const o=await pg.$$eval('#mid .flcl label',x=>x.map(e=>e.textContent));
+const nth=await pg.evaluate(()=>{FL.setDim('theme');return document.querySelectorAll('#mid .flcl label').length});await pg.evaluate(()=>FL.setDim('level'));
+T('v21.0：主題與 Level 分成兩個獨立頁籤：Level 20 個、主題至少 16 個',o.length===20&&nth>=16,{lv:o.length,th:nth});
+T('Level 選項顯示名稱與詞彙數、圖片張數',o.some(e=>/Level 01.+\d+ 個詞彙｜\d+ 張圖片/.test(e)),o.slice(0,2));
 // 依 Level 開始練習
 const lv=await pg.evaluate(()=>{const c=S.cats.find(c=>c.libId==='LV02');return{id:c.id,n:S.cards.filter(x=>x.cats.includes(c.id)).length}});
-await pg.evaluate(v=>{const e=document.getElementById('fl_cat');e.value=v;e.dispatchEvent(new Event('change'))},'c:'+lv.id);
-const src=await pg.evaluate(()=>({src:FL.mem().cat}));
-T('選 Level 02 後練習範圍記住該 Level',src.src==='c:'+lv.id,src);
+await pg.evaluate(v=>{FL.selNone('level');FL.togCat('level',v,true)},lv.id);
+const src=await pg.evaluate(()=>({src:FL.mem().sel.level.join()}));
+T('選 Level 02 後練習範圍記住該 Level（多選維度）',src.src===lv.id,src);
 await pg.evaluate(id=>{S.set.src='c:'+id;save()},lv.id);
 const pl=await pg.evaluate(()=>{const p=pool();return{n:p.length,allIn:p.every(c=>c.cats.some(k=>k===S.set.src.slice(2)))}});
 T('依 Level 出題範圍只含該級的圖卡',pl.n===lv.n&&pl.allIn&&pl.n>0,pl);
@@ -30,7 +30,7 @@ const pc=await pg.evaluate(()=>pool().length);
 T('依分類出題範圍正確',pc===cat.n&&pc>0,{pc,cat});
 // 首頁下拉
 await pg.evaluate(()=>{try{leave()}catch(e){}home()});const h=await pg.evaluate(()=>[...document.querySelectorAll('select')].some(s=>/依 Level/.test(s.innerHTML)));
-T('首頁的選擇分類下拉也分兩區',h);
+T('v21.0：首頁不再有分類下拉（改為設定頁的多選核取方塊）',!h);
 // 後台詞彙庫 Level 篩選
 await pg.evaluate(()=>{tab(2);sub='lib';tch()});await pg.waitForFunction(()=>/內建詞彙庫/.test(document.querySelector('#sp').innerText),null,{timeout:15000});
 const f=await pg.evaluate(()=>[...document.querySelectorAll('#sp select')].some(s=>/全部 Level/.test(s.innerHTML)));

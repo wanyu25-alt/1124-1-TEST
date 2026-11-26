@@ -30,6 +30,7 @@ body.noanim #jf,body.noanim #jv{transition:none}
 #rail{position:absolute;left:0;right:0;bottom:16%;height:7px;background:repeating-linear-gradient(90deg,var(--rail) 0 14px,#8a6a50 14px 18px);border-radius:3px}
 #rail2{position:absolute;left:0;right:0;bottom:calc(16% + 9px);height:3px;background:#555}
 .bg1{position:absolute;bottom:38%;font-size:calc(var(--t)*1.3);opacity:.85}
+.labar{display:flex;height:12px;border-radius:6px;overflow:hidden;background:#eee;min-width:120px;max-width:420px}.labar i{display:block;height:100%}.lat{width:100%;border-collapse:collapse;font-size:.92em}.lat th,.lat td{border-bottom:1px solid #e3e6ea;padding:3px 6px;text-align:left}
 .stn{position:absolute;bottom:calc(16% + 7px);text-align:center;transition:filter .4s}
 .stn .pl{height:calc(var(--t)*.35);background:#9aa5ad;border-radius:4px 4px 0 0;margin-top:2px}
 .stn .sb{display:inline-block;background:#fff;border:3px solid #7d8b95;border-radius:8px;padding:1px 10px;font-weight:700;font-size:clamp(13px,2.2vh,18px);color:#6a7882;margin-bottom:calc(var(--t)*1.05)}
@@ -700,7 +701,7 @@ function home(){
  const so=(v,t)=>`<option value="${v}" ${S.set.src===v?'selected':''}>${t}</option>`;
  $('#mid').innerHTML=`<div class="box" style="width:min(1000px,98%)"><h2 style="margin:0">🚂 詞彙特快車</h2><p style="margin:2px 0 2px">注音 × 詞彙 × 鐵道探索</p><p style="margin:0 0 6px;font-weight:700;color:#2f6fe4">選一種交通工具，直接出發練習</p><p style="margin:0 0 6px">🚂 個案：<b>${esc(LRN.cur().name)}</b> <button class="btn go" onclick="MAP.show()">🗺 學習地圖（六個學習站）</button></p>${S.cards.length?(PK.state==='warn'?'<p style="background:#fff3cd;border:2px solid #e0a800;border-radius:12px;padding:6px;font-size:15px">⚠ 目前無法連到網站教材，先使用這台電腦已儲存的教材。 <button class="btn alt" onclick="packRetry()">↻ 重新載入</button></p>':''):PK.state==='loading'||PK.state==='idle'?'<p style="background:#e8f1ff;border:2px solid #7fa8e8;border-radius:12px;padding:8px"><b>⏳ 教材載入中… '+esc(PK.prog)+'</b></p>':'<p style="background:#fff3cd;border:2px solid #e0a800;border-radius:12px;padding:8px"><b>沒有載入到教材。</b>'+esc(PK.msg||'')+' <button class="btn go" onclick="packRetry()">↻ 重新載入教材</button> 　或到「教師設定 → 教材與資料管理」匯入教材 ZIP。</p>'}
  <div class="vgrid">${Object.keys(TH).map((k,i)=>`<button class="vc ${thNow()===k?'on':''}" onclick="goV('${k}')"><span class="st">交通工具 ${i+1}</span><span class="ill">${vsvg(k,'26px')}</span><b>${TH[k].e} ${TH[k].n}</b><span style="font-weight:700">${TH[k].m}</span><span class="st">${TH[k].d}</span><span class="go2">▶ 出發</span></button>`).join('')}</div>
- <p>選擇分類 <select onchange="S.set.src=this.value;save();home()">${so('all','全部圖卡（'+S.cards.length+'）')}${CATZ(c=>so('c:'+c.id,esc(c.name)+'（'+S.cards.filter(x=>x.cats.includes(c.id)).length+'張）'))}${so('mk','錯題集（'+mistakeCards().length+'）')}${so('wk','注音加強練習（'+weakCards().length+'）')}</select>
+ <p>選擇分類 <select onchange="S.set.src=this.value;save();home()">${so('all','全部圖卡（'+S.cards.length+'）')}${CATZ(c=>so('c:'+c.id,esc(c.name)+'（'+S.cards.filter(x=>x.cats.includes(c.id)).length+'張）'))}${so('mk','錯題集（'+mistakeCards().length+'）')}${so('wk','注音加強練習（'+weakCards().length+'）')}${LA.opt(so)}</select>
  順序 <select onchange="S.set.order=this.value;save()"><option value="rand" ${S.set.order!=='seq'?'selected':''}>隨機</option><option value="seq" ${S.set.order==='seq'?'selected':''}>依順序</option></select></p>
  <p>學習模式 <select onchange="S.set.lm=this.value;V2.noMic=false;save();home()">${Object.entries(V2.lmN).map(([k,v])=>`<option value="${k}" ${V2.lm()===k?'selected':''}>${v}</option>`).join('')}</select> <small>${{quiet:'聽＋打字，不使用麥克風',oral:'聽＋跟著說（會用到麥克風）',integ:'聽＋打字，部分題目加口說'}[V2.lm()]}</small></p>
  <p>輸入方式 <select onchange="S.set.input=this.value;save()"><option value="phys" ${S.set.input!=='touch'?'selected':''}>外接實體鍵盤</option><option value="touch" ${UI.touchKb()?'selected':''}>觸控注音鍵盤</option></select> <button class="btn alt" onclick="ktOpen()">⌨ 測試鍵盤</button><br><small>系統內建注音輸入法：不提供（瀏覽器無法可靠取得逐注音資料）</small></p>
@@ -713,7 +714,7 @@ function botFor(){mbd();if(typed())kBot();else if(S.set.mode==='speak')sBot();el
 function startRound(){RE.flush();{const ao=document.getElementById('arr');if(ao)ao.remove();clearTimeout(ARR.t)}
  if(V2.needPrep()){V2.prep(startRound);return}
  PH.pre0();AM.stop();AM.unlock();const cs=PH.cards(deck().cards);if(!cs.length&&!PH.qq){alert(PH.why||(S.set.src||'').startsWith('c:')?'此分類目前沒有圖卡':'這個出題來源目前沒有圖卡（錯題集和注音加強需要先有練習紀錄），請改選其他來源或先新增圖卡。');return}
- const n=S.set.n;let q=[];while(q.length<n&&cs.length)q=q.concat(S.set.order==='seq'?cs:shuffle(cs));
+ let n=S.set.n,q=[];const sn=PH.qq?null:SNAP.pick(cs);if(sn){q=sn.cards;n=sn.n;if(!n){alert('目前教材範圍內沒有可練習的詞彙');return}}else while(q.length<n&&cs.length)q=q.concat(S.set.order==='seq'?cs:shuffle(cs));
  G={q:q.slice(0,n),i:0,done:0,n,on:true,lock:false,rid:Date.now(),first:0,wrongTot:0,vf:{}};S.rounds.started++;PH.qinit();G.orSet=new Set(V2.plan(G.n));save();
  botFor();
  const a=$('#ans')||document.createElement('input');
@@ -837,9 +838,9 @@ function rwPage(){const R=S.rw;$('#tch').innerHTML=`<div class="panel"><h2>🏆 
  <div class="panel"><h3>車站徽章</h3>${R.badges.slice().reverse().slice(0,40).map(b=>`<span style="display:inline-block;margin:3px;padding:3px 10px;border:2px solid #e0a800;border-radius:12px;background:#fff7d6">🎖 ${esc(b.name)}</span>`).join('')||'<p>還沒有徽章，抵達車站就能獲得。</p>'}</div>
  <div class="panel"><h3>最近完成的旅程</h3>${R.journeys.slice().reverse().slice(0,10).map(j=>`<p>🏁 ${new Date(j.t).toLocaleDateString()}　${esc(j.deck)}　${j.n} 題・${j.stations} 站</p>`).join('')||'<p>還沒有完成的旅程。</p>'}</div>`}
 function tch(){
- const T={cards:'🖼 詞彙管理',cats:'🏷 分類管理',set:'⚙ 設定',log:'📊 紀錄',io:'📦 教材與資料管理',lm:'🎓 學習模式與口語',za:'🔤 注音音檔',lr:'👤 個案與學習路徑',cb:'🚃 詞彙組合',se:'💬 語句與情境',ob:'🌱 生活觀察',as:'📈 語言能力評量',dash:'📊 儀表板與報表',acl:'🔒 存取與隱私',rc:'🎯 初始評量與推薦',lib:'📖 詞彙庫',par:'👪 家長專區設定',sec:'🛡 資料安全與雲端預留'};
+ const T={cards:'🖼 詞彙管理',cats:'🏷 分類管理',set:'⚙ 設定',log:'📊 紀錄',io:'📦 教材與資料管理',lm:'🎓 學習模式與口語',za:'🔤 注音音檔',lr:'👤 個案與學習路徑',cb:'🚃 詞彙組合',se:'💬 語句與情境',ob:'🌱 生活觀察',as:'📈 語言能力評量',dash:'📊 儀表板與報表',acl:'🔒 存取與隱私',rc:'🎯 初始評量與推薦',la:'🧭 學習分析（Level／主題／熟悉度）',lib:'📖 詞彙庫',par:'👪 家長專區設定',sec:'🛡 資料安全與雲端預留'};
  $('#tch').innerHTML=`<div class="sub">${Object.entries(T).map(([k,v])=>`<button class="${sub===k?'on':''}" onclick="sub='${k}';tch()">${v}</button>`).join('')}</div><div id="sp"></div>`;
- ({cards:tCards,cats:tCats,set:tSet,log:tLog,io:tIO,lm:tLM,za:tZA,lr:tLR,cb:tCB,se:tSE,ob:tOB,as:tAS,dash:tDASH,acl:tACL,rc:tRC,lib:()=>{$('#sp').innerHTML=LIB.view()},par:tPAR,sec:()=>tSEC()})[sub]();
+ ({cards:tCards,cats:tCats,set:tSet,log:tLog,io:tIO,lm:tLM,za:tZA,lr:tLR,cb:tCB,se:tSE,ob:tOB,as:tAS,dash:tDASH,acl:tACL,rc:tRC,la:()=>{$('#sp').innerHTML=LA.view()},lib:()=>{$('#sp').innerHTML=LIB.view()},par:tPAR,sec:()=>tSEC()})[sub]();
 }
 /* ===== 共用圖卡／分類／詞彙庫（以ID關聯，圖卡只存一份） ===== */
 let fl={q:'',cat:''},sel=new Set(),catOpen=null,bkOpen=null;
@@ -868,8 +869,9 @@ function weakCards(){const E={};S.logs.forEach(l=>(l.evs||[]).forEach(v=>{if(v.e
  const top=Object.entries(E).filter(e=>e[0]!==' ').sort((a,b)=>b[1]-a[1]).slice(0,3).map(e=>e[0]);return S.cards.filter(c=>top.some(s=>c.zy.includes(s)))}
 function pool(){const s=S.set.src||'all',[t,id]=s.split(':');
  if(t==='c')return catCards(id);
- return s==='mk'?mistakeCards():s==='wk'?weakCards():s==='rec'?FL.recPool():s==='rv'?(()=>{const a=S.cards.filter(FL.learned);return a.length?a:[]})():S.cards}
-function srcName(){const s=S.set.src||'all',[t,id]=s.split(':');return t==='c'?'分類：'+((S.cats.find(c=>c.id===id)||{}).name||'?'):s==='mk'?'錯題集':s==='wk'?'注音加強練習':s==='rec'?'系統推薦':s==='rv'?'複習學過的詞彙':'全部圖卡'}
+ if(s==='sel')return MAT.selPool();
+ return s==='mk'?mistakeCards():s==='wk'?weakCards():s==='rec'?FL.recPool():s==='rv'?(()=>{const a=S.cards.filter(FL.learned);return a.length?a:[]})():s==='la'?LA.pool():S.cards}
+function srcName(){const s=S.set.src||'all',[t,id]=s.split(':');return t==='c'?'分類：'+((S.cats.find(c=>c.id===id)||{}).name||'?'):s==='mk'?'錯題集':s==='wk'?'注音加強練習':s==='rec'?'系統推薦':s==='rv'?'複習學過的詞彙':s==='la'?'分析推薦的詞彙':s==='sel'?'選擇的教材分類':'全部圖卡'}
 function bkDl(){kvGet('backup-pre-v2').then(s=>{if(!s)return alert('沒有升級前備份（本機沒有舊格式資料）');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(s)],{type:'application/json'}));a.download='詞彙特快車_升級前舊資料備份.json';a.click()})}
 const mini=(c,b)=>`<div class="c">${c.img?`<img src="${c.img}">`:''}<div style="font-size:20px">${esc(c.text)}</div><div style="color:#b8322b">${esc(c.zy)}</div>${b}</div>`;
 function mvA(a,i,d){const j=i+d;if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];save();tch()}
@@ -1096,7 +1098,7 @@ async function ioExport(kind){const full=kind==='full',files=[],warn=[],j=(n,o)=
   j('records.json',{schemaVersion:1,logs:S.logs,quits:S.quits,rounds:S.rounds});
   j('progress.json',{schemaVersion:1,rw:S.rw,mst:S.mst,mflag:MF()});
   LRN.sync();{const data={};S.lrn.list.forEach(p=>{data[p.id]=p.id===S.lrn.cur?LRN.slice():(S.lrn.store[p.id]||perDef())});j('learners.json',{schemaVersion:1,dataVersion:DV,cur:S.lrn.cur,list:S.lrn.list,data,mig:S.mig,note:'各個案的星星、紀錄與作答紀錄彼此獨立'})}}
- const man={format:'詞彙特快車',schemaVersion:1,dataVersion:DV,kind:full?'full':'materials',exportedAt:new Date().toISOString(),appVersion:'詞彙特快車 v3',build:'v19.0',
+ const man={format:'詞彙特快車',schemaVersion:1,dataVersion:DV,kind:full?'full':'materials',exportedAt:new Date().toISOString(),appVersion:'詞彙特快車 v3',build:'v21.0',
   counts:{cards:cards.length,libraryWords:S.cards.filter(c=>c.lib).length,categories:S.cats.filter(c=>!c.lib).length,images:nImg,audio:nAud,logs:full?S.logs.length:0,settings:Object.keys(portableSet(S.set)).length,learners:full?S.lrn.list.length:0,records:full?S.lrn.list.reduce((n,p)=>n+(p.id===S.lrn.cur?S.recs.length:((S.lrn.store[p.id]||{}).recs||[]).length),0):0,observations:full?(S.ob||[]).length:0,combos:(S.cb||[]).length,sentences:(S.se||[]).length,scenes:(S.sc||[]).length},
   files:Object.fromEntries(files.map(f=>[f.name,{size:f.data.length,crc32:crc32(f.data),...(/\.json$/.test(f.name)?{sha256:SHA.hex(SHA.hash(f.data))}:{})}]))};
  files.unshift({name:'manifest.json',data:U8(JSON.stringify(man,null,1))});
@@ -1623,7 +1625,7 @@ function tLM(){const s=S.set,ck=v=>v?'checked':'',hz=s.hz||{},sa=s.sa||{},ot=s.o
  <small>「🔊 再聽一次」永遠開放、不限次數、不扣星星。</small></div>
  <div class="panel"><h3 style="margin:0">ㄅ 視覺提示（注音提示）</h3>
  <p>解鎖條件 <select onchange="S.set.hz=S.set.hz||{};S.set.hz.u=this.value;save()">${[['none','不限制'],['once','必須先主動按「再聽一次」並播完（預設）'],['twice','必須先主動聽兩次'],['wrong1','答錯一次後解鎖'],['off','關閉注音提示']].map(([v,t])=>`<option value="${v}" ${(hz.u||'once')===v?'selected':''}>${t}</option>`).join('')}</select></p>
- <p><label><input type="checkbox" ${hz.cost===false?'':'checked'} onchange="S.set.hz=S.set.hz||{};S.set.hz.cost=this.checked;save()"> 使用注音提示要花星星</label> 每題第一次 ${num('hzn',0,5,1,hz.n==null?1:hz.n,"S.set.hz=S.set.hz||{};S.set.hz.n=Math.max(0,Math.min(5,+this.value));save()")} 顆
+ <p><label><input type="checkbox" ${S.set.legacyCost&&hz.cost!==false?'checked':''} onchange="S.set.legacyCost=this.checked;S.set.hz=S.set.hz||{};if(this.checked)S.set.hz.cost=true;save()"> 使用注音提示要扣星星（預設關閉＝六站簡化星星）</label> 每題第一次 ${num('hzn',0,5,1,hz.n==null?1:hz.n,"S.set.hz=S.set.hz||{};S.set.hz.n=Math.max(0,Math.min(5,+this.value));save()")} 顆
  　<label hidden><input type="checkbox" ${hz.free?'checked':''} onchange="S.set.hz=S.set.hz||{};S.set.hz.free=this.checked;save()"> 老師免費開放（不用解鎖、不扣星星）</label></p></div>
  <div class="panel"><h3 style="margin:0">⭐ 動畫與聲音</h3>
  <label><input type="checkbox" ${sa.gain===false?'':'checked'} onchange="S.set.sa=S.set.sa||{};S.set.sa.gain=this.checked;save()"> 獲得星星動畫</label>
@@ -4089,7 +4091,7 @@ UI.settings=()=>{const so=(v,t)=>`<option value="${v}" ${S.set.src===v?'selected
  return `<div class="hm3 st3"><h2>⚙ 設定</h2>
  <div class="panel"><h3>🔊 聲音</h3><p><button id="mt" class="btn alt" onclick="musToggle()"></button> 音樂音量 <input type="range" id="mvs" min="0" max=".8" step=".05" value="${S.set.mv}" oninput="S.set.mv=+this.value;musApply();save()"></p><p><label><input type="checkbox" ${S.set.sound?'checked':''} onchange="S.set.sound=this.checked;save()"> 提示音</label></p></div>
  <div class="panel"><h3>📚 練習內容</h3><p>題數 <input type="number" min="1" max="30" style="width:70px" value="${S.set.n}" onchange="S.set.n=Math.max(1,Math.min(30,+this.value||5));this.value=S.set.n;save()"></p>
- <p>選擇分類 <select onchange="S.set.src=this.value;save()">${so('all','全部圖卡（'+S.cards.length+'）')}${CATZ(c=>so('c:'+c.id,esc(c.name)+'（'+S.cards.filter(x=>x.cats.includes(c.id)).length+'張）'))}${so('mk','錯題集（'+mistakeCards().length+'）')}${so('wk','注音加強練習（'+weakCards().length+'）')}</select></p>
+ <p>選擇分類 <select onchange="S.set.src=this.value;save()">${so('all','全部圖卡（'+S.cards.length+'）')}${CATZ(c=>so('c:'+c.id,esc(c.name)+'（'+S.cards.filter(x=>x.cats.includes(c.id)).length+'張）'))}${so('mk','錯題集（'+mistakeCards().length+'）')}${so('wk','注音加強練習（'+weakCards().length+'）')}${LA.opt(so)}</select></p>
  <p>順序 <select onchange="S.set.order=this.value;save()"><option value="rand" ${S.set.order!=='seq'?'selected':''}>隨機</option><option value="seq" ${S.set.order==='seq'?'selected':''}>依順序</option></select></p></div>
  <div class="panel"><h3>⌨ 輸入方式</h3><p><select id="inmode" onchange="UI.setIn(this.value)"><option value="auto" ${im==='auto'?'selected':''}>自動判斷（建議）</option><option value="phys" ${im==='phys'?'selected':''}>實體鍵盤</option><option value="touch" ${im==='touch'?'selected':''}>觸控注音鍵盤</option></select> <button class="btn alt" onclick="ktOpen()">⌨ 測試鍵盤</button></p><small>自動判斷：只有觸控、沒有滑鼠的裝置顯示觸控注音鍵盤；偵測到實體鍵盤按鍵就改用實體鍵盤。系統內建注音輸入法：不提供。</small></div>
  <div class="panel"><h3>🎤 麥克風</h3><p>目前狀態：<b id="micst">${ms}</b> ${UI.mic.state==='granted'||UI.mic.state==='unsupported'?'':'<button class="btn go" onclick="UI.micAsk()">立即授權</button>'}</p><small>聽讀練習不使用麥克風；只有口語題目才會收音，離開題目就停止。</small></div>
@@ -4136,14 +4138,14 @@ FL.SD={1:{quiet:'聽詞選圖，認識圖片與詞彙。',oral:'先聽詞認識�
 FL.STAR=['一星','二星','三星','四星','五星'];
 FL.VEH=['bike','car','train','hsr','plane'];   /* 預設交通工具＝難度（愈高愈快抵達的交通工具）；可在「進階」更換 */
 /* ---------- 題型設定（每個星級對應真正存在的遊戲參數） ---------- */
-FL.okTyped=()=>{const n=deck().cards.filter(c=>c.zy).length;return n?{ok:true}:{ok:false,msg:'需要有注音的詞彙圖卡'}};
-FL.okExpose=()=>{const n=deck().cards.filter(c=>c.img).length;return n?{ok:true}:{ok:false,msg:'需要有圖片的詞彙圖卡'}};
-FL.okFlow=()=>{const n=deck().cards.length;return n?{ok:true}:{ok:false,msg:'目前教材範圍內沒有詞彙'}};
+FL.okTyped=()=>{const n=deck().cards.filter(c=>c.zy).length;return n?{ok:true,n}:{ok:false,msg:'需要有注音的詞彙圖卡'}};
+FL.okExpose=()=>{const n=deck().cards.filter(c=>c.img).length;return n?{ok:true,n}:{ok:false,msg:'需要有圖片的詞彙圖卡'}};
+FL.okFlow=()=>{const n=deck().cards.length;return n?{ok:true,n}:{ok:false,msg:'目前教材範圍內沒有詞彙'}};
 FL.cPick=(sub,t,ps)=>({t,ps,ok:()=>PH.elig('pick',sub),go:()=>PH.start('pick',sub)});
 FL.cSpeak=(sub,t,ps)=>({t,ps,ok:()=>PH.elig('speak',sub),go:()=>PH.start('speak',sub)});
 FL.cTyped=(m,t,hl,ps)=>({t,hl,ps,ok:FL.okTyped,go:()=>{S.set.mode=m;S.set.mix=false;save();startRound();return true}});
 FL.cExpose=t=>({t,ok:FL.okExpose,go:()=>{S.set.mode='expose';S.set.mix=false;save();startRound();return true}});
-FL.cFlow=(t,flow)=>({t,ps:{flow},ok:FL.okFlow,go:()=>{/* 整合流程每個詞有數個步驟：減少詞數、必要時截尾，讓總題數不超過所選題數 */if(FLR){const n=FLR.n||5;FLR.ps={...(FLR.ps||{}),cap:n,fw:Math.max(1,Math.floor(n/Math.max(1,FLOW.steps().length)))};while(FLR.ps.fw>1&&FLOW.items().length>n)FLR.ps.fw--}return PH.startFlow()}});
+FL.cFlow=(t,flow)=>({t,ps:{flow},ok:FL.okFlow,go:()=>{/* 整合流程每個詞有數個步驟：有詞彙快照時＝所選詞彙數量（每個詞走完全部步驟）；舊式題數流程維持原本截尾規則 */if(SNAP.on()){FLR.ps={...(FLR.ps||{}),cap:0,fw:SNAP.fw()}}else if(FLR){const n=FLR.n||5;FLR.ps={...(FLR.ps||{}),cap:n,fw:Math.max(1,Math.floor(n/Math.max(1,FLOW.steps().length)))};while(FLR.ps.fw>1&&FLOW.items().length>n)FLR.ps.fw--}return PH.startFlow()}});
 FL.cCB=(g,t,o)=>({t,ok:()=>{const L=CB.avail(g,o||{rel:'all'});return L.length?{ok:true}:{ok:false,msg:CB.why||'目前沒有可用教材'}},go:()=>CB.start(g,o||{rel:'all'})});
 FL.cSE=(g,t,o)=>({t,ok:()=>{const L=SCM.includes(g)?SCN.avail(g,o||{}):SE.avail(g,o||{});return L.length?{ok:true}:{ok:false,msg:SE.why||'目前沒有可用教材'}},go:()=>SE.start(g)});
 FL.cMX=(kind,t)=>({t,ok:()=>{const m=CB.mxs()[0];if(!m)return{ok:false,msg:'需要老師先建立「詞彙組合矩陣」'};return CB.mxItems(m.id,kind).length?{ok:true}:{ok:false,msg:'矩陣裡沒有可評量的「未教過」組合（可能都已教過，或缺少圖片／情境提示）'}},go:()=>CB.mxStart(CB.mxs()[0].id,kind)});
@@ -4179,7 +4181,7 @@ FL.extras=(st,mode)=>{if(st!==1||mode==='oral')return [];return [{t:'看圖＋�
 FL.RANGE={rec:'系統推薦',rv:'複習學過的詞彙',pick:'自行選擇教材'};
 FL.srcOf=(range,cat)=>range==='rec'?'rec':range==='rv'?'rv':(cat||'all');
 FL.withSrc=(src,fn)=>{const o=S.set.src;S.set.src=src;try{return fn()}finally{S.set.src=o}};
-FL.chk=(cfg,range,cat)=>cfg.na?{ok:false,msg:cfg.na}:FL.withSrc(FL.srcOf(range,cat),()=>{try{const r=cfg.ok();return r&&r.ok?{ok:true}:{ok:false,msg:(r&&r.msg)||'目前沒有可用教材'}}catch(e){return{ok:false,msg:'目前無法使用'}}});
+FL.chk=(cfg,range,cat)=>cfg.na?{ok:false,msg:cfg.na}:FL.withSrc(FL.srcOf(range,cat),()=>{try{const r=cfg.ok();return r&&r.ok?{ok:true,n:r.n}:{ok:false,msg:(r&&r.msg)||'目前沒有可用教材'}}catch(e){return{ok:false,msg:'目前無法使用'}}});
 FL.learned=c=>{const v=S.rv[c.id];return !!(v&&v.ok>0)};
 FL.seed=1;FL.rnd=id=>{let h=FL.seed;for(const ch of String(id))h=(h*31+ch.charCodeAt(0))%100003;return(h%1000)/1000};
 FL.recPool=()=>{const due=new Set((()=>{try{return REV.due().map(x=>x.cid||x.id||x)}catch(e){return[]}})()),mk=new Set(mistakeCards().map(c=>c.id));
@@ -4208,7 +4210,7 @@ FL.mapHtml=()=>{const mode=FL.modeOf(),L=UI.LM[mode],R=FL.recs(),mm=FL.mem();
   return `<div class="stc ${okN?'':'off'}"><div class="stt"><span class="ste">${s.e}</span><b>第 ${s.id} 站｜${s.n}</b>${tag}</div><div class="std">${esc(FL.SD[s.id][mode])}</div>${rec?`<small class="strc">${esc(rec.why)}</small>`:''}
   ${okN?`<div class="stb"><button class="btn go" onclick="FL.open(${s.id})">進入這一站</button> <small>${okN}／5 個難度可用</small></div>`:`<div class="stb"><button class="btn alt" disabled>目前無法練習</button><small class="stw">${esc((first&&first.msg)||why||'尚無教材')}</small></div>`}</div>`}).join('');
  return `<div class="hm3 md3"><p class="bk"><button class="btn alt" onclick="UI.navTo(1)">← 回首頁</button></p><h2>${L.ic} ${L.n}</h2><p class="hq">${L.s}　<span class="mk2">${L.mic}</span></p>${UI.packNote()}<p class="hq2">選一站開始（每一站都可以自由選擇）</p><div class="stg6">${cards}</div></div>`};
-FL.rangeCat=()=>{const mm=FL.mem();const mk=c=>['c:'+c.id,c.name+'（'+S.cards.filter(x=>x.cats.includes(c.id)).length+'張）'],lv=S.cats.filter(c=>c.lvl).sort((a,b)=>(a.sort||0)-(b.sort||0));return `<select id="fl_cat" onchange="FL.setCat(this.value)">${[['all','全部圖卡（'+S.cards.length+'）'],...(lv.length?[['','── 依分類 ──']]:[]),...S.cats.filter(c=>!c.lvl).map(mk),...(lv.length?[['','── 依 Level ──']]:[]),...lv.map(mk),['mk','錯題集（'+mistakeCards().length+'）'],['wk','注音加強練習（'+weakCards().length+'）']].map(([v,t])=>v===''?`<option disabled>${esc(t)}</option>`:`<option value="${v}" ${mm.cat===v?'selected':''}>${esc(t)}</option>`).join('')}</select>`};
+FL.rangeCat=()=>{const mm=FL.mem();const mk=c=>['c:'+c.id,c.name+'（'+S.cards.filter(x=>x.cats.includes(c.id)).length+'張）'],lv=S.cats.filter(c=>c.lvl).sort((a,b)=>(a.sort||0)-(b.sort||0));return `<select id="fl_cat" onchange="FL.setCat(this.value)">${[['all','全部圖卡（'+S.cards.length+'）'],...(lv.length?[['','── 依分類 ──']]:[]),...S.cats.filter(c=>!c.lvl).map(mk),...(lv.length?[['','── 依 Level ──']]:[]),...lv.map(mk),['mk','錯題集（'+mistakeCards().length+'）'],['wk','注音加強練習（'+weakCards().length+'）'],...(S.set.laIds&&S.set.laIds.length?[['la','分析推薦的詞彙（'+LA.pool().length+'）']]:[])].map(([v,t])=>v===''?`<option disabled>${esc(t)}</option>`:`<option value="${v}" ${mm.cat===v?'selected':''}>${esc(t)}</option>`).join('')}</select>`};
 FL.setupHtml=()=>{const st=FL.st,mode=FL.modeOf(),S0=STG.find(s=>s.id===st),mm=FL.mem(),n=mm.n||(FL.pref().n)||5,star=FL.starFor(st,mode),rng=mm.range||'rec',lad=FL.ladder(st,mode),ex=FL.extras(st,mode),act=FL.actSel||'';
  const stars=lad.map((c,i)=>{const r=FL.chk(c,rng,mm.cat),on=star===i+1;return `<button class="fstar ${on?'on':''} ${r.ok?'':'na'}" ${r.ok?`onclick="FL.setStar(${i+1})"`:'disabled'} aria-pressed="${on}" aria-label="${FL.STAR[i]}難度${r.ok?'':'（目前無法使用）'}" title="${r.ok?'':esc(r.msg||'')}"><span>${'★'.repeat(i+1)}${'☆'.repeat(4-i)}</span><small>${r.ok?FL.STAR[i]:'尚無教材'}</small></button>`}).join('');
  const cur=lad[star-1],curChk=FL.chk(cur,rng,mm.cat),desc=curChk.ok?`<b>${FL.STAR[star-1]}：</b>${esc(cur.t)}　<small>每完成一題 ⭐ ${star} 顆</small>`:`<b>${FL.STAR[star-1]}目前無法使用：</b>${esc(curChk.msg)}`;
@@ -4231,20 +4233,21 @@ FL.setCat=v=>{const m=FL.mem();m.cat=v;m.range='pick';save();home()};
 FL.setAct=v=>{FL.actSel=v;home()};
 FL.setVeh=v=>{FL.mem().veh=v;save();home()};
 /* ---------- 開始練習 ---------- */
-FL.begin=r=>{const S1=S.set;S1.flbk={src:S1.src,n:S1.n,theme:S1.theme,hl:JSON.parse(JSON.stringify(S1.hl||{})),pks:S1.pks,sps:S1.sps,mode:S1.mode,mix:S1.mix,p4Gen:S1.p4Gen,order:S1.order};FL.seed=(Date.now()%90000)+1;FL.run=r;if(r.hl){const u=S1.hl||{},h=r.hl,m={...u};['w','c','p','f','a'].forEach(k=>{if(h[k]!==undefined)m[k]=(u[k]&&h[k])?1:0});m.cap=Math.max(+u.cap||0,+h.cap||0);S1.hl=m}/* 難度階梯與個案設定取較嚴格者 */if(r.gen)S1.p4Gen=r.gen;S1.src=FL.srcOf(r.range,r.cat);if(r.range==='rec')S1.order='seq';S1.n=r.n;if(TH[r.veh])S1.theme=r.veh};
-FL.restore=()=>{const b=S.set.flbk;if(!b)return;['src','n','theme','pks','sps','p4Gen','order'].forEach(k=>{if(b[k]===undefined)delete S.set[k];else S.set[k]=b[k]});if(b.hl)S.set.hl=b.hl;delete S.set.flbk;save()};
+FL.begin=r=>{const S1=S.set;S1.flbk={src:S1.src,n:S1.n,theme:S1.theme,hl:JSON.parse(JSON.stringify(S1.hl||{})),pks:S1.pks,sps:S1.sps,mode:S1.mode,mix:S1.mix,p4Gen:S1.p4Gen,order:S1.order};FL.seed=(Date.now()%90000)+1;FL.run=r;if(r.hl){const u=S1.hl||{},h=r.hl,m={...u};['w','c','p','f','a'].forEach(k=>{if(h[k]!==undefined)m[k]=(u[k]&&h[k])?1:0});m.cap=Math.max(+u.cap||0,+h.cap||0);S1.hl=m}/* 難度階梯與個案設定取較嚴格者 */if(r.gen)S1.p4Gen=r.gen;S1.src=FL.srcOf(r.range,r.cat);if(r.range==='rec')S1.order='seq';S1.n=r.n;SNAP.init(r);if(TH[r.veh])S1.theme=r.veh};
+FL.restore=()=>{SNAP.s=null;const b=S.set.flbk;if(!b)return;['src','n','theme','pks','sps','p4Gen','order'].forEach(k=>{if(b[k]===undefined)delete S.set[k];else S.set[k]=b[k]});if(b.hl)S.set.hl=b.hl;delete S.set.flbk;save()};
 FL.go=()=>{const st=FL.st,mode=FL.modeOf(),mm=FL.mem(),lad=FL.ladder(st,mode),ex=FL.extras(st,mode);let cfg,star;
  if(FL.actSel&&/^x\d+$/.test(FL.actSel)){const x=ex[+FL.actSel.slice(1)];cfg=x;star=x?x.star:1}else{star=FL.starFor(st,mode);cfg=lad[star-1]}
- if(!cfg)return false;const n=mm.n||FL.pref().n||5,rng=mm.range||'rec',cat=mm.cat||'all',chk=FL.chk(cfg,rng,cat);
+ if(!cfg)return false;let n=mm.n||FL.pref().n||5;if((mm.range||'rec')==='pick')FL.migDim();const rng=mm.range||'rec',cat=mm.cat||'all',chk=FL.chk(cfg,rng,cat);
  if(!chk.ok){alert(chk.msg);return false}
+ let w=null;if(chk.n!=null){const W=MAT.want(chk.n);if(W.err){alert(W.err);return false}n=W.k;w={want:MAT.wOf()==='all'?'all':W.k,avail:chk.n,dim:rng==='pick'?mm.dim:null,cats:rng==='pick'&&mm.dim!=='sp'?((mm.sel||{})[mm.dim]||[]).slice():null}}
  S.set.lm=mode;V2.noMic=false;
- const veh=mm.veh&&TH[mm.veh]?mm.veh:FL.VEH[star-1];UI.origin={view:'mode',mode};FL.sticky={st,mode};
- FL.begin({st,mode,star,n,range:rng,cat,veh,ps:cfg.ps||null,hl:cfg.hl||null,gen:cfg.gen||null,t:cfg.t,cfg,act:FL.actSel||null,enc:{},tot:0});
+ const veh=FL.vehFor(star);UI.origin={view:'mode',mode};FL.sticky={st,mode};
+ FL.begin({st,mode,star,n,w,range:rng,cat,veh,ps:cfg.ps||null,hl:cfg.hl||null,gen:cfg.gen||null,t:cfg.t,cfg,act:FL.actSel||null,enc:{},tot:0});
  let ok=false;try{ok=cfg.go()!==false}catch(e){console.error('FL.go',e)}
  if(!ok||!G.on){const had=!!G.on;if(!had){FL.restore();FL.run=null;UI.origin=null}}
  return ok};
 FL.again=()=>{const r=FL.run;if(!r){startRound();return}const cfg=r.cfg;FL.restore();FL.begin({...r,enc:{},tot:0});let ok=false;try{ok=cfg.go()!==false}catch(e){console.error(e)}if(!ok){FL.restore();FL.run=null;home()}};
-FL.end=()=>{if(FL.run){FL.restore();FL.run=null}};
+FL.end=()=>{if(FL.run){FL.restore();FL.run=null}SNAP.s=null};
 /* ---------- 星星：同一題只發一次最終星星，不扣星，鼓勵星 1 顆 ---------- */
 FL.star=()=>(FL.run&&FL.run.star)||1;
 FL.award=()=>{const cid=G.cur&&G.cur.id,st=FL.star(),r=FL.run,enc=r?(r.enc[cid]||0):0,add=Math.max(0,st-enc);if(r){delete r.enc[cid];r.tot=(r.tot||0)+add}G.starsRound=(G.starsRound||0)+add;return add};
@@ -4646,13 +4649,13 @@ PH.M.key='key';
 SM.stepOf=mode=>({pick:'pick',speak:'speak',key:'key',listen:'listen',spell:'spell'})[mode]||null;
 SM.active=()=>{if(!SM.on()||PH.qq||S.set.mix||!SM.stepOf(S.set.mode))return false;const s=S.set.src;return s==='rec'||s==='rv'};
 SM.pre=()=>{try{if(!SM.active())return;const mode=S.set.mode,sub=mode==='pick'?(S.set.pks||'word'):mode==='speak'?(S.set.sps||'obj'):null,cs=PH.cards(deck().cards);if(!cs||!cs.length)return;
-  const n=Math.max(1,+S.set.n||5),ab=[SM.abOf(mode,sub)],r=SM.plan(cs,n,ab);
+  const n=Math.max(1,+S.set.n||5),ab=[SM.abOf(mode,sub)],r=SM.plan(cs,n,ab,SNAP.on()?{noRepeat:true,baseK:n}:undefined);
   if(SM.ratio().paused&&r.plan.avail.fam+r.plan.avail.need===0){alert('已暫停新詞彙，但目前教材裡沒有學過的詞彙可以出題。請老師到「教師專區→詞彙履歷→出題設定」取消「暫停新詞彙」，或先讓學生做過示範與練習。');SM._abort=true;return}
-  if(!r.items.length)return;
+  if(!r.items.length)return;SNAP.note(r.items.map(x=>x.c.id));
   const step=SM.stepOf(mode);SM._lastId=r.plan.id;
   let items=[];r.items.forEach(x=>{const it=(st,ex)=>({...x.c,_step:st,_sub:st==='expose'?undefined:sub||undefined,_sm:{b:x.b,pid:r.plan.id,...(ex||{})}});
    if(x.b==='new'&&x.base){items.push(it('expose'));items.push(it(step,{base:1}))}else items.push(it(x.b==='new'?'expose':step))});
-  if(r.plan.baseline){items=items.slice(0,n);r.plan.words=items.map(c=>({id:c.id,t:c.text,b:'new',step:c._step}))}
+  if(r.plan.baseline){if(!SNAP.on())items=items.slice(0,n);r.plan.words=items.map(c=>({id:c.id,t:c.text,b:'new',step:c._step}))}
   PH.m0=(G&&G.flow&&PH.m0)?PH.m0:S.set.mode;PH.qq={items,flow:true,sm:r.plan}}catch(e){console.warn('SM.pre',e);PH.qq=null}};
 {const _s=startRound;startRound=function(){SM._abort=false;SM.pre();if(SM._abort){SM._abort=false;return}return _s.apply(this,arguments)}}
 {const _q=PH.qinit;PH.qinit=function(){const q=PH.qq;_q.apply(this,arguments);if(q&&q.sm){G.sm=q.sm;G.heard={};SM.save(q.sm)}}}
@@ -4670,7 +4673,7 @@ FLOW.ilOf=()=>{const il=SM.cfg().il||'auto',star=(typeof FLR!=='undefined'&&FLR&
 FLOW.stepsFor=(c,b,steps,base)=>{const per=+(SM.cfg().per)||0;if(b==='new'&&!base)return ['expose'];if(b==='new')return steps.includes('expose')?steps:['expose',...steps];
  if(!per||per>=steps.length)return steps;const P=VP.prof(c.id),pool=steps.filter(s=>s!=='expose'),sc=s=>{const a=SM.STEPAB[s],x=a&&P.ab[a];return x?(x.regressed?-1:VP.rank(x)):9};
  return pool.map((s,i)=>[s,sc(s),i]).sort((x,y)=>x[1]-y[1]||x[2]-y[2]).slice(0,per).map(x=>x[0]).sort((x,y)=>steps.indexOf(x)-steps.indexOf(y))};
-FLOW.items=()=>{const p=PS(),steps=FLOW.steps(),gap=Math.max(1,Math.min(8,+p.fg||3)),fwN=Math.max(1,Math.min(10,+p.fw||3)),base=LRN.words(pool()),R=[],pend=[],useSM=SM.on()&&(S.set.src==='rec'||S.set.src==='rv');
+FLOW.items=()=>{const p=PS(),steps=FLOW.steps(),gap=Math.max(1,Math.min(8,+p.fg||3)),fwN=SNAP.on()?SNAP.fw():Math.max(1,Math.min(10,+p.fw||3)),base0=LRN.words(pool()),base=SNAP.on()?((SNAP.pick(base0)||{}).cards||base0):base0,R=[],pend=[],useSM=SM.on()&&(S.set.src==='rec'||S.set.src==='rv');
  let words;
  if(useSM&&base.length){const abs=[...new Set(steps.map(s=>SM.STEPAB[s]).filter(Boolean))];const r=SM.plan(base,fwN,abs.length?abs:['si'],{noRepeat:true});words=r.items.map(x=>({c:x.c,b:x.b,base:!!x.base}));FLOW._plan=r.plan}
  else{FLOW._plan=null;words=(S.set.order==='seq'?base:shuffle(base)).slice(0,fwN).map(c=>({c,b:null}))}
@@ -4797,7 +4800,7 @@ DSH.v.vp=()=>{
 /* 事後補確認會改變口語結果 → 履歷快取失效並重算狀態 */
 {const _r=RE.revise;RE.revise=function(id){const ok=_r.apply(this,arguments);try{VP._k=null;const r=(S.recs||[]).find(x=>x.id===id);if(r&&r.itemId)VP.sync(r.itemId)}catch(e){console.warn('VP revise',e)}return ok}}
 /*P11-END*/
-/*P12-BEGIN 第05階段：內建詞彙庫（1,000 詞／16 分類／592 張圖）整合。靜態資料放在 vocab/，教師資料另存於 S.lib，不放進 HTML、不用 Base64 */
+/*P12-BEGIN 第05階段：內建詞彙庫整合（詞彙數、分類數、圖片數一律讀自 vocab/ 資料，不寫死）。靜態資料放在 vocab/，教師資料另存於 S.lib，不放進 HTML、不用 Base64 */
 const LIB={base:null,cats:null,man:null,err:'',loading:null,ui:{q:'',cat:'',img:'',rv:'',en:'',zy:'',pg:0,sel:{},w:null,rvPg:0},
  DIR:'vocab/',
  st(){const s=S.lib||(S.lib={});if(!s.en)s.en={};if(!s.ov)s.ov={};if(!s.cm)s.cm={};if(!s.log)s.log=[];if(!s.ver)s.ver='1.0';return s},
@@ -4855,14 +4858,14 @@ const LIB={base:null,cats:null,man:null,err:'',loading:null,ui:{q:'',cat:'',img:
  setEn(ids,on){const s=LIB.st();let n=0;ids.forEach(id=>{if(!LIB.idx.has(id))return;if(on&&!s.en[id]){s.en[id]=1;n++}else if(!on&&s.en[id]){delete s.en[id];n++}});LIB.sync();LIB.log((on?'啟用 ':'停用 ')+n+' 個詞彙');save();return n},
  log(t){const s=LIB.st();s.log.push({ts:Date.now(),t});if(s.log.length>200)s.log=s.log.slice(-200)},
  /* ---- 多圖：固定／輪流／隨機；只在「新題目開始時」選圖，同一題不換圖 ---- */
- ext(){const e=LRN.cur();e.ext=e.ext||{};e.ext.lib=e.ext.lib||{mode:'fixed',rot:{},use:{}};return e.ext.lib},
- mode(){return LIB.ext().mode||'fixed'},
+ ext(){const e=LRN.cur();e.ext=e.ext||{};e.ext.lib=e.ext.lib||{mode:'random',rot:{},use:{}};return e.ext.lib},
+ mode(){return LIB.ext().mode||'random'},
  pick(q){if(!q||!q.lib||!q.imgs||q.imgs.length<2||!q.img)return;const key=(G.rid||0)+':'+G.i,L=LIB.ext();
   if(L._q&&L._q.k===key&&L._q.id===q.id){q.img=L._q.u;const o=byId(q.id);if(o)o.img=L._q.u;return}
-  const n=q.imgs.length,m=L.mode||'fixed';let u=q.libPrim||q.imgs[0];
+  const n=q.imgs.length,m=L.mode||'random';let u=q.libPrim||q.imgs[0];
   if(m==='rotate'){const i=(L.rot[q.id]||0)%n;u=q.imgs[i];L.rot[q.id]=(i+1)%n}
   else if(m==='random'){const last=(L.last||{})[q.id];const c=q.imgs.filter(x=>x!==last);u=(c.length?c:q.imgs)[Math.floor(Math.random()*(c.length||n))];(L.last=L.last||{})[q.id]=u}
-  q.img=u;const o=byId(q.id);if(o)o.img=u;L._q={k:key,id:q.id,u};const nm=u.startsWith('data:')?'自行新增圖片':u.split('/').pop();(L.use[q.id]=L.use[q.id]||{})[nm]=(L.use[q.id][nm]||0)+1},
+  q.img=u;q._alts=q.imgs.filter(x=>x!==u);const o=byId(q.id);if(o)o.img=u;L._q={k:key,id:q.id,u};const nm=u.startsWith('data:')?'自行新增圖片':u.split('/').pop();(L.use[q.id]=L.use[q.id]||{})[nm]=(L.use[q.id][nm]||0)+1},
  /* ---- 注音：格式檢查與「需人工確認」清單（不自動改注音）---- */
  SYL:/^˙?[ㄅ-ㄩ]+[ˊˇˋ]?$/,
  POLY:{行:'行（ㄒㄧㄥˊ／ㄏㄤˊ）',長:'長（ㄔㄤˊ／ㄓㄤˇ）',重:'重（ㄓㄨㄥˋ／ㄔㄨㄥˊ）',樂:'樂（ㄌㄜˋ／ㄩㄝˋ）',了:'了（ㄌㄜ˙／ㄌㄧㄠˇ）',還:'還（ㄏㄞˊ／ㄏㄨㄢˊ）',為:'為（ㄨㄟˊ／ㄨㄟˋ）',得:'得（ㄉㄜˊ／˙ㄉㄜ／ㄉㄟˇ）',著:'著（ㄓㄜ˙／ㄓㄠˊ／ㄓㄨㄛˊ）',都:'都（ㄉㄡ／ㄉㄨ）',沒:'沒（ㄇㄟˊ／ㄇㄛˋ）',背:'背（ㄅㄟˋ／ㄅㄟ）',數:'數（ㄕㄨˋ／ㄕㄨˇ）',降:'降（ㄐㄧㄤˋ／ㄒㄧㄤˊ）',曲:'曲（ㄑㄩ／ㄑㄩˇ）',差:'差（ㄔㄚ／ㄔㄚˋ／ㄔㄞ）',和:'和（ㄏㄜˊ／ㄏㄢˋ／ㄏㄨㄛˋ）',調:'調（ㄊㄧㄠˊ／ㄉㄧㄠˋ）',切:'切（ㄑㄧㄝ／ㄑㄧㄝˋ）',血:'血（ㄒㄧㄝˇ／ㄒㄩㄝˋ）',假:'假（ㄐㄧㄚˇ／ㄐㄧㄚˋ）',朝:'朝（ㄔㄠˊ／ㄓㄠ）',便:'便（ㄅㄧㄢˋ／ㄆㄧㄢˊ）',好:'好（ㄏㄠˇ／ㄏㄠˋ）',甚:'甚（ㄕㄣˊ／ㄕㄣˋ）',累:'累（ㄌㄟˋ／ㄌㄟˇ）',參:'參（ㄘㄢ／ㄕㄣ）',似:'似（ㄙˋ／ㄕˋ）',率:'率（ㄌㄩˋ／ㄕㄨㄞˋ）'},
@@ -5031,7 +5034,7 @@ LIB.defDl=()=>{if(!LIB.base)return alert('詞彙庫尚未讀取');const {o,drop}
  const b=new Blob([JSON.stringify(o,null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='default-library.json';document.body.appendChild(a);a.click();a.remove();LIB.log('匯出預設清單（啟用 '+o.counts.enabled+'）');save();LIB.defMsg='已下載 default-library.json。請放進網站的 vocab 資料夾（和 vocabulary.json 同一層）並推送到 GitHub。';LIB.re()};
 LIB.defFetch=async()=>{const r=await fetch(LIB.DIR+'default-library.json?t='+Date.now(),{cache:'no-store'});if(r.status===404)return null;if(!r.ok)throw new Error('default-library.json HTTP '+r.status);
  let j;try{j=await r.json()}catch(e){throw new Error('default-library.json 不是有效的 JSON')}const c=LIB.defClean(j);if(!c)throw new Error('default-library.json 格式不正確');return c};
-LIB.defSnap=c=>({hash:c.hash,en:Object.keys(c.en),ovh:Object.fromEntries(Object.entries(c.ov).map(([k,v])=>[k,LIB.hash(JSON.stringify(v))])),ts:Date.now()});
+LIB.defSnap=c=>({hash:c.hash,ver:(LIB.man&&LIB.man.version)||'',en:Object.keys(c.en),ovh:Object.fromEntries(Object.entries(c.ov).map(([k,v])=>[k,LIB.hash(JSON.stringify(v))])),ts:Date.now()});
 LIB.defApplyAll=(c,onlyMissing)=>{const s=LIB.st();let a=0,b=0;
  Object.keys(c.en).forEach(id=>{if(!s.en[id]){s.en[id]=1;a++}});
  Object.entries(c.ov).forEach(([id,v])=>{if(!onlyMissing||!s.ov[id]){if(!s.ov[id]||!onlyMissing){s.ov[id]={...(s.ov[id]||{}),...JSON.parse(JSON.stringify(v))};b++}}});
@@ -5041,15 +5044,17 @@ LIB.defDiff=c=>{const s=LIB.st(),p=s.def||{en:[],ovh:{}},pe=new Set(p.en),d={add
  Object.entries(c.ov).forEach(([id,v])=>{const h=LIB.hash(JSON.stringify(v));if(p.ovh[id]===h)return;if(s.ov[id])d.conflict.push(id);else d.newOv.push(id)});return d};
 LIB.defBoot=async()=>{LIB.defInfo={state:'none'};if(!LIB.base)return;
  try{const c=await LIB.defFetch();if(!c)return;const s0=S.lib,empty=!s0||(!Object.keys(s0.en||{}).length&&!Object.keys(s0.ov||{}).length&&!s0.def);
-  if(empty){const r=LIB.defApplyAll(c,false),s=LIB.st();s.def=LIB.defSnap(c);if(c.mode&&!(LRN.cur().ext||{}).lib)LIB.ext().mode=c.mode;LIB.log('自動套用網站預設清單：啟用 '+r.a+'、設定 '+r.b);LIB.defInfo={state:'applied',a:r.a,b:r.b};await save();return}
+  if(empty){const r=LIB.defApplyAll(c,false),s=LIB.st();s.def=LIB.defSnap(c);if(c.mode&&!(LRN.cur().ext||{}).lib)LIB.ext().mode=(c.mode&&c.mode!=='fixed')?c.mode:'random';LIB.log('自動套用網站預設清單：啟用 '+r.a+'、設定 '+r.b);LIB.defInfo={state:'applied',a:r.a,b:r.b};await save();return}
   const s=LIB.st();if(!s.def){s.def=LIB.defSnap(c);LIB.defInfo={state:'baseline'};LIB.defC=c;await save();return}
   LIB.defC=c;if(s.def.hash===c.hash){LIB.defInfo={state:'same'};return}
   const d=LIB.defDiff(c);if(!d.addEn.length&&!d.newOv.length&&!d.conflict.length){s.def=LIB.defSnap(c);LIB.defInfo={state:'same'};await save();return}
   if(s.def.skip===c.hash){LIB.defInfo={state:'skipped'};return}
   LIB.defPend={c,d};LIB.defInfo={state:'pending'}}
  catch(e){LIB.defInfo={state:'err',msg:String(e&&e.message||e)}}};
-LIB.defOk=()=>{const p=LIB.defPend;if(!p)return;const s=LIB.st();p.d.addEn.forEach(id=>{s.en[id]=1});p.d.newOv.forEach(id=>{s.ov[id]=JSON.parse(JSON.stringify(p.c.ov[id]))});
+LIB.defOk=()=>{const p=LIB.defPend;if(!p)return;const s=LIB.st();const pre=JSON.parse(JSON.stringify(s));kvPut('lib-pre-update',{ts:Date.now(),lib:pre}).catch(()=>{});LIB.pre=pre;try{LIB.defOk0(p,s)}catch(e){console.error('defOk',e);Object.keys(s).forEach(k=>delete s[k]);Object.assign(s,pre);LIB.defMsg='更新失敗，已自動回復到更新前的設定（沒有任何資料被改動）';LIB.defPend=p;LIB.defInfo={state:'pending'};try{LIB.sync()}catch(x){}save();LIB.re()}};
+LIB.defOk0=(p,s)=>{p.d.addEn.forEach(id=>{s.en[id]=1});p.d.newOv.forEach(id=>{s.ov[id]=JSON.parse(JSON.stringify(p.c.ov[id]))});
  s.def=LIB.defSnap(p.c);delete s.def.skip;LIB.log('套用預設清單更新：新增啟用 '+p.d.addEn.length+'、新設定 '+p.d.newOv.length+'；本機已有設定而保留 '+p.d.conflict.length);LIB.defPend=null;LIB.defInfo={state:'same'};LIB.sync();save();LIB.re()};
+LIB.defUndo=async()=>{let pre=LIB.pre;if(!pre){const r=await kvGet('lib-pre-update');pre=r&&r.lib}if(!pre){alert('沒有可回復的更新前設定');return}if(!confirm('回復到最近一次套用預設清單之前的詞彙設定？（學習紀錄、自訂教材不受影響）'))return;const s=LIB.st();Object.keys(s).forEach(k=>delete s[k]);Object.assign(s,JSON.parse(JSON.stringify(pre)));LIB.sync();LIB.defMsg='已回復到更新前的詞彙設定';await save();LIB.re()};
 LIB.defSkip=()=>{const p=LIB.defPend;if(!p)return;LIB.st().def.skip=p.c.hash;LIB.defPend=null;LIB.defInfo={state:'skipped'};save();LIB.re()};
 LIB.defFill=async()=>{try{const c=LIB.defC||await LIB.defFetch();if(!c)return alert('網站上沒有 vocab/default-library.json');const r=LIB.defApplyAll(c,true),s=LIB.st();s.def=LIB.defSnap(c);LIB.log('手動補入預設清單：新增啟用 '+r.a+'、新設定 '+r.b);LIB.sync();await save();LIB.defMsg='已補入預設清單：新增啟用 '+r.a+' 個詞彙、'+r.b+' 項設定。本機原有的設定都沒有被改動。';LIB.re()}catch(e){alert('讀取預設清單失敗：'+(e.message||e))}};
 /* 無圖詞彙與 CSV */
@@ -5062,7 +5067,8 @@ LIB.csv=kind=>{if(!LIB.base)return;const q=v=>'"'+String(v==null?'':v).replace(/
 LIB.noImgByCat=()=>{const m=new Map();LIB.base.forEach(b=>{const w=LIB.eff(b.id);if(!w.imgs.length)m.set(w.catId,(m.get(w.catId)||0)+1)});return LIB.cats.map(c=>({id:c.id,name:c.name,n:m.get(c.id)||0,total:c.count})).filter(x=>x.n)};
 LIB.extra=()=>{if(!LIB.base)return{top:'',bot:''};const s=LIB.st(),i=LIB.defInfo||{state:'none'},p=LIB.defPend,nb=LIB.noImgByCat(),tot=nb.reduce((a,x)=>a+x.n,0);
  const stt={none:'網站上沒有 vocab/default-library.json（還沒發布預設清單）。',applied:'這台裝置第一次開啟，已自動套用網站預設清單。',baseline:'網站有預設清單；這台裝置已有自己的設定，所以沒有改動。要把預設清單裡本機沒有的項目補進來，請按下方「補入」。',same:'與網站預設清單一致，沒有待處理的差異。',skipped:'網站預設清單有更新，你選擇暫時略過。',pending:'網站預設清單有更新，等你確認。',err:'讀取預設清單失敗：'+esc(i.msg||'')}[i.state]||'';
- const top=p?`<div class="panel" style="border:2px solid #e0a020;background:#fff7e6"><b>網站的預設詞彙清單有更新</b>：新增 ${p.d.addEn.length} 個啟用詞彙、${p.d.newOv.length} 項新設定；另有 ${p.d.conflict.length} 項你這台已有自己的設定，會<b>保留你的設定</b>。<br><small>只會加入你這台還沒有的項目，不會覆蓋或停用你已做的設定。</small><br><button class="btn go" onclick="LIB.defOk()">確認套用</button> <button class="btn alt" onclick="LIB.defSkip()">暫時略過</button></div>`:'';
+ const mv=(LIB.man&&LIB.man.version)||'未記錄',dv=(s.def&&s.def.ver)||(s.def?'舊版（未記錄版本）':'尚未套用'),vtxt=`<div class="panel"><b>📚 教材版本</b>（程式版本 v20.0）：網站目前 <b>${esc(mv)}</b>（${LIB.base.length} 詞、${LIB.cats.length} 個主題、${(LIB.lvs||[]).length} 個 Level）；這台裝置上次套用的預設清單版本：<b>${esc(dv)}</b>。${s.def&&s.def.ver&&s.def.ver!==mv&&!p?'<br><small>網站教材已更新，但沒有需要你確認的差異。</small>':''}${p?'<br><small>網站教材有更新，請看下方確認。</small>':''}<br><small>更新只會「加入」本機還沒有的啟用與設定，不會刪除教師自訂詞彙、自訂分類、錄音、學習紀錄、星星與成就；詞彙編號不變，所以學習紀錄不會失去對應。套用前會自動備份，也可以按 <button class="btn alt sm" onclick="LIB.defUndo()">回復到更新前</button>。</small></div>`;
+ const top=vtxt+(p?`<div class="panel" style="border:2px solid #e0a020;background:#fff7e6"><b>網站的預設詞彙清單有更新</b>：新增 ${p.d.addEn.length} 個啟用詞彙、${p.d.newOv.length} 項新設定；另有 ${p.d.conflict.length} 項你這台已有自己的設定，會<b>保留你的設定</b>。<br><small>只會加入你這台還沒有的項目，不會覆蓋或停用你已做的設定。</small><br><button class="btn go" onclick="LIB.defOk()">確認套用</button> <button class="btn alt" onclick="LIB.defSkip()">暫時略過</button></div>`:'');
  const bot=`<div class="panel"><h4 style="margin:0 0 4px">📌 預設詞彙清單（讓每個裝置自動有同一批詞彙）</h4><p><small>${stt}</small></p>
  <p><small>做法：在一台裝置把詞彙啟用、審核好 → 按「匯出預設清單」→ 把下載的 default-library.json 放進網站的 vocab 資料夾並推送 → 其他裝置第一次開啟網站時自動套用；已有自己設定的裝置不會被覆蓋，之後預設清單更新時會提示差異。預設清單不含錄音、老師上傳的圖片、學生姓名與學習紀錄；學生個別的詞彙範圍也不包含。</small></p>
  <button class="btn go" onclick="LIB.defDl()">⬇ 匯出預設清單</button> <button class="btn alt" onclick="LIB.defFill()">補入網站預設清單中本機沒有的項目</button> ${LIB.defMsg?`<p style="color:#237a3b"><b>${esc(LIB.defMsg)}</b></p>`:''}</div>
@@ -5551,6 +5557,289 @@ GV.say=(id,o)=>{o=o||{};let fin=0;const done=p=>{if(fin)return;fin=1;try{o.after
 {const _s=AM.stop;AM.stop=function(){try{GV.clear()}catch(e){}return _s.apply(this,arguments)}}
 {const st=document.createElement('style');st.textContent='.gvb{position:absolute;left:50%;top:6px;transform:translateX(-50%);z-index:30;background:#fff8d8;border:2px solid #f0c040;border-radius:18px;padding:4px 14px;font-size:20px;font-weight:700;color:#5a4300;pointer-events:none;box-shadow:0 2px 6px #0002}.gvb.anim{animation:gvin .35s ease-out}@keyframes gvin{from{opacity:0;transform:translateX(-50%) translateY(-8px)}to{opacity:1}}.gv-find .pko,.gv-find .sxo,.gv-find .cbo{outline:4px solid #f0c040;outline-offset:2px}.gvturn{transform:scale(1.12);transition:transform .25s}.gvsoft{box-shadow:0 0 0 6px #f0c04066;border-radius:18px}@media (prefers-reduced-motion:reduce){.gvturn{transform:none}.gvb.anim{animation:none}}';document.head.appendChild(st)}
 /*P18-END*/
+/*P19-BEGIN v20.0 學習分析（LA）：16 主題／20 Level／六站能力、三階段詞彙熟悉度、智慧複習。
+  只讀取既有作答紀錄（S.recs）與既有學習履歷（VP.evOf），以詞彙 ID 連結；不新增第二套紀錄。規則見 LEARNING-ANALYTICS.md */
+const LA={RV:'1.0',D:864e5,
+ R:{minEv:3,famI:3,famDays:2,recentK:4,famRecentI:3,weakRecentF:2,maintDays:14},
+ CAP:[{k:'lc',n:'聽覺理解',ab:['lc']},{k:'pi',n:'詞彙辨認',ab:['pi']},{k:'zy',n:'注音拼讀與輸入',ab:['zy','dc']},{k:'sp',n:'口語表達',ab:['si','sp']},{k:'ap',n:'綜合應用',ab:['ph','se','gn','dl']}],
+ SN:{1:'詞彙認識站',2:'詞彙練習站',3:'詞彙連結站',4:'短語組合站',5:'語句表達站',6:'生活溝通站'},
+ FN:{weak:'待加強',mid:'學習中',fa:'已熟悉'},
+ DN:{none:'尚未練習',few:'學習紀錄不足',off:'教材尚未啟用',noimg:'尚未補圖'},
+ ui:{view:'lv',st:'',days:'all',fam:'',open:null,word:null,rs:'weak',rn:20,page:{}},_k:null,_c:null};
+LA.now=()=>(typeof VP!=='undefined'&&VP.now)?VP.now():Date.now();
+LA.pct=(a,b)=>b>0?Math.round(a*1000/b)/10:null;
+LA.fp=v=>v==null||!isFinite(v)?'—':v+'%';
+LA.rst=r=>{const f=r&&r.ext&&r.ext.fl;return +(f&&f.st)||+(r&&r.stage)||1};
+LA.rwords=r=>{if(!r)return[];if(r.itemKind==='combo')return((r.combo&&r.combo.parts)||[]).map(p=>p.cid).filter(Boolean);if(r.itemKind==='sentence'||r.itemKind==='scene')return VP.wordsIn(r.itemText);return r.itemId?[r.itemId]:[]};
+LA.valid=r=>!!r&&(r.outcome==='correct'||r.outcome==='wrong');   /* 技術問題、略過、無反應、辨識失敗都不算作答對錯 */
+/* ---------- 三階段熟悉度（保守規則；ev 為依時間排序、已排除技術問題的有效事件，lv：I 獨立／P 部分提示／D 完整示範後／A 有嘗試／F 錯誤） ---------- */
+LA.stage=ev=>{const R=LA.R,n=ev.length;if(!n)return'none';if(n<R.minEv)return'few';
+ const I=ev.filter(e=>e.lv==='I'),days=new Set(I.map(e=>REV.day(e.ts))),rc=ev.slice(-R.recentK),rI=rc.filter(e=>e.lv==='I').length,rF=rc.filter(e=>e.lv==='F').length;
+ if(I.length>=R.famI&&days.size>=R.famDays&&rI>=R.famRecentI&&rF===0)return'fa';
+ if(rI===0||rF>=R.weakRecentF)return'weak';
+ return'mid'};
+LA.why=(ev,s)=>{const n=ev.length,I=ev.filter(e=>e.lv==='I').length,rc=ev.slice(-LA.R.recentK),rI=rc.filter(e=>e.lv==='I').length,hs=rc.filter(e=>e.lv==='P'||e.lv==='D').length,rF=rc.filter(e=>e.lv==='F').length;
+ if(s==='none')return'還沒有作答紀錄';if(s==='few')return'有效紀錄 '+n+' 次，未達 '+LA.R.minEv+' 次，先累積紀錄';
+ return'有效紀錄 '+n+' 次、獨立 '+I+' 次；最近 '+rc.length+' 次中：獨立 '+rI+'、需提示 '+hs+'、錯誤 '+rF};
+/* ---------- 事件與作答索引（依紀錄筆數與最後一筆編號快取；個案、教材改變時自動重算） ---------- */
+LA.idx=()=>{const rs=S.recs||[],key=[LRN.id(),rs.length,rs.length?rs[rs.length-1].id:'',S.cards.length,(S.logs||[]).length].join('|');
+ if(LA._k===key&&LA._c)return LA._c;
+ const byW={},rmap={},ev=[];
+ rs.forEach(r=>{rmap[r.id]=r;let es=[];try{es=VP.evOf(r)}catch(e){}es.forEach(e=>{e.st=LA.rst(r);ev.push(e);(byW[e.w]=byW[e.w]||[]).push(e)})});
+ Object.values(byW).forEach(a=>a.sort((x,y)=>x.ts-y.ts));
+ return LA._c={byW,rmap,ev,n:rs.length},LA._k=key,LA._c};
+LA.cut=days=>days==='all'||!days?0:LA.now()-(+days)*LA.D;
+LA.evOf=(wid,f)=>{const a=(LA.idx().byW[wid]||[]),c=LA.cut(f&&f.days),cp=f&&f.cap?LA.CAP.find(x=>x.k===f.cap):null;
+ const seen=new Set();return a.filter(e=>(!c||e.ts>=c)&&(!f||!f.st||e.st===+f.st)&&(!cp||cp.ab.includes(e.ab))&&!seen.has(e.rid)&&seen.add(e.rid))};  /* 一次作答只算一次（同一次作答可能同時對應多項能力） */
+/* ---------- 詞彙範圍：主題（LIB.cats＋教師自訂分類）、Level（LIB.lvs；日後新增 Level 自動納入） ---------- */
+LA.words=()=>{const out=[],seen=new Set(),on=id=>S.cards.some(c=>c.id===id&&!c.part);
+ if(typeof LIB!=='undefined'&&LIB.base)LIB.base.forEach(b=>{seen.add(b.id);out.push({id:b.id,text:b.word,zy:b.zhuyin,cat:b.categoryId,lv:b.levelId||'',hasImg:(b.images||[]).length>0,on:on(b.id),lib:1,cats:[]})});
+ S.cards.forEach(c=>{if(c.part||seen.has(c.id))return;out.push({id:c.id,text:c.text,zy:c.zy||'',cat:'',lv:'',hasImg:!!c.img,on:true,lib:0,cats:(c.cats||[])})});
+ return out};
+LA.groups=kind=>{const W=LA.words(),g=[];
+ if(kind==='lv'){((typeof LIB!=='undefined'&&LIB.lvs)||[]).slice().sort((a,b)=>(a.level||0)-(b.level||0)).forEach(l=>g.push({k:l.id,n:l.label||l.name||l.id,ids:W.filter(w=>w.lv===l.id)}))}
+ else{((typeof LIB!=='undefined'&&LIB.cats)||[]).forEach(c=>g.push({k:c.id,n:c.name,ids:W.filter(w=>w.cat===c.id)}));
+  S.cats.filter(c=>!c.lib&&!c.lvl&&!/^LA-/.test(c.id)).forEach(c=>{const ids=W.filter(w=>!w.lib&&w.cats.includes(c.id));if(ids.length)g.push({k:'U:'+c.id,n:c.name+'（自訂）',ids})})}
+ return g};
+/* ---------- 單一詞彙的狀態 ---------- */
+LA.wstat=(w,f)=>{if(!w.on)return{d:w.hasImg?'off':'noimg',n:0,ev:[]};const ev=LA.evOf(w.id,f),s=LA.stage(ev);return{d:(s==='none'||s==='few')?s:'',f:(s==='weak'||s==='mid'||s==='fa')?s:'',n:ev.length,ev}};
+LA.dist=(ws,f)=>{const o={tot:ws.length,on:0,off:0,noimg:0,none:0,few:0,weak:0,mid:0,fa:0,judged:0,practiced:0};
+ ws.forEach(w=>{const s=LA.wstat(w,f);if(!w.on){o[s.d]++;return}o.on++;if(s.d==='none')o.none++;else{o.practiced++;if(s.d==='few')o.few++;else{o[s.f]++;o.judged++}}});
+ o.cover=LA.pct(o.practiced,o.on);return o};
+/* ---------- 作答次數為單位的指標（分母逐項標明） ---------- */
+LA.metrics=(ids,f)=>{const set=new Set(ids),I=LA.idx(),c=LA.cut(f&&f.days),m={rec:0,valid:0,ok:0,indep:0,typed:0,tPart:0,tFull:0,words:new Set(),rt:[],speak:0,asrN:0,asrOk:0,conf:0,daily:{},repeat:0,corr:0,hintPost:{n:0,ind:0}};
+ const per={};
+ Object.values(I.rmap).forEach(r=>{if(c&&r.ts<c)return;if(f&&f.st&&LA.rst(r)!==+f.st)return;const ws=LA.rwords(r).filter(x=>set.has(x));if(!ws.length)return;m.rec++;
+  if(r.game==='speak'&&r.outcome!=='tech_error'){m.speak++;if(r.asr&&r.asr.length){m.asrN++;if(r.asr.some(a=>a.matched))m.asrOk++}if(r.manual&&r.manual.used)m.conf++}
+  if(!LA.valid(r))return;m.valid++;const ok=r.outcome==='correct';if(ok)m.ok++;if(ok&&r.independent)m.indep++;
+  ws.forEach(x=>{m.words.add(x);(per[x]=per[x]||[]).push(r)});
+  if(['key','listen','spell'].includes(r.game)){m.typed++;const hs=(r.hints||[]).map(h=>h.type||''),full=hs.some(t=>/^zy_full/.test(t)),part=!full&&hs.some(t=>t==='zy_stage');if(full)m.tFull++;else if(part)m.tPart++}
+  if(typeof r.rtFirstInput==='number'&&r.rtFirstInput>0)m.rt.push(r.rtFirstInput);
+  const d=new Date(r.ts),k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');const o=m.daily[k]=m.daily[k]||{n:0,ok:0,ind:0};o.n++;if(ok)o.ok++;if(ok&&r.independent)o.ind++});
+ m.repeat=Math.max(0,m.valid-m.words.size);
+ Object.values(per).forEach(a=>{a.sort((x,y)=>x.ts-y.ts);const i=a.findIndex(r=>(r.hints||[]).length>0);if(i>=0)a.slice(i+1).forEach(r=>{m.hintPost.n++;if(r.outcome==='correct'&&r.independent)m.hintPost.ind++})});
+ (S.logs||[]).forEach(l=>{if(set.has(l.cid)&&(!c||l.t>=c))m.corr+=+l.corr||0});
+ return{rec:m.rec,valid:m.valid,correct:LA.pct(m.ok,m.valid),indep:LA.pct(m.indep,m.valid),typed:m.typed,partial:LA.pct(m.tPart,m.typed),full:LA.pct(m.tFull,m.typed),corr:m.corr,
+  rt:m.rt.length?Math.round(m.rt.reduce((a,b)=>a+b,0)/m.rt.length/100)/10:null,repeat:m.repeat,speak:m.speak,asr:LA.pct(m.asrOk,m.asrN),asrN:m.asrN,conf:LA.pct(m.conf,m.speak),
+  hintPost:LA.pct(m.hintPost.ind,m.hintPost.n),hintPostN:m.hintPost.n,daily:Object.entries(m.daily).sort((a,b)=>a[0]<b[0]?-1:1).map(([d,o])=>({d,n:o.n,ok:LA.pct(o.ok,o.n),ind:LA.pct(o.ind,o.n)}))}};
+/* ---------- 單一詞彙明細 ---------- */
+LA.detail=w=>{const all=LA.evOf(w.id,null),o={id:w.id,text:w.text,zy:w.zy,n:all.length,last:all.length?all[all.length-1].ts:null,
+  overall:w.on?LA.wstat(w,null):{d:w.hasImg?'off':'noimg',ev:[]},st:{},cap:{}};
+ for(let s=1;s<=6;s++){const ev=LA.evOf(w.id,{st:s});o.st[s]=ev.length?{n:ev.length,s:LA.stage(ev)}:null}
+ LA.CAP.forEach(c=>{const ev=LA.evOf(w.id,{cap:c.k});o.cap[c.k]=ev.length?{n:ev.length,s:LA.stage(ev)}:null});
+ o.I=all.filter(e=>e.lv==='I').length;o.hint=all.filter(e=>e.lv==='P'||e.lv==='D').length;o.F=all.filter(e=>e.lv==='F').length;o.days=new Set(all.map(e=>REV.day(e.ts))).size;
+ o.sug=LA.suggest(w,o);return o};
+LA.suggest=(w,o)=>{if(!w.on)return w.hasImg?'教材尚未啟用，不列入學生練習':'尚未補圖，不列入學生練習';
+ const s=o.overall.f||o.overall.d;if(s==='none')return'尚未練習：可先安排到「詞彙認識站」';if(s==='few')return'紀錄還不夠，多練習幾次再判斷';
+ if(s==='fa')return'維持性複習即可（隔一段時間再練一次）';
+ const best=Object.entries(o.st).filter(([k,v])=>v).sort((a,b)=>({fa:3,mid:2,weak:1}[b[1].s]||0)-({fa:3,mid:2,weak:1}[a[1].s]||0))[0],worst=Object.entries(o.st).filter(([k,v])=>v&&v.s==='weak')[0];
+ if(s==='weak')return worst?'建議在「'+LA.SN[worst[0]]+'」多練習，並搭配提示逐步減少':'建議多重複練習並保留提示';
+ return'繼續練習，目標是減少提示、獨立完成'};
+/* ---------- 智慧複習：不只看錯誤次數，也看提示與最近表現；技術問題不列入 ---------- */
+LA.rec=(scope,n,f)=>{const ws=LA.words().filter(w=>w.on),now=LA.now(),out=[];
+ ws.forEach(w=>{if(scope.cat&&!(w.cat===scope.cat||w.cats.includes(scope.cat)))return;if(scope.lv&&w.lv!==scope.lv)return;
+  const ev=LA.evOf(w.id,f),s=LA.stage(ev);if(s==='none'||s==='few')return;
+  const last=ev[ev.length-1],gap=Math.max(0,Math.floor((now-last.ts)/LA.D)),rc=ev.slice(-LA.R.recentK),h=rc.filter(e=>e.lv==='P'||e.lv==='D').length,fl=rc.filter(e=>e.lv==='F').length;
+  const want=scope.fam||'weak';if(want==='fa'){if(s!=='fa'||gap<LA.R.maintDays)return}else if(s!==want)return;
+  const sc=({weak:100,mid:60,fa:20})[s]+h*6+fl*4+Math.min(20,gap)-Math.min(10,ev.length);
+  out.push({id:w.id,text:w.text,s,sc,n:ev.length,why:LA.why(ev,s)+(gap>=3?'；已 '+gap+' 天沒練習':'')})});
+ return out.sort((a,b)=>b.sc-a.sc||(a.id<b.id?-1:1)).slice(0,n||20)};
+/* 站別建議（只是輔助；六站仍可自由選擇） */
+LA.stationHint=()=>{const ws=LA.words().filter(w=>w.on),r=[];
+ for(let s=1;s<=6;s++){const d={weak:0,mid:0,fa:0};ws.forEach(w=>{const ev=LA.evOf(w.id,{st:s}),x=LA.stage(ev);if(d[x]!=null)d[x]++});const t=d.weak+d.mid+d.fa;if(t>=3)r.push({st:s,t,...d})}
+ if(!r.length)return{list:[],text:'目前各站的有效紀錄還不夠，先依學生興趣自由練習。'};
+ const worst=r.slice().sort((a,b)=>b.weak/b.t-a.weak/a.t)[0];
+ return{list:r,text:worst.weak?'「'+LA.SN[worst.st]+'」有 '+worst.weak+' 個詞待加強，可以多安排這一站（只是建議，六站仍可自由選擇）':'各站目前沒有待加強的詞彙，可以嘗試綜合挑戰或新的 Level'}};
+/* 提示褪除建議：只提出建議，需教師或家長確認後自行到設定調整，不會自動取消提示 */
+LA.fade=()=>{const rs=(S.recs||[]).filter(r=>LA.valid(r)&&['key','listen','spell'].includes(r.game)).slice(-8);
+ if(rs.length<5)return{ok:false,text:'注音題的有效紀錄不足 5 筆，先不調整提示'};
+ const part=rs.filter(r=>(r.hints||[]).some(h=>h.type==='zy_stage')).length,full=rs.filter(r=>(r.hints||[]).some(h=>/^zy_full/.test(h.type||''))).length,okAll=rs.every(r=>r.outcome==='correct');
+ if(full>=Math.ceil(rs.length/2))return{ok:false,text:'最近常使用完整注音提示（'+full+'／'+rs.length+'），暫時維持目前提示'};
+ if(okAll&&(part+full)>0)return{ok:true,text:'最近 '+rs.length+' 次注音題都完成，仍有 '+(part+full)+' 次使用提示；可以考慮改為「只在需要時提供部分提示」（需老師或家長確認）'};
+ if(okAll)return{ok:true,text:'最近 '+rs.length+' 次注音題都沒有使用提示就完成；可以考慮進一步減少視覺提示（需老師或家長確認）'};
+ return{ok:false,text:'最近仍有答錯，先維持目前提示'}};
+/*P19-CORE-END*/
+/* ---------- 介面（教師分頁「學習分析」） ---------- */
+LA.COL={weak:'#f4a6a0',mid:'#ffe08a',fa:'#9bd8a0',none:'#e5e7eb',few:'#d9e2f3',off:'#ececec',noimg:'#ececec'};
+LA.dt=ts=>ts?new Date(ts).toLocaleDateString('zh-TW'):'—';
+LA.f=()=>({st:LA.ui.st||'',days:LA.ui.days||'all'});
+LA.set=(k,v)=>{LA.ui[k]=v;if(k!=='open'&&k!=='word')LA.ui.open=null;LA.re()};
+LA.re=()=>{const e=document.getElementById('sp');if(e)e.innerHTML=LA.view()};
+LA.bar=d=>{const j=d.judged;if(!j)return'<div class="labar"><i style="width:100%;background:#eee"></i></div><small>可判定熟悉度的詞彙：0（資料不足，不顯示比例）</small>';
+ const p=k=>Math.round(d[k]*1000/j)/10;return`<div class="labar" role="img" aria-label="待加強 ${d.weak}、學習中 ${d.mid}、已熟悉 ${d.fa}"><i style="width:${p('weak')}%;background:${LA.COL.weak}"></i><i style="width:${p('mid')}%;background:${LA.COL.mid}"></i><i style="width:${p('fa')}%;background:${LA.COL.fa}"></i></div>
+ <small>可判定 ${j} 個詞：待加強 ${d.weak}（${p('weak')}%）／學習中 ${d.mid}（${p('mid')}%）／已熟悉 ${d.fa}（${p('fa')}%）</small>`};
+LA.dline=d=>`<small>總數 ${d.tot}｜已啟用 ${d.on}｜尚未補圖 ${d.noimg}｜教材尚未啟用 ${d.off}｜已練習 ${d.practiced}｜尚未練習 ${d.none}｜學習紀錄不足 ${d.few}｜練習覆蓋率 ${LA.fp(d.cover)}（已練習詞數÷已啟用詞數）</small>`;
+LA.badge=s=>{const t=LA.FN[s.f]||LA.DN[s.d]||'';const c=LA.COL[s.f||s.d]||'#eee';return`<span style="background:${c};border-radius:8px;padding:1px 8px;font-size:.85em;white-space:nowrap">${t}</span>`};
+LA.mtable=m=>`<table class="lat"><tr><th>指標</th><th>數值</th><th>計算方式（分母）</th></tr>
+ <tr><td>有效作答次數</td><td>${m.valid}</td><td>答對＋答錯；略過、無反應、辨識失敗、麥克風或網路異常不計</td></tr>
+ <tr><td>答題正確率</td><td>${LA.fp(m.correct)}</td><td>答對次數÷有效作答次數</td></tr>
+ <tr><td>獨立完成率</td><td>${LA.fp(m.indep)}</td><td>沒有提示、沒有教師協助而答對÷有效作答次數</td></tr>
+ <tr><td>部分注音提示使用率</td><td>${LA.fp(m.partial)}</td><td>用了部分提示的注音題÷有效注音題（共 ${m.typed} 題）</td></tr>
+ <tr><td>完整注音提示使用率</td><td>${LA.fp(m.full)}</td><td>用了完整提示的注音題÷有效注音題</td></tr>
+ <tr><td>自行修正次數</td><td>${m.corr}</td><td>退格自行修正的總次數（不當作失敗）</td></tr>
+ <tr><td>平均首次反應時間</td><td>${m.rt==null?'—':m.rt+' 秒'}</td><td>只作輔助觀察，不用來降低熟悉度</td></tr>
+ <tr><td>重複練習次數</td><td>${m.repeat}</td><td>有效作答次數－練習過的不同詞彙數</td></tr>
+ <tr><td>語音辨識成功率</td><td>${LA.fp(m.asr)}</td><td>辨識到目標÷有辨識結果的口語題（共 ${m.asrN} 題）；辨識失敗不算答錯</td></tr>
+ <tr><td>教師確認完成率</td><td>${LA.fp(m.conf)}</td><td>由教師確認完成的口語題÷口語題（共 ${m.speak} 題）</td></tr>
+ <tr><td>提示後的獨立完成率</td><td>${LA.fp(m.hintPost)}</td><td>某詞第一次用提示之後的作答中，獨立完成的比例（共 ${m.hintPostN} 次）</td></tr></table>`;
+LA.wrow=(w,f)=>{const s=LA.wstat(w,f),c=S.cards.find(x=>x.id===w.id),open=LA.ui.word===w.id;
+ return`<tr><td>${c&&c.img?`<img src="${esc(c.img)}" loading="lazy" width="32" height="32" alt="" style="object-fit:contain">`:''}</td><td><b>${esc(w.text)}</b> <small>${esc(w.zy)}</small></td><td>${LA.badge(s)}</td><td>${s.n}</td><td><button class="btn alt sm" onclick="LA.set('word',${open?'null':`'${w.id}'`})">${open?'收合':'詳細'}</button></td></tr>${open?`<tr><td colspan="5">${LA.wdetail(w)}</td></tr>`:''}`};
+LA.wdetail=w=>{const d=LA.detail(w),lvn=((LIB.lvs||[]).find(l=>l.id===w.lv)||{}).label||'—',cn=((LIB.cats||[]).find(c=>c.id===w.cat)||{}).name||'—';
+ const stc=Object.entries(d.st).map(([k,v])=>`<td>${v?LA.badge({f:v.s==='weak'||v.s==='mid'||v.s==='fa'?v.s:'',d:v.s==='few'?'few':''})+' <small>'+v.n+'次</small>':'<small>無紀錄</small>'}</td>`).join(''),
+ cpc=LA.CAP.map(c=>{const v=d.cap[c.k];return`<td>${v?LA.badge({f:v.s==='weak'||v.s==='mid'||v.s==='fa'?v.s:'',d:v.s==='few'?'few':''})+' <small>'+v.n+'次</small>':'<small>無紀錄</small>'}</td>`}).join('');
+ return`<div class="panel" style="margin:4px 0"><small>主題：${esc(cn)}｜Level：${esc(lvn)}｜練習 ${d.n} 次（${d.days} 天）｜最近 ${LA.dt(d.last)}｜獨立 ${d.I}、需提示 ${d.hint}、錯誤 ${d.F}｜整體：${LA.badge(d.overall)}</small>
+ <table class="lat"><tr>${[1,2,3,4,5,6].map(s=>`<th>${s} ${LA.SN[s]}</th>`).join('')}</tr><tr>${stc}</tr></table>
+ <table class="lat"><tr>${LA.CAP.map(c=>`<th>${c.n}</th>`).join('')}</tr><tr>${cpc}</tr></table>
+ <small>建議：${esc(d.sug)}　（只有單一站的紀錄時，不推定其他能力已熟悉）</small></div>`};
+LA.famOk=(w,f)=>{const q=LA.ui.fam;if(!q)return true;const s=LA.wstat(w,f);return q===(s.f||s.d)};
+LA.grow=(g,f)=>{const d=LA.dist(g.ids,f),open=LA.ui.open===g.k,pg=LA.ui.page[g.k]||0;
+ let body='';if(open){const m=LA.metrics(g.ids,f),ws=g.ids.filter(w=>LA.famOk(w,f)),pn=30,pages=Math.max(1,Math.ceil(ws.length/pn)),p=Math.min(pg,pages-1);
+  const cross=[1,2,3,4,5,6].map(s=>{const x=LA.metrics(g.ids,{...f,st:s});return`<tr><td>${s} ${LA.SN[s]}</td><td>${x.valid}</td><td>${LA.fp(x.correct)}</td><td>${LA.fp(x.indep)}</td><td>${LA.fp(x.partial)}</td></tr>`}).join('');
+  const fd=LA.f(),dd=m.daily.slice(-10).map(x=>`<tr><td>${x.d}</td><td>${x.n}</td><td><div class="labar"><i style="width:${x.ok||0}%;background:${LA.COL.fa}"></i></div></td><td>${LA.fp(x.ok)}</td></tr>`).join('');
+  const weakN=g.ids.filter(w=>w.on&&LA.wstat(w,f).f==='weak').length;
+  body=`<div class="panel" style="margin:4px 0">${LA.mtable(m)}
+  <b>各學習站表現</b><table class="lat"><tr><th>站</th><th>有效作答</th><th>正確率</th><th>獨立完成率</th><th>部分提示率</th></tr>${cross}</table>
+  <b>不同日期的正確率</b>${dd?`<table class="lat"><tr><th>日期</th><th>作答</th><th></th><th>正確率</th></tr>${dd}</table>`:'<br><small>尚無紀錄</small>'}
+  <p><button class="btn go sm" ${weakN?'':'disabled'} onclick="LA.goScope('${g.k}','${LA.ui.view}')">練習這個範圍的待加強詞（${weakN}）</button></p>
+  <b>詞彙清單（${ws.length}）</b><table class="lat"><tr><th></th><th>詞彙</th><th>狀態</th><th>有效紀錄</th><th></th></tr>${ws.slice(p*pn,p*pn+pn).map(w=>LA.wrow(w,f)).join('')}</table>
+  ${pages>1?`<p><button class="btn alt sm" ${p?'':'disabled'} onclick="LA.ui.page['${g.k}']=${p-1};LA.re()">上一頁</button> ${p+1}／${pages} <button class="btn alt sm" ${p<pages-1?'':'disabled'} onclick="LA.ui.page['${g.k}']=${p+1};LA.re()">下一頁</button></p>`:''}</div>`}
+ return`<div class="panel" style="margin:6px 0"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b style="min-width:12em">${esc(g.n)}</b><button class="btn alt sm" aria-expanded="${open}" onclick="LA.set('open',${open?'null':`'${g.k}'`})">${open?'收合':'展開'}</button></div>${LA.bar(d)}<br>${LA.dline(d)}${body}</div>`};
+LA.optSel=(k,items,cur)=>`<select onchange="LA.set('${k}',this.value)">${items.map(([v,t])=>`<option value="${v}" ${String(cur)===String(v)?'selected':''}>${esc(t)}</option>`).join('')}</select>`;
+LA.view=()=>{const u=LA.ui,f=LA.f(),W=LA.words(),all=LA.dist(W,f),p=LRN.cur();
+ const tabs=[['lv','Level（20）'],['cat','主題分類（16）'],['ab','六站與能力'],['rv','智慧複習']].map(([k,t])=>`<button class="${u.view===k?'on':''}" onclick="LA.set('view','${k}')">${t}</button>`).join('');
+ let h=`<div class="panel"><b>📈 學習分析　${esc(p.name||'')}</b><div class="sub" style="margin:6px 0">${tabs}</div>
+ <p>學習站：${LA.optSel('st',[['','全部'],...[1,2,3,4,5,6].map(s=>[s,s+' '+LA.SN[s]])],u.st)}　日期：${LA.optSel('days',[['all','全部'],['7','近 7 天'],['30','近 30 天']],u.days)}　顯示詞彙：${LA.optSel('fam',[['','全部'],['weak','待加強'],['mid','學習中'],['fa','已熟悉'],['none','尚未練習'],['few','學習紀錄不足'],['off','教材尚未啟用'],['noimg','尚未補圖']],u.fam)}</p>
+ <b>全部詞彙的熟悉度</b>${LA.bar(all)}<br>${LA.dline(all)}
+ <details><summary><small>三階段熟悉度怎麼判定？</small></summary><small>至少 ${LA.R.minEv} 筆有效紀錄才判定。<b>已熟悉</b>：獨立完成至少 ${LA.R.famI} 次、分布在至少 ${LA.R.famDays} 個不同日期，最近 ${LA.R.recentK} 次中至少 ${LA.R.famRecentI} 次獨立且沒有錯誤。<b>待加強</b>：最近 ${LA.R.recentK} 次都沒有獨立完成，或有 ${LA.R.weakRecentF} 次以上錯誤。其餘為<b>學習中</b>。反應時間不影響判定；尚未練習、紀錄不足、教材尚未啟用、尚未補圖不是熟悉度階段，也不算能力不足。這是保守的初始規則，未經大量學生資料驗證，僅供教學參考。</small></details></div>`;
+ if(u.view==='lv'||u.view==='cat'){const g=LA.groups(u.view);h+=g.length?g.map(x=>LA.grow(x,f)).join(''):'<div class="panel">詞彙庫尚未載入或沒有資料</div>'}
+ else if(u.view==='ab')h+=LA.abView(f,W);else h+=LA.rvView(f,W);
+ return h};
+LA.abView=(f,W)=>{const on=W.filter(w=>w.on),rows=LA.CAP.map(c=>{const d={weak:0,mid:0,fa:0,few:0,none:0};on.forEach(w=>{const s=LA.stage(LA.evOf(w.id,{...f,cap:c.k}));d[s]++});const j=d.weak+d.mid+d.fa;
+  return`<tr><td><b>${c.n}</b></td><td>${LA.bar({...d,judged:j})}</td><td><small>紀錄不足 ${d.few}｜無紀錄 ${d.none}</small></td></tr>`}).join('');
+ const st=[1,2,3,4,5,6].map(s=>{const x=LA.metrics(W.map(w=>w.id),{...f,st:s});return`<tr><td>${s} ${LA.SN[s]}</td><td>${x.valid}</td><td>${LA.fp(x.correct)}</td><td>${LA.fp(x.indep)}</td><td>${x.rt==null?'—':x.rt+' 秒'}</td></tr>`}).join('');
+ return`<div class="panel"><b>能力（以詞彙為單位；每項能力各自判定，不互相推定）</b><table class="lat">${rows}</table><small>聽覺理解＝聽詞選圖（3 張以上）；詞彙辨認＝聽詞選圖；注音拼讀與輸入＝看圖／聽音打注音；口語表達＝看圖說詞；綜合應用＝短語、句子、不同圖片情境與生活運用。單一題型的表現不等於完整的語言能力。</small></div>
+ <div class="panel"><b>各學習站（以作答次數為單位）</b><table class="lat"><tr><th>站</th><th>有效作答</th><th>正確率</th><th>獨立完成率</th><th>平均反應</th></tr>${st}</table></div>`};
+LA.rvView=(f,W)=>{const u=LA.ui,sc={fam:u.rs||'weak'};if(u.rcat)sc.cat=u.rcat;if(u.rlv)sc.lv=u.rlv;const list=LA.rec(sc,u.rn,f),sh=LA.stationHint(),fd=LA.fade();
+ const lvs=(LIB.lvs||[]).map(l=>[l.id,l.label||l.name]),cats=(LIB.cats||[]).map(c=>[c.id,c.name]);
+ return`<div class="panel"><b>🔁 智慧複習推薦</b><p>推薦：${LA.optSel('rs',[['weak','待加強的詞彙'],['mid','學習中的詞彙'],['fa','已熟悉詞彙的維持性複習']],u.rs)}　主題：${LA.optSel('rcat',[['','全部'],...cats],u.rcat||'')}　Level：${LA.optSel('rlv',[['','全部'],...lvs],u.rlv||'')}　題數：${LA.optSel('rn',[[10,'10'],[20,'20'],[30,'30']],u.rn)}</p>
+ <small>排序同時考慮：熟悉度階段、最近需要提示與錯誤的次數、距離上次練習的天數；不只看錯誤次數。麥克風或辨識服務的技術問題不會被當成需要複習的理由。上方的學習站與日期篩選也會套用。</small>
+ ${list.length?`<table class="lat"><tr><th>詞彙</th><th>狀態</th><th>理由</th></tr>${list.map(x=>`<tr><td><b>${esc(x.text)}</b></td><td>${LA.badge({f:x.s})}</td><td><small>${esc(x.why)}</small></td></tr>`).join('')}</table>
+ <p><button class="btn go" onclick="LA.go(${JSON.stringify(list.map(x=>x.id)).replace(/"/g,'&quot;')},'${esc(({weak:'待加強',mid:'學習中',fa:'維持性複習'})[u.rs||'weak'])}')">用這 ${list.length} 個詞開始練習</button></p>`:'<p>目前沒有符合條件的詞彙（可能是紀錄還不夠，或這個範圍沒有待加強的詞）。</p>'}</div>
+ <div class="panel"><b>🚉 建議的學習站</b><p>${esc(sh.text)}</p><small>只作為輔助，不會鎖定關卡；六站仍可自由選擇。</small></div>
+ <div class="panel"><b>🔅 提示褪除建議</b><p>${esc(fd.text)}</p><small>系統不會自動取消提示，請由老師或家長確認後，再到個案設定調整。</small></div>`};
+LA.go=(ids,name)=>{try{FL.mem().w='all';FL.mem().wcOn=0}catch(e){}ids=(ids||[]).filter(id=>S.cards.some(c=>c.id===id)).slice(0,60);if(!ids.length){alert('沒有可練習的詞彙');return}
+ S.set.laIds=ids;S.set.laName=name||'分析推薦';save();alert('已建立練習範圍「分析推薦的詞彙（'+ids.length+'）」。接下來請選擇學習站開始練習（六站可自由選擇）。');FL.setCat('la')};
+LA.goScope=(k,view)=>{const f=LA.f(),g=LA.groups(view).find(x=>x.k===k);if(!g)return;const ids=g.ids.filter(w=>w.on&&LA.wstat(w,f).f==='weak').map(w=>w.id);LA.go(ids,g.n+' 待加強')};
+LA.pool=()=>{const ids=new Set(S.set.laIds||[]);return S.cards.filter(c=>ids.has(c.id))};
+LA.opt=so=>S.set.laIds&&S.set.laIds.length?so('la','分析推薦的詞彙（'+LA.pool().length+'）'):'';
+/*P19-END*/
+/*P20-BEGIN v21.0 統一教材存取層（MAT）、本次練習題庫快照（SNAP）、前臺學習設定重整。
+  教材唯一來源＝S.cards／S.cats（教師後臺管理的正式教材；內建詞彙庫啟用後也由 LIB.sync 寫入同一處）。
+  前臺分類選單、數量統計、系統推薦、複習、錯題集、遊戲派題都經由這裡，不另存分類清單或題庫。 */
+const MAT={ver:0,_d:null,_k:'',bc:null,_t:0};
+MAT.imgN=c=>c&&c.img?Math.max(1,(c.imgs||[]).length):0;
+MAT.cards=()=>S.cards.filter(c=>!c.part);
+MAT.bump=()=>{MAT.ver++;MAT._d=null};
+/* 兩個獨立的分類維度：theme（主題）／level（分級）；以卡片實際所屬分類計算，名稱與數量不寫死 */
+MAT.dims=()=>{const k=[S.cards.length,S.cats.length,MAT.ver,S.cats.map(c=>c.id).join(',').length].join('|');if(MAT._d&&MAT._k===k)return MAT._d;
+ const by={};S.cards.forEach(c=>{if(c.part)return;(c.cats||[]).forEach(id=>{(by[id]=by[id]||[]).push(c)})});
+ const mk=c=>{const a=by[c.id]||[];return{id:c.id,name:c.name,words:a.length,imgs:a.reduce((s,x)=>s+MAT.imgN(x),0),noimg:a.filter(x=>!x.img).length,sort:c.sort||0,lib:c.lib?1:0}};
+ const th=S.cats.filter(c=>!c.lvl).map(mk).sort((a,b)=>(b.lib-a.lib)||(a.sort-b.sort)),lv=S.cats.filter(c=>c.lvl).map(mk).sort((a,b)=>a.sort-b.sort);
+ const un=S.cards.filter(c=>!c.part&&!(c.cats||[]).some(id=>S.cats.some(k=>k.id===id)));if(un.length)th.push({id:'__none',name:'未分類',words:un.length,imgs:un.reduce((s0,x)=>s0+MAT.imgN(x),0),noimg:un.filter(x=>!x.img).length,sort:9999,lib:0});
+ MAT._k=k;return MAT._d={theme:th,level:lv}};
+MAT.sel=()=>{const m=FL.mem(),s=(SNAP.s&&SNAP.s.active&&SNAP.s.cats)||null;if(s)return s;const d=m.dim;return d==='theme'||d==='level'?((m.sel||{})[d]||[]):[]};
+MAT.union=ids=>{const set=new Set(ids),seen=new Set(),out=[],catIds=new Set(S.cats.map(k=>k.id));S.cards.forEach(c=>{if(c.part||seen.has(c.id))return;if((c.cats||[]).some(k=>set.has(k))||(set.has('__none')&&!(c.cats||[]).some(k=>catIds.has(k)))){seen.add(c.id);out.push(c)}});return out};
+MAT.selPool=()=>MAT.union(MAT.sel());
+MAT.stat=ids=>{const a=MAT.union(ids);return{words:a.length,imgs:a.reduce((s,x)=>s+MAT.imgN(x),0)}};
+MAT.special=()=>{const o=[{k:'mk',n:'錯題集',w:mistakeCards().length,d:'依學習紀錄產生：答錯或需要協助的詞彙'},{k:'wk',n:'注音加強練習',w:weakCards().length,d:'依最常按錯的注音符號產生'}];if(S.set.laIds&&S.set.laIds.length)o.push({k:'la',n:'分析推薦的詞彙',w:LA.pool().length,d:'教師從「學習分析」建立'});return o};
+/* 本次練習詞彙數量：不同詞彙，不重複抽取湊數；超過可用量要求使用者確認 */
+MAT.WS=[5,10,15,20,30,50];
+MAT.wOf=()=>{const m=FL.mem();return m.w!=null?m.w:(m.n||5)};
+MAT.want=U=>{const w=MAT.wOf();if(!(U>0))return{err:'目前沒有可用的教材，請選擇其他教材範圍'};if(w==='all')return{k:U};const k=+w;if(!Number.isInteger(k)||!(k>=1))return{err:'請輸入大於 0 的整數練習數量'};if(k>U)return{err:'目前最多只能練習 '+U+' 個詞彙，請調整數量或改用「全部」',over:U};return{k}};
+/* 跨分頁同步：另一個分頁儲存教材後，這個分頁（不在遊戲中）重新讀取並更新畫面 */
+MAT.listen=()=>{try{if(typeof BroadcastChannel==='undefined'||MAT.bc)return;MAT.bc=new BroadcastChannel('vocab-express');MAT.id=Math.random().toString(36).slice(2);
+ MAT.bc.onmessage=async e=>{const d=e.data||{};if(d.t!=='saved'||d.id===MAT.id)return;if(G&&G.on){MAT.pend=1;return}await MAT.refresh()}}catch(x){}};
+MAT.refresh=async()=>{try{const s=await load();if(!s)return;S={...DEF(),...s,set:{...DEF().set,...s.set}};try{await LRN.ensure()}catch(e){}try{LIB.sync&&LIB.base&&LIB.sync()}catch(e){}MAT.bump();MAT.pend=0;if(FL.view==='setup'||FL.view==='map'||UI.view==='mode'){try{home()}catch(e){}}}catch(e){console.warn('MAT.refresh',e)}};
+{const _s=save;save=async function(){const r=await _s.apply(this,arguments);MAT.bump();try{if(MAT.bc)MAT.bc.postMessage({t:'saved',id:MAT.id,ts:Date.now()})}catch(e){}return r}}
+/* ---------- 本次練習題庫快照 ---------- */
+const SNAP={s:null};
+SNAP.init=r=>{SNAP.s=null;const w=r&&r.w;if(!w)return;SNAP.s={id:'T'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),active:true,want:w.want,avail:w.avail,star:r.star,range:r.range,dim:w.dim,cats:w.cats||null,t:r.t||'',ids:null,n:0,at:Date.now()}};
+SNAP.on=()=>!!(SNAP.s&&SNAP.s.active&&FL.run&&FL.run.w);
+SNAP.fix=ids=>{const s=SNAP.s;s.ids=ids;s.n=ids.length;try{FL.mem().last={id:s.id,ids:ids.slice(),star:s.star,range:s.range,dim:s.dim,cats:s.cats,want:s.want,avail:s.avail,n:s.n,at:s.at}}catch(e){}};
+SNAP.pick=cs=>{if(!SNAP.on())return null;const s=SNAP.s;
+ if(!s.ids){const seen=new Set(),u=[];(S.set.order==='seq'?cs:shuffle(cs)).forEach(c=>{if(!seen.has(c.id)){seen.add(c.id);u.push(c)}});const k=s.want==='all'?u.length:Math.min(u.length,Math.floor(+s.want));SNAP.fix(u.slice(0,k).map(c=>c.id))}
+ const m=new Map(cs.map(c=>[c.id,c])),out=s.ids.map(id=>m.get(id)).filter(Boolean);return{cards:out,n:out.length}};
+SNAP.fw=()=>SNAP.on()?(SNAP.s.want==='all'?9999:Math.floor(+SNAP.s.want)):0;
+SNAP.note=ids=>{if(SNAP.on()&&!SNAP.s.ids)SNAP.fix([...new Set(ids)])};
+SNAP.reuse=base=>{if(!SNAP.on()||!SNAP.s.ids)return null;const m=new Map(base.map(c=>[c.id,c]));return SNAP.s.ids.map(id=>m.get(id)).filter(Boolean)};
+/* 圖片預載：開始前載入前 3 題，進行中載入下 2 題（只載入目標詞彙的主要圖片，不一次載入全部） */
+SNAP.pre=(a,b)=>{try{(G.q||[]).slice(a,b).forEach(c=>{if(c&&c.img&&!c.img.startsWith('data:')){const i=new Image();i.src=c.img}})}catch(e){}};
+/* 多圖：圖片載入失敗時，改用同一詞彙的其他有效圖片 */
+document.addEventListener('error',e=>{const t=e.target;if(!t||t.tagName!=='IMG'||!G||!G.on)return;const q=G.q&&G.q[G.i];if(!q||!q._alts||!q._alts.length)return;if(t.id!=='pic'&&!(t.src||'').endsWith(q.img||'\0'))return;const u=q._alts.shift();q.img=u;const o=byId(q.id);if(o)o.img=u;t.src=u},true);
+{const _ask=ask;ask=function(){const r=_ask.apply(this,arguments);try{if(SNAP.on())SNAP.pre(G.i+1,G.i+3)}catch(e){}return r}}
+{const _c=RE.close;RE.close=function(){const rec=_c.apply(this,arguments);try{if(rec&&SNAP.on()){rec.ext=rec.ext||{};rec.ext.task={id:SNAP.s.id,star:SNAP.s.star,want:SNAP.s.want}}}catch(e){}return rec}}
+/* ---------- 前臺學習設定（取代原本的「進階：教材、題型、交通工具」） ---------- */
+FL.vehFor=star=>FL.VEH[Math.max(0,Math.min(FL.VEH.length-1,star-1))];   /* 交通工具由難度自動安排；規則集中在此，日後可調整 */
+FL.srcOf=(range,cat)=>{if(range==='rec')return'rec';if(range==='rv')return'rv';const m=FL.mem();if(cat==='la'||cat==='mk'||cat==='wk')return cat;if(m.dim)return m.dim==='sp'?(m.sp||'mk'):'sel';return cat||'all'};
+FL.migDim=()=>{const m=FL.mem(),c=m.cat||'all',cs=S.cats;if(c==='la'||c==='mk'||c==='wk'){m.dim='sp';m.sp=c;return}if(m.dim)return;m.sel=m.sel||{theme:[],level:[]};
+ if(/^c:/.test(c)){const k=cs.find(x=>'c:'+x.id===c);if(k){m.dim=k.lvl?'level':'theme';m.sel[m.dim]=[k.id];return}}
+ if(c==='la'||c==='mk'||c==='wk'){m.dim='sp';m.sp=c;return}
+ m.dim='theme';m.sel.theme=MAT.dims().theme.filter(x=>x.words>0).map(x=>x.id)};
+FL.setCat=v=>{const m=FL.mem();m.range='pick';m.sel=m.sel||{theme:[],level:[]};if(v==='la'||v==='mk'||v==='wk'){m.dim='sp';m.sp=v;m.cat=v}else if(/^c:/.test(v)){const k=S.cats.find(x=>'c:'+x.id===v);m.dim=k&&k.lvl?'level':'theme';m.sel[m.dim]=k?[k.id]:[];m.cat=v}else{m.dim='theme';m.sel.theme=MAT.dims().theme.map(x=>x.id);m.cat='all'}save();home()};
+FL.setDim=d=>{const m=FL.mem();m.range='pick';m.dim=d;m.sel=m.sel||{theme:[],level:[]};m.cat=d==='sp'?(m.sp||'mk'):'sel';if(d==='sp'&&!m.sp)m.sp='mk';save();home()};
+FL.togCat=(d,id,on)=>{const m=FL.mem();m.sel=m.sel||{theme:[],level:[]};const a=new Set(m.sel[d]||[]);on?a.add(id):a.delete(id);m.sel[d]=[...a];m.cat='sel';save();FL.part()};
+FL.selAll=d=>{const m=FL.mem();m.sel=m.sel||{theme:[],level:[]};m.sel[d]=MAT.dims()[d].filter(x=>x.words>0).map(x=>x.id);m.cat='sel';save();home()};
+FL.selNone=d=>{const m=FL.mem();m.sel=m.sel||{theme:[],level:[]};m.sel[d]=[];m.cat='sel';save();home()};
+FL.setSp=k=>{const m=FL.mem();m.dim='sp';m.sp=k;m.cat=k;save();home()};
+FL.setW=v=>{const m=FL.mem();m.w=v==='all'?'all':+v;m.wcOn=0;if(v!=='all')m.n=+v;save();home()};
+FL.setWC=v=>{const m=FL.mem();m.wcOn=1;const k=String(v).trim()===''?NaN:+v;m.wc=v;if(Number.isInteger(k)&&k>=1){m.w=k;m.n=k}else m.w=0;save();FL.part()};
+FL.wcMode=()=>{const m=FL.mem();m.wcOn=1;save();home()};
+FL.part=()=>{const e=document.getElementById('fl_sum');if(e)e.innerHTML=FL.sumHtml()};
+FL.cur=()=>{const st=FL.st,mode=FL.modeOf(),mm=FL.mem(),lad=FL.ladder(st,mode),star=FL.starFor(st,mode),cfg=lad[star-1],rng=mm.range||'rec';return{st,mode,mm,lad,star,cfg,rng,chk:cfg?FL.chk(cfg,rng,mm.cat||'all'):{ok:false,msg:'目前無法使用'}}};
+FL.flowK=cfg=>{const f=(cfg&&cfg.ps&&cfg.ps.flow)||null;if(!f)return 1;return['expose','pick','speak','spell','listen'].filter(k=>f[k]!==0&&f[k]!==false&&!(FL.modeOf()==='oral'&&(k==='spell'||k==='listen'))).length+((f.retest!==0&&f.retest!==false&&f.speak!==0)?1:0)};
+FL.sumHtml=()=>{const c=FL.cur(),mm=c.mm,S0=STG.find(s=>s.id===c.st),cfg=c.cfg;if(!cfg)return'';
+ const item=c.chk.ok&&c.chk.n==null,U=c.chk.n,W=item?null:MAT.want(U||0),rl=FL.RANGE[c.rng];let cat='';
+ if(c.rng==='pick'){FL.migDim();const d=mm.dim;if(d==='sp'){const s=MAT.special().find(x=>x.k===mm.sp);cat='特殊練習：'+(s?s.n:'（尚未選擇）')}else{const ds=MAT.dims()[d]||[],ids=(mm.sel||{})[d]||[],nm=ds.filter(x=>ids.includes(x.id)).map(x=>x.name);cat=(d==='level'?'分級教材（Level）：':'主題分類：')+(nm.length?nm.slice(0,6).join('、')+(nm.length>6?'…等 '+nm.length+' 項':''):'（尚未選擇）')}}
+ const rows=[['學習難度',FL.STAR[c.star-1]+'（'+esc(cfg.t||'')+'）'],['練習範圍',rl+(cat?'<br><small>'+esc(cat)+'</small>':'')]];
+ if(!c.chk.ok)rows.push(['目前狀態','<span style="color:#b8322b">'+esc(c.chk.msg||'目前沒有可用教材')+'</span>']);
+ else if(item)rows.push(['教材','本站使用老師設定的短語／句子教材，依題數練習（不以詞彙數量計）']);
+ else{rows.push(['符合這個難度的可用詞彙',U+' 個']);
+  if(W.err)rows.push(['本次練習','<span style="color:#b8322b">'+esc(W.err)+'</span>'+(W.over?` <button class="btn alt sm" onclick="FL.setW('all')">改為全部（${U} 個）</button>`:'')]);
+  else{const f=FL.flowK(cfg);rows.push(['本次練習',W.k+' 個不同的詞彙']);rows.push(['實際遊戲題數',f>1?'約 '+W.k*f+' 題（每個詞彙有 '+f+' 個步驟）':(c.rng==='pick'?W.k+' 題（每個詞彙一題）':W.k+'～'+W.k*2+' 題（新詞彙會先教學再詢問，所以題數可能多於詞彙數）')])}}
+ rows.push(['題型','由系統依難度自動安排']);rows.push(['交通工具',TH[FL.vehFor(c.star)].e+' '+TH[FL.vehFor(c.star)].n+'（由難度自動安排）']);
+ return`<h3>本次學習任務</h3><table class="lat">${rows.map(r=>`<tr><th style="width:9em;vertical-align:top">${r[0]}</th><td>${r[1]}</td></tr>`).join('')}</table>`};
+FL.catHtml=()=>{FL.migDim();const mm=FL.mem(),d=mm.dim||'theme',tabs=[['theme','主題分類'],['level','分級教材（Level）'],['sp','錯題集／注音加強']].map(([k,t])=>`<button class="fn ${k===d?'on':''}" onclick="FL.setDim('${k}')" aria-pressed="${k===d}">${t}</button>`).join('');
+ let body='';
+ if(d==='sp'){const sp=MAT.special();body=sp.map(s=>`<label style="display:block;margin:4px 0"><input type="radio" name="flsp" ${mm.sp===s.k?'checked':''} onchange="FL.setSp('${s.k}')"> <b>${s.n}</b>（${s.w} 個詞彙）<small> ${esc(s.d)}</small></label>`).join('')}
+ else{const ds=MAT.dims()[d],sel=new Set((mm.sel||{})[d]||[]);body=ds.length?`<p><button class="btn alt sm" onclick="FL.selAll('${d}')">全部選取</button> <button class="btn alt sm" onclick="FL.selNone('${d}')">取消全選</button> <small id="fl_selc">${FL.selSum(d)}</small></p>
+  <div class="flcl" style="max-height:260px;overflow:auto;border:2px solid #cfd8e3;border-radius:10px;padding:6px">${ds.map(x=>`<label style="display:flex;gap:8px;align-items:center;padding:4px 2px;${x.words?'':'opacity:.5'}"><input type="checkbox" ${sel.has(x.id)?'checked':''} ${x.words?'':'disabled'} onchange="FL.togCat('${d}','${x.id}',this.checked)"> <span><b>${esc(x.name)}</b> <small>${x.words} 個詞彙｜${x.imgs} 張圖片${x.noimg?'｜'+x.noimg+' 個沒有圖片':''}</small></span></label>`).join('')}</div>`:'<p>目前沒有'+(d==='level'?'分級教材':'主題分類')+'（請先到教師後臺啟用詞彙庫或新增分類）</p>'}
+ return`<div class="fseg">${tabs}</div>${body}`};
+FL.selSum=d=>{const ids=((FL.mem().sel||{})[d])||[],st=MAT.stat(ids);return'已選 '+ids.length+' 類｜去重後 '+st.words+' 個詞彙｜'+st.imgs+' 張圖片'};
+FL.setupHtml=()=>{const c=FL.cur(),st=c.st,mode=c.mode,S0=STG.find(s=>s.id===st),mm=c.mm,rng=c.rng,lad=c.lad,star=c.star;if(rng==='pick')FL.migDim();
+ const stars=lad.map((x,i)=>{const r=FL.chk(x,rng,mm.cat||'all'),on=star===i+1;return `<button class="fstar ${on?'on':''} ${r.ok?'':'na'}" ${r.ok?`onclick="FL.setStar(${i+1})"`:'disabled'} aria-pressed="${on}" aria-label="${FL.STAR[i]}難度${r.ok?'':'（目前無法使用）'}" title="${r.ok?'':esc(r.msg||'')}"><span>${'★'.repeat(i+1)}${'☆'.repeat(4-i)}</span><small>${r.ok?FL.STAR[i]:'尚無教材'}</small></button>`}).join('');
+ const cur=lad[star-1],cc=c.chk,desc=cc.ok?`<b>${FL.STAR[star-1]}：</b>${esc(cur.t)}　<small>每完成一題 ⭐ ${star} 顆</small>`:`<b>${FL.STAR[star-1]}目前無法使用：</b>${esc(cc.msg)}`;
+ const item=cc.ok&&cc.n==null,w=MAT.wOf(),wc=mm.wcOn,U=cc.n;
+ const wb=MAT.WS.map(k=>`<button class="fn ${!wc&&w===k?'on':''}" onclick="FL.setW(${k})" aria-pressed="${!wc&&w===k}">${k} 個</button>`).join('')+`<button class="fn ${!wc&&w==='all'?'on':''}" onclick="FL.setW('all')" aria-pressed="${!wc&&w==='all'}">全部</button><button class="fn ${wc?'on':''}" onclick="FL.wcMode()" aria-pressed="${!!wc}">自訂</button>${wc?` <input type="number" min="1" step="1" inputmode="numeric" style="width:5em;font-size:1.1em" value="${esc(mm.wc||'')}" oninput="FL.setWC(this.value)" aria-label="自訂練習詞彙數量"> 個`:''}`;
+ const qn=FL.N.map(k=>`<button class="fn ${k===(mm.n||5)?'on':''}" onclick="FL.setN(${k})" aria-pressed="${k===(mm.n||5)}">${k} 題</button>`).join('');
+ const act=FL.actSel||'',ax=/^x\d+$/.test(act)?FL.extras(st,mode)[+act.slice(1)]:null,axc=ax?FL.chk(ax,rng,mm.cat||'all'):null,ok=axc?axc.ok&&(axc.n==null||!MAT.want(axc.n).err):(cc.ok&&(item||!MAT.want(U||0).err));
+ return `<div class="hm3 md3 fsu"><p class="bk"><button class="btn alt" onclick="FL.back()">← 回到六站</button></p><h2>${S0.e} ${S0.n}</h2><p class="hq">${esc(FL.SD[st][mode])}</p>
+ <div class="panel fpan"><h3>1　挑戰難度</h3><div class="fstars">${stars}</div><p class="fdesc" id="fdesc">${desc}</p>
+ <h3>2　練習範圍</h3><div class="fseg">${Object.entries(FL.RANGE).map(([k,t])=>`<button class="fn ${k===rng?'on':''}" onclick="FL.setRange('${k}')" aria-pressed="${k===rng}">${t}</button>`).join('')}</div>
+ <p class="fdesc"><small>${rng==='rec'?'系統依「沒練習過、容易錯、到了複習時間」的詞彙優先挑選。':rng==='rv'?'只出現已經答對過的詞彙，用來複習。':'選擇下面的主題分類或分級教材（可以多選）。'}</small></p>
+ ${rng==='pick'?`<h3>3　選擇教材</h3>${FL.catHtml()}`:''}
+ <h3>${rng==='pick'?'4':'3'}　本次練習數量</h3>${item?`<div class="fseg">${qn}</div><p><small>這一站使用短語／句子教材，依題數練習。</small></p>`:`<div class="fseg">${wb}</div><p><small>數量是「不同的詞彙」個數，不會重複抽同一個詞來湊數；「全部」＝目前範圍內所有符合條件的詞彙。</small></p>`}
+ <div id="fl_sum">${FL.sumHtml()}</div>
+ <p class="fgo"><button class="btn go fgob" id="fl_go" onclick="FL.go()" ${ok?'':'disabled'}>▶ 開始練習</button></p></div></div>`};
+{const _s=FL.setupHtml;FL.setupHtml=function(){const h=_s.apply(this,arguments);return h.replace(/(<p class="fdesc" id="fdesc">[\s\S]*?<\/p>)/,'$1'+P15.objHtml(FL.st,FL.modeOf()).replace(/\$/g,'$$$$'))}}
+{const _p=FL.part;FL.part=function(){_p.apply(this,arguments);const b=document.getElementById('fl_go'),c=FL.cur();if(b){const it=c.chk.ok&&c.chk.n==null;b.disabled=!(c.chk.ok&&(it||!MAT.want(c.chk.n||0).err))}const s=document.getElementById('fl_selc');if(s&&FL.mem().dim&&FL.mem().dim!=='sp')s.textContent=FL.selSum(FL.mem().dim)}}
+FL.setN=k=>{const m=FL.mem();m.n=k;save();home()};
+FL.setRange=k=>{const m=FL.mem();m.range=k;if(k==='pick'){FL.migDim()}save();home()};
+{const _h=home;home=function(){if(MAT.pend&&!(G&&G.on)){MAT.pend=0;MAT.refresh()}return _h.apply(this,arguments)}}
+MAT.listen();
+/*P20-END*/
+
+
+
 
 
 

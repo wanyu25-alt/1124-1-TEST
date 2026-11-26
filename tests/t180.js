@@ -74,7 +74,7 @@ const J=(E,c)=>JSON.parse(E('JSON.stringify('+c+')'));
  E(`LIB.setSel(['${ids[1]}','${ids[2]}'],true)`);
 
  E(`LIB.ext().mode='random'`);const idA=E('LRN.cur().id');E(`LRN.add('測試乙');LRN.switchTo(LRN.list?LRN.list()[LRN.list().length-1].id:S.lrn.list[S.lrn.list.length-1].id)`);
- T('⑫ a second learner has its own range and image mode (independent of learner 1)',E('LRN.cur().id')!==idA&&E('LIB.sel()')===null&&E('LIB.mode()')==='fixed'&&E('pool().filter(c=>c.lib).length')===n0);
+ T('⑫ a second learner has its own range and image mode (independent of learner 1)',E('LRN.cur().id')!==idA&&E('LIB.sel()')===null&&E('LIB.mode()')==='random'/*v21.0 新預設：隨機*/&&E('pool().filter(c=>c.lib).length')===n0);
  E(`LRN.switchTo('${idA}')`);T('switching back keeps learner 1 settings',E('LIB.mode()')==='random');E(`LIB.ext().mode='fixed'`);
  E(`LRN.cur().ext.libSel=['${ids[1]}','${ids[2]}']`);
  T('⑫ range filter applies (2 chosen words) and teacher card stays',E('pool().filter(c=>c.lib).length')===2&&E('pool().some(c=>c.id==="my1")')&&n0>2);
