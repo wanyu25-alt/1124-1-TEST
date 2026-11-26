@@ -19,15 +19,13 @@ const addCustom=p=>p.evaluate(async()=>{S.cats.push({id:'cuA',name:'老師的教
   const a=await poolOrg(c.p,'all'),r=await poolOrg(c.p,'rec');T('A2 全部／系統推薦題庫只有正式詞彙（950 有圖）',a.n===950&&a.leg===0&&r.lib===r.n&&r.leg===0,{a,r});
   const g=await start(c.p,1);T('A3 第1站實際出題全部是正式詞彙',g.on&&g.lib===g.n&&g.n>0,g);
   T('A4 教師後臺「教材來源管理」三種來源都列出',/教材來源管理/.test(s.html)&&/正式內建教材/.test(s.html)&&/舊版內建教材/.test(s.html)&&/教師自訂教材/.test(s.html),null);
-  T('A5 程式版本不再寫死（教材版本面板、完整性檢查都顯示目前版本 '+s.ver+'）',/^v22\.\d+$/.test(s.ver)&&+s.ver.split('.')[1]>=3&&s.html.includes('程式版本 '+s.ver)&&s.html.includes('（程式 '+s.ver+'）')&&!/v20\.0）/.test(s.html),s.html.match(/程式版本 [^）]*/));
+  T('A5 程式版本不再寫死（教材版本面板、完整性檢查都顯示目前版本 '+s.ver+'）',/^v22\.\d+(\.\d+)?$/.test(s.ver)&&+s.ver.split('.')[1]>=3&&s.html.includes('程式版本 '+s.ver)&&s.html.includes('（程式 '+s.ver+'）')&&!/v20\.0）/.test(s.html),s.html.match(/程式版本 [^）]*/));
   T('A6 沒有頁面錯誤',c.errs.length===0,c.errs);await c.ctx.close()}
- /* B：啟用／停用舊版內建教材；停用不刪除 */
- {const c=await fresh(b);const before=await c.p.evaluate(()=>({cards:S.cards.length,leg:S.cards.filter(x=>(S.packIds||[]).includes(x.id)).length,cats:S.cats.length}));
-  await c.p.evaluate(()=>SRC.set('legacy',1));let a=await poolOrg(c.p,'all');T('B1 啟用舊版後，題庫加入 18 張舊版圖卡',a.leg===before.leg&&a.leg===18&&a.n===968,a);
-  const tab=await c.p.evaluate(()=>{UI.mode='quiet';FL.open(1);FL.setRange('pick');FL.setDim('custom');return document.getElementById('mid').innerText});T('B2 學生端「教師自訂教材」分頁列出舊版分類',/水果|交通工具|民生用品|三餐/.test(tab),tab.slice(0,300));
-  await c.p.evaluate(()=>SRC.set('legacy',0));await reload(c);a=await poolOrg(c.p,'all');const after=await c.p.evaluate(()=>({cards:S.cards.length,leg:S.cards.filter(x=>(S.packIds||[]).includes(x.id)).length,cats:S.cats.length,saved:S.matSrc.legacy}));
-  T('B3 停用並重新整理後：舊版不進題庫，但圖卡與分類全部保留',a.leg===0&&after.cards===before.cards&&after.leg===18&&after.cats===before.cats&&after.saved===0,{a,before,after});
-  const tab2=await c.p.evaluate(()=>{UI.mode='quiet';FL.open(1);FL.setRange('pick');FL.setDim('custom');return document.getElementById('mid').innerText});T('B4 停用時學生端說明「沒有啟用」，不列出停用分類',/沒有啟用/.test(tab2)&&!/水果（|民生用品\s/.test(tab2),tab2.slice(0,300));
+ /* B（v22.4.1 起）：舊版內建示範教材已在網站移除（第03-B批方案A）；來源管理改顯示移除結果，不再有舊版開關；學生端「教師自訂教材」說明未啟用 */
+ {const c=await fresh(b);const r=await c.p.evaluate(()=>({leg:S.cards.filter(x=>MAT.origin(x)==='legacy').length,gone:!!S.legacyGone,html:SRC.html(),cards:S.cards.length}));
+  T('B1 舊版示範教材已移除：沒有舊版圖卡、已標記完成（不會每次重新執行）',r.leg===0&&r.gone&&r.cards===1000,r);
+  T('B2 教材來源管理：舊版一列改為移除說明，沒有舊版的啟用／停用按鈕',/舊版內建示範教材/.test(r.html)&&!/SRC\.set\('legacy'/.test(r.html),r.html.slice(0,300));
+  const tab2=await c.p.evaluate(()=>{UI.mode='quiet';FL.open(1);FL.setRange('pick');FL.setDim('custom');return document.getElementById('mid').innerText});T('B3 學生端「教師自訂教材」分頁說明目前沒有啟用',/沒有啟用|目前沒有教師自訂教材/.test(tab2),tab2.slice(0,300));
   await c.ctx.close()}
  /* C：教師自訂教材；預設不使用，啟用後可在自選範圍練習 */
  {const c=await fresh(b);await addCustom(c.p);let a=await poolOrg(c.p,'all');T('C1 新增的教師自訂圖卡預設不進入題庫',a.cus===0,a);
@@ -59,8 +57,8 @@ const addCustom=p=>p.evaluate(async()=>{S.cats.push({id:'cuA',name:'老師的教
    return{q11:R.quiet[1][0],q15:R.quiet[1][4],q31:R.quiet[3][0],o21:R.oral[2][0],cells:Object.values(R).reduce((a,m)=>a+Object.values(m).reduce((s,x)=>s+x.length,0),0),tbl:/學習站/.test(h)&&/聽讀練習/.test(h)&&/口語練習/.test(h)&&/綜合練習/.test(h),ow}});
   T('G1 六站×三模式×五星全部計算（90 格）',g.cells===90&&g.tbl,g);T('G2 第1站一星可用 950 個詞彙',g.q11.ok&&g.q11.n===950,g.q11);
   T('G3 不可用時列出原因（第1站五星、第3站）',!g.q15.ok&&/需要/.test(g.q15.msg)&&!g.q31.ok&&/組合/.test(g.q31.msg),{q15:g.q15,q31:g.q31});T('G4 手機寬度下表格可捲動、不撐破版面',!g.ow,g.ow);await c.ctx.close()}
- /* H：家長直接複習不使用停用來源 */
- {const c=await fresh(b);const h=await c.p.evaluate(async()=>{const leg=S.cards.find(x=>(S.packIds||[]).includes(x.id)),now=Date.now();S.recs.push({id:'r_h1',ts:now,itemKind:'word',itemId:leg.id,game:'pick',outcome:'wrong',purpose:'teach'},{id:'r_h2',ts:now,itemKind:'word',itemId:'VOC0010',game:'pick',outcome:'wrong',purpose:'teach'});
-   const off=PAR.review().map(w=>w.id);await SRC.set('legacy',1);const on=PAR.review().map(w=>w.id);return{leg:leg.id,off,on}});
-  T('H1 家長「待複習詞彙」不列出停用來源的詞彙',!h.off.includes(h.leg),h);T('H2 啟用後才列出',h.on.includes(h.leg),h);await c.ctx.close()}
+ /* H：家長直接複習不使用停用來源（v22.4.1 起以教師自訂教材驗證） */
+ {const c=await fresh(b);await addCustom(c.p);const h=await c.p.evaluate(async()=>{const now=Date.now();S.recs.push({id:'r_h1',ts:now,itemKind:'word',itemId:'cu_0',game:'pick',outcome:'wrong',purpose:'teach'},{id:'r_h2',ts:now,itemKind:'word',itemId:'VOC0010',game:'pick',outcome:'wrong',purpose:'teach'});
+   const off=PAR.review().map(w=>w.id);await SRC.set('custom',1);const on=PAR.review().map(w=>w.id);return{off,on}});
+  T('H1 家長「待複習詞彙」不列出停用來源的詞彙',!h.off.includes('cu_0')&&h.off.includes('VOC0010'),h);T('H2 啟用後才列出',h.on.includes('cu_0'),h);await c.ctx.close()}
  await b.close();console.log('PASS',P,'FAIL',F);process.exit(F?1:0)})();

@@ -1,5 +1,7 @@
 const {JSDOM}=require('jsdom');const fs=require('fs');const {IDBFactory}=require('fake-indexeddb');
 const html=fs.readFileSync((process.env.IDX||'/mnt/user-data/outputs/vocabulary-express/index.html'),'utf8').replace(/<script src[^>]*><\/script>/g,'').replace("lm:'quiet'","lm:'integ'").replace("or:30,","or:0,").replace("hz:{u:'once',cost:true,n:1,free:false}","hz:{u:'none',cost:false,n:1,free:true}").replace("ap:true,","ap:false,").replace("oj:'A'","oj:'B'").replace("prepDone:false","prepDone:true");
+/* v22.4.1：網站已移除 materials/（舊版內建示範教材），這支測試驗證的舊版教材載入功能已停用；找不到 materials/pack.js 時明確標示「未執行」並結束 */
+if(!fs.existsSync('/mnt/user-data/outputs/vocabulary-express/materials/pack.js')){console.log('SKIP t22：materials/ 已移除，舊版教材載入功能停用（未執行，不計入通過）');process.exit(0)}
 const packSrc=fs.readFileSync('/mnt/user-data/outputs/vocabulary-express/materials/pack.js','utf8');
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));let P=0,F=0;const T=(n,c)=>{c?P++:F++;console.log(c?'PASS':'FAIL',n)};
 const mk=(idb,q='',pack=packSrc)=>new JSDOM(html,{url:'http://localhost/'+(q?q+'&legacypack=1':'?legacypack=1'),runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){w.indexedDB=idb;w.alert=()=>{};w.confirm=()=>true;w.AudioContext=function(){};w.speechSynthesis={getVoices:()=>[],cancel(){}};if(pack)w.eval(pack)}}).window;

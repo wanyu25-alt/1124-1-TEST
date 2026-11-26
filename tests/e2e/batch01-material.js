@@ -14,7 +14,7 @@ const tryStart=(p,st)=>p.evaluate(st=>{UI.mode='quiet';FL.open(st);const sum=(do
 (async()=>{const b=await chromium.launch();
  /* A：全新瀏覽器 */
  {const c=await fresh(b);const r=await c.p.evaluate(()=>({lib:S.cards.filter(x=>x.lib).length,img:S.cards.filter(x=>x.lib&&x.img).length,th:S.cats.filter(x=>x.lib&&!x.lvl).length,lv:S.cats.filter(x=>x.lvl).length,
-   mapped:S.cards.filter(x=>x.lib).every(x=>x.cats.some(id=>S.cats.find(k=>k.id===id&&k.lib&&!k.lvl))&&x.cats.some(id=>S.cats.find(k=>k.id===id&&k.lvl))),noimg:S.cards.filter(x=>x.lib&&!x.img).length,build:(m=>!!m&&(+m[1]>22||(+m[1]===22&&+m[2]>=2)))(document.documentElement.innerHTML.match(/build:'v(\d+)\.(\d+)'/))}));
+   mapped:S.cards.filter(x=>x.lib).every(x=>x.cats.some(id=>S.cats.find(k=>k.id===id&&k.lib&&!k.lvl))&&x.cats.some(id=>S.cats.find(k=>k.id===id&&k.lvl))),noimg:S.cards.filter(x=>x.lib&&!x.img).length,build:(m=>!!m&&(+m[1]>22||(+m[1]===22&&+m[2]>=2)))(document.documentElement.innerHTML.match(/build:'v(\d+)\.(\d+)/))}));
   T('A1 全新瀏覽器：正式 1000 詞載入、950 有圖、50 缺圖仍保留',r.lib===1000&&r.img===950&&r.noimg===50,r);
   T('A2 16 主題＋20 Level，每個正式詞都同時有主題與 Level',r.th===16&&r.lv===20&&r.mapped,r);
   T('A3 程式版本為 v22.2 或之後',r.build,r);
@@ -22,8 +22,9 @@ const tryStart=(p,st)=>p.evaluate(st=>{UI.mode='quiet';FL.open(st);const sum=(do
   T('A6 沒有頁面錯誤',c.errs.length===0,c.errs);await c.ctx.close()}
  /* B：使用者實際情況——曾在教材未完整時選過範圍，之後刪除全部舊分類與舊詞彙 */
  {const c=await fresh(b);
-  const before=await c.p.evaluate(async()=>{const m=FL.mem();m.range='pick';m.dim='theme';m.sel={theme:S.cats.filter(k=>!k.lib).map(k=>k.id),level:[],custom:[]};m.cat='sel';
-   const ids=S.cats.filter(k=>!k.lib).map(k=>k.id);S.cards=S.cards.filter(x=>x.lib);S.cats=S.cats.filter(k=>!ids.includes(k.id));
+  const before=await c.p.evaluate(async()=>{/* v22.4.1：舊版示範教材已移除，改用「老師曾建立、之後刪除」的分類重現失效範圍 */S.cats.push({id:'oldA',name:'舊分類A',order:[]},{id:'oldB',name:'舊分類B',order:[]});S.cards.push({id:'oc1',text:'舊卡',zy:'ㄐㄧㄡˋ',img:'',audio:'',cats:['oldA'],created:1,modified:1});
+   const m=FL.mem();m.range='pick';m.dim='theme';m.sel={theme:['oldA','oldB'],level:[],custom:[]};m.cat='sel';
+   const ids=['oldA','oldB'];S.cards=S.cards.filter(x=>x.lib);S.cats=S.cats.filter(k=>!ids.includes(k.id));
    S.recs.push({id:'r_t1',ts:Date.now(),itemId:'VOC0001',game:'pick',outcome:'correct'});S.rw.stars=(S.rw.stars||0)+7;S.rw.badges=(S.rw.badges||[]).concat(['t_badge']);S.lib.off['VOC0005']=1;(S.lib.ov['VOC0002']=S.lib.ov['VOC0002']||{}).rv='pending';LIB.sync();await save();
    return{recs:S.recs.length,stars:S.rw.stars,bad:S.rw.badges.length,lrn:S.lrn.list.length,cats:S.cats.length}});
   /* 舊版（v22.1）會在這裡變成 0：驗證失效範圍的確存在 */

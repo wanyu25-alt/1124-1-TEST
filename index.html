@@ -379,7 +379,7 @@ body.aid-calm #scene{max-height:90px;overflow:hidden}body.aid-calm .stc .ste{dis
 <script src="lib/pinyin-pro.js"></script>
 <script>
 /* ===== 基本工具 ===== */
-const APP={build:'v22.4'};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
+const APP={build:'v22.4.1',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -588,7 +588,7 @@ function speak(c){AM.cut();ZQ.stop();stopSpeak();SP.log=[];const my=SP.id,done=(
  if(c.audio){const a=new Audio(c.audio);SP.audio=a;a.volume=Math.min(1,VV());V2.setRate(a);dk(1);sayBusy(true);a.onended=a.onerror=done;SP.wd=setTimeout(done,20000);const r=a.play();if(r&&r.catch)r.catch(done);return}
  if(!('speechSynthesis' in window)){alert('此瀏覽器不支援語音合成，請上傳錄音');return}
  let ch=[...(c.text||'')].filter(x=>/[\u4e00-\u9fff]/.test(x));if(!ch.length)ch=[c.text||''];
- const v=(speechSynthesis.getVoices()||[]).find(v=>/zh[-_]TW/i.test(v.lang));dk(1);sayBusy(true);
+ const v=(typeof TTSX!=='undefined'&&TTSX.pick)?TTSX.pick():(speechSynthesis.getVoices()||[]).find(v=>/zh[-_]TW/i.test(v.lang));dk(1);sayBusy(true);
  const play=i=>{if(SP.id!==my)return;const u=new SpeechSynthesisUtterance(ch[i]);u.lang='zh-TW';u.rate=V2.ar();u.volume=V2.av();if(v)u.voice=v;let adv=false;
   const next=()=>{if(adv||SP.id!==my)return;adv=true;clearTimeout(SP.wd);if(i>=ch.length-1)done();else SP.timer=setTimeout(()=>play(i+1),GAP)};
   u.onstart=()=>{SP.log.push({i,s:performance.now()})};u.onend=()=>{SP.log.push({i,e:performance.now()});next()};u.onerror=next;SP.wd=setTimeout(next,5000);speechSynthesis.speak(u)};
@@ -5071,7 +5071,7 @@ LIB.csv=kind=>{if(!LIB.base)return;const q=v=>'"'+String(v==null?'':v).replace(/
 LIB.noImgByCat=()=>{const m=new Map();LIB.base.forEach(b=>{const w=LIB.eff(b.id);if(!w.imgs.length)m.set(w.catId,(m.get(w.catId)||0)+1)});return LIB.cats.map(c=>({id:c.id,name:c.name,n:m.get(c.id)||0,total:c.count})).filter(x=>x.n)};
 LIB.extra=()=>{if(!LIB.base)return{top:'',bot:''};const s=LIB.st(),i=LIB.defInfo||{state:'none'},p=LIB.defPend,nb=LIB.noImgByCat(),tot=nb.reduce((a,x)=>a+x.n,0);
  const stt={none:'網站上沒有 vocab/default-library.json（還沒發布預設清單）。',applied:'這台裝置第一次開啟，已自動套用網站預設清單。',baseline:'網站有預設清單；這台裝置已有自己的設定，所以沒有改動。要把預設清單裡本機沒有的項目補進來，請按下方「補入」。',same:'與網站預設清單一致，沒有待處理的差異。',skipped:'網站預設清單有更新，你選擇暫時略過。',pending:'網站預設清單有更新，等你確認。',err:'讀取預設清單失敗：'+esc(i.msg||'')}[i.state]||'';
- const mv=(LIB.man&&LIB.man.version)||'未記錄',dv=(s.def&&s.def.ver)||(s.def?'舊版（未記錄版本）':'尚未套用'),vtxt=`<div class="panel"><b>📚 教材版本</b>（程式版本 ${APP.build}）：網站目前 <b>${esc(mv)}</b>（${LIB.base.length} 詞、${LIB.cats.length} 個主題、${(LIB.lvs||[]).length} 個 Level）；這台裝置上次套用的預設清單版本：<b>${esc(dv)}</b>。${s.def&&s.def.ver&&s.def.ver!==mv&&!p?'<br><small>網站教材已更新，但沒有需要你確認的差異。</small>':''}${p?'<br><small>網站教材有更新，請看下方確認。</small>':''}<br><small>更新只會「加入」本機還沒有的啟用與設定，不會刪除教師自訂詞彙、自訂分類、錄音、學習紀錄、星星與成就；詞彙編號不變，所以學習紀錄不會失去對應。套用前會自動備份，也可以按 <button class="btn alt sm" onclick="LIB.defUndo()">回復到更新前</button>。</small></div>`;
+ const mv=(LIB.man&&LIB.man.version)||'未記錄',dv=(s.def&&s.def.ver)||(s.def?'舊版（未記錄版本）':'尚未套用'),vtxt=`<div class="panel"><b>📚 教材版本</b>（程式版本 ${APP.build}，建置 ${APP.id}）：網站目前 <b>${esc(mv)}</b>（${LIB.base.length} 詞、${LIB.cats.length} 個主題、${(LIB.lvs||[]).length} 個 Level）；這台裝置上次套用的預設清單版本：<b>${esc(dv)}</b>。${s.def&&s.def.ver&&s.def.ver!==mv&&!p?'<br><small>網站教材已更新，但沒有需要你確認的差異。</small>':''}${p?'<br><small>網站教材有更新，請看下方確認。</small>':''}<br><small>更新只會「加入」本機還沒有的啟用與設定，不會刪除教師自訂詞彙、自訂分類、錄音、學習紀錄、星星與成就；詞彙編號不變，所以學習紀錄不會失去對應。套用前會自動備份，也可以按 <button class="btn alt sm" onclick="LIB.defUndo()">回復到更新前</button>。</small></div>`;
  const top=vtxt+(p?`<div class="panel" style="border:2px solid #e0a020;background:#fff7e6"><b>網站的預設詞彙清單有更新</b>：新增 ${p.d.addEn.length} 個啟用詞彙、${p.d.newOv.length} 項新設定；另有 ${p.d.conflict.length} 項你這台已有自己的設定，會<b>保留你的設定</b>。<br><small>只會加入你這台還沒有的項目，不會覆蓋或停用你已做的設定。</small><br><button class="btn go" onclick="LIB.defOk()">確認套用</button> <button class="btn alt" onclick="LIB.defSkip()">暫時略過</button></div>`:'');
  const bot=`<div class="panel"><h4 style="margin:0 0 4px">📌 預設詞彙清單（讓每個裝置自動有同一批詞彙）</h4><p><small>${stt}</small></p>
  <p><small>做法：在一台裝置把詞彙啟用、審核好 → 按「匯出預設清單」→ 把下載的 default-library.json 放進網站的 vocab 資料夾並推送 → 其他裝置第一次開啟網站時自動套用；已有自己設定的裝置不會被覆蓋，之後預設清單更新時會提示差異。預設清單不含錄音、老師上傳的圖片、學生姓名與學習紀錄；學生個別的詞彙範圍也不包含。</small></p>
@@ -5950,7 +5950,7 @@ TTSX.say=(text,o={})=>{const s=TTSX.ss();let fin=false,started=false,ws=null,wd=
  const done=ok=>{if(fin)return;fin=true;clr();if(ok)TTSX.okN++;ok?o.onend&&o.onend():o.onfail&&o.onfail(ok===false?'unknown':ok)};
  const fail=r=>{if(fin)return;fin=true;clr();TTSX.errs.push({r,t:Date.now(),text:String(text).slice(0,20)});if(TTSX.errs.length>30)TTSX.errs.shift();o.onfail&&o.onfail(r)};
  if(!s||!window.SpeechSynthesisUtterance){setTimeout(()=>fail('unsupported'),0);return()=>{fin=true}}
- const run=()=>{if(fin)return;try{try{s.resume&&s.resume()}catch(e){}const u=new SpeechSynthesisUtterance(text);u.lang='zh-TW';u.rate=o.rate||.75;u.volume=o.volume==null?1:o.volume;const v=TTSX.voice();if(v)u.voice=v;cur=u;
+ const run=()=>{if(fin)return;try{try{s.resume&&s.resume()}catch(e){}const u=new SpeechSynthesisUtterance(text);u.lang='zh-TW';u.rate=o.rate||.75;u.volume=o.volume==null?1:o.volume;const v=o.voice!==undefined?o.voice:TTSX.voice();if(v)u.voice=v;cur=u;TTSX.keep=u;/* v22.4.1：可指定語音；保留參照避免 Chrome 在播放完成前回收 */
    u.onstart=()=>{started=true;clearTimeout(ws)};
    u.onend=()=>{if(!fin&&cur===u){started=true;done(true)}};
    u.onerror=e=>{const er=(e&&e.error)||'error';if(fin)return;if(er==='interrupted'||er==='canceled'){fin=true;clr();return}fail('tts-'+er)};
@@ -6240,6 +6240,70 @@ ZG.KEEP=['ttsRate','recRate','aiGain'];
 /* 第一次載入時若教師剛好在同一次操作中改過設定，0.5 倍會被存進個案設定：一次性把各個案「剛好 0.5」的語音速度改回 0.75（之後教師在設定頁調整的速度不受影響） */
 {const f=LRN.ensure;LRN.ensure=async function(){const r=await f.apply(this,arguments);try{if(S.set&&!S.set.ttsFix224){(S.lrn&&S.lrn.list||[]).forEach(p=>{const pr=p.ext&&p.ext.pref;if(pr&&+pr.ttsRate===0.5)pr.ttsRate=.75});S.set.ttsFix224=1}}catch(e){}return r}}
 /*P26-END*/
+/*P27-BEGIN v22.4.1 第03-B批：舊版示範教材完全移除（併入 GitHub 15:30 的 P23B 並補強）、materials/ 依賴移除、跨瀏覽器語音備援、版本識別 */
+APP.id='20261126-03B';
+/* ---- 一、舊版內建示範教材（materials/ 18 張、4 個分類）：備份後一次性移除 ----
+   只移除「仍與網站原始版本完全相同」的舊版圖卡（以 packSnap 簽章比對，不看名稱）；老師改過的保留為自訂教材；
+   舊版分類只有在裡面已經沒有任何保留下來的圖卡時才移除；學習紀錄全部保留；S.legacyGone 標記後不再重複執行。
+   測試或還原用：網址加 ?legacypack=1 會停用本機制。 */
+const LEG={on:/[?&]legacypack=1/.test(location.search)};
+LEG.purge=async()=>{if(LEG.on||S.legacyGone)return 0;const ids=new Set(S.packIds||[]),cats=new Set(S.packCats||[]);
+ if(!ids.size&&!cats.size){S.legacyGone={ts:Date.now(),n:0,kept:0,catsRm:0,catsKept:0};await save();return 0}
+ const snap=S.packSnap||{},rm=S.cards.filter(c=>!c.lib&&!c.part&&ids.has(c.id)&&snap[c.id]&&sigC(c)===snap[c.id]),rid=new Set(rm.map(c=>c.id));
+ const catsRm=[...cats].filter(k=>!S.cards.some(c=>!rid.has(c.id)&&(c.cats||[]).includes(k)));
+ const bk={ts:Date.now(),build:APP.build,cards:JSON.parse(JSON.stringify(rm)),cats:JSON.parse(JSON.stringify(S.cats.filter(k=>catsRm.includes(k.id)))),
+  catRefs:S.cards.filter(c=>(c.cats||[]).some(x=>catsRm.includes(x))).map(c=>({id:c.id,cats:(c.cats||[]).slice()})),pack:{ids:[...ids],cats:[...cats],snap,ver:S.packVer,ksnap:S.packKSnap}};
+ try{if(!(await kvPut('pre-legacy-remove',bk)))return 0}catch(e){return 0}
+ S.cards=S.cards.filter(c=>!rid.has(c.id));S.cats=S.cats.filter(k=>!catsRm.includes(k.id));S.cards.forEach(c=>{if(c.cats)c.cats=c.cats.filter(x=>!catsRm.includes(x))});
+ const kept=S.cards.filter(c=>ids.has(c.id)).length;S.packIds=[];S.packCats=[];S.packSnap={};S.packKSnap='';delete S.packVer;MAT._pk=null;
+ S.legacyGone={ts:Date.now(),n:rm.length,kept,catsRm:catsRm.length,catsKept:cats.size-catsRm.length};try{MAT.bump()}catch(e){}await save();return rm.length};
+LEG.undo=async()=>{const b=await kvGet('pre-legacy-remove').catch(()=>null);if(!b)return alert('沒有可以復原的舊版教材備份');if(!confirm('要把移除的 '+b.cards.length+' 張舊版示範圖卡與 '+b.cats.length+' 個分類加回來嗎？（加回後屬於「教師自訂教材」，可在教材來源管理啟用）'))return;
+ b.cats.forEach(k=>{if(!S.cats.some(c=>c.id===k.id))S.cats.push(k)});b.cards.forEach(c=>{if(!S.cards.some(x=>x.id===c.id))S.cards.push(c)});
+ b.catRefs.forEach(r=>{const c=S.cards.find(x=>x.id===r.id);if(c)c.cats=[...new Set([...(c.cats||[]),...r.cats])]});S.legacyGone={...(S.legacyGone||{}),undone:Date.now()};try{MAT.bump()}catch(e){}await save();try{LIB.re()}catch(e){}alert('已加回舊版示範教材')};
+/* materials/ 已從網站移除：不再請求 materials/manifest.json、materials/pack.js（原本的兩個 404）。
+   首頁的教材警告改為反映「正式詞彙庫」是否讀取成功；正式詞彙庫真的讀不到時仍會顯示並可重新載入。 */
+if(!LEG.on){packLoad=async function(){if(PK.busy)return;PK.busy=true;try{await LEG.purge()}catch(e){console.warn('LEG.purge',e)}
+  if(LIB.base){PK.state='ok';PK.msg=''}else{PK.state=S.cards.length?'warn':'err';PK.msg='正式詞彙庫讀取失敗：'+(LIB.err||'未知原因')}PK.busy=false;pkUi()};
+ packRetry=async function(){PK.state='loading';pkUi();try{LIB.err='';if(await LIB.load(true)){await LIB.defBoot();LIB.sync();await save()}}catch(e){}PK.busy=false;packLoad()};
+ packPanel=function(){return''}}
+/* 教材來源管理：舊版示範教材已移除時，改顯示移除結果與「復原」 */
+{const f=SRC.html;SRC.html=function(){let h=f.apply(this,arguments);try{if(!SRC.count().legacy.w){const g=S.legacyGone;const info=g?`已於 ${new Date(g.ts).toLocaleString('zh-TW',{hour12:false})} 移除 ${g.n} 張未修改的示範圖卡${g.kept?'；'+g.kept+' 張老師改過的保留在教師自訂教材':''} <button class="btn alt sm" onclick="LEG.undo()">復原</button>`:'目前沒有舊版示範教材';
+  h=h.replace(/<tr><th style="text-align:left">舊版內建教材（materials\/）<\/th>[\s\S]*?<\/tr>/,`<tr><th style="text-align:left">舊版內建示範教材</th><td colspan="3"><small>${info}</small></td></tr>`)}}catch(e){}return h}}
+/* ---- 二、語音：合成語音候選順序與有限次數備援（沿用 TTSX，不另建播放系統） ----
+   候選：①這台裝置教師在「語音診斷」指定的語音 ②本機 zh-TW（依瀏覽器清單順序）③原本的選擇規則（第一個 zh-TW）④其他 zh-TW（含網路語音）⑤zh-Hant／zh-HK ⑥其他中文。
+   Safari 的語音都是本機語音，②與原本規則選到的是同一個，Safari 目前正常的路徑不變；Chrome 則優先使用本機語音，不會先選網路語音。
+   明確錯誤或逾時：換下一個候選，最多再試 2 次；同一個語音失敗兩次以上，本次開啟期間不再優先使用。瀏覽器擋自動播放（blocked／not-allowed）不換語音，改請使用者按鈕重播。
+   說明：onstart／onend 不代表喇叭真的有聲音；「念完的時間短得不合理（<200 毫秒）」視為可疑並換語音一次，其他「回報成功但沒有聲音」網頁無法偵測，請用語音診斷試聽並指定。 */
+TTSX.voice0=TTSX.voice;TTSX.bad=new Set();TTSX.sus={};TTSX.FAST=200;TTSX.last=null;
+TTSX.vk=v=>v?(v.voiceURI||v.name):'';
+TTSX.cands=()=>{const v=TTSX.voices(),zh=v.filter(x=>/^zh/i.test(x.lang||'')),out=[],add=x=>{if(x&&!out.includes(x)&&!TTSX.bad.has(TTSX.vk(x)))out.push(x)};
+ const pref=S&&S.set&&S.set.ttsVoice;if(pref)add(v.find(x=>x.name===pref||x.voiceURI===pref));
+ zh.filter(x=>/^zh[-_]TW$/i.test(x.lang)&&x.localService).forEach(add);try{add(TTSX.voice0())}catch(e){}zh.filter(x=>/^zh[-_]TW$/i.test(x.lang)).forEach(add);zh.filter(x=>/^zh[-_](Hant|HK)/i.test(x.lang)).forEach(add);zh.forEach(add);return out};
+TTSX.voice=()=>TTSX.cands()[0]||null;
+TTSX.mark=(v,why,hard)=>{const k=TTSX.vk(v);if(!k)return;TTSX.sus[k]=(TTSX.sus[k]||0)+1;if(hard?TTSX.sus[k]>=2:TTSX.sus[k]>=2)TTSX.bad.add(k);TTSX.errs.push({r:'voice:'+why,t:Date.now(),text:k.slice(0,30)});if(TTSX.errs.length>30)TTSX.errs.shift()};
+TTSX.RETRY=/^(tts-(synthesis|audio|voice|language|network|text|error|unknown)|timeout|no-start|unknown)/;
+{const f=TTSX.say;TTSX.say=function(text,o={}){if(o.voice!==undefined)return f.call(TTSX,text,o);
+ const C=TTSX.cands(),txt=String(text||'').trim();let tries=0,dead=false,cx=null;
+ const go=i=>{const v=C[i]||null,t0=Date.now();TTSX.last=v;
+  cx=f.call(TTSX,text,{...o,voice:v,onend:()=>{if(dead)return;if(v&&txt&&Date.now()-t0<TTSX.FAST&&i+1<C.length&&tries<2){TTSX.mark(v,'fast');tries++;return go(i+1)}if(v)TTSX.sus[TTSX.vk(v)]=0;o.onend&&o.onend()},
+   onfail:r=>{if(dead)return;if(v&&TTSX.RETRY.test(String(r))&&i+1<C.length&&tries<2){TTSX.mark(v,r,true);tries++;return go(i+1)}o.onfail&&o.onfail(r)}})};
+ go(0);return()=>{dead=true;try{cx&&cx()}catch(e){}}}}
+/* 舊的逐字語音（逐字提示、聽題目等）也用同一個語音選擇 */
+TTSX.pick=()=>{try{return TTSX.voice()}catch(e){return null}};
+/* ---- 三、語音診斷：中文語音清單、逐一試聽、指定這台裝置使用的語音（不新增設定頁） ---- */
+VDX.vs={};
+VDX.try=k=>{const v=TTSX.voices().find(x=>TTSX.vk(x)===k);const t0=Date.now();VDX.vs[k]='播放中…';try{LIB.re()}catch(e){}
+ TTSX.say('葡萄',{voice:v||null,rate:V2.ar(),volume:V2.av(),manual:true,startMs:3000,onend:()=>{VDX.vs[k]='程式回報已念完（'+(Date.now()-t0)+' 毫秒）：請確認是否真的聽到「葡萄」';try{LIB.re()}catch(e){}},onfail:r=>{VDX.vs[k]='失敗：'+r;try{LIB.re()}catch(e){}}})};
+VDX.use=k=>{const v=TTSX.voices().find(x=>TTSX.vk(x)===k);if(!v)return;S.set.ttsVoice=v.name;TTSX.bad.delete(k);TTSX.sus[k]=0;save();try{LIB.re()}catch(e){}};
+VDX.auto=()=>{delete S.set.ttsVoice;TTSX.bad.clear();TTSX.sus={};save();try{LIB.re()}catch(e){}};
+VDX.list=()=>{const v=TTSX.voices().filter(x=>/^zh/i.test(x.lang||'')),cur=TTSX.pick(),pref=S.set.ttsVoice;
+ const rows=v.slice(0,40).map(x=>{const k=TTSX.vk(x);return`<tr><td>${esc(x.name)}${cur&&TTSX.vk(cur)===k?' <b style="color:#1b7a3a">（目前使用）</b>':''}${TTSX.bad.has(k)?' <small style="color:#a33">（本次失敗略過）</small>':''}</td><td>${esc(x.lang)}</td><td>${x.localService?'本機':'網路'}</td><td><button class="btn alt sm" onclick="VDX.try('${esc(k).replace(/'/g,"\\'")}')">▶ 試聽</button> <button class="btn ${pref===x.name?'':'alt'} sm" onclick="VDX.use('${esc(k).replace(/'/g,"\\'")}')">${pref===x.name?'✔ 已指定':'使用這個'}</button><br><small>${esc(VDX.vs[k]||'')}</small></td></tr>`}).join('');
+ return`<details ${pref||Object.keys(VDX.vs).length?'open':''}><summary><b>中文語音清單（${v.length} 個）</b>：${pref?'這台裝置已指定「'+esc(pref)+'」':'自動選擇'}</summary><p><small>聽不到詞彙時：逐一按「▶ 試聽」，選一個<b>真的聽得到</b>「葡萄」的語音按「使用這個」。設定只存在這台裝置。程式回報「已念完」不代表喇叭真的有聲音，請以耳朵為準。</small> <button class="btn alt sm" onclick="VDX.auto()">恢復自動選擇</button></p>${v.length?`<div style="max-height:260px;overflow:auto"><table class="lat" style="font-size:.9em">${rows}</table></div>`:'<p>這個瀏覽器目前沒有提供中文語音（可能還在載入，請稍候再開一次）。</p>'}</details>`};
+{const f=VDX.html;VDX.html=function(){let h=f.apply(this,arguments);try{h=h.replace(/<\/div>$/,VDX.list()+`<p><small>程式版本 ${esc(APP.build)}（建置 ${esc(APP.id)}）</small></p></div>`)}catch(e){}return h}}
+{const f=VDX.run;VDX.run=async function(){const r=await f.apply(this,arguments);try{const v=TTSX.last||TTSX.pick();VDX.res&&VDX.res.items.push({k:'目前使用的中文語音',v:v?v.name+'（'+v.lang+'，'+(v.localService?'本機':'網路')+'）':'沒有（交給瀏覽器預設）',ok:!!v});if(S.set.ttsVoice)VDX.res.items.push({k:'教師指定語音',v:S.set.ttsVoice,ok:true});LIB.re()}catch(e){}return r}}
+/* 語音清單非同步載入（Chrome）：載入完成時若教師後臺開著，更新清單 */
+try{const ss=TTSX.ss();if(ss&&ss.addEventListener)ss.addEventListener('voiceschanged',()=>{try{if(document.getElementById('srcp'))LIB.re()}catch(e){}})}catch(e){}
+/*P27-END*/
 (async()=>{let s=await load();if(s&&s.decks&&!s.v){await kvPut('backup-pre-v2',s);s=migrate(s)}const mb=await kvGet('music').catch(()=>null);if(mb)mus.url=URL.createObjectURL(mb);if(s)S={...DEF(),...s,set:{...DEF().set,...s.set}};if(s&&s.set&&s.set.vs==null&&s.set.vol!=null)S.set.vs=s.set.vol;
 await zaLoad();await LRN.ensure();try{if(await LIB.load()){await LIB.defBoot();LIB.sync()}}catch(e){console.warn('LIB boot',e)}if(S.set.stuName===undefined)S.set.stuName='';if(S.set.musSrc==='project'&&!S.set.musPicked)S.set.musSrc='builtin';if(!['key','listen','spell','speak'].includes(S.set.mode))S.set.mode='key';if(S.set.ttsMig!==3){S.set.ttsMig=3;S.set.ttsRate=.75;S.set.recRate=1.25;S.set.aiGain=1.5}if(!S.bankMap)S.bankMap={};if((S.banks||[]).some(b=>!(b.id in S.bankMap))||/^b:/.test(S.set.src||'')){if(!(await kvGet('backup-pre-bankmig')))await kvPut('backup-pre-bankmig',JSON.parse(JSON.stringify(S)));migrateBanks()}if(!S.set.musMig){S.set.musMig=1;S.set.musSrc='project';save()}FL.recover();try{FL.applyPref()}catch(e){}save();UI.init();home();mtLbl();packLoad();
  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();

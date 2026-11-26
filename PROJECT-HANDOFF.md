@@ -1,5 +1,19 @@
 # PROJECT-HANDOFF｜詞彙特快車（Vocabulary Express）
 
+> **最新完整開發基準：v22.4.1（建置 20261126-03B）**，2026-11-26 第03-B批。
+> **GitHub 部署基準**：`wanyu25-alt/1124-1-TEST` main 提交 `c1a272194f162bcd24a307ead9b3f1473f6484d0`（根目錄 index.html＝v22.3，SHA-256 b01a0c6e…）。v22.4.1 的 index.html SHA-256：`d4cc68e6eaa56403ff617bcf70f4bc59b1b3769a7cd4b43ae3c593c454d6cb73`。
+> **重要教訓**：增量包必須以 GitHub 實際提交為基準（不是舊 ZIP）；交付前比對校驗碼；部署後用 Console `APP.build+' '+APP.id` 確認版本。教師以 GitHub 網頁版「Add file → Upload files」上傳，**只能拖入檔案本身，不能拖整個資料夾**（曾因此產生子資料夾 vocabulary-express-v22_2-patch／v22_3-patch，待刪除）。
+> 新對話請提供：GitHub 目前的實際檔案（或最新完整網站）＋本文件＋DEVELOPMENT-ROADMAP.md。
+
+## 0. 第03-B批摘要（最新）
+- **已修復**：GitHub 部署落差（v22.3→v22.4.1 累積更新，只需上傳 index.html）；舊版示範教材方案A（備份後移除、老師改過的保留、分類保守處理、可復原）；materials/ 兩個 404 與錯誤教材警告；合成語音候選順序與有限次數備援；語音診斷可試聽與指定語音；版本與建置識別碼。
+- **教材清理決策**：方案A（教師確認）。只移除與原始簽章相同的示範圖卡；老師改過的改屬教師自訂；舊分類僅在無保留圖卡時移除；備份在裝置本機 `pre-legacy-remove`；`S.legacyGone` 防止重複；`?legacypack=1` 停用。與 GitHub 15:30 的 P23B 差異：分類保留規則更保守（t291 已更新）。
+- **Chrome／Safari 真機結果（教師回報，修復前 v22.3）**：Mac Safari：背景音樂、答對音效、真人注音、完整詞彙朗讀都正常。Mac Chrome：可取得 24 個中文語音，但 Console 直接 speak 與部分遊戲詞彙沒有聲音。v22.4.1 修復後**尚待教師實測**。註：Chrome 需點擊頁面後才能播放合成語音，Console 測試可能被擋。
+- **尚未確認**：Chrome 實際能否發聲（需用語音診斷試聽指定）；Safari 是否維持正常；WebKit 自動測試缺環境；輕聲輸入順序待教師確認。
+- **本次修改檔案**：網站：`index.html`（P27 區段、`APP`、TTSX.say 可指定語音並保留參照、speak() 改用 TTSX.pick、教材版本面板顯示建置）。開發：BATCH03B-REPORT.md、CHANGELOG.md、KNOWN_ISSUES.md、DEVELOPMENT-ROADMAP.md、PROJECT-HANDOFF.md、PATCH-README.md、PATCH-MANIFEST.json、tests/e2e/batch03b-deploy.js、tests/e2e/lib/voice-stub.js、tests/t291.js、tests/t22.js、tests/t230.js、tests/e2e/batch01-material.js、batch02-source.js、batch03-guide.js（另含 v22.4 尚未上傳 GitHub 的文件與測試）。
+- **第04批待執行**：v22.5 麥克風與語音辨識優化（等待 v22.4.1 部署驗收後開始）；口語流程 V2.run／V2.gate；沿用 TTSX 語音備援。
+
+
 > 給下一個 Claude 對話的交接文件。新對話請同時提供「最新版網站 ZIP」與本文件。
 > 本文件依實際程式與文件撰寫，最近更新：**v22.4（第03批）2026-11-26**。開發採 12 批增量更新，進度見 DEVELOPMENT-ROADMAP.md。
 > 新對話請提供：最新完整網站（v22.1 ZIP＋之後各批增量包，或已更新的專案資料夾）＋本文件＋DEVELOPMENT-ROADMAP.md。
@@ -8,7 +22,7 @@
 國小特殊需求學生（自閉症、ADHD、低口語、詞彙提取困難、仿說等）的遊戲化詞彙學習網站：聽覺理解、圖詞連結、詞彙提取、注音輸入、口語表達、語意組織、短語／語句組合、生活溝通。教師端提供學習歷程分析，家長端提供家庭複習。系統紀錄是教學參考，**不是臨床評估或診斷**。
 
 ## 2. 目前版本
-- 程式 build：`v22.4`。**版本唯一來源**：index.html 主程式開頭 `const APP={build:'v22.4'}`（備份清單、教師後臺、完整性檢查、診斷都讀它；升版只改這一處）。
+- 程式 build：`v22.4.1`，建置 `20261126-03B`。**版本唯一來源**：index.html 主程式開頭 `const APP={build:'v22.4.1',id:''}`（id 在 P27 設定）（備份清單、教師後臺、完整性檢查、診斷都讀它；升版只改這一處）。
 - 開發方式：分批增量更新；v22.4＝v22.1 完整 ZIP＋第01、02、03批增量包（依序覆蓋）。線上 GitHub Pages 仍為 v22.1（使用者確認，兩批預定一起推送）。
 - 正式教材：V077_merged（1000 詞／16 主題／20 Level／961 張 WebP／950 有圖詞／50 缺圖詞）。
 - v22.1 基準 ZIP SHA-256：`8b5a66a1208b29175279e12ed61da84a8fc516f63efa20d8c24feec2f6bef9ce`；各批檔案校驗見 PATCH-MANIFEST.json。
@@ -16,7 +30,8 @@
 ## 3. 系統架構
 - 純靜態網站，GitHub Pages：`wanyu25-alt/1124-1-TEST` → `https://wanyu25-alt.github.io/1124-1-TEST/`。無後端、無 Service Worker。
 - `index.html`（約 950 KB，全部程式在單一檔案，以 `/*Pxx*/` 區段標記模組）。
-- 主要模組：`S`（全域狀態，存 IndexedDB／localStorage）、`UI`、`FL`（六站流程：`FL.ladder`／`FL.chk`／`FL.extras`／`FL.setAct`）、`LIB`（正式詞彙庫）、`MAT`（前臺教材統一存取層，`MAT.origin()` 判斷來源）、`SNAP`（練習快照）、`CB`（詞彙組合）、`SE`／`SCN`（語句／生活情境）、`LA`（學習分析）、`VP`（五階段學習履歷，保留）、`GV`（真人引導語音）、`AM`（語音管理）、`TTSX`／`VF`／`VDX`（v22.1 合成語音備援、文字備援、語音診斷）、`ACL`（教師入口鎖）、`MATFIX`（v22.2 教材讀取修復與唯讀診斷，`/*P24*/`，包裝 FL.chk／FL.migDim／LIB.sync／LIB.v22Boot）、`SRC`（v22.3 教材來源管理、安全修復、六站可用題數，`/*P25*/`）、`ZG`（v22.4 單一步驟逐音引導，`/*P26*/`）。P24～P26 都位於開機程式之前，是最後一層包裝；新批次的包裝請放在 P26 之後。
+- 主要模組：`S`（全域狀態，存 IndexedDB／localStorage）、`UI`、`FL`（六站流程：`FL.ladder`／`FL.chk`／`FL.extras`／`FL.setAct`）、`LIB`（正式詞彙庫）、`MAT`（前臺教材統一存取層，`MAT.origin()` 判斷來源）、`SNAP`（練習快照）、`CB`（詞彙組合）、`SE`／`SCN`（語句／生活情境）、`LA`（學習分析）、`VP`（五階段學習履歷，保留）、`GV`（真人引導語音）、`AM`（語音管理）、`TTSX`／`VF`／`VDX`（v22.1 合成語音備援、文字備援、語音診斷）、`ACL`（教師入口鎖）、`MATFIX`（v22.2 教材讀取修復與唯讀診斷，`/*P24*/`，包裝 FL.chk／FL.migDim／LIB.sync／LIB.v22Boot）、`SRC`（v22.3 教材來源管理、安全修復、六站可用題數，`/*P25*/`）、`ZG`（v22.4 單一步驟逐音引導，`/*P26*/`）、`LEG`／語音備援／語音診斷擴充（v22.4.1，`/*P27*/`）。P24～P27 都位於開機程式之前，是最後一層包裝；新批次的包裝請放在 P27 之後。
+- 語音（v22.4.1）：所有合成語音經 `TTSX.say`（P23＋P27 包裝）；候選 `TTSX.cands()`（教師指定 `S.set.ttsVoice`→本機 zh-TW→原規則 `TTSX.voice0`→其他 zh-TW→zh-Hant/HK→其他中文）；失敗換語音最多 2 次，`TTSX.bad` 本次略過；`TTSX.pick()` 給舊逐字語音用。舊版教材：`LEG.purge`／`LEG.undo`，`packLoad` 已改為不讀 materials/。
 - 打字題語音流程（v22.4）：`ask()`→`V2.ask`→`V2.auto`（延遲 `S.set.apd`）→`V2.playQ`→（打字題）`ZG.start`＝念詞＋依層級的目前一個注音。按鍵：`kPress`（最外層 ZG 包裝）→KV 按鍵回音→原 kPress（判斷、`wrongHit` 鼓勵語音）→`ZG.after` 等 KV 與 AM 語音結束再 `ZG.prompt`。聲調提示用 `ZG.charPlan`（上傳音節錄音＞單字合成＞同音字＞整個詞）。完成：`V2.word` 先排隊念詞，`AM.say`／`AM.after` 在 `ZG.wp` 期間排隊。層級：`ZG.level()` 依 `FL.run.star`。紀錄：`v2.zg`。所有聲音共用 ZQ（單一 Audio＋序號），新播放會中止舊的。
 - 題庫篩選鏈（重要）：`deck()`→`LRN.words(pool())`；`pool()` 依 `S.set.src` 取來源（`sel`＝`MAT.selPool`＝個案範圍 `ext.fl.sel` 的分類聯集），再依序經過：排除詞彙零件 `part`→個案排除 `ext.excl`→個別學生詞彙範圍 `LIB.selEff()`→非拼音模式排除沒有圖片的正式詞→**停用來源 `SRC.cardOn`**（v22.3）。
 - 教材來源：`S.matSrc={legacy:0|1,custom:0|1,log[]}`，未設定＝預設不使用（正式教材無法使用時自動備援）；`SRC.on(k)`、`SRC.cardOn(card)`、`SRC.catOn(catId)`；來源依 `MAT.origin`（builtin／legacy／custom）。`FL.chk` 以 `FL.withSrc` 暫時切換來源計算各站可用數。
