@@ -379,7 +379,7 @@ body.aid-calm #scene{max-height:90px;overflow:hidden}body.aid-calm .stc .ste{dis
 <script src="lib/pinyin-pro.js"></script>
 <script>
 /* ===== 基本工具 ===== */
-const APP={build:'v22.5.7',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
+const APP={build:'v22.6',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -1998,7 +1998,7 @@ const HM={P1:{lv:1,t:'P1',n:'引導'},P2:{lv:2,t:'P2',n:'語意提示'},P3v:{lv:
 const HLV={P1:1,P2:2,P3_voice:3,P3_zy:3,P4_voice:4,P4_zy:4,P4_show:4};
 const PH={why:'',qq:null};
 const XP=()=>!!(G&&G.cur&&G.cur._step==='expose');
-const cxOf=c=>(S.cx&&S.cx[c.id])||{};
+let cxOf=c=>(S.cx&&S.cx[c.id])||{};
 PH.sub=()=>S.set.mode==='pick'?((G.cur&&G.cur._sub)||S.set.pks||'word'):S.set.mode==='speak'?((G.cur&&G.cur._sub)||S.set.sps||'obj'):null;
 PH.task=()=>{const m=S.set.mode,sub=PH.sub();
  if(m==='pick')return{id:'S1.pick.'+sub,st:1,ind:sub==='same'?['M1','M6','M5','M7']:['M1','M5','M7']};
@@ -6241,7 +6241,7 @@ ZG.KEEP=['ttsRate','recRate','aiGain'];
 {const f=LRN.ensure;LRN.ensure=async function(){const r=await f.apply(this,arguments);try{if(S.set&&!S.set.ttsFix224){(S.lrn&&S.lrn.list||[]).forEach(p=>{const pr=p.ext&&p.ext.pref;if(pr&&+pr.ttsRate===0.5)pr.ttsRate=.75});S.set.ttsFix224=1}}catch(e){}return r}}
 /*P26-END*/
 /*P27-BEGIN v22.4.1 第03-B批：舊版示範教材完全移除（併入 GitHub 15:30 的 P23B 並補強）、materials/ 依賴移除、跨瀏覽器語音備援、版本識別 */
-APP.id='20261127-04H';
+APP.id='20261127-05';
 /* ---- 一、舊版內建示範教材（materials/ 18 張、4 個分類）：備份後一次性移除 ----
    只移除「仍與網站原始版本完全相同」的舊版圖卡（以 packSnap 簽章比對，不看名稱）；老師改過的保留為自訂教材；
    舊版分類只有在裡面已經沒有任何保留下來的圖卡時才移除；學習紀錄全部保留；S.legacyGone 標記後不再重複執行。
@@ -6566,6 +6566,98 @@ P34.take=(m,alts)=>{const now=Date.now();try{AM.cut()}catch(e){}ASR.paused=false
  G.sp.asr++;G.sp.asrOk++;G.sp.txt.push(alts[0]||'');G.sp.choice='asr';ASR.lockUntil=now+2500;MV.acc=[];MV.asrSince=now;asrMsg('收到！','var(--leaf)');SK.credit('asr',m)};
 {const _c=RE.close;RE.close=function(){const r=RE.cur,o=r&&r.o28,rec=_c.apply(this,arguments);try{if(rec&&o&&rec.ext&&rec.ext.oral)rec.ext.oral.duringPrompt=!!o.barge}catch(e){}return rec}}
 /*P34-END*/
+/*P35-BEGIN v22.6 第05批：正式詞彙語言屬性（vocab/language-metadata.json）
+  - 讀取正式 1000 詞的語言屬性，換成既有「教材擴充層」的格式（詞性、語意、用途、情境、相關動作），讓第1站五星「聽用途選圖」、
+    口語第2站四星「看動作圖片說詞」、五星「看生活情境說詞」有教材可用。
+  - 優先順序：教師在裝置上填的進階欄位（S.cx）＞正式語言屬性。「需要教師確認」的詞要教師按「已確認」後才使用；「停用」的詞只用教師自己的資料。
+  - 教師的審查狀態存在 S.cx[詞彙ID].lmrv（跟著原本的備份／還原一起保存）。不修改 vocabulary.json，不刪除任何紀錄。
+  - 「看圖說詞（物品）」的可用範圍維持只看教師設定的詞性（正式詞性不會把動詞、形容詞排除在外）。
+  - 聽用途選圖的干擾選項：用途相同、互相包含、或互為「同類」的詞不會一起出現（避免兩個選項都對）。 */
+const LM={map:new Map(),memo:new Map(),meta:null,err:'',raw:0,loading:null,RV:{auto_ok:'自動檢查通過（待審查）',needs_review:'需要教師確認',teacher_ok:'教師已確認',teacher_off:'教師停用'},
+ P:{'名詞':'名詞','量詞':'量詞','副詞':'副詞','形容詞':POSF}};
+LM.load=()=>LM.loading||(LM.loading=(async()=>{try{const r=await fetch(LIB.DIR+'language-metadata.json',{cache:'no-cache'});if(!r.ok)throw new Error('HTTP '+r.status);const j=await r.json();
+  if(!j||j.schema!==1||!Array.isArray(j.words))throw new Error('檔案格式不符');LM.map=new Map(j.words.filter(w=>w&&typeof w.id==='string').map(w=>[w.id,w]));LM.memo=new Map();LM.meta={ver:j.ver||'',made:j.made||'',count:LM.map.size};LM.err='';return true}
+ catch(e){LM.err=String(e&&e.message||e);return false}finally{LM.loading=null}})());
+LM.tx=id=>(S.cx&&S.cx[id])||{};
+LM.rv=id=>{const w=LM.map.get(id);if(!w)return null;const t=LM.tx(id).lmrv;return LM.RV[t]&&/^teacher_/.test(t)?t:(LM.RV[w.review]?w.review:'auto_ok')};
+/* 可以出題：自動檢查通過、或教師已確認；「需要教師確認」與「教師停用」只用教師自己填的資料 */
+LM.on=id=>{const r=LM.rv(id);return r==='auto_ok'||r==='teacher_ok'};
+/* 正式語言屬性 → 教材擴充層格式 */
+LM.cx=w=>{let o=LM.memo.get(w.id);if(o)return o;const adv=(w.teach&&w.teach.adv)||{},p0=(w.pos||[])[0];
+ o={pos:(w.sem||[]).includes('動作')?POSV:(LM.P[p0]||'其他'),sem:(w.sem||[])[0]||'',scene:adv.scene?(w.scene||[]).slice(0,2).join('、'):'',use:w.use||'',
+  rel:{verbs:(w.acts||[]).map(a=>a&&a.w).filter(Boolean),nouns:[],feats:[]}};LM.memo.set(w.id,o);return o};
+LM.has=v=>Array.isArray(v)?v.length>0:!!(v&&String(v).trim());
+LM.merge=(c,t)=>{if(LM.raw||!c||!LM.map.size||!LM.on(c.id))return t;const o=LM.cx(LM.map.get(c.id)),r={...t},tr=t.rel||{};
+ ['pos','sem','scene','use'].forEach(k=>{if(!LM.has(t[k]))r[k]=o[k]});r.rel={verbs:LM.has(tr.verbs)?tr.verbs:o.rel.verbs,nouns:tr.nouns||[],feats:tr.feats||[]};r._lmUse=!LM.has(t.use)&&!!o.use;return r};
+{const _x=cxOf;cxOf=c=>LM.merge(c,_x(c))}
+LIB.lmLoad=LIB.load;LIB.load=async function(){const r=await LIB.lmLoad.apply(this,arguments);try{if(r&&!LM.map.size)await LM.load()}catch(e){}return r};
+{const _o=PH.ok;PH.ok=function(c,m,sub){if(m==='speak'&&(sub==='obj'||sub==='newimg')){LM.raw++;try{return _o.apply(this,arguments)}finally{LM.raw--}}return _o.apply(this,arguments)}}
+/* 提示與題目用語：正式用途多寫成「用來…」，改成完整句子 */
+LM.useSay=u=>{u=String(u||'').trim().replace(/[。．]$/,'');return /^用來/.test(u)?'是'+u+'的':'可以'+u};
+{const _s=PH.sem;PH.sem=function(c,noUse){try{if(c&&!c._cb&&!c._se&&!c._sc&&!noUse){const x=cxOf(c);if(x._lmUse&&x.use)return('它'+LM.useSay(x.use)).split(c.text).join('○')}}catch(e){}return _s.apply(this,arguments)}}
+{const _i=PICK.item;PICK.item=function(c){try{if(G.pk&&G.pk.sub==='use'&&c){const x=cxOf(c);if(x._lmUse&&x.use)return{k:'U:'+c.id,tts:'哪一個'+LM.useSay(x.use)+'？',src:'tts',st:'ai'}}}catch(e){}return _i.apply(this,arguments)}}
+/* 聽用途選圖：干擾選項不得同時成立 */
+LM.nu=u=>String(u||'').replace(/^(用來|可以|讓|幫助)/,'').replace(/[，,。、\s的]/g,'');
+LM.clash=(c,d)=>{const a=LM.nu(cxOf(c).use),b=LM.nu(cxOf(d).use);if(a&&b&&(a===b||a.includes(b)||b.includes(a)))return true;
+ const sib=(x,y)=>{const w=LM.map.get(x.id);return !!(w&&(w.rel||[]).some(r=>r&&r.id===y.id&&(r.t==='同類'||r.t==='上位'||r.t==='下位')))};return sib(c,d)||sib(d,c)};
+{const _b=PICK.build;PICK.build=function(c){const pk=_b.apply(this,arguments);try{if(!pk||pk.sub!=='use')return pk;
+  const used=new Set(pk.opts.map(o=>o.cid)),pool0=[...(LRN.words(pool())||[]),...S.cards].filter(d=>d&&d.img&&!d.part&&d.id!==c.id),seen=new Set(),alt=pool0.filter(d=>!seen.has(d.id)&&seen.add(d.id));
+  const opts=[];let fixed=0;for(const o of pk.opts){if(o.correct||!LM.clash(c,byId(o.cid)||{id:o.cid})){opts.push(o);continue}
+   const r=alt.find(d=>!used.has(d.id)&&!LM.clash(c,d));fixed++;if(r){used.add(r.id);opts.push({cid:r.id,img:r.img,imgId:WD.imgId(r),correct:false,gen:false})}}
+  if(!fixed)return pk;if(opts.length<2)return null;const o2=shuffle(opts);return{...pk,opts:o2,ci:o2.findIndex(o=>o.correct),lmFix:fixed}}catch(e){console.warn('P35 pick',e);return pk}}}
+/* ---------- 後台：查看、修正、審查、匯出／匯入 ---------- */
+LM.F={pos:'詞性',sem:'語意類別',hyper:'上位概念',feat:'語意特徵',rel:'相關詞',acts:'相關動作',objs:'相關物品',use:'用途',scene:'生活情境',situ:'可能情境',comm:'溝通功能',phrase:'短語',sent:'句型'};
+LM.relTxt=r=>{const n=r.id?((LIB.idx&&LIB.idx.get(r.id))||{}).word||r.id:r.ext;return(r.t||'')+'：'+(n||'')};
+LM.val=(w,k)=>{const v=w[k];if(v==null)return'';if(k==='rel')return v.map(LM.relTxt).join('、');if(k==='acts'||k==='objs')return v.map(a=>a.w).join('、');
+ if(k==='phrase')return v.map(p=>p.p+(p.ex?'（'+p.ex+'）':p.with?'（'+p.with.join('、')+'）':p.obj?'（'+p.obj.join('、')+'）':p.cl?'（'+p.cl.join('、')+'）':'')).join('；');
+ if(k==='sent')return v.map(s=>s.ex||s.s).join('；');return Array.isArray(v)?v.join('、'):String(v)};
+LM.edited=id=>{const t=LM.tx(id),tr=t.rel||{};return['pos','sem','scene','use'].filter(k=>LM.has(t[k])).concat(LM.has(tr.verbs)?['rel']:[])};
+LM.panel=id=>{const w=LM.map.get(id);if(!w)return LM.map.size?'':`<div class="panel"><small>語言屬性：${LM.err?'讀取失敗（'+esc(LM.err)+'）':'尚未載入'}</small></div>`;
+ const rv=LM.rv(id),t=LM.tx(id),o=LM.cx(w),ed=LM.edited(id),adv=(w.teach&&w.teach.adv)||{},hasImg=!!(byId(id)||{}).img;
+ const ip=(k,l,v,ph)=>`<label style="display:block;margin-top:4px">${l}<br><input id="lm_${k}" value="${esc(v||'')}" placeholder="${esc(ph||'')}" style="width:100%;max-width:520px"></label>`;
+ return `<div class="panel" style="border:2px solid #4a9d5b"><h4 style="margin:0">🧩 正式語言屬性（第05批）　<small>審查狀態：<b>${esc(LM.RV[rv])}</b></small></h4>
+ <table style="font-size:14px;margin:4px 0">${Object.keys(LM.F).filter(k=>w[k]!=null).map(k=>`<tr><td style="white-space:nowrap;vertical-align:top;color:#555">${LM.F[k]}</td><td>${esc(LM.val(w,k))}</td></tr>`).join('')}
+ <tr><td style="color:#555">教學程度</td><td>${{core:'核心',ext:'延伸',adv:'進階'}[w.teach&&w.teach.lv]||''}</td></tr>
+ <tr><td style="color:#555;vertical-align:top">進階題型</td><td>聽用途選圖 ${adv.use?'✔':'—'}｜看情境說詞 ${adv.scene?'✔':'—'}｜看動作說詞 ${adv.act?'✔':'—'}${hasImg?'':'（這個詞目前沒有可出題的圖片，看圖題不會使用）'}</td></tr>
+ ${w.note?`<tr><td style="color:#555;vertical-align:top">說明</td><td>${esc(w.note)}</td></tr>`:''}</table>
+ <p style="margin:4px 0">審查：<select onchange="LM.setRv('${id}',this.value)">${[['','依正式資料（'+LM.RV[w.review]+(w.review==='needs_review'?'，確認前不用於進階題型':'')+'）'],['teacher_ok','教師已確認'],['teacher_off','停用（這個詞不使用正式語言屬性出題）']].map(([v,l])=>`<option value="${v}" ${(t.lmrv||'')===v?'selected':''}>${esc(l)}</option>`).join('')}</select></p>
+ <details ${ed.length?'open':''}><summary>修正（只存在這台裝置；留白＝使用正式資料）${ed.length?'　<b>已修改：'+ed.map(k=>LM.F[k]||k).join('、')+'</b>':''}</summary>
+ <label style="display:block;margin-top:4px">詞性<br><select id="lm_pos">${WD.POS.map(p=>`<option value="${p}" ${(t.pos||'')===p?'selected':''}>${p||'（使用正式資料：'+esc(o.pos)+'）'}</option>`).join('')}</select></label>
+ ${ip('use','用途（聽用途選圖會說「哪一個是…的？」）',t.use,o.use)}${ip('scene','生活情境（看情境說詞、語意提示）',t.scene,o.scene)}${ip('sem','語意類別',t.sem,o.sem)}${ip('verbs','相關動作（用頓號分隔）',((t.rel||{}).verbs||[]).join('、'),o.rel.verbs.join('、'))}
+ <p><button class="btn go sm" onclick="LM.saveEd('${id}')">💾 儲存修正</button> ${ed.length?`<button class="btn alt sm" onclick="LM.resetEd('${id}')">恢復正式資料</button>`:''} <small id="lm_msg"></small></p>
+ <small>也可以在「圖卡」分頁的「進階教材欄位」修改，兩邊是同一份資料。</small></details></div>`};
+LM.re=()=>{try{LIB.re()}catch(e){}};
+LM.setRv=(id,v)=>{if(!LM.map.has(id))return;const x=WD.x(id);if(v==='teacher_ok'||v==='teacher_off'){x.lmrv=v;x.lmts=Date.now()}else{delete x.lmrv;delete x.lmts}save();LM.re()};
+LM.saveEd=id=>{const x=WD.x(id),g=k=>(($('#lm_'+k)||{}).value||'').trim();const pos=g('pos');x.pos=WD.POS.includes(pos)?pos:'';x.use=g('use');x.scene=g('scene');x.sem=g('sem');
+ x.rel={...(x.rel||{}),verbs:lst2(g('verbs'))};const c=byId(id);if(c)c.modified=Date.now();save();LM.re()};
+LM.resetEd=id=>{if(!confirm('清除這個詞在這台裝置上的修正，改回使用正式語言屬性？（審查狀態、類化圖片、替代說法不受影響）'))return;const x=WD.x(id);['pos','use','scene','sem'].forEach(k=>x[k]='');x.rel={...(x.rel||{}),verbs:[]};save();LM.re()};
+LM.stats=()=>{const o={auto_ok:0,needs_review:0,teacher_ok:0,teacher_off:0,edited:0};LM.map.forEach((w,id)=>{o[LM.rv(id)]++;if(LM.edited(id).length)o.edited++});return o};
+LM.overview=()=>{if(!LM.map.size)return `<div class="panel"><h4 style="margin:0">🧩 正式語言屬性</h4><small>${LM.err?'讀取失敗：'+esc(LM.err)+'（進階題型只使用教師自己填的進階欄位）':'讀取中…'}</small></div>`;
+ const s=LM.stats(),L=[...LM.map.values()].filter(w=>{const r=LM.rv(w.id);return r==='needs_review'||r==='teacher_off'||LM.edited(w.id).length});
+ return `<div class="panel" style="border:2px solid #4a9d5b"><h4 style="margin:0 0 4px">🧩 正式語言屬性（第05批，${LM.meta.count} 詞，${esc(LM.meta.made)}）</h4>
+ <p style="margin:2px 0">自動檢查通過（待審查）${s.auto_ok}｜需要教師確認 ${s.needs_review}｜教師已確認 ${s.teacher_ok}｜教師停用 ${s.teacher_off}｜有修正 ${s.edited}</p>
+ <p style="margin:2px 0"><small>點詞彙看完整屬性、修正或審查。修正只存在這台裝置，教師的修正優先；可以匯出給開發者併入正式資料，或匯入到另一台裝置。</small></p>
+ <div style="margin:4px 0">${L.map(w=>`<button class="btn alt sm" style="margin:2px" onclick="LIB.set('w','${w.id}');scrollTo(0,0)">${esc(w.word)}${LM.rv(w.id)==='needs_review'?' ⚠':LM.rv(w.id)==='teacher_off'?' ⛔':' ✎'}</button>`).join('')||'<small>（沒有需要確認或修正過的詞）</small>'}</div>
+ <p style="margin:4px 0"><button class="btn sm" onclick="LM.exp()">⬇ 匯出語言屬性修正</button> <label class="btn alt sm">⬆ 匯入修正<input type="file" accept="application/json,.json" style="display:none" onchange="LM.imp(this.files[0]);this.value=''"></label> <small id="lm_io"></small></p></div>`};
+{const _d=LIB.detail;LIB.detail=function(id){let h=_d.apply(this,arguments);try{h+=LM.panel(id)}catch(e){console.warn('P35 detail',e)}return h}}
+{const _v=LIB.view;LIB.view=function(){let h=_v.apply(this,arguments);try{if(LIB.base)h+=LM.overview()}catch(e){console.warn('P35 view',e)}return h}}
+{const _p=WD.panel;WD.panel=function(){let h=_p.apply(this,arguments);try{const id=ed&&ed.id;if(id&&LM.map.has(id)){const e=LM.edited(id);h+=`<div class="panel" style="border:2px solid #4a9d5b"><small>🧩 這個詞有正式語言屬性（${esc(LM.RV[LM.rv(id)])}）。上方欄位留白時使用正式資料${e.length?'；你已修改：'+e.map(k=>LM.F[k]||k).join('、'):''}。完整內容請到「內建詞彙庫」點這個詞查看。</small></div>`}}catch(e){}return h}}
+/* 匯出／匯入：只含語言屬性相關欄位，不含學生資料、錄音、圖片 */
+LM.KEYS=['pos','sem','scene','use','alts','approx'];
+LM.expo=()=>{const words={};LM.map.forEach((w,id)=>{const t=LM.tx(id),o={};LM.KEYS.forEach(k=>{if(LM.has(t[k]))o[k]=t[k]});if(t.rel&&LM.has(t.rel.verbs))o.verbs=t.rel.verbs;if(/^teacher_/.test(t.lmrv||''))o.review=t.lmrv;if(Object.keys(o).length)words[id]={word:w.word,...o}});
+ return{schema:1,kind:'language-metadata-edits',app:APP.build,exportedAt:new Date().toISOString(),base:LM.meta&&LM.meta.made,count:Object.keys(words).length,note:'教師對正式語言屬性的修正與審查狀態。不含學生資料、錄音、圖片。',words}};
+LM.exp=()=>{const o=LM.expo();if(!o.count&&!confirm('目前沒有任何修正或審查紀錄，仍要匯出空白檔案嗎？'))return;const b=new Blob([JSON.stringify(o,null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='language-metadata-edits.json';document.body.appendChild(a);a.click();a.remove();const m=$('#lm_io');if(m)m.textContent='已匯出 '+o.count+' 個詞'};
+LM.clean=(id,v)=>{if(!v||typeof v!=='object')return null;const o={},s=x=>typeof x==='string'?x.trim().slice(0,200):'',arr=x=>Array.isArray(x)?x.filter(y=>typeof y==='string').map(y=>y.trim().slice(0,40)).filter(Boolean).slice(0,20):null;
+ if(v.pos!=null){const p=s(v.pos);if(WD.POS.includes(p))o.pos=p}['sem','scene','use'].forEach(k=>{if(v[k]!=null)o[k]=s(v[k])});['alts','approx','verbs'].forEach(k=>{const a=arr(v[k]);if(a)o[k]=a});
+ if(v.review==='teacher_ok'||v.review==='teacher_off')o.review=v.review;return Object.keys(o).length?o:null};
+LM.imp=async f=>{const m=$('#lm_io'),say=t=>{if(m)m.textContent=t};if(!f)return;try{const j=JSON.parse(await f.text());if(!j||j.kind!=='language-metadata-edits'||!j.words||typeof j.words!=='object')throw new Error('不是「語言屬性修正」檔案');
+  const ok=[],bad=[];Object.entries(j.words).forEach(([id,v])=>{const c=LM.map.has(id)?LM.clean(id,v):null;(c?ok:bad).push([id,c])});
+  if(!ok.length)return say('檔案裡沒有可以套用的修正'+(bad.length?'（'+bad.length+' 筆無法辨識）':''));
+  if(!confirm('要套用 '+ok.length+' 個詞的語言屬性修正嗎？'+(bad.length?'\n（另有 '+bad.length+' 筆無法辨識，會略過）':'')+'\n套用前會先自動備份目前的進階欄位。'))return;
+  await kvPut('backup-pre-lm-import-'+Date.now(),JSON.parse(JSON.stringify(S.cx||{})));
+  ok.forEach(([id,c])=>{const x=WD.x(id);['pos','sem','scene','use','alts','approx'].forEach(k=>{if(c[k]!==undefined)x[k]=c[k]});if(c.verbs)x.rel={...(x.rel||{}),verbs:c.verbs};if(c.review){x.lmrv=c.review;x.lmts=Date.now()}});
+  await save();LM.re();say('已套用 '+ok.length+' 個詞'+(bad.length?'，略過 '+bad.length+' 筆':''))}catch(e){say('匯入失敗：'+(e&&e.message||e))}};
+/*P35-END*/
 (async()=>{let s=await load();if(s&&s.decks&&!s.v){await kvPut('backup-pre-v2',s);s=migrate(s)}const mb=await kvGet('music').catch(()=>null);if(mb)mus.url=URL.createObjectURL(mb);if(s)S={...DEF(),...s,set:{...DEF().set,...s.set}};if(s&&s.set&&s.set.vs==null&&s.set.vol!=null)S.set.vs=s.set.vol;
 await zaLoad();await LRN.ensure();try{if(await LIB.load()){await LIB.defBoot();LIB.sync()}}catch(e){console.warn('LIB boot',e)}if(S.set.stuName===undefined)S.set.stuName='';try{P28.init()}catch(e){}if(S.set.musSrc==='project'&&!S.set.musPicked)S.set.musSrc='builtin';if(!['key','listen','spell','speak'].includes(S.set.mode))S.set.mode='key';if(S.set.ttsMig!==3){S.set.ttsMig=3;S.set.ttsRate=.75;S.set.recRate=1.25;S.set.aiGain=1.5}if(!S.bankMap)S.bankMap={};if((S.banks||[]).some(b=>!(b.id in S.bankMap))||/^b:/.test(S.set.src||'')){if(!(await kvGet('backup-pre-bankmig')))await kvPut('backup-pre-bankmig',JSON.parse(JSON.stringify(S)));migrateBanks()}if(!S.set.musMig){S.set.musMig=1;S.set.musSrc='project';save()}FL.recover();try{FL.applyPref()}catch(e){}save();UI.init();home();mtLbl();packLoad();
  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();

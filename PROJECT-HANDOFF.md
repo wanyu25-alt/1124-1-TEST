@@ -5,7 +5,13 @@
 > **重要教訓**：增量包必須以 GitHub 實際提交為基準（不是舊 ZIP）；交付前比對校驗碼；部署後用 Console `APP.build+' '+APP.id` 確認版本。教師以 GitHub 網頁版「Add file → Upload files」上傳，**只能拖入檔案本身，不能拖整個資料夾**（曾因此產生子資料夾 vocabulary-express-v22_2-patch／v22_3-patch，待刪除）。
 > 新對話請提供：GitHub 目前的實際檔案（或最新完整網站）＋本文件＋DEVELOPMENT-ROADMAP.md。
 
-## 0-G. 第04-H批摘要（最新，v22.5.7）
+## 0-H. 第05批摘要（最新，v22.6，建置 20261127-05，未推送）
+- 正式 1000 詞語言屬性：`vocab/language-metadata.json`（由 `tools/merge-lang.mjs` 合併 `vocab/lang/05-01～05-10.json`；撰寫稿 `tools/lang-src/`；驗證 `tools/validate-lang.mjs`）。欄位見 LANGUAGE-METADATA-SCHEMA.md，詳細見 BATCH05-REPORT.md。
+- P35：`LM` 模組。`cxOf` 改為 `let`，P35 包裝成「正式資料＋教師 S.cx（優先）」；`LIB.load` 後載入；`PH.ok` 的 speak obj／newimg 以原始 S.cx 判斷（`LM.raw`）；`PICK.build` 的 use 題替換會同時成立的干擾選項（`LM.clash`）；`PICK.item`／`PH.sem` 用問句。審查狀態 `S.cx[id].lmrv`；needs_review 與 teacher_off 不用正式資料。後台：`LIB.view`／`LIB.detail`／`WD.panel` 包裝；`LM.exp`／`LM.imp`。
+- 開放：第1站五星聽用途選圖、口語第2站四星看動作說詞、五星看情境說詞。
+- 新批次的包裝請放在 P35 之後、開機程式之前。
+
+## 0-G. 第04-H批摘要（v22.5.7）
 - 「這是什麼」只在每回合第 1、2 題（P18 兩處 qi 條件 3→2）。
 - P34：`gv_what`／`gv_turn` 播放中，辨識符合目標詞（SK.match／MV.judge 有 by）→ AM.cut、記為 asr 成功、`ext.oral.duringPrompt`。其他語音期間仍略過結果。新批次包裝放在 P34 之後。
 
@@ -62,7 +68,7 @@
 國小特殊需求學生（自閉症、ADHD、低口語、詞彙提取困難、仿說等）的遊戲化詞彙學習網站：聽覺理解、圖詞連結、詞彙提取、注音輸入、口語表達、語意組織、短語／語句組合、生活溝通。教師端提供學習歷程分析，家長端提供家庭複習。系統紀錄是教學參考，**不是臨床評估或診斷**。
 
 ## 2. 目前版本
-- 程式 build：`v22.5.7`，建置 `20261127-04H`。**版本唯一來源**：index.html 主程式開頭 `const APP={build:'v22.5.7',id:''}`（建置 id 在 P27 設定）（備份清單、教師後臺、完整性檢查、診斷都讀它；升版只改這一處）。
+- 程式 build：`v22.6`，建置 `20261127-05`。**版本唯一來源**：index.html 主程式開頭 `const APP={build:'v22.6',id:''}`（建置 id 在 P27 設定）（備份清單、教師後臺、完整性檢查、診斷都讀它；升版只改這一處）。
 - 開發方式：分批增量更新；v22.4＝v22.1 完整 ZIP＋第01、02、03批增量包（依序覆蓋）。線上 GitHub Pages 仍為 v22.1（使用者確認，兩批預定一起推送）。
 - 正式教材：V077_merged（1000 詞／16 主題／20 Level／961 張 WebP／950 有圖詞／50 缺圖詞）。
 - v22.1 基準 ZIP SHA-256：`8b5a66a1208b29175279e12ed61da84a8fc516f63efa20d8c24feec2f6bef9ce`；各批檔案校驗見 PATCH-MANIFEST.json。
@@ -163,7 +169,7 @@
 - **沒有任何 iPhone／iPad／Android／Windows／macOS 實機或真實學生測試。**
 
 ## 11. 下一階段開發建議
-下一批＝**第05批 正式詞彙屬性及進階難度（v22.6）**，以 v22.5 為基礎，**等教師完成第04批 Chrome／Safari 真機口語驗收後才開始**。口語相關：口語練習走 SK（`asrRes`／`SK.match`／`MV.judge`）、綜合練習口說步驟走 V2（`V2.run`／`V2.asr`），兩者已共用 P28 的判定與紀錄。待教師確認：輕聲輸入順序（已改為最後）。升版只改 `APP.build`。
+第05批（v22.6）已完成，待教師上傳驗收。下一批＝**第06批 第3、4站教材（v22.7）**：等教師驗收 v22.6 並同意後才開始；先提架構與示例，確認後才大量生成；優先引用 `vocab/language-metadata.json` 的 acts／objs／rel。（以下為舊紀錄）口語相關：口語練習走 SK（`asrRes`／`SK.match`／`MV.judge`）、綜合練習口說步驟走 V2（`V2.run`／`V2.asr`），兩者已共用 P28 的判定與紀錄。待教師確認：輕聲輸入順序（已改為最後）。升版只改 `APP.build`。
 
 （以下為接手時的整體建議，已併入 DEVELOPMENT-ROADMAP.md 12 批規劃）
 1. 實機驗證 v22.1 iPhone／iPad 語音（後臺「語音診斷」回報）。
@@ -174,6 +180,7 @@
 6. 小修：教材版本面板版本字樣、t33 斷言、測試路徑改用環境變數、README 舊網址。
 
 ## 12. GitHub 部署狀態
+- 2026-11-27：v22.5.7 已推送（提交 569cdbc），教師 Mac Chrome／Safari 驗收；v22.6（第05批）尚未推送。
 - 2026-11-27：v22.5.1（提交 487d90f）已推送；v22.5.2 尚未推送。
 - 2026-11-26：v22.5（提交 f12b715）已推送部署；教師實測發現 Chrome／iPhone 合成語音無聲 → 第04-B批 v22.5.1（未推送）。
 - 2026-11-26：v22.4.1（提交 78932bb）已推送並部署，教師完成 Chrome／Safari 驗收。舊增量包子資料夾 v22_2／v22_3／v22_4 已從儲存庫移除。v22.5 尚未推送。
@@ -181,6 +188,7 @@
 - 規則：未經使用者確認不得推送。使用者以 GitHub Desktop 自行更新。
 
 ## 13. 最近一次修改的檔案及原因
+- v22.6 第05批（2026-11-27）：`index.html`（`cxOf` const→let、P35、`APP.build`、P27 的 `APP.id`）；新增 `vocab/language-metadata.json`、`vocab/lang/`、`tools/lang-src/`、`tools/validate-lang.mjs`、`tools/merge-lang.mjs`、`tools/lang-review-md.mjs`、`tests/e2e/batch05-lang.js`；`tests/t230.js`；文件 BATCH05-REPORT、BATCH05-REVIEW、BATCH05-PROGRESS、BATCH05-SAMPLE、BATCH05-01-REVIEW、LANGUAGE-METADATA-SCHEMA、CHANGELOG、ROADMAP、本文件、PATCH-README、PATCH-MANIFEST。
 - v22.5.7 第04-H批（2026-11-27）：`index.html`（P18 兩處「這是什麼」題數、P34、`APP.build`、P27 的 `APP.id`）；新增 `tests/e2e/batch04h-prompt.js`；`tests/t230.js`；文件 BATCH04B-REPORT（第 13 節）、CHANGELOG、PROJECT-HANDOFF、DEVELOPMENT-ROADMAP、PATCH-README、PATCH-MANIFEST。原因：教師需求。
 - v22.5.6 第04-G批（2026-11-27）：`index.html`（P28 的 SM.pre 包裝、`APP.build`、P27 的 `APP.id`）；新增 `tests/e2e/batch04g-noread.js`；`tests/t230.js`；文件 BATCH04B-REPORT（第 12 節）、CHANGELOG、PROJECT-HANDOFF、DEVELOPMENT-ROADMAP、PATCH-README、PATCH-MANIFEST。原因：教師決定口語二星以上不先念題目。
 - v22.5.5 第04-F批（2026-11-27）：`index.html`（P33、`APP.build`、P27 的 `APP.id`）；新增 `mic-test.html`、`tests/e2e/batch04f-mic.js`；`tests/t230.js`；文件 BATCH04B-REPORT（第 11 節）、CHANGELOG、PROJECT-HANDOFF、DEVELOPMENT-ROADMAP、PATCH-README、PATCH-MANIFEST。原因：教師回報口語練習沒有聲波、讀不到聲音。

@@ -1,25 +1,36 @@
-# PATCH-README｜v22.5.6（GitHub 目前）→ v22.5.7 第04-H批
+# PATCH-README｜v22.5.7（GitHub 目前）→ v22.6 第05批
 
-- **更新前**：GitHub main 提交 `e8a0439`（v22.5.6，已部署）
-- **更新後**：v22.5.7（建置 `20261127-04H`）
+- **更新前**：GitHub main 提交 `569cdbc`（v22.5.7，已部署）
+- **更新後**：v22.6（建置 `20261127-05`）
 - **資料遷移**：沒有。
+  - 新增唯讀資料檔 `vocab/language-metadata.json`。
+  - 教師的審查狀態存在原本的進階教材欄位裡（`S.cx[詞彙ID].lmrv`）。
+  - 學習紀錄、星星、收藏、個案設定、自訂教材都不變。
 
-## 要上傳的網站檔案
+## 要上傳的網站檔案（兩個都要）
 | 檔案 | 說明 |
 |---|---|
-| `index.html` | 「這是什麼」只在第 1、2 題；引導語音播放中說對也算過關 |
+| `index.html` | P35：讀取正式語言屬性；開放第1站五星、口語第2站四五星；後台審查、修正、匯出入 |
+| `vocab/language-metadata.json`（新增） | 正式 1000 詞語言屬性（約 640 KB） |
+
+只上傳 `index.html`、沒有上傳 `vocab/language-metadata.json` 也不會壞：網站照舊運作，只是新題型沒有正式教材可用。
 
 ## 部署方式
-GitHub Desktop → Commit（例如「v22.5.7 這是什麼」）→ Push origin。或用 GitHub 網頁版上傳 `index.html` 一個檔案。
+GitHub Desktop：
+1. 確認 Changes 列出 `index.html` 與 `vocab/language-metadata.json`。
+2. Commit，例如「v22.6 第05批語言屬性」。
+3. Push origin。
 
-## 檔案清單（相對於 e8a0439）
-| 動作 | 檔案 |
-|---|---|
-| 覆蓋 | `index.html`、`BATCH04B-REPORT.md`、`CHANGELOG.md`、`DEVELOPMENT-ROADMAP.md`、`PROJECT-HANDOFF.md`、`PATCH-README.md`、`PATCH-MANIFEST.json`、`tests/t230.js` |
-| 新增 | `tests/e2e/batch04h-prompt.js` |
-| 刪除 | 沒有 |
+開發用的檔案也可以一起上傳，不影響網站：`vocab/lang/`、`tools/`、`tests/`、文件。
+
+## 檔案清單
+見 `PATCH-MANIFEST.json`：A＝網站必要檔，B＝開發文件、工具、測試。
 
 ## 更新後驗收（Mac Chrome）
-1. 口語練習第2站三星：第 1、2 題會說「這是什麼」，第 3 題起不再說。
-2. 在「這是什麼」還沒說完時就說出答案：會停止引導語音、顯示「收到！」，然後接下一題。
-3. 在「這是什麼」播放中說錯的詞：不會過關，也不會顯示答錯。
+見 `BATCH05-REPORT.md` 第 6 節。
+
+摘要：
+1. Console 輸入 `APP.build+' '+APP.id`，應顯示 `v22.6 20261127-05`。
+2. 聽讀練習第1站五星：聽用途選圖，只有一個正確選項。
+3. 口語練習第2站四星、五星：可以開始，說對會過關。
+4. 教師後台 → 內建詞彙庫：最下方有「🧩 正式語言屬性」。
