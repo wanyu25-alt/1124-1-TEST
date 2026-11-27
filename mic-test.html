@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-Hant-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>麥克風測試頁｜詞彙特快車</title>
+<!-- 獨立的麥克風與語音辨識測試頁：只使用瀏覽器內建功能，不錄音、不送出任何資料；網站設定只「讀取」，不修改。
+     （語音辨識由瀏覽器處理：Chrome 會把聲音送到 Google、Safari 送到 Apple，這是瀏覽器本身的做法） -->
+<style>
+body{font-family:-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;max-width:760px;margin:0 auto;padding:14px;background:#f6f8fc;color:#223;font-size:17px;line-height:1.5}
+h1{font-size:24px;margin:6px 0}.box{background:#fff;border-radius:14px;padding:12px 14px;margin:10px 0;box-shadow:0 1px 4px #0001}
+button{font-size:17px;border:0;border-radius:10px;padding:8px 14px;cursor:pointer;background:#2f6fe4;color:#fff;margin:2px}
+button.y{background:#1b7a3a}button.n{background:#b8322b}button.g{background:#667}button.sel{outline:3px solid #f0c040}
+.wv{display:flex;align-items:flex-end;gap:5px;height:70px;margin:8px 0}.wv i{display:block;width:16px;height:6%;border-radius:6px;background:linear-gradient(#4aa3ff,#35c28a);transition:height .08s linear}
+.ev{font-size:14px;color:#556;white-space:pre-wrap}textarea{width:100%;height:190px;font-size:13px;box-sizing:border-box}small{color:#556}.big{font-size:26px;font-weight:800;min-height:1.4em}
+</style></head><body>
+<h1>🎤 麥克風測試頁</h1>
+<div class="box"><b>使用方法</b>：由上往下做 A～E。每一項做完按「✔ 有／✘ 沒有」。最後按「📋 複製結果」，把文字貼給開發者。<br><small>這一頁不錄音、不保存聲音；網站的學習紀錄只讀取設定、不修改。</small></div>
+
+<div class="box" id="bA"><b>A　麥克風權限與串流</b><br><button onclick="A()">▶ 取得麥克風</button><div class="ev" id="eA"></div>
+ <button class="y" onclick="mk('A',1)">✔ 有跳出詢問／取得成功</button><button class="n" onclick="mk('A',0)">✘ 失敗</button></div>
+
+<div class="box" id="bB"><b>B　即時聲波（網站的聲波就是用這個方式）</b><br><small>先做 A，再按開始，對著麥克風說「啊——」，看長條有沒有跟著跳。</small><br>
+ <button onclick="B()">▶ 開始聲波</button><button class="g" onclick="Bstop()">■ 停止</button>
+ <div class="wv" id="wv"></div><div class="ev" id="eB"></div>
+ <button class="y" onclick="mk('B',1)">✔ 長條有跟著聲音跳</button><button class="n" onclick="mk('B',0)">✘ 長條不動</button></div>
+
+<div class="box" id="bC"><b>C　語音辨識（只開辨識，不開聲波）</b><br><small>按開始後，清楚說「葡萄」。</small><br>
+ <button onclick="C(false)">▶ 開始辨識</button><div class="big" id="tC"></div><div class="ev" id="eC"></div>
+ <button class="y" onclick="mk('C',1)">✔ 有出現「葡萄」或相近的字</button><button class="n" onclick="mk('C',0)">✘ 沒有出現文字</button></div>
+
+<div class="box" id="bD"><b>D　聲波＋語音辨識同時開（網站實際的狀況）</b><br><small>按開始後說「蘋果」，同時看長條有沒有跳、有沒有出現文字。</small><br>
+ <button onclick="D()">▶ 同時開始</button><div class="wv" id="wvD"></div><div class="big" id="tD"></div><div class="ev" id="eD"></div>
+ <button class="y" onclick="mk('D',1)">✔ 長條有跳、也有出現文字</button><button class="n" onclick="mk('D',0)">✘ 其中一個沒有作用</button></div>
+
+<div class="box" id="bE"><b>E　這台裝置的網站設定（只讀取）</b><div class="ev" id="eE">讀取中…</div></div>
+
+<div class="box"><button onclick="copyOut()">📋 複製結果</button> <button class="g" onclick="location.reload()">↻ 重新整理（重新開始）</button><textarea id="out" readonly></textarea></div>
+<script>
+const R={},M={};let st=null,ac=null,raf=0,rafD=0;const $=id=>document.getElementById(id);const t0=performance.now(),T=()=>Math.round(performance.now()-t0);
+for(const id of ['wv','wvD'])$(id).innerHTML='<i></i>'.repeat(12);
+function log(k,s){R[k]=(R[k]||[]);R[k].push(s);$('e'+k).textContent=R[k].join('\n');out()}
+function mk(k,v){M[k]=v;const b=$('b'+k);b.querySelectorAll('.y,.n').forEach(x=>x.classList.remove('sel'));b.querySelector(v?'.y':'.n').classList.add('sel');out()}
+async function A(){R.A=[];if(!window.isSecureContext)log('A','⚠ 不是安全連線（https），瀏覽器不允許使用麥克風');
+ try{if(navigator.permissions&&navigator.permissions.query){const p=await navigator.permissions.query({name:'microphone'});log('A','權限（取得前）：'+p.state)}}catch(e){log('A','權限：這個瀏覽器無法查詢')}
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){log('A','✘ 這個瀏覽器不支援麥克風');return}
+ try{if(st)st.getTracks().forEach(t=>t.stop());st=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true,channelCount:1}});
+  const t=st.getAudioTracks()[0],s=t.getSettings?t.getSettings():{};log('A','✔ 取得麥克風：'+(t.label||'（瀏覽器沒有提供名稱）')+'，狀態 '+t.readyState+(t.muted?'，⚠ 被系統靜音':''));
+  log('A','降噪 '+s.noiseSuppression+'、回音消除 '+s.echoCancellation+'、自動增益 '+s.autoGainControl+'、取樣率 '+(s.sampleRate||'?'));
+  t.onmute=()=>log('A','⚠ '+T()+'ms 麥克風被系統暫停（mute）');t.onunmute=()=>log('A','✔ '+T()+'ms 麥克風恢復');t.onended=()=>log('A','⚠ '+T()+'ms 麥克風串流結束')}
+ catch(e){log('A','✘ 取得失敗：'+e.name+'（'+e.message+'）'+(/NotAllowed/.test(e.name)?' → 權限被拒絕：請在網址列左邊的設定允許麥克風':/NotFound/.test(e.name)?' → 找不到麥克風':''))}}
+function meter(bars,ev,stop){const AC=window.AudioContext||window.webkitAudioContext;ac=ac||new AC();if(ac.resume)ac.resume();const src=ac.createMediaStreamSource(st),an=ac.createAnalyser();an.fftSize=1024;src.connect(an);
+ const td=new Float32Array(an.fftSize),fd=new Float32Array(an.frequencyBinCount),bs=$(bars).querySelectorAll('i');let mx=-200,zero=0,n=0,last=0;
+ const loop=()=>{if(stop())return;an.getFloatTimeDomainData(td);an.getFloatFrequencyData(fd);let s=0;for(const v of td)s+=v*v;const db=20*Math.log10(Math.sqrt(s/td.length)+1e-9);n++;if(db<-120)zero++;if(db>mx)mx=db;
+  bs.forEach((b,i)=>{const lo=Math.floor((150+i*300)/(ac.sampleRate/2/fd.length)),hi=lo+6;let m=-200;for(let k=lo;k<hi&&k<fd.length;k++)if(fd[k]>m)m=fd[k];b.style.height=(6+Math.max(0,Math.min(94,(m+100)*1.6)))+'%'});
+  if(performance.now()-last>500){last=performance.now();$(ev).textContent=(R[ev.slice(1)]||[]).join('\n')+'\n目前音量 '+db.toFixed(1)+' dB｜最大 '+mx.toFixed(1)+' dB｜音訊引擎 '+ac.state+(n>30&&zero/n>.95?'｜⚠ 幾乎沒有訊號（全是 0）':'')}
+  return requestAnimationFrame(loop)};
+ const id=requestAnimationFrame(loop);return()=>({mx:+mx.toFixed(1),zeroPct:n?Math.round(zero/n*100):null,state:ac.state})}
+let Bon=false,Bsum=null;
+async function B(){R.B=[];if(!st||!st.active)await A();if(!st||!st.active){log('B','✘ 沒有麥克風串流（請先完成 A）');return}Bon=true;Bsum=meter('wv','eB',()=>!Bon);log('B','開始：音訊引擎 '+ac.state);setTimeout(()=>{if(Bon&&Bsum){const s=Bsum();log('B','5 秒摘要：最大音量 '+s.mx+' dB，無訊號比例 '+s.zeroPct+'%，引擎 '+s.state)}},5000)}
+function Bstop(){Bon=false;if(Bsum){const s=Bsum();log('B','停止：最大音量 '+s.mx+' dB，無訊號比例 '+s.zeroPct+'%')}}
+function rec(k,tid,onEnd){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){log(k,'✘ 這個瀏覽器不支援語音辨識');return null}
+ const r=new SR();r.lang='zh-TW';r.continuous=false;r.interimResults=true;r.maxAlternatives=3;const s0=performance.now(),ms=()=>Math.round(performance.now()-s0);
+ r.onstart=()=>log(k,'辨識開始 @'+ms()+'ms');r.onaudiostart=()=>log(k,'辨識收到音訊 @'+ms()+'ms');r.onspeechstart=()=>log(k,'辨識偵測到說話 @'+ms()+'ms');
+ r.onresult=e=>{for(let i=e.resultIndex;i<e.results.length;i++){const x=e.results[i];const alts=[...x].map(a=>a.transcript).join(' / ');$(tid).textContent=x[0].transcript;log(k,(x.isFinal?'最後結果':'暫時結果')+'：'+alts+' @'+ms()+'ms')}};
+ r.onerror=e=>log(k,'✘ 辨識錯誤：'+e.error+(e.error==='not-allowed'?' → 麥克風或辨識權限被拒絕':e.error==='service-not-allowed'?' → 辨識服務沒有開放（Safari：請開啟 Siri 與聽寫）':e.error==='network'?' → 需要網路':e.error==='no-speech'?' → 沒有聽到說話':e.error==='audio-capture'?' → 無法取得麥克風':'')+' @'+ms()+'ms');
+ r.onend=()=>{log(k,'辨識結束 @'+ms()+'ms');onEnd&&onEnd()};try{r.start()}catch(e){log(k,'✘ 無法開始：'+e.message)}return r}
+function C(){R.C=[];$('tC').textContent='';rec('C','tC')}
+async function D(){R.D=[];$('tD').textContent='';if(!st||!st.active)await A();if(!st||!st.active){log('D','✘ 沒有麥克風串流');return}let on=true;const sum=meter('wvD','eD',()=>!on);log('D','聲波開始');
+ rec('D','tD',()=>{setTimeout(()=>{const s=sum();on=false;log('D','聲波摘要：最大音量 '+s.mx+' dB，無訊號比例 '+s.zeroPct+'%，引擎 '+s.state)},300)})}
+/* E：唯讀讀取網站設定（若這台裝置從未開過網站，不建立任何資料） */
+function E(){try{const q=indexedDB.open('trafficHero',1);q.onupgradeneeded=()=>{try{q.transaction.abort()}catch(e){}};q.onerror=()=>{R.E=['這台裝置還沒有網站資料（沒有開過網站，或資料被清除）'];$('eE').textContent=R.E.join('\n');out()};
+  q.onsuccess=()=>{const db=q.result;if(!db.objectStoreNames.contains('kv')){R.E=['沒有網站設定'];$('eE').textContent=R.E[0];out();db.close();return}
+   const g=db.transaction('kv').objectStore('kv').get('s');g.onsuccess=()=>{const S=g.result||{},s=S.set||{};
+    R.E=['學習模式：'+({quiet:'安靜學習（不用麥克風）',oral:'口語訓練',integ:'聽說打字整合'}[s.lm]||s.lm||'未設定'),'判定方式：'+({A:'A 開口練習',B:'B 老師確認',C:'C 電腦語音辨識'}[s.oj||'A']),
+     '聲音動畫（聲波）：'+(s.micAnim===false?'⚠ 關閉':'開啟'),'語音辨識同意：'+(S.asrDecl?'⚠ 曾經選擇「不使用語音辨識」':S.asrAgreed?'已同意':'還沒問過'),'口說等候：'+(s.ow||'?')+' 秒','麥克風靈敏度：'+(s.micSens||3)];
+    $('eE').textContent=R.E.join('\n');out();db.close()}}}catch(e){R.E=['無法讀取：'+e.message];$('eE').textContent=R.E[0];out()}}
+function out(){const L=['【麥克風測試結果】'+new Date().toLocaleString(),navigator.userAgent];for(const k of ['A','B','C','D','E'])L.push(k+'｜'+(k==='E'?'':(M[k]==null?'未回答':M[k]?'✔':'✘'))+'｜'+(R[k]||['未測']).join('；'));$('out').value=L.join('\n')}
+function copyOut(){const t=$('out');t.select();try{navigator.clipboard.writeText(t.value).then(()=>alert('已複製'),()=>{document.execCommand('copy');alert('已複製')})}catch(e){document.execCommand('copy');alert('已複製')}}
+E();out();
+</script></body></html>

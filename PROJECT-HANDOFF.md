@@ -1,14 +1,19 @@
 # PROJECT-HANDOFF｜詞彙特快車（Vocabulary Express）
 
-> **最新完整開發基準：v22.5.4（建置 20261127-04E）**，2026-11-27 第04-E批（v22.5.3 已推送部署；試聽音檔未上傳，與本批一起上傳驗收）。
+> **最新完整開發基準：v22.5.5（建置 20261127-04F）**，2026-11-27 第04-F批（v22.5.4 已推送部署，提交 0056d4b，iPhone 驗收通過）。
 > **GitHub 部署基準**：`wanyu25-alt/1124-1-TEST` main 提交 `78932bb`（根目錄 index.html＝v22.4.1，SHA-256 d4cc68e6…，線上已部署並經教師 Chrome／Safari 驗收）。第04批尚未推送。
 > **重要教訓**：增量包必須以 GitHub 實際提交為基準（不是舊 ZIP）；交付前比對校驗碼；部署後用 Console `APP.build+' '+APP.id` 確認版本。教師以 GitHub 網頁版「Add file → Upload files」上傳，**只能拖入檔案本身，不能拖整個資料夾**（曾因此產生子資料夾 vocabulary-express-v22_2-patch／v22_3-patch，待刪除）。
 > 新對話請提供：GitHub 目前的實際檔案（或最新完整網站）＋本文件＋DEVELOPMENT-ROADMAP.md。
 
-## 0-D. 第04-E批摘要（最新，v22.5.4）
+## 0-E. 第04-F批摘要（最新，v22.5.5）
+- 教師回報三台裝置口語練習「讀不到聲音、沒有聲波」。模擬環境中流程正常（聽詞認識→我知道了→口說題有聲波與辨識）。
+- 新增 `mic-test.html`（A～E 真機麥克風／辨識診斷，唯讀讀取網站 IndexedDB trafficHero/kv/s，不建立資料庫）；P33：口語練習的聽詞認識畫面顯示聲波並暫停背景音樂。**等待教師的 mic-test 結果**，再依結果針對性修正（BATCH04B-REPORT 第 11 節）。新批次包裝放在 P33 之後。
+
+## 0-D. 第04-E批摘要（v22.5.4）
 - 教師同意（11 段試聽音檔尚未上傳即同意全部錄製，iPhone 聲音品質待本批上傳後驗收）：iPhone／iPad 改播預錄詞彙音檔。`voice/tts/`：1818 段 m4a（1000 詞彙＋818 單字，macOS Meijia、速度 131≈AI 0.75，AAC 32k 單聲道，約 15 MB），`index.json` 文字→檔名；重錄或補錄：`bash tools/make-tts-audio.sh 清單檔`（清單可由 ZG.charPlan 產生，見 BATCH04B-REPORT 第 10 節）。
 - P32：iOS 時 `TTSX.say`／`speak` 遇到有音檔的文字就播音檔；無音檔或失敗退回 TTS＋P31 文字；`S.set.iosPre=false` 可關閉。新批次包裝放在 P32 之後。
 - 限制：多音字依美佳預設讀音（同 TTS）；老師自訂教材在 iPhone 無聲（顯示文字），可補錄。
+- **2026-11-27 已部署（0056d4b），教師 iPhone 驗收通過：可正常播放。** 語音問題告一段落：Mac Safari／Chrome 用合成語音（Chrome 卡住時 ⌘Q），iPhone／iPad 用預錄音檔。下一步：第04批口語練習真機驗收（BATCH04-REPORT 第 9 節）。
 
 ## 0-C. 第04-D批摘要（v22.5.3）
 - iPhone（iOS 18.7）Safari 網頁合成語音：測試頁所有方式（含先播錄音／音效、audioSession playback／transient／ambient）都無聲，系統朗讀正常 → 網頁無法修正。教師**兩次決定暫不預錄詞彙音檔**。
@@ -49,7 +54,7 @@
 國小特殊需求學生（自閉症、ADHD、低口語、詞彙提取困難、仿說等）的遊戲化詞彙學習網站：聽覺理解、圖詞連結、詞彙提取、注音輸入、口語表達、語意組織、短語／語句組合、生活溝通。教師端提供學習歷程分析，家長端提供家庭複習。系統紀錄是教學參考，**不是臨床評估或診斷**。
 
 ## 2. 目前版本
-- 程式 build：`v22.5.4`，建置 `20261127-04E`。**版本唯一來源**：index.html 主程式開頭 `const APP={build:'v22.5.4',id:''}`（建置 id 在 P27 設定）（備份清單、教師後臺、完整性檢查、診斷都讀它；升版只改這一處）。
+- 程式 build：`v22.5.5`，建置 `20261127-04F`。**版本唯一來源**：index.html 主程式開頭 `const APP={build:'v22.5.5',id:''}`（建置 id 在 P27 設定）（備份清單、教師後臺、完整性檢查、診斷都讀它；升版只改這一處）。
 - 開發方式：分批增量更新；v22.4＝v22.1 完整 ZIP＋第01、02、03批增量包（依序覆蓋）。線上 GitHub Pages 仍為 v22.1（使用者確認，兩批預定一起推送）。
 - 正式教材：V077_merged（1000 詞／16 主題／20 Level／961 張 WebP／950 有圖詞／50 缺圖詞）。
 - v22.1 基準 ZIP SHA-256：`8b5a66a1208b29175279e12ed61da84a8fc516f63efa20d8c24feec2f6bef9ce`；各批檔案校驗見 PATCH-MANIFEST.json。
@@ -168,6 +173,7 @@
 - 規則：未經使用者確認不得推送。使用者以 GitHub Desktop 自行更新。
 
 ## 13. 最近一次修改的檔案及原因
+- v22.5.5 第04-F批（2026-11-27）：`index.html`（P33、`APP.build`、P27 的 `APP.id`）；新增 `mic-test.html`、`tests/e2e/batch04f-mic.js`；`tests/t230.js`；文件 BATCH04B-REPORT（第 11 節）、CHANGELOG、PROJECT-HANDOFF、DEVELOPMENT-ROADMAP、PATCH-README、PATCH-MANIFEST。原因：教師回報口語練習沒有聲波、讀不到聲音。
 - v22.5.4 第04-E批（2026-11-27）：`index.html`（P32、`APP.build`、P27 的 `APP.id`）；新增 `voice/tts/`（1818 段＋index.json）、`tools/make-tts-audio.sh`、`tests/e2e/batch04e-ios-pre.js`；調整 `tests/e2e/batch04d-ios-text.js`、`tests/t230.js`；文件 BATCH04B-REPORT（第 10 節）、CHANGELOG、PROJECT-HANDOFF、DEVELOPMENT-ROADMAP、PATCH-README、PATCH-MANIFEST。原因：iPhone 網頁語音無聲，改播預錄音檔。
 - v22.5.3 第04-D批（2026-11-27）：`index.html`（P31、`APP.build`、P27 的 `APP.id`）；新增 `tests/e2e/batch04d-ios-text.js`；`tests/t230.js`；文件 BATCH04B-REPORT（第 9 節）、CHANGELOG、PROJECT-HANDOFF、DEVELOPMENT-ROADMAP、PATCH-README、PATCH-MANIFEST。原因：iPhone 網頁語音無聲，先顯示文字。
 - v22.5.2 第04-C批（2026-11-27）：`index.html`（P30、`APP.build`、P27 的 `APP.id`）；`tts-test.html`（12 項）；新增 `tests/e2e/batch04c-voice.js`；`tests/e2e/batch04b-tts.js`、`tests/t230.js`（版本、項目數）；文件 BATCH04B-REPORT（第 8 節）、CHANGELOG、PROJECT-HANDOFF、DEVELOPMENT-ROADMAP、PATCH-README、PATCH-MANIFEST。原因：Safari 選到趣味語音、Chrome 語音卡住。

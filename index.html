@@ -379,7 +379,7 @@ body.aid-calm #scene{max-height:90px;overflow:hidden}body.aid-calm .stc .ste{dis
 <script src="lib/pinyin-pro.js"></script>
 <script>
 /* ===== 基本工具 ===== */
-const APP={build:'v22.5.4',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
+const APP={build:'v22.5.5',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -6241,7 +6241,7 @@ ZG.KEEP=['ttsRate','recRate','aiGain'];
 {const f=LRN.ensure;LRN.ensure=async function(){const r=await f.apply(this,arguments);try{if(S.set&&!S.set.ttsFix224){(S.lrn&&S.lrn.list||[]).forEach(p=>{const pr=p.ext&&p.ext.pref;if(pr&&+pr.ttsRate===0.5)pr.ttsRate=.75});S.set.ttsFix224=1}}catch(e){}return r}}
 /*P26-END*/
 /*P27-BEGIN v22.4.1 第03-B批：舊版示範教材完全移除（併入 GitHub 15:30 的 P23B 並補強）、materials/ 依賴移除、跨瀏覽器語音備援、版本識別 */
-APP.id='20261127-04E';
+APP.id='20261127-04F';
 /* ---- 一、舊版內建示範教材（materials/ 18 張、4 個分類）：備份後一次性移除 ----
    只移除「仍與網站原始版本完全相同」的舊版圖卡（以 packSnap 簽章比對，不看名稱）；老師改過的保留為自訂教材；
    舊版分類只有在裡面已經沒有任何保留下來的圖卡時才移除；學習紀錄全部保留；S.legacyGone 標記後不再重複執行。
@@ -6524,6 +6524,31 @@ P32.audio=()=>{if(!P32.a){P32.a=new Audio();P32.a.preload='auto';try{P32.a.prese
 {const f=P29.diag;P29.diag=function(){let h=f.apply(this,arguments);try{if(P29.ios)h=h.replace('<br>\n 最近一次','<br>iPhone／iPad 預錄音檔：'+(P32.map?Object.keys(P32.map).length+' 段，本次已播放 '+P32.n+' 次':'載入中')+'<br>\n 最近一次')}catch(e){}return h}}
 if(P29.ios)P32.load();
 /*P32-END*/
+/*P33-BEGIN v22.5.5 第04-F批：口語練習的「聽詞認識」畫面也顯示麥克風聲波；麥克風測試頁連結
+  教師回報口語練習「讀不到聲音、沒有聲波」：第04批起每個新詞先「聽詞認識」（只有「我知道了」），這個畫面原本沒有聲波區，按下後才有。
+  → 只在口語練習：聽詞認識畫面也顯示聲波（真實麥克風訊號，沿用 MIC／MV；系統念題目時不畫），不辨識、不判定。
+  真機收音／辨識狀況另以 mic-test.html 量測。 */
+const P33={};
+P33.on=()=>{try{return V2.lm()==='oral'&&V2.micAllowed()&&!V2.noMic&&S.set.micAnim!==false}catch(e){return false}};
+P33.TX={prep:'麥克風準備中…',wait:'先聽一聽…',voice:'麥克風有收到你的聲音 ✔',idle:'麥克風已開啟 ✔　先聽，按「我知道了」後換你說',
+ denied:'麥克風沒有開啟（權限被拒絕）',none:'找不到麥克風',unsupported:'這個瀏覽器不能使用麥克風',fail:'麥克風啟動失敗',nosig:'收不到麥克風的聲音，點一下畫面再試'};
+{const _b=EXP.bot;EXP.bot=function(){const r=_b.apply(this,arguments);try{if(P33.on())MV.hold();   /* 口語練習：聽詞認識時也暫停背景音樂（聲波只顯示學生的聲音） */
+  if(P33.on()&&!$('#micbox')){const b=$('#bot');if(b){const d=document.createElement('div');d.id='micbox';d.innerHTML=`<div id="wave" class="wv">${'<i></i>'.repeat(9)}</div><div id="wst">${P33.TX.prep}</div><div id="mnote"></div>`;b.insertBefore(d,b.firstChild.nextSibling);
+    if(!MIC.st&&!MV.starting&&!P28.denied)micStart(1).then(()=>{try{micUI()}catch(e){}});else try{micUI()}catch(e){}}}}catch(e){console.warn('P33 bot',e)}return r}}
+P33.draw=()=>{try{if(!G||!G.on||S.set.mode!=='expose'||!P33.on())return;const bx=$('#micbox');if(!bx)return;const now=performance.now(),v=MV.vad;
+  let st=MIC.err?'err:'+MIC.err:(!MIC.st||MV.starting)?'prep':!P28.sig(now)?'err:nosig':!MV.gate(now)?'wait':MIC.state==='speaking'?'voice':'idle';
+  const k=st.split(':');if(bx.dataset.v!==k[0])bx.dataset.v=k[0];const w=$('#wst');if(w){w.style.display='block';const t=P33.TX[k[1]||k[0]]||'';if(w.textContent!==t)w.textContent=t}
+  const wv=$('#wave');if(wv&&wv.style.display==='none')wv.style.display='flex';
+  const bars=bx.querySelectorAll('#wave i'),gate=MV.gate(now);
+  if(MV.sf&&v){const nb=MV.sf.length,hz=(MV.sr||48000)/2/nb;bars.forEach((b,i)=>{const lo=Math.floor((150+i*330)/hz),hi=Math.max(lo+1,Math.floor((150+(i+1)*330)/hz));let m=-140;for(let j=lo;j<hi&&j<nb;j++)if(MV.sf[j]>m)m=MV.sf[j];const e=gate?Math.max(0,Math.min(1,(m-(v.floor-30))/40)):0;b.style.height=(8+Math.min(92,e*100))+'%'})}
+  else bars.forEach(b=>{b.style.height=(8+Math.min(92,(gate?MIC.sm:0)*100))+'%'})}catch(e){}};
+{const _l=micLoop;micLoop=function(){const r=_l.apply(this,arguments);P33.draw();return r}}
+/* 麥克風還沒啟動時（沒有 micLoop），狀態文字仍要更新 */
+{const _t=P28.tick;P28.tick=function(){const r=_t.apply(this,arguments);try{if(!MIC.raf&&S.set.mode==='expose')P33.draw()}catch(e){}return r}}
+{const _s=startRound;startRound=function(){const r=_s.apply(this,arguments);try{if(P33.on()&&!P28.ticker)P28.ticker=setInterval(P28.tick,150)}catch(e){}return r}}
+/* 語音診斷：麥克風測試頁連結 */
+{const f=P29.diag;P29.diag=function(){let h=f.apply(this,arguments);try{h=h.replace('<a href="tts-test.html" target="_blank" rel="noopener">語音測試頁</a>','<a href="tts-test.html" target="_blank" rel="noopener">語音測試頁</a>；麥克風或語音辨識有問題時，請開啟 <a href="mic-test.html" target="_blank" rel="noopener">麥克風測試頁</a>')}catch(e){}return h}}
+/*P33-END*/
 (async()=>{let s=await load();if(s&&s.decks&&!s.v){await kvPut('backup-pre-v2',s);s=migrate(s)}const mb=await kvGet('music').catch(()=>null);if(mb)mus.url=URL.createObjectURL(mb);if(s)S={...DEF(),...s,set:{...DEF().set,...s.set}};if(s&&s.set&&s.set.vs==null&&s.set.vol!=null)S.set.vs=s.set.vol;
 await zaLoad();await LRN.ensure();try{if(await LIB.load()){await LIB.defBoot();LIB.sync()}}catch(e){console.warn('LIB boot',e)}if(S.set.stuName===undefined)S.set.stuName='';try{P28.init()}catch(e){}if(S.set.musSrc==='project'&&!S.set.musPicked)S.set.musSrc='builtin';if(!['key','listen','spell','speak'].includes(S.set.mode))S.set.mode='key';if(S.set.ttsMig!==3){S.set.ttsMig=3;S.set.ttsRate=.75;S.set.recRate=1.25;S.set.aiGain=1.5}if(!S.bankMap)S.bankMap={};if((S.banks||[]).some(b=>!(b.id in S.bankMap))||/^b:/.test(S.set.src||'')){if(!(await kvGet('backup-pre-bankmig')))await kvPut('backup-pre-bankmig',JSON.parse(JSON.stringify(S)));migrateBanks()}if(!S.set.musMig){S.set.musMig=1;S.set.musSrc='project';save()}FL.recover();try{FL.applyPref()}catch(e){}save();UI.init();home();mtLbl();packLoad();
  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();
