@@ -36,6 +36,11 @@ function say(text,o){return new Promise(res=>{const ev=[],t0=performance.now(),T
  u.onstart=()=>ev.push('開始@'+T()+'ms');u.onend=()=>fin('結束@'+T()+'ms');u.onerror=e=>fin('錯誤:'+((e&&e.error)||'?')+'@'+T()+'ms');
  try{s.speak(u)}catch(e){fin('例外:'+e.message)}setTimeout(()=>fin('逾時（5 秒沒有結束）speaking='+s.speaking+' pending='+s.pending+' paused='+s.paused),5000)})}
 const W='葡萄';
+/* 錄音「叮」（網站自己的音檔）、網頁音效「嗶」、音訊播放模式（測完恢復為 auto） */
+const AS=()=>!!(navigator.audioSession&&'type' in navigator.audioSession);
+function clip(){return new Promise(res=>{try{const a=new Audio('voice/ok.m4a');a.onended=()=>res();a.onerror=()=>res();const p=a.play();if(p&&p.catch)p.catch(()=>res());setTimeout(res,4000)}catch(e){res()}})}
+let AC=null;function beep(){return new Promise(res=>{try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.resume)AC.resume();const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=660;g.gain.value=.15;o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+.25);setTimeout(res,350)}catch(e){res()}})}
+async function sess(t,f){if(!AS())return['這個瀏覽器不支援音訊播放模式（navigator.audioSession）'];let r;try{navigator.audioSession.type=t;r=await f();r=['模式='+navigator.audioSession.type,...r]}catch(e){r=['設定失敗：'+e.message]}try{navigator.audioSession.type='auto'}catch(e){}return r}
 const TESTS=[
  ['A','最簡單：中文、不指定語音（瀏覽器預設）',()=>say(W,{lang:'zh-TW'}),()=>'瀏覽器預設語音：'+vName(vDef())],
  ['B','英文 hello（確認語音功能整體）',()=>say('hello',{lang:'en-US'})],
@@ -48,12 +53,20 @@ const TESTS=[
  ['I','先 cancel 再念',async()=>{try{s.cancel()}catch(e){}await new Promise(r=>setTimeout(r,80));return say(W,{lang:'zh-TW'})}],
  ['J','先念「音量 0」的一段，再正常念（網站舊的解鎖方式）',async()=>{say(' ',{vol:0});return say(W,{lang:'zh-TW'})}],
  ['K','先念「空字串」，再正常念',async()=>{say('',{vol:0});return say(W,{lang:'zh-TW'})}],
+ /* ---- iPhone／iPad 專用：網頁聲音通道與「音訊播放模式」（navigator.audioSession，Safari 16.4 以上） ---- */
+ ['M','先播一段錄音「叮」，播完馬上念',async()=>{await clip();return say(W,{lang:'zh-TW'})}],
+ ['N','錄音「叮」還在播的時候同時念',async()=>{clip();await new Promise(r=>setTimeout(r,150));return say(W,{lang:'zh-TW'})}],
+ ['P','先播一聲網頁音效「嗶」（網站答對特效的方式），再念',async()=>{await beep();return say(W,{lang:'zh-TW'})}],
+ ['L','音訊播放模式設為「播放 playback」後再念',()=>sess('playback',()=>say(W,{lang:'zh-TW'})),()=>'這個瀏覽器'+(AS()?'支援':'不支援')+'音訊播放模式'+(AS()?'（目前：'+navigator.audioSession.type+'）':'')],
+ ['Q','播放模式「playback」＋先播一聲「嗶」，再念',()=>sess('playback',async()=>{await beep();return say(W,{lang:'zh-TW'})})],
+ ['R','音訊播放模式設為「短暫播放 transient」後再念',()=>sess('transient',()=>say(W,{lang:'zh-TW'}))],
+ ['T','音訊播放模式設為「環境音 ambient」後再念',()=>sess('ambient',()=>say(W,{lang:'zh-TW'}))],
  ['Z','最後再試一次 A（看前面的步驟有沒有讓之後都沒聲音）',()=>say(W,{lang:'zh-TW'})]];
 function env(){const z=zh();document.getElementById('env').innerHTML='<b>這個瀏覽器</b>：'+navigator.userAgent.replace(/[<>]/g,'')+'<br>語音總數：'+vs().length+'，中文語音：'+z.length+'<br><small>'+z.slice(0,30).map(vName).join('、')+'</small>';out()}
 function row([k,t,f,nm]){const d=document.createElement('div');d.className='box t';d.id='r'+k;d.innerHTML=`<b>${k}</b><span class="d">${t}${nm?'<br><small>'+nm()+'</small>':''}</span><button onclick="run('${k}')">▶ 測試</button><button class="y" onclick="mark('${k}',1)">🔊 有聽到</button><button class="n" onclick="mark('${k}',0)">🔇 沒聽到</button><div class="ev" id="e${k}"></div>`;document.getElementById('list').appendChild(d)}
 async function run(k){const t=TESTS.find(x=>x[0]===k);document.getElementById('e'+k).textContent='播放中…';R[k]=await t[2]();document.getElementById('e'+k).textContent='瀏覽器回報：'+R[k].join('，');out()}
 function mark(k,h){HEARD[k]=h;const r=document.getElementById('r'+k);r.querySelectorAll('.y,.n').forEach(b=>b.classList.remove('sel'));r.querySelector(h?'.y':'.n').classList.add('sel');out()}
-function out(){const L=['【語音測試結果】'+new Date().toLocaleString(),navigator.userAgent,'語音總數 '+vs().length+'，中文 '+zh().length+'；本機中文：'+vName(vLocal())+'；網路中文：'+vName(vNet())];
+function out(){const L=['【語音測試結果】'+new Date().toLocaleString(),navigator.userAgent,'音訊播放模式：'+(AS()?'支援（'+navigator.audioSession.type+'）':'不支援')+'；語音總數 '+vs().length+'，中文 '+zh().length+'；本機中文：'+vName(vLocal())+'；網路中文：'+vName(vNet())];
  TESTS.forEach(([k,t])=>L.push(k+' '+t+'｜'+(HEARD[k]==null?'未回答':HEARD[k]?'有聽到':'沒聽到')+'｜'+(R[k]?R[k].join('，'):'未測')));document.getElementById('out').value=L.join('\n')}
 function copyOut(){const t=document.getElementById('out');t.select();try{navigator.clipboard.writeText(t.value).then(()=>alert('已複製'),()=>{document.execCommand('copy');alert('已複製')})}catch(e){document.execCommand('copy');alert('已複製')}}
 TESTS.forEach(row);env();if(s&&s.addEventListener)s.addEventListener('voiceschanged',()=>{document.getElementById('list').innerHTML='';TESTS.forEach(row);env()});

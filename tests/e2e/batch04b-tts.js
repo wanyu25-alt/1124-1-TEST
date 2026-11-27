@@ -36,7 +36,7 @@ const open=async(b,o={})=>{const ctx=await b.newContext({viewport:o.vp||{width:1
   await c.ctx.close()}
  /* ===== C：語音測試頁 ===== */
  {const c=await open(b,{page:'tts-test.html'});await c.p.waitForTimeout(500);
-  const btn=await c.p.locator('button',{hasText:'▶ 測試'}).count();T('C1 語音測試頁可以開啟，有 12 個測試項目',btn===12,btn);
+  const btn=await c.p.locator('button',{hasText:'▶ 測試'}).count();T('C1 語音測試頁可以開啟，有 19 個測試項目（含 iPhone 專用 7 項）',btn===19,btn);
   await c.p.locator('#rA button',{hasText:'▶ 測試'}).click();await c.p.waitForTimeout(800);await c.p.locator('#rA button',{hasText:'有聽到'}).click();
   await c.p.locator('#rJ button',{hasText:'▶ 測試'}).click();await c.p.waitForTimeout(800);await c.p.locator('#rJ button',{hasText:'沒聽到'}).click();
   const o=await c.p.locator('#out').inputValue();

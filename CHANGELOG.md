@@ -1,3 +1,6 @@
+# 語音測試頁更新（2026-11-27，網站程式仍為 v22.5.2）
+- `tts-test.html` 新增 iPhone 專用 7 項（先播錄音／網頁音效再念、音訊播放模式 playback／transient／ambient），共 19 項；`batch04b-tts.js` 項目數。原因：iPhone 系統朗讀正常，但 Safari 網頁合成語音無聲。
+
 # v22.5.2（建置 20261127-04C）｜第04-C批：語音挑選避開趣味語音、偵測瀏覽器語音卡住（未推送）
 - 原因（教師實測 v22.5.1）：Mac Safari 聲音怪＝網站選到 macOS 新增的趣味語音 Shelley（Safari 清單第一個）；Mac Chrome 測試頁全部「沒有開始、一直 speaking」＝Chrome 本身語音卡住（網頁無法解開）；iPhone 待測試頁結果。
 - 修正（P30）：自動挑選順序 老師指定→美佳／Meijia→其他台灣中文→其他中文→趣味語音（最後備援）；語音診斷標示趣味語音。

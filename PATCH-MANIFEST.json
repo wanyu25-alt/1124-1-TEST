@@ -1,15 +1,15 @@
 {
  "schemaVersion": 1,
  "project": "詞彙特快車 Vocabulary Express",
- "batch": "04-C",
- "fromVersion": "v22.5.1",
- "toVersion": "v22.5.2",
+ "batch": "04-C 測試頁",
+ "fromVersion": "v22.5.2",
+ "toVersion": "v22.5.2（只更新 tts-test.html）",
  "buildId": "20261127-04C",
  "base": {
   "github": "wanyu25-alt/1124-1-TEST",
-  "commit": "487d90f0f37da072469f11fc25748894c098a4c7",
-  "indexSha256": "50dfced8b72d5fda57298c8992bc4863ca197cb6635b1939bb56adf1c3d425a9",
-  "note": "直接套用於 GitHub 目前根目錄（v22.5.1，已部署）"
+  "commit": "a174fb360669ad126b32576aaf2c5bfe5747f670",
+  "indexSha256": "2365ad11689b45e36a5737d6e6ddb7b003e141b88faf23fa2cb701b192184055",
+  "note": "直接套用於 GitHub 目前根目錄（v22.5.2，已部署）"
  },
  "dataMigration": {
   "formatChange": false,
@@ -19,16 +19,10 @@
   "folder": "1_upload-to-github-root",
   "overwrite": [
    {
-    "path": "index.html",
-    "sha256": "2365ad11689b45e36a5737d6e6ddb7b003e141b88faf23fa2cb701b192184055",
-    "bytes": 1021527,
-    "previousSha256": "50dfced8b72d5fda57298c8992bc4863ca197cb6635b1939bb56adf1c3d425a9"
-   },
-   {
     "path": "tts-test.html",
-    "sha256": "b86bcd45807c9c37f914fca351191208eda45d6eb07c55025ff7a712d1a45b08",
-    "bytes": 7018,
-    "previousSha256": "38adfb78b3fb2ef0f066e58cdc6c6eb08223b2e697684409b05a68648a9e46ba"
+    "sha256": "79f1d31f068ab612b8ad9191d84011a61c8edc0f37da109aea3b514b1b9c68a5",
+    "bytes": 9316,
+    "previousSha256": "b86bcd45807c9c37f914fca351191208eda45d6eb07c55025ff7a712d1a45b08"
    }
   ]
  },
@@ -37,66 +31,36 @@
   "overwrite": [
    {
     "path": "BATCH04B-REPORT.md",
-    "sha256": "168a202a41a8840bb4b695baeff9afb0f62dfbc261aad79a8e3f15d68a991242",
-    "bytes": 9867,
-    "previousSha256": "d25ab90bbd83f847e1728af55454a2417c2e3934006a1ead45eb67aef33eca36"
+    "sha256": "21354c937dc782129f38d8a4addcd41bb9a272a08da230689b53f2f419e08d4d",
+    "bytes": 11090,
+    "previousSha256": "168a202a41a8840bb4b695baeff9afb0f62dfbc261aad79a8e3f15d68a991242"
    },
    {
     "path": "CHANGELOG.md",
-    "sha256": "16271cb8574d35632b21b34056e37d42334b77c679ab83f3151199d85feb5aaa",
-    "bytes": 75857,
-    "previousSha256": "73a31aa6bc59270967252708ac4ad9e67e5733dd01d21bc6af511d6580296d68"
-   },
-   {
-    "path": "DEVELOPMENT-ROADMAP.md",
-    "sha256": "e0088dd4a3dad3a3964ca152f594e926eee65c69e0626cdfca28d949b0e25dca",
-    "bytes": 10506,
-    "previousSha256": "82ae6121fd7fe62c4c54cfab23f633408894891cb263fafd0e2a12b418a88dfc"
+    "sha256": "4de38f5787b8ce9581a7c4dc29bd1692b1fc495fba7dba06d3a825565cbf882a",
+    "bytes": 76184,
+    "previousSha256": "16271cb8574d35632b21b34056e37d42334b77c679ab83f3151199d85feb5aaa"
    },
    {
     "path": "PATCH-MANIFEST.json",
     "sha256": "（本檔案，不自我校驗）",
-    "bytes": 3448,
-    "previousSha256": "f931f3034ff2d784107bb1ef802a6a5dc6fb400c0d3c6d8da123330d72b6bf22"
+    "bytes": 3852,
+    "previousSha256": "39141ba4c11ed8f614c98036629580ab620e96a2f8d22b5973cba78f50325c6a"
    },
    {
     "path": "PATCH-README.md",
-    "sha256": "46c037a6b4cf3f7c434cc959af244abff311106bf22476d33354c2fcdd8de898",
-    "bytes": 1968,
-    "previousSha256": "73cf983696f96b7a774be2630a1f275ee9e86260c1317854102e62f0be86f7cf"
-   },
-   {
-    "path": "PROJECT-HANDOFF.md",
-    "sha256": "e61bb2fa8b6210046df9a548f7a9b6beef5f80cc06894d3f8b076e32bec3c6a3",
-    "bytes": 23738,
-    "previousSha256": "044797fcaee5fd807d9d85f5e27eed3d907ff1bbe65833e06f14025618dcd582"
-   },
-   {
-    "path": "tests/e2e/batch03b-deploy.js",
-    "sha256": "97d3e6bb4ea2751d576f9d84d1ddc5437a8fd8cf7042522aeb77dd1bd80bf231",
-    "bytes": 13257,
-    "previousSha256": "321d4c05c34f21f8488a2977da4b99b42c1e2eec31b619a425c628cec985ac2d"
+    "sha256": "008bb6c97dabaf8f80459023b3eb6e9fbeb0eceffa611269dd9c35544b66ddb9",
+    "bytes": 1192,
+    "previousSha256": "46c037a6b4cf3f7c434cc959af244abff311106bf22476d33354c2fcdd8de898"
    },
    {
     "path": "tests/e2e/batch04b-tts.js",
-    "sha256": "4eea630656703d6b550a9ed432e6820f4610ccd674420f673da1b9c17e782ca8",
-    "bytes": 5844,
-    "previousSha256": "11af27f18d2bdc84f6f1c867d25bf421891ac834e6920bce97d445bff2639c61"
-   },
-   {
-    "path": "tests/t230.js",
-    "sha256": "c4ebbc1f74bb15630747b9b0e124bb2ab63d3b4977bb82549aa742f2da6e83a8",
-    "bytes": 11463,
-    "previousSha256": "325ec1843d0c7f768f96a24dc33eb384e32adedf5bc149181f3c08d9ad946220"
+    "sha256": "c062b704f5e966124318c8bc9de9aaec42c72cbb8103301efa992d3c7658a021",
+    "bytes": 5873,
+    "previousSha256": "4eea630656703d6b550a9ed432e6820f4610ccd674420f673da1b9c17e782ca8"
    }
   ],
-  "add": [
-   {
-    "path": "tests/e2e/batch04c-voice.js",
-    "sha256": "4f9199ba5b292ba01072ee5fb2f1a17c56bb758b463cb98e18c1cbef0296b65a",
-    "bytes": 6456
-   }
-  ]
+  "add": []
  },
  "deleteBeforeDeploy": [],
  "notIncluded": [
