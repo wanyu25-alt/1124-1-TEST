@@ -1,25 +1,31 @@
-# PATCH-README｜語音測試頁更新（網站程式仍為 v22.5.2）
+# PATCH-README｜v22.5.2（GitHub 目前）→ v22.5.3 第04-D批
 
-- **更新前**：GitHub `wanyu25-alt/1124-1-TEST` main 提交 `a174fb3`（v22.5.2，已部署）
-- **這次只更新語音測試頁**，網站主程式 `index.html` 沒有修改，版本仍然是 `v22.5.2 20261127-04C`。
+- **更新前**：GitHub `wanyu25-alt/1124-1-TEST` main 提交 `842bc64`（v22.5.2＋語音測試頁，已部署）
+- **更新後**：v22.5.3（建置 `20261127-04D`）
+- **資料遷移**：沒有。不需要清除瀏覽器資料。
 
-## 要上傳的檔案
+## 要上傳的網站檔案（一個）
 | 檔案 | 說明 |
 |---|---|
-| `tts-test.html` | 語音測試頁，新增 iPhone 專用的 7 項（M、N、P、L、Q、R、T），共 19 項 |
+| `index.html` | iPhone／iPad 念題目時同時顯示題目文字 |
 
 ## 部署方式
-- **GitHub Desktop**：Commit → Push origin。
-- **GitHub 網頁版**：把 `tts-test.html` 拖進儲存庫最上層 → Commit changes。
+- **GitHub Desktop（建議）**：確認變更清單 → Commit（例如「v22.5.3 iPhone 顯示文字」）→ **Push origin**。
+- **GitHub 網頁版**：把 `1_upload-to-github-root/index.html` 拖進儲存庫最上層 → Commit changes。
+- 部署後，按 `Cmd`＋`Shift`＋`R` 重新整理，Console 輸入 `APP.build+' '+APP.id`，應顯示 `'v22.5.3 20261127-04D'`。
 
-## 檔案清單（相對於 a174fb3）
-| 動作 | 檔案 |
-|---|---|
-| 覆蓋 | `tts-test.html`、`BATCH04B-REPORT.md`、`CHANGELOG.md`、`PATCH-README.md`、`PATCH-MANIFEST.json`、`tests/e2e/batch04b-tts.js` |
-| 刪除 | 沒有 |
+## 檔案清單（相對於 GitHub 提交 842bc64）
+| 類別 | 動作 | 相對路徑 |
+|---|---|---|
+| A 網站 | 覆蓋 | `index.html` |
+| B 文件 | 覆蓋 | `BATCH04B-REPORT.md`、`CHANGELOG.md`、`DEVELOPMENT-ROADMAP.md`、`PROJECT-HANDOFF.md`、`PATCH-README.md`、`PATCH-MANIFEST.json` |
+| B 測試 | 新增 | `tests/e2e/batch04d-ios-text.js` |
+| B 測試 | 覆蓋 | `tests/t230.js`（版本號） |
+| — | 刪除 | **沒有需要刪除的檔案** |
 
-## 測試方法（iPhone Safari）
-1. 開啟 `https://wanyu25-alt.github.io/1124-1-TEST/tts-test.html`。
-2. 按 `↻ 重新整理`，確認看得到 M、N、P、L、Q、R、T 這幾項。
-3. **從 M 開始往下測**，每一項都按「有聽到」或「沒聽到」。
-4. 最後按「📋 複製結果」，把文字貼給開發者。
+## 復原
+- 還沒 Commit：GitHub Desktop → 對變更按右鍵 → Discard changes。
+- 已 Push：History → 這次的 Commit 按右鍵 → Revert changes in commit → Push。
+
+## 更新後驗收
+見 `BATCH04B-REPORT.md` 第 9-4 節（iPhone Safari）。

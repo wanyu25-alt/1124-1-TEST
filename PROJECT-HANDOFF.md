@@ -1,11 +1,16 @@
 # PROJECT-HANDOFF｜詞彙特快車（Vocabulary Express）
 
-> **最新完整開發基準：v22.5.2（建置 20261127-04C）**，2026-11-27 第04-C批（v22.5.1 已推送部署，提交 487d90f）。
+> **最新完整開發基準：v22.5.3（建置 20261127-04D）**，2026-11-27 第04-D批（v22.5.2 與測試頁已推送部署）。
 > **GitHub 部署基準**：`wanyu25-alt/1124-1-TEST` main 提交 `78932bb`（根目錄 index.html＝v22.4.1，SHA-256 d4cc68e6…，線上已部署並經教師 Chrome／Safari 驗收）。第04批尚未推送。
 > **重要教訓**：增量包必須以 GitHub 實際提交為基準（不是舊 ZIP）；交付前比對校驗碼；部署後用 Console `APP.build+' '+APP.id` 確認版本。教師以 GitHub 網頁版「Add file → Upload files」上傳，**只能拖入檔案本身，不能拖整個資料夾**（曾因此產生子資料夾 vocabulary-express-v22_2-patch／v22_3-patch，待刪除）。
 > 新對話請提供：GitHub 目前的實際檔案（或最新完整網站）＋本文件＋DEVELOPMENT-ROADMAP.md。
 
-## 0-B. 第04-C批摘要（最新，v22.5.2）
+## 0-C. 第04-D批摘要（最新，v22.5.3）
+- iPhone（iOS 18.7）Safari 網頁合成語音：測試頁所有方式（含先播錄音／音效、audioSession playback／transient／ambient）都無聲，系統朗讀正常 → 網頁無法修正。教師**兩次決定暫不預錄詞彙音檔**。
+- P31：iOS 念題目詞彙時直接顯示文字（聽詞選圖開啟顯示文字、打字／聽打顯示於圖片下方、口語不顯示），紀錄 `ext.tx={v:1,a:'ios-tts'}`。`S.set.iosTxt=false` 可關閉。新批次包裝放在 P31 之後。
+- 另：念「空字串」會讓 iOS 語音佇列卡住（P29 已避開）。Mac Chrome 語音卡住時須 ⌘Q 重開（P30 會提示）。
+
+## 0-B. 第04-C批摘要（v22.5.2）
 - 教師實測 v22.5.1：Mac Safari 聲音怪（網站選到趣味語音 Shelley）；Mac Chrome 測試頁全部「沒有開始、speaking 一直 true」＝Chrome 本身語音卡住；iPhone 仍無聲（待測試頁結果，推測同為趣味語音）。
 - P30：`TTSX.cands` 重新排序（老師指定→美佳→其他台灣中文→其他中文→趣味語音最後）；`P30.hit` 偵測卡住並提示大人一次；診斷標示趣味語音與卡住狀態。新批次包裝放在 P30 之後。
 
@@ -39,7 +44,7 @@
 國小特殊需求學生（自閉症、ADHD、低口語、詞彙提取困難、仿說等）的遊戲化詞彙學習網站：聽覺理解、圖詞連結、詞彙提取、注音輸入、口語表達、語意組織、短語／語句組合、生活溝通。教師端提供學習歷程分析，家長端提供家庭複習。系統紀錄是教學參考，**不是臨床評估或診斷**。
 
 ## 2. 目前版本
-- 程式 build：`v22.5.2`，建置 `20261127-04C`。**版本唯一來源**：index.html 主程式開頭 `const APP={build:'v22.5.2',id:''}`（建置 id 在 P27 設定）（備份清單、教師後臺、完整性檢查、診斷都讀它；升版只改這一處）。
+- 程式 build：`v22.5.3`，建置 `20261127-04D`。**版本唯一來源**：index.html 主程式開頭 `const APP={build:'v22.5.3',id:''}`（建置 id 在 P27 設定）（備份清單、教師後臺、完整性檢查、診斷都讀它；升版只改這一處）。
 - 開發方式：分批增量更新；v22.4＝v22.1 完整 ZIP＋第01、02、03批增量包（依序覆蓋）。線上 GitHub Pages 仍為 v22.1（使用者確認，兩批預定一起推送）。
 - 正式教材：V077_merged（1000 詞／16 主題／20 Level／961 張 WebP／950 有圖詞／50 缺圖詞）。
 - v22.1 基準 ZIP SHA-256：`8b5a66a1208b29175279e12ed61da84a8fc516f63efa20d8c24feec2f6bef9ce`；各批檔案校驗見 PATCH-MANIFEST.json。
@@ -158,6 +163,7 @@
 - 規則：未經使用者確認不得推送。使用者以 GitHub Desktop 自行更新。
 
 ## 13. 最近一次修改的檔案及原因
+- v22.5.3 第04-D批（2026-11-27）：`index.html`（P31、`APP.build`、P27 的 `APP.id`）；新增 `tests/e2e/batch04d-ios-text.js`；`tests/t230.js`；文件 BATCH04B-REPORT（第 9 節）、CHANGELOG、PROJECT-HANDOFF、DEVELOPMENT-ROADMAP、PATCH-README、PATCH-MANIFEST。原因：iPhone 網頁語音無聲，先顯示文字。
 - v22.5.2 第04-C批（2026-11-27）：`index.html`（P30、`APP.build`、P27 的 `APP.id`）；`tts-test.html`（12 項）；新增 `tests/e2e/batch04c-voice.js`；`tests/e2e/batch04b-tts.js`、`tests/t230.js`（版本、項目數）；文件 BATCH04B-REPORT（第 8 節）、CHANGELOG、PROJECT-HANDOFF、DEVELOPMENT-ROADMAP、PATCH-README、PATCH-MANIFEST。原因：Safari 選到趣味語音、Chrome 語音卡住。
 - v22.5.1 第04-B批（2026-11-26）：`index.html`（P29、`APP.build`、P27 的 `APP.id`）；新增 `tts-test.html`、`BATCH04B-REPORT.md`、`tests/e2e/batch04b-tts.js`；`tests/t230.js`（版本）；文件 CHANGELOG、PROJECT-HANDOFF、DEVELOPMENT-ROADMAP、PATCH-README、PATCH-MANIFEST。原因：Mac Chrome、iPhone Safari 聽不到 AI 念詞彙。
 - v22.5 第04批（2026-11-26）：`index.html`（新增 P28 區段、`APP.build`、P27 的 `APP.id`、預設設定 `ow:10`、開機呼叫 `P28.init()`）；新增 `BATCH04-REPORT.md`、`tests/e2e/batch04-oral.js`、`tests/e2e/lib/mic-stub.js`；文件 CHANGELOG、PROJECT-HANDOFF、DEVELOPMENT-ROADMAP、PATCH-README、PATCH-MANIFEST；`.gitignore` 加入 `.testenv/`、`node_modules/`。原因：教師回報口語練習只能按「我知道了」、沒有聲波、辨識困難。

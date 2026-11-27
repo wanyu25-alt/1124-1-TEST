@@ -20,7 +20,7 @@ const importFull=async(w,b,mode)=>{const Pk=await w.eval('pkgFromZip')(b);w.__P=
  const A=await boot();seed(A,'甲','A');const bufA=await expFull(A);const z=await A.eval('zipRead')(bufA);const names=[...z.keys()];
  const man=JSON.parse(Buffer.from(z.get('manifest.json')).toString());
  T('① full backup contains teaching, observations, assessment files',['teaching.json','observations.json','assessment.json'].every(n=>names.includes(n)),names);
- T('① manifest has dataVersion, build, counts, and SHA-256 for every json file',man.dataVersion===3&&man.build==='v22.5.2'&&man.counts.records===2&&man.counts.observations===1&&man.counts.combos===1&&Object.entries(man.files).filter(([n])=>/\.json$/.test(n)).every(([,i])=>/^[0-9a-f]{64}$/.test(i.sha256||'')),man.counts);
+ T('① manifest has dataVersion, build, counts, and SHA-256 for every json file',man.dataVersion===3&&man.build==='v22.5.3'&&man.counts.records===2&&man.counts.observations===1&&man.counts.combos===1&&Object.entries(man.files).filter(([n])=>/\.json$/.test(n)).every(([,i])=>/^[0-9a-f]{64}$/.test(i.sha256||'')),man.counts);
  T('① backup never contains the teacher password hash or access log',!names.some(n=>/acl|pass/i.test(n))&&![...z.values()].some(b=>/"audit"|"salt"/.test(Buffer.from(b).toString().slice(0,200000))));
  const B=await boot();await importFull(B,bufA,'full');
  T('① full restore on a fresh browser brings back combos, matrix, sentences, scenes, observations, assessment fixes, records',B.eval('S.cb.length')===1&&B.eval('S.mx.length')===1&&B.eval('S.se.length')===1&&B.eval('S.sc.length')===1&&B.eval('S.ob.length')===1&&B.eval('!!S.as.fix.r_A')&&B.eval('S.recs.length')===2&&B.eval('S.cards.length')===3);

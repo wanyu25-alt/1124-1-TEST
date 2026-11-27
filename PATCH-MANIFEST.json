@@ -1,15 +1,15 @@
 {
  "schemaVersion": 1,
  "project": "詞彙特快車 Vocabulary Express",
- "batch": "04-C 測試頁",
+ "batch": "04-D",
  "fromVersion": "v22.5.2",
- "toVersion": "v22.5.2（只更新 tts-test.html）",
- "buildId": "20261127-04C",
+ "toVersion": "v22.5.3",
+ "buildId": "20261127-04D",
  "base": {
   "github": "wanyu25-alt/1124-1-TEST",
-  "commit": "a174fb360669ad126b32576aaf2c5bfe5747f670",
+  "commit": "842bc64fdedb06a80cd9ee2247d5090f21d76a58",
   "indexSha256": "2365ad11689b45e36a5737d6e6ddb7b003e141b88faf23fa2cb701b192184055",
-  "note": "直接套用於 GitHub 目前根目錄（v22.5.2，已部署）"
+  "note": "直接套用於 GitHub 目前根目錄（v22.5.2＋語音測試頁，已部署）"
  },
  "dataMigration": {
   "formatChange": false,
@@ -19,10 +19,10 @@
   "folder": "1_upload-to-github-root",
   "overwrite": [
    {
-    "path": "tts-test.html",
-    "sha256": "ce32cc7e0a44cef6f830d13e9c321343beff82651e41bec8378a6d906f48fc15",
-    "bytes": 9489,
-    "previousSha256": "b86bcd45807c9c37f914fca351191208eda45d6eb07c55025ff7a712d1a45b08"
+    "path": "index.html",
+    "sha256": "bc2f762bccc3dd8403dc43f5c1297edf6cd795805ae88f9e716ad53f1d20b14b",
+    "bytes": 1023813,
+    "previousSha256": "2365ad11689b45e36a5737d6e6ddb7b003e141b88faf23fa2cb701b192184055"
    }
   ]
  },
@@ -31,18 +31,54 @@
   "overwrite": [
    {
     "path": "BATCH04B-REPORT.md",
-    "sha256": "76bc9a211816f6e0ccd4f1d8fc2b60e9edd237866520bcba67efbd3a04f5b13f",
-    "bytes": 11865,
-    "previousSha256": "168a202a41a8840bb4b695baeff9afb0f62dfbc261aad79a8e3f15d68a991242"
+    "sha256": "1e97851b709f24345d5e938736ceebe1825ca54bcc672204c3ccfccfd2727e0b",
+    "bytes": 14095,
+    "previousSha256": "76bc9a211816f6e0ccd4f1d8fc2b60e9edd237866520bcba67efbd3a04f5b13f"
+   },
+   {
+    "path": "CHANGELOG.md",
+    "sha256": "03ace89b59414a348a61e1a48fb2e8e4ad0776b2518056b0ba6de853944ca6b2",
+    "bytes": 76904,
+    "previousSha256": "4de38f5787b8ce9581a7c4dc29bd1692b1fc495fba7dba06d3a825565cbf882a"
+   },
+   {
+    "path": "DEVELOPMENT-ROADMAP.md",
+    "sha256": "f4b821a7c3d02db63c52e2cdcd889949d357c171fa6b1c5c2fefb20148cd6b7c",
+    "bytes": 10642,
+    "previousSha256": "e0088dd4a3dad3a3964ca152f594e926eee65c69e0626cdfca28d949b0e25dca"
    },
    {
     "path": "PATCH-MANIFEST.json",
     "sha256": "（本檔案，不自我校驗）",
-    "bytes": 2553,
-    "previousSha256": "39141ba4c11ed8f614c98036629580ab620e96a2f8d22b5973cba78f50325c6a"
+    "bytes": 1849,
+    "previousSha256": "0cfb63864af521229f64a56ce875bf0aa7fc5043ef2f60d71de4883dd5021245"
+   },
+   {
+    "path": "PATCH-README.md",
+    "sha256": "6eff2320ae70fd5e14f45467f34d1cb63fa1c43d0641bc5f63df9da26f58adad",
+    "bytes": 1557,
+    "previousSha256": "008bb6c97dabaf8f80459023b3eb6e9fbeb0eceffa611269dd9c35544b66ddb9"
+   },
+   {
+    "path": "PROJECT-HANDOFF.md",
+    "sha256": "b63e98e26f6566f4cf8be4b22487baa0a3c5fe685f711f15393db3b0632411d2",
+    "bytes": 24751,
+    "previousSha256": "e61bb2fa8b6210046df9a548f7a9b6beef5f80cc06894d3f8b076e32bec3c6a3"
+   },
+   {
+    "path": "tests/t230.js",
+    "sha256": "21452a0f9d82ea043036e5d1ed8f798418116714d715f4d1e96db5f7876844bf",
+    "bytes": 11463,
+    "previousSha256": "c4ebbc1f74bb15630747b9b0e124bb2ab63d3b4977bb82549aa742f2da6e83a8"
    }
   ],
-  "add": []
+  "add": [
+   {
+    "path": "tests/e2e/batch04d-ios-text.js",
+    "sha256": "12284e0733c9501b281b38226cc883ad5172a5c406aa1fecd8306115668ca24c",
+    "bytes": 4671
+   }
+  ]
  },
  "deleteBeforeDeploy": [],
  "notIncluded": [
@@ -56,7 +92,7 @@
  ],
  "tests": {
   "jsdom": "1820 通過／10 失敗（與修改前逐檔相同）",
-  "e2e": "487 通過／0 失敗（含 batch04 Chromium＋WebKit、batch04b、batch04c）",
-  "device": "未進行（待教師實測 Mac Safari、iPhone、Chrome）"
+  "e2e": "498 通過／0 失敗（含 batch04d iPhone 顯示文字 11 項）",
+  "device": "未進行（待教師 iPhone Safari 確認）"
  }
 }

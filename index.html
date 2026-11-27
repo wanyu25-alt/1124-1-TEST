@@ -379,7 +379,7 @@ body.aid-calm #scene{max-height:90px;overflow:hidden}body.aid-calm .stc .ste{dis
 <script src="lib/pinyin-pro.js"></script>
 <script>
 /* ===== 基本工具 ===== */
-const APP={build:'v22.5.2',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
+const APP={build:'v22.5.3',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -6241,7 +6241,7 @@ ZG.KEEP=['ttsRate','recRate','aiGain'];
 {const f=LRN.ensure;LRN.ensure=async function(){const r=await f.apply(this,arguments);try{if(S.set&&!S.set.ttsFix224){(S.lrn&&S.lrn.list||[]).forEach(p=>{const pr=p.ext&&p.ext.pref;if(pr&&+pr.ttsRate===0.5)pr.ttsRate=.75});S.set.ttsFix224=1}}catch(e){}return r}}
 /*P26-END*/
 /*P27-BEGIN v22.4.1 第03-B批：舊版示範教材完全移除（併入 GitHub 15:30 的 P23B 並補強）、materials/ 依賴移除、跨瀏覽器語音備援、版本識別 */
-APP.id='20261127-04C';
+APP.id='20261127-04D';
 /* ---- 一、舊版內建示範教材（materials/ 18 張、4 個分類）：備份後一次性移除 ----
    只移除「仍與網站原始版本完全相同」的舊版圖卡（以 packSnap 簽章比對，不看名稱）；老師改過的保留為自訂教材；
    舊版分類只有在裡面已經沒有任何保留下來的圖卡時才移除；學習紀錄全部保留；S.legacyGone 標記後不再重複執行。
@@ -6475,6 +6475,25 @@ P30.hit=()=>{P30.stuck++;if(P30.stuck<2||P30.warned)return;P30.warned=1;try{cons
 {const f=VDX.list;VDX.list=function(){let h=f.apply(this,arguments);try{TTSX.voices().filter(v=>/^zh/i.test(v.lang||'')&&P30.nov(v)).forEach(v=>{h=h.split('<tr><td>'+esc(v.name)).join('<tr><td>'+esc(v.name)+' <small style="color:#a60">（趣味語音，不建議）</small>')})}catch(e){}return h}}
 {const f=P29.diag;P29.diag=function(){let h=f.apply(this,arguments);try{if(P30.stuck>=2)h=h.replace('<br>\n 最近一次','<br><b style="color:#b8322b">語音狀態：卡住（瀏覽器一直停在「正在念」）→ 請完全結束瀏覽器再開，或改用 Safari</b><br>\n 最近一次')}catch(e){}return h}}
 /*P30-END*/
+/*P31-BEGIN v22.5.3 第04-D批：iPhone／iPad 自動顯示題目文字
+  教師以 tts-test.html 實測（iOS 18.7 Safari）：網頁合成語音每一種方式都回報「開始→結束」卻沒有聲音（系統朗讀正常、錄音正常），網頁無法修正；
+  教師決定暫不預錄詞彙音檔，先顯示文字。因為 iOS 回報播放成功，原本的文字備援（VF）不會啟動 → 在 iOS 念題目詞彙時直接顯示文字。
+  聽詞選圖：沿用「👁 顯示文字」；打字／聽打：圖片下方顯示詞彙；口語說詞、聽詞認識不另外顯示（避免洩漏答案／已經顯示）。
+  紀錄：沿用 rec.ext.tx（v=1 語音異常）→ 不計入純聽覺能力。 */
+const P31={};
+P31.on=()=>!!(P29.ios&&S.set.iosTxt!==false);
+P31.put=()=>{try{if(!G||!G.on||!G.iosTxt||!G.cur)return;const m=S.set.mode;if(m==='speak'||m==='expose'||m==='pick')return;const mid=$('#mid');if(!mid)return;
+  let e=$('#iosTxt');if(!e){e=document.createElement('div');e.id='iosTxt';e.setAttribute('aria-live','polite');e.style.cssText='font-size:38px;font-weight:800;text-align:center;margin:4px 0;color:#2f4a8a';const pic=$('#pic');if(pic&&pic.parentNode===mid)pic.after(e);else mid.prepend(e)}
+  if(e.textContent!==G.cur.text)e.textContent=G.cur.text}catch(e){}};
+P31.show=()=>{if(!G||!G.on||!G.cur)return;const m=S.set.mode;if(m==='speak'||m==='expose')return;G.iosTxt=1;
+ if(m==='pick'&&G.pk){const pk=G.pk;pk.aidA=pk.aidA||'ios-tts';pk.txt=1;PICK.txtDom();return}P31.put()};
+{const f=TTSX.say;TTSX.say=function(text){try{if(P31.on()&&G&&G.on&&G.cur&&String(text||'').trim()===String(G.cur.text||'').trim())P31.show()}catch(e){}return f.apply(this,arguments)}}
+{const _q=showQ;showQ=function(){const r=_q.apply(this,arguments);P31.put();return r}}
+{const _k=showK;showK=function(){const r=_k.apply(this,arguments);P31.put();return r}}
+/* 每題重新開始（先讓上一題的紀錄寫完，再清除旗標） */
+{const _o=RE.open;RE.open=function(){const r=_o.apply(this,arguments);try{G.iosTxt=0}catch(e){}return r}}
+{const _c=RE.close;RE.close=function(){const ios=G&&G.iosTxt,rec=_c.apply(this,arguments);try{if(rec&&ios&&!(rec.ext&&rec.ext.tx)){rec.ext=rec.ext||{};rec.ext.tx={m:0,a:'ios-tts',v:1,e:null,tw:0}}}catch(e){}return rec}}
+/*P31-END*/
 (async()=>{let s=await load();if(s&&s.decks&&!s.v){await kvPut('backup-pre-v2',s);s=migrate(s)}const mb=await kvGet('music').catch(()=>null);if(mb)mus.url=URL.createObjectURL(mb);if(s)S={...DEF(),...s,set:{...DEF().set,...s.set}};if(s&&s.set&&s.set.vs==null&&s.set.vol!=null)S.set.vs=s.set.vol;
 await zaLoad();await LRN.ensure();try{if(await LIB.load()){await LIB.defBoot();LIB.sync()}}catch(e){console.warn('LIB boot',e)}if(S.set.stuName===undefined)S.set.stuName='';try{P28.init()}catch(e){}if(S.set.musSrc==='project'&&!S.set.musPicked)S.set.musSrc='builtin';if(!['key','listen','spell','speak'].includes(S.set.mode))S.set.mode='key';if(S.set.ttsMig!==3){S.set.ttsMig=3;S.set.ttsRate=.75;S.set.recRate=1.25;S.set.aiGain=1.5}if(!S.bankMap)S.bankMap={};if((S.banks||[]).some(b=>!(b.id in S.bankMap))||/^b:/.test(S.set.src||'')){if(!(await kvGet('backup-pre-bankmig')))await kvPut('backup-pre-bankmig',JSON.parse(JSON.stringify(S)));migrateBanks()}if(!S.set.musMig){S.set.musMig=1;S.set.musSrc='project';save()}FL.recover();try{FL.applyPref()}catch(e){}save();UI.init();home();mtLbl();packLoad();
  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();
