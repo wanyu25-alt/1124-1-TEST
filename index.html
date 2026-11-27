@@ -379,7 +379,7 @@ body.aid-calm #scene{max-height:90px;overflow:hidden}body.aid-calm .stc .ste{dis
 <script src="lib/pinyin-pro.js"></script>
 <script>
 /* ===== 基本工具 ===== */
-const APP={build:'v22.6.1',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
+const APP={build:'v22.6.2',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -6241,7 +6241,7 @@ ZG.KEEP=['ttsRate','recRate','aiGain'];
 {const f=LRN.ensure;LRN.ensure=async function(){const r=await f.apply(this,arguments);try{if(S.set&&!S.set.ttsFix224){(S.lrn&&S.lrn.list||[]).forEach(p=>{const pr=p.ext&&p.ext.pref;if(pr&&+pr.ttsRate===0.5)pr.ttsRate=.75});S.set.ttsFix224=1}}catch(e){}return r}}
 /*P26-END*/
 /*P27-BEGIN v22.4.1 第03-B批：舊版示範教材完全移除（併入 GitHub 15:30 的 P23B 並補強）、materials/ 依賴移除、跨瀏覽器語音備援、版本識別 */
-APP.id='20261127-05B';
+APP.id='20261128-05C';
 /* ---- 一、舊版內建示範教材（materials/ 18 張、4 個分類）：備份後一次性移除 ----
    只移除「仍與網站原始版本完全相同」的舊版圖卡（以 packSnap 簽章比對，不看名稱）；老師改過的保留為自訂教材；
    舊版分類只有在裡面已經沒有任何保留下來的圖卡時才移除；學習紀錄全部保留；S.legacyGone 標記後不再重複執行。
@@ -6696,6 +6696,29 @@ LM.F.clz='聽句子說詞';
 {const _h=FL.setupHtml;FL.setupHtml=function(){let h=_h.apply(this,arguments);try{const c=FL.cur(),mm=c.mm,why=c.lad.map((x,i)=>{const r=FL.chk(x,c.rng,mm.cat||'all');return r.ok?null:'<li>'+'★'.repeat(i+1)+'：'+esc(r.msg||'目前沒有可用教材')+'</li>'}).filter(Boolean);
   if(why.length)h=h.replace('<p class="fdesc" id="fdesc">',`<details class="fwhy" style="margin:4px 0;font-size:.9em"><summary>為什麼有些難度「尚無教材」？</summary><ul style="margin:4px 0 4px 1.2em;padding:0">${why.join('')}</ul><small>可以在「練習範圍」改選其他主題或 Level，或選「系統推薦」。</small></details><p class="fdesc" id="fdesc">`)}catch(e){console.warn('P36 why',e)}return h}}
 /*P36-END*/
+/*P37-BEGIN v22.6.2 第05-C批：清楚標示目前是「聽讀／口語／綜合」練習
+  教師：聽讀與口語都各有六站、每站五個星級，點進去後分不出現在是哪個模式。
+  - 六站地圖頁、站內設定頁：模式顏色橫條＋外框顏色（聽讀藍、口語橘、綜合紫）。
+  - 練習進行中：角落小標籤（例：🎧 聽讀｜第1站｜三星），小、淡、不能點、不發聲；只在由六站開始的練習顯示。 */
+const P37={C:{quiet:'#2f6fe4',oral:'#e07a1f',integ:'#7b4fc9'},B:{quiet:'#eaf1ff',oral:'#fff1e3',integ:'#f3ecff'},SHORT:{quiet:'聽讀',oral:'口語',integ:'綜合'}};
+(()=>{try{const st=document.createElement('style');st.textContent=Object.keys(P37.C).map(k=>`.lm-${k}.hm3{border:4px solid ${P37.C[k]};border-radius:18px;padding:10px 12px;background:${P37.B[k]}66}.lm-${k} .lmband{background:${P37.B[k]};border:3px solid ${P37.C[k]};color:${P37.C[k]}}.lm-${k} .stc{border-left:8px solid ${P37.C[k]}}#lmbd.lm-${k}{border-color:${P37.C[k]};color:${P37.C[k]}}`).join('')+
+ '.lmband{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;justify-content:center;font-weight:800;font-size:clamp(18px,2.4vw,24px);border-radius:14px;padding:6px 16px;margin:2px 0;width:100%;box-sizing:border-box}.lmband small{font-weight:600;font-size:.7em;color:#444}'+
+ '#lmbd{position:absolute;right:8px;bottom:6px;background:#ffffffcc;border:2px solid #cfd8e3;border-radius:10px;padding:1px 8px;font-weight:700;font-size:clamp(11px,1.5vw,14px);z-index:4;pointer-events:none;opacity:.85;display:none}';document.head.appendChild(st)}catch(e){}})();
+P37.mode=()=>{try{const m=FL.modeOf();return UI.LM[m]?m:null}catch(e){return null}};
+P37.band=(m,txt,mic)=>{const L=UI.LM[m];return `<div class="lmband" role="status" aria-label="目前模式：${esc(L.n)}"><span>${L.ic} ${esc(L.n)}</span><span>｜${txt}</span>${mic?`<small>${esc(L.mic)}</small>`:''}</div>`};
+{const _m=FL.mapHtml;FL.mapHtml=function(){let h=_m.apply(this,arguments);try{const m=P37.mode();if(m)h=h.replace('<div class="hm3 md3">','<div class="hm3 md3 lm-'+m+'">').replace(/(<h2>[\s\S]*?<\/h2>)/,'$1'+P37.band(m,'選一站開始').replace(/\$/g,'$$$$'))}catch(e){console.warn('P37 map',e)}return h}}
+{const _s=FL.setupHtml;FL.setupHtml=function(){let h=_s.apply(this,arguments);try{const m=P37.mode(),S0=STG.find(s=>s.id===FL.st);if(m&&S0)h=h.replace('<div class="hm3 md3 fsu">','<div class="hm3 md3 fsu lm-'+m+'">').replace('<h2>',P37.band(m,'第 '+S0.id+' 站 '+esc(S0.n),1).replace(/\$/g,'$$$$')+'<h2>')}catch(e){console.warn('P37 setup',e)}return h}}
+P37.tag=()=>{try{const sc=$('#scene');if(!sc)return;let e=$('#lmbd');if(!e){e=document.createElement('div');e.id='lmbd';e.setAttribute('aria-hidden','true');sc.appendChild(e)}
+ const r=FL.run||P37.go,L=r&&UI.LM[r.mode];if(G.on&&r&&L&&r.st){e.className='lm-'+r.mode;e.textContent=L.ic+' '+P37.SHORT[r.mode]+'｜第'+r.st+'站｜'+(FL.STAR[(r.star||1)-1]||'');e.style.display='block'}else e.style.display='none'}catch(x){}};
+{const _b=mbd;mbd=function(){const r=_b.apply(this,arguments);P37.tag();return r}}
+/* 口語練習先出現「啟用麥克風並開始」畫面時，FL.run 會先被清掉：另外記住由六站開始的站別與星級，直到下一次不是由六站開始的練習 */
+P37.go=null;P37.in=0;
+{const _g=FL.go;FL.go=function(){try{const st=FL.st,mode=FL.modeOf();let star=FL.starFor(st,mode);if(FL.actSel&&/^x\d+$/.test(FL.actSel)){const x=FL.extras(st,mode)[+FL.actSel.slice(1)];star=x?x.star:1}P37.go={st,mode,star}}catch(e){}P37.in++;try{return _g.apply(this,arguments)}finally{P37.in--}}}
+{const _a=FL.again;FL.again=function(){P37.in++;try{return _a.apply(this,arguments)}finally{P37.in--}}}
+{const _p=V2.prep;V2.prep=function(cb){if(P37.in&&typeof cb==='function'){const c0=cb;cb=function(){P37.in++;try{return c0.apply(this,arguments)}finally{P37.in--}}}return _p.call(this,cb)}}
+{const _s=startRound;startRound=function(){if(!P37.in)P37.go=null;return _s.apply(this,arguments)}}
+{const _q=showQ;showQ=function(){const r=_q.apply(this,arguments);P37.tag();return r}}
+/*P37-END*/
 (async()=>{let s=await load();if(s&&s.decks&&!s.v){await kvPut('backup-pre-v2',s);s=migrate(s)}const mb=await kvGet('music').catch(()=>null);if(mb)mus.url=URL.createObjectURL(mb);if(s)S={...DEF(),...s,set:{...DEF().set,...s.set}};if(s&&s.set&&s.set.vs==null&&s.set.vol!=null)S.set.vs=s.set.vol;
 await zaLoad();await LRN.ensure();try{if(await LIB.load()){await LIB.defBoot();LIB.sync()}}catch(e){console.warn('LIB boot',e)}if(S.set.stuName===undefined)S.set.stuName='';try{P28.init()}catch(e){}if(S.set.musSrc==='project'&&!S.set.musPicked)S.set.musSrc='builtin';if(!['key','listen','spell','speak'].includes(S.set.mode))S.set.mode='key';if(S.set.ttsMig!==3){S.set.ttsMig=3;S.set.ttsRate=.75;S.set.recRate=1.25;S.set.aiGain=1.5}if(!S.bankMap)S.bankMap={};if((S.banks||[]).some(b=>!(b.id in S.bankMap))||/^b:/.test(S.set.src||'')){if(!(await kvGet('backup-pre-bankmig')))await kvPut('backup-pre-bankmig',JSON.parse(JSON.stringify(S)));migrateBanks()}if(!S.set.musMig){S.set.musMig=1;S.set.musSrc='project';save()}FL.recover();try{FL.applyPref()}catch(e){}save();UI.init();home();mtLbl();packLoad();
  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();
