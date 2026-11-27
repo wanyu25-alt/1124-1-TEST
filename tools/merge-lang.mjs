@@ -13,8 +13,11 @@ if(r.errors.length){console.error('✘ 驗證有 '+r.errors.length+' 個錯誤�
 const V=JSON.parse(fs.readFileSync(path.join(ROOT,'vocab/vocabulary.json'),'utf8')),order=new Map(V.map((v,i)=>[v.id,i]));
 const words=files.flatMap(f=>JSON.parse(fs.readFileSync(path.join(ROOT,f),'utf8')).words).sort((a,b)=>order.get(a.id)-order.get(b.id));
 if(words.length!==V.length||new Set(words.map(w=>w.id)).size!==V.length){console.error('✘ 詞數不是 '+V.length+' 或有重複');process.exit(1)}
+/* 口語第2站五星「聽句子說詞」問句（教師確認，vocab/lang/cloze.json）→ clz 欄位 */
+const cz=path.join(ROOT,'vocab/lang/cloze.json');let nclz=0;
+if(fs.existsSync(cz)){const C=new Map(JSON.parse(fs.readFileSync(cz,'utf8')).items.filter(x=>!x.amb).map(x=>[x.id,x.q]));words.forEach(w=>{const q=C.get(w.id);if(q){if(q.includes(w.word)){console.error('✘ 問句含答案：'+w.word);process.exit(1)}w.clz=q;nclz++}})}
 const out={schema:1,kind:'language-metadata',ver:'22.6',made:new Date().toISOString().slice(0,10),count:words.length,
  note:'正式 1000 詞語言屬性（第05批）。以原始詞彙 ID 連結，不修改 vocabulary.json。教師在裝置上的修改優先。欄位說明見 LANGUAGE-METADATA-SCHEMA.md。',
  stats:r.stats,words};
 const f=path.join(ROOT,'vocab/language-metadata.json');fs.writeFileSync(f,JSON.stringify(out));
-console.log('✔ 產生 vocab/language-metadata.json：'+words.length+' 詞，'+(fs.statSync(f).size/1024).toFixed(0)+' KB（提醒 '+r.warn.length+'）');
+console.log('✔ 產生 vocab/language-metadata.json：'+words.length+' 詞，'+(fs.statSync(f).size/1024).toFixed(0)+' KB；聽句子說詞 '+nclz+' 句（提醒 '+r.warn.length+'）');

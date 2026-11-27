@@ -5,7 +5,12 @@
 > **重要教訓**：增量包必須以 GitHub 實際提交為基準（不是舊 ZIP）；交付前比對校驗碼；部署後用 Console `APP.build+' '+APP.id` 確認版本。教師以 GitHub 網頁版「Add file → Upload files」上傳，**只能拖入檔案本身，不能拖整個資料夾**（曾因此產生子資料夾 vocabulary-express-v22_2-patch／v22_3-patch，待刪除）。
 > 新對話請提供：GitHub 目前的實際檔案（或最新完整網站）＋本文件＋DEVELOPMENT-ROADMAP.md。
 
-## 0-H. 第05批摘要（最新，v22.6，建置 20261127-05，未推送）
+## 0-I. 第05-B批摘要（最新，v22.6.1，建置 20261127-05B，未推送）
+- P36：口語第2站五星 → `speak` 子題型 `clz`「聽句子說詞」（FL.ladder 包裝替換第 5 個）。問句 `CLZ.q`＝教師 `S.cx[id].clz`＞正式 `clz`；showQ 包裝隱藏 #pic、念問句；第一次 SK.give 或等待（GV your_turn 之後的 tick）→ `CLZ.reveal` 顯示圖片並記 `RE.hint('P1',{what:'顯示圖片（聽句子說詞）'})`；`rec.ext.clz`。FL.setupHtml 加「為什麼有些難度尚無教材」。
+- 問句來源：`tools/make-cloze.mjs`（FIX 人工句）→ `vocab/lang/cloze.json` → `tools/merge-lang.mjs`。iOS 預錄：`bash tools/make-tts-audio.sh 清單`。
+- 新批次的包裝請放在 P36 之後、開機程式之前。
+
+## 0-H. 第05批摘要（v22.6，建置 20261127-05，已推送 5341a17）
 - 正式 1000 詞語言屬性：`vocab/language-metadata.json`（由 `tools/merge-lang.mjs` 合併 `vocab/lang/05-01～05-10.json`；撰寫稿 `tools/lang-src/`；驗證 `tools/validate-lang.mjs`）。欄位見 LANGUAGE-METADATA-SCHEMA.md，詳細見 BATCH05-REPORT.md。
 - P35：`LM` 模組。`cxOf` 改為 `let`，P35 包裝成「正式資料＋教師 S.cx（優先）」；`LIB.load` 後載入；`PH.ok` 的 speak obj／newimg 以原始 S.cx 判斷（`LM.raw`）；`PICK.build` 的 use 題替換會同時成立的干擾選項（`LM.clash`）；`PICK.item`／`PH.sem` 用問句。審查狀態 `S.cx[id].lmrv`；needs_review 與 teacher_off 不用正式資料。後台：`LIB.view`／`LIB.detail`／`WD.panel` 包裝；`LM.exp`／`LM.imp`。
 - 開放：第1站五星聽用途選圖、口語第2站四星看動作說詞、五星看情境說詞。
@@ -68,7 +73,7 @@
 國小特殊需求學生（自閉症、ADHD、低口語、詞彙提取困難、仿說等）的遊戲化詞彙學習網站：聽覺理解、圖詞連結、詞彙提取、注音輸入、口語表達、語意組織、短語／語句組合、生活溝通。教師端提供學習歷程分析，家長端提供家庭複習。系統紀錄是教學參考，**不是臨床評估或診斷**。
 
 ## 2. 目前版本
-- 程式 build：`v22.6`，建置 `20261127-05`。**版本唯一來源**：index.html 主程式開頭 `const APP={build:'v22.6',id:''}`（建置 id 在 P27 設定）（備份清單、教師後臺、完整性檢查、診斷都讀它；升版只改這一處）。
+- 程式 build：`v22.6.1`，建置 `20261127-05B`。**版本唯一來源**：index.html 主程式開頭 `const APP={build:'v22.6.1',id:''}`（建置 id 在 P27 設定）（備份清單、教師後臺、完整性檢查、診斷都讀它；升版只改這一處）。
 - 開發方式：分批增量更新；v22.4＝v22.1 完整 ZIP＋第01、02、03批增量包（依序覆蓋）。線上 GitHub Pages 仍為 v22.1（使用者確認，兩批預定一起推送）。
 - 正式教材：V077_merged（1000 詞／16 主題／20 Level／961 張 WebP／950 有圖詞／50 缺圖詞）。
 - v22.1 基準 ZIP SHA-256：`8b5a66a1208b29175279e12ed61da84a8fc516f63efa20d8c24feec2f6bef9ce`；各批檔案校驗見 PATCH-MANIFEST.json。
@@ -180,6 +185,7 @@
 6. 小修：教材版本面板版本字樣、t33 斷言、測試路徑改用環境變數、README 舊網址。
 
 ## 12. GitHub 部署狀態
+- 2026-11-27：v22.6（提交 5341a17）教師已推送；v22.6.1 尚未推送。
 - 2026-11-27：v22.5.7 已推送（提交 569cdbc），教師 Mac Chrome／Safari 驗收；v22.6（第05批）尚未推送。
 - 2026-11-27：v22.5.1（提交 487d90f）已推送；v22.5.2 尚未推送。
 - 2026-11-26：v22.5（提交 f12b715）已推送部署；教師實測發現 Chrome／iPhone 合成語音無聲 → 第04-B批 v22.5.1（未推送）。
@@ -188,6 +194,7 @@
 - 規則：未經使用者確認不得推送。使用者以 GitHub Desktop 自行更新。
 
 ## 13. 最近一次修改的檔案及原因
+- v22.6.1 第05-B批（2026-11-27）：`index.html`（P36、`APP.build`、P27 的 `APP.id`）；`vocab/language-metadata.json`（clz）；新增 `vocab/lang/cloze.json`、`tools/make-cloze.mjs`、`BATCH05-CLOZE-REVIEW.md`、`voice/tts/` 157 段問句；`tools/merge-lang.mjs`；`tests/e2e/batch05-lang.js`、`tests/t230.js`；文件 CHANGELOG、本文件、ROADMAP、BATCH05-REPORT、PATCH-README、PATCH-MANIFEST。
 - v22.6 第05批（2026-11-27）：`index.html`（`cxOf` const→let、P35、`APP.build`、P27 的 `APP.id`）；新增 `vocab/language-metadata.json`、`vocab/lang/`、`tools/lang-src/`、`tools/validate-lang.mjs`、`tools/merge-lang.mjs`、`tools/lang-review-md.mjs`、`tests/e2e/batch05-lang.js`；`tests/t230.js`；文件 BATCH05-REPORT、BATCH05-REVIEW、BATCH05-PROGRESS、BATCH05-SAMPLE、BATCH05-01-REVIEW、LANGUAGE-METADATA-SCHEMA、CHANGELOG、ROADMAP、本文件、PATCH-README、PATCH-MANIFEST。
 - v22.5.7 第04-H批（2026-11-27）：`index.html`（P18 兩處「這是什麼」題數、P34、`APP.build`、P27 的 `APP.id`）；新增 `tests/e2e/batch04h-prompt.js`；`tests/t230.js`；文件 BATCH04B-REPORT（第 13 節）、CHANGELOG、PROJECT-HANDOFF、DEVELOPMENT-ROADMAP、PATCH-README、PATCH-MANIFEST。原因：教師需求。
 - v22.5.6 第04-G批（2026-11-27）：`index.html`（P28 的 SM.pre 包裝、`APP.build`、P27 的 `APP.id`）；新增 `tests/e2e/batch04g-noread.js`；`tests/t230.js`；文件 BATCH04B-REPORT（第 12 節）、CHANGELOG、PROJECT-HANDOFF、DEVELOPMENT-ROADMAP、PATCH-README、PATCH-MANIFEST。原因：教師決定口語二星以上不先念題目。

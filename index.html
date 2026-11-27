@@ -379,7 +379,7 @@ body.aid-calm #scene{max-height:90px;overflow:hidden}body.aid-calm .stc .ste{dis
 <script src="lib/pinyin-pro.js"></script>
 <script>
 /* ===== 基本工具 ===== */
-const APP={build:'v22.6',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
+const APP={build:'v22.6.1',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -6241,7 +6241,7 @@ ZG.KEEP=['ttsRate','recRate','aiGain'];
 {const f=LRN.ensure;LRN.ensure=async function(){const r=await f.apply(this,arguments);try{if(S.set&&!S.set.ttsFix224){(S.lrn&&S.lrn.list||[]).forEach(p=>{const pr=p.ext&&p.ext.pref;if(pr&&+pr.ttsRate===0.5)pr.ttsRate=.75});S.set.ttsFix224=1}}catch(e){}return r}}
 /*P26-END*/
 /*P27-BEGIN v22.4.1 第03-B批：舊版示範教材完全移除（併入 GitHub 15:30 的 P23B 並補強）、materials/ 依賴移除、跨瀏覽器語音備援、版本識別 */
-APP.id='20261127-05';
+APP.id='20261127-05B';
 /* ---- 一、舊版內建示範教材（materials/ 18 張、4 個分類）：備份後一次性移除 ----
    只移除「仍與網站原始版本完全相同」的舊版圖卡（以 packSnap 簽章比對，不看名稱）；老師改過的保留為自訂教材；
    舊版分類只有在裡面已經沒有任何保留下來的圖卡時才移除；學習紀錄全部保留；S.legacyGone 標記後不再重複執行。
@@ -6655,9 +6655,47 @@ LM.imp=async f=>{const m=$('#lm_io'),say=t=>{if(m)m.textContent=t};if(!f)return;
   if(!ok.length)return say('檔案裡沒有可以套用的修正'+(bad.length?'（'+bad.length+' 筆無法辨識）':''));
   if(!confirm('要套用 '+ok.length+' 個詞的語言屬性修正嗎？'+(bad.length?'\n（另有 '+bad.length+' 筆無法辨識，會略過）':'')+'\n套用前會先自動備份目前的進階欄位。'))return;
   await kvPut('backup-pre-lm-import-'+Date.now(),JSON.parse(JSON.stringify(S.cx||{})));
-  ok.forEach(([id,c])=>{const x=WD.x(id);['pos','sem','scene','use','alts','approx'].forEach(k=>{if(c[k]!==undefined)x[k]=c[k]});if(c.verbs)x.rel={...(x.rel||{}),verbs:c.verbs};if(c.review){x.lmrv=c.review;x.lmts=Date.now()}});
+  ok.forEach(([id,c])=>{const x=WD.x(id);['pos','sem','scene','use','alts','approx','clz'].forEach(k=>{if(c[k]!==undefined)x[k]=c[k]});if(c.verbs)x.rel={...(x.rel||{}),verbs:c.verbs};if(c.review){x.lmrv=c.review;x.lmts=Date.now()}});
   await save();LM.re();say('已套用 '+ok.length+' 個詞'+(bad.length?'，略過 '+bad.length+' 筆':''))}catch(e){say('匯入失敗：'+(e&&e.message||e))}};
 /*P35-END*/
+/*P36-BEGIN v22.6.1 第05-B批：口語第2站五星改為「聽句子說詞」；「尚無教材」直接寫出原因
+  教師：五星「看生活情境說詞」實際上和一、二星一樣是看圖說詞 → 改為先聽一句生活問句（答案換成「什麼」）、不看圖說出詞彙。
+  - 問句來自 vocab/language-metadata.json 的 clz（教師確認 157 句，BATCH05-CLOZE-REVIEW.md）；教師可在詞彙詳細頁修改（S.cx[id].clz）。
+  - 一開始不顯示圖片；按「提示」或等待後才顯示圖片（記為提示 P1「顯示圖片」→ 提示後完成），之後照原本提示順序。
+  - 語音辨識失敗不算錯、沒有時間壓力（沿用原本口語流程）。iPhone／iPad 播放預錄問句音檔（voice/tts）。 */
+const CLZ={};
+CLZ.q=c=>{if(!c||!LM.on(c.id))return null;const t=LM.tx(c.id).clz;if(t&&String(t).trim())return String(t).trim();const w=LM.map.get(c.id);return(w&&w.clz)||null};
+CLZ.is=()=>{try{return !!(G&&G.on&&G.cur&&S.set.mode==='speak'&&PH.sub()==='clz'&&!G.cur._cb&&!G.cur._se&&!G.cur._sc)}catch(e){return false}};
+CLZ.key=()=>G.rid+':'+G.i;
+CLZ.st=()=>{const k=CLZ.key();if(!G.clz||G.clz.k!==k)G.clz={k,id:G.cur.id,q:CLZ.q(G.cur),shown:false,played:0};return G.clz};
+SUBN.speak.clz='聽句子說詞';PH.need.clz='有「聽句子說詞」問句、而且有圖片的詞（目前是有用途的物品，例如身體、文具、餐具、家電、衣物、交通工具；動物、水果、食物、植物還沒有問句）';
+PH.need.use='有「用途」而且有圖片的詞（例如文具、餐具、家電、衣物、交通工具；動物、水果、食物、植物沒有用途）';PH.need.act='動作詞而且有動作圖片（例如刷牙、洗手、跳舞；多在「動作」主題，Level 08、09、16～20 沒有）';
+P15.OBJ['speak:clz']=['詞彙提取：聽句子說出詞彙（不看圖）','先聽生活問句、不看圖自主說出；看圖片後才說出另記為提示後完成','oral'];
+{const _o=PH.ok;PH.ok=function(c,m,sub){if(m==='speak'&&sub==='clz')return !!(c&&c.img&&CLZ.q(c));return _o.apply(this,arguments)}}
+{const _l=FL.ladder;FL.ladder=function(st,mode){const r=_l.apply(this,arguments);try{if(st===2&&mode==='oral'&&r&&r.length===5)r[4]=FL.cSpeak('clz','聽句子說詞：先聽一句生活問句、不看圖片，說出缺少的詞',{auto:'off',sw:15})}catch(e){console.warn('P36 ladder',e)}return r}}
+CLZ.play=manual=>{try{if(!CLZ.is())return;const s=CLZ.st();if(!s.q)return;s.played++;if(manual&&RE.cur)RE.cur.clzRe=(RE.cur.clzRe||0)+1;PH.say([{k:'CLZ:'+s.id,tts:s.q,src:'tts',st:'ai'}])}catch(e){console.warn('P36 play',e)}};
+CLZ.draw=()=>{const s=CLZ.st(),mid=$('#mid');if(!mid)return;const pic=$('#pic');if(pic)pic.style.display=s.shown?'':'none';
+ if(!$('#clzq'))mid.insertAdjacentHTML('afterbegin',`<div id="clzq" style="margin:6px 0 10px"><div style="font-size:22px;margin-bottom:6px">👂 聽句子，說出答案</div>${(P29.ios||S.set.showText)&&s.q?`<div id="clzt" style="font-size:26px;font-weight:700;margin:4px 0">${esc(s.q)}</div>`:''}<button class="btn alt" onclick="CLZ.play(1)" aria-label="再聽一次句子">🔊 再聽一次</button></div>`)};
+CLZ.reveal=src=>{const s=CLZ.st();if(s.shown)return false;s.shown=true;s.at=RE.cur?Date.now()-RE.cur.t0:null;const p=$('#pic');if(p)p.style.display='';
+ try{RE.hint('P1',{level:1,src:src||'button',what:'顯示圖片（聽句子說詞）'})}catch(e){}SK.msg('看看圖片，這是什麼？');return true};
+{const _s=showQ;showQ=function(){const r=_s.apply(this,arguments);try{if(CLZ.is()){const s=CLZ.st();CLZ.draw();if(!s.played){const k=s.k;AM.later(500,()=>{if(CLZ.is()&&G.clz&&G.clz.k===k&&!G.lock&&!G.clz.played)CLZ.play()})}}}catch(e){console.warn('P36 show',e)}return r}}
+{const _g=SK.give;SK.give=function(id,src){try{if(CLZ.is()&&G.sk&&!G.lock&&!CLZ.st().shown){CLZ.reveal(src||'button');SK.arm();SK.ui();return true}}catch(e){}return _g.apply(this,arguments)}}
+{const _u=SK.ui;SK.ui=function(){const r=_u.apply(this,arguments);try{if(CLZ.is()&&!CLZ.st().shown){const b=$('#sknx');if(b)b.textContent='💡 提示（下一步：看圖片）'}}catch(e){}return r}}
+{const _t=SK.tick;SK.tick=function(){const sk=G&&G.sk;try{if(sk&&CLZ.is()&&!G.lock&&!G.paused&&!SP.speaking&&!AM.cur&&!ZQ.busy&&!document.querySelector('.ov')&&!CLZ.st().shown&&(sk.gvT||!GV.on())){CLZ.reveal('auto');SK.arm();SK.ui();return}}catch(e){}return _t.apply(this,arguments)}}
+{const _c=RE.close;RE.close=function(){const r0=RE.cur,s=G&&G.clz,rec=_c.apply(this,arguments);try{if(rec&&r0&&r0.mode==='speak'&&r0.sub==='clz'&&s&&s.id===r0.cid){rec.ext=rec.ext||{};rec.ext.clz={q:s.q,pic:!!s.shown,picAt:s.at==null?null:s.at,replays:r0.clzRe||0}}}catch(e){}return rec}}
+/* 後台：詞彙詳細頁可以修改問句 */
+LM.KEYS.push('clz');
+{const _p=LM.panel;LM.panel=function(id){let h=_p.apply(this,arguments);try{const w=LM.map.get(id);if(w&&(w.clz||LM.tx(id).clz!=null)){const t=LM.tx(id).clz||'';
+  h=h.replace('<p><button class="btn go sm" onclick="LM.saveEd(',`<label style="display:block;margin-top:4px">聽句子說詞的問句（口語第2站五星；答案換成「什麼」，不能出現答案）<br><input id="lm_clz" value="${esc(t)}" placeholder="${esc(w.clz||'')}" style="width:100%;max-width:520px"></label><p><button class="btn go sm" onclick="LM.saveEd(`)}}catch(e){}return h}}
+{const _s=LM.saveEd;LM.saveEd=function(id){const e=$('#lm_clz');if(e){const v=e.value.trim(),w=LM.map.get(id);if(v&&w&&v.includes(w.word)){alert('問句裡不能出現答案「'+w.word+'」');return}WD.x(id).clz=v}return _s.apply(this,arguments)}}
+LM.resetEd=id=>{if(!confirm('清除這個詞在這台裝置上的修正，改回使用正式語言屬性？（審查狀態、類化圖片、替代說法不受影響）'))return;const x=WD.x(id);['pos','use','scene','sem'].forEach(k=>x[k]='');x.rel={...(x.rel||{}),verbs:[]};delete x.clz;save();LM.re()};
+{const _e=LM.edited;LM.edited=function(id){const r=_e.apply(this,arguments);return LM.has(LM.tx(id).clz)?r.concat(['clz']):r}}
+LM.F.clz='聽句子說詞';
+{const _c=LM.clean;LM.clean=function(id,v){const o=_c.apply(this,arguments)||{};if(v&&typeof v.clz==='string'){const q=v.clz.trim().slice(0,80),w=LM.map.get(id);if(!w||!q.includes(w.word))o.clz=q}return Object.keys(o).length?o:null}}
+/* 「尚無教材」：在星星下方直接寫出原因 */
+{const _h=FL.setupHtml;FL.setupHtml=function(){let h=_h.apply(this,arguments);try{const c=FL.cur(),mm=c.mm,why=c.lad.map((x,i)=>{const r=FL.chk(x,c.rng,mm.cat||'all');return r.ok?null:'<li>'+'★'.repeat(i+1)+'：'+esc(r.msg||'目前沒有可用教材')+'</li>'}).filter(Boolean);
+  if(why.length)h=h.replace('<p class="fdesc" id="fdesc">',`<details class="fwhy" style="margin:4px 0;font-size:.9em"><summary>為什麼有些難度「尚無教材」？</summary><ul style="margin:4px 0 4px 1.2em;padding:0">${why.join('')}</ul><small>可以在「練習範圍」改選其他主題或 Level，或選「系統推薦」。</small></details><p class="fdesc" id="fdesc">`)}catch(e){console.warn('P36 why',e)}return h}}
+/*P36-END*/
 (async()=>{let s=await load();if(s&&s.decks&&!s.v){await kvPut('backup-pre-v2',s);s=migrate(s)}const mb=await kvGet('music').catch(()=>null);if(mb)mus.url=URL.createObjectURL(mb);if(s)S={...DEF(),...s,set:{...DEF().set,...s.set}};if(s&&s.set&&s.set.vs==null&&s.set.vol!=null)S.set.vs=s.set.vol;
 await zaLoad();await LRN.ensure();try{if(await LIB.load()){await LIB.defBoot();LIB.sync()}}catch(e){console.warn('LIB boot',e)}if(S.set.stuName===undefined)S.set.stuName='';try{P28.init()}catch(e){}if(S.set.musSrc==='project'&&!S.set.musPicked)S.set.musSrc='builtin';if(!['key','listen','spell','speak'].includes(S.set.mode))S.set.mode='key';if(S.set.ttsMig!==3){S.set.ttsMig=3;S.set.ttsRate=.75;S.set.recRate=1.25;S.set.aiGain=1.5}if(!S.bankMap)S.bankMap={};if((S.banks||[]).some(b=>!(b.id in S.bankMap))||/^b:/.test(S.set.src||'')){if(!(await kvGet('backup-pre-bankmig')))await kvPut('backup-pre-bankmig',JSON.parse(JSON.stringify(S)));migrateBanks()}if(!S.set.musMig){S.set.musMig=1;S.set.musSrc='project';save()}FL.recover();try{FL.applyPref()}catch(e){}save();UI.init();home();mtLbl();packLoad();
  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();
