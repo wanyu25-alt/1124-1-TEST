@@ -379,7 +379,7 @@ body.aid-calm #scene{max-height:90px;overflow:hidden}body.aid-calm .stc .ste{dis
 <script src="lib/pinyin-pro.js"></script>
 <script>
 /* ===== 基本工具 ===== */
-const APP={build:'v22.5.6',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
+const APP={build:'v22.5.7',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -5531,12 +5531,12 @@ GV.say=(id,o)=>{o=o||{};let fin=0;const done=p=>{if(fin)return;fin=1;try{o.after
 /* ---- 掛接（每一個都包 try，失敗時退回原本行為） ---- */
 {const _s=showQ;showQ=function(){const r=_s.apply(this,arguments);try{if(G.on&&G.cur){const s=GV.q();const m=S.set.mode;if(m!=='speak'&&ASR.on)stopAsr();
   if(!s.init){s.init=1;
-   if(m==='speak'&&GV.naming()&&s.qi<=3)GV.say('what_is_this',{delay:300})
+   if(m==='speak'&&GV.naming()&&s.qi<=2)GV.say('what_is_this',{delay:300})/* v22.5.7 教師：只在第 1、2 題（避免疲乏） */
    else if(GV.SEL.includes(m)&&s.qi===1&&m!=='pick')GV.say('find_it',{delay:600})}}}catch(e){console.error('GV.showQ',e)}return r}}
 {const _a=PICK.auto;PICK.auto=function(){const r=_a.apply(this,arguments);try{const s=GV.q();if(GV.on()&&s.qi===1&&!s.pk){s.pk=1;GV.say('find_it',{delay:1300})}}catch(e){console.error('GV.pick',e)}return r}}
 {const _a=V2.auto;V2.auto=function(){const a=arguments,self=this;try{if(S.set.mode==='listen'&&GV.on()&&G.cur){const s=GV.q();if(s.qi===1&&!s.n.listen_carefully){GV.say('listen_carefully',{after:()=>_a.apply(self,a)});return}}}catch(e){console.error('GV.auto',e)}return _a.apply(this,arguments)}}
 {const _t=V2.turn;V2.turn=function(){const s=V2.stp,a=arguments,self=this;
-  try{if(s&&!s.gvd&&s.miss===0&&GV.on()&&G.cur){s.gvd=1;const pic=s.sp.kind==='pic',id=pic?'what_is_this':'repeat_after_me';const sid=s.id;if(pic&&GV.q().qi>3){return _t.apply(this,arguments)}
+  try{if(s&&!s.gvd&&s.miss===0&&GV.on()&&G.cur){s.gvd=1;const pic=s.sp.kind==='pic',id=pic?'what_is_this':'repeat_after_me';const sid=s.id;if(pic&&GV.q().qi>2){return _t.apply(this,arguments)}
    GV.say(id,{after:()=>{if(V2.stp&&V2.stp.id===sid)_t.apply(self,a)}});return}}catch(e){console.error('GV.turn',e)}return _t.apply(this,arguments)}}
 {const _k=SK.tick;SK.tick=function(){const sk=G&&G.sk,a=arguments,self=this;
   try{if(sk&&G.on&&S.set.mode==='speak'&&!sk.gvT&&GV.on()&&GV.micOK()&&!G.paused&&!AM.cur&&!ZQ.busy&&!SP.speaking&&!document.querySelector('.ov')){sk.gvT=1;
@@ -6241,7 +6241,7 @@ ZG.KEEP=['ttsRate','recRate','aiGain'];
 {const f=LRN.ensure;LRN.ensure=async function(){const r=await f.apply(this,arguments);try{if(S.set&&!S.set.ttsFix224){(S.lrn&&S.lrn.list||[]).forEach(p=>{const pr=p.ext&&p.ext.pref;if(pr&&+pr.ttsRate===0.5)pr.ttsRate=.75});S.set.ttsFix224=1}}catch(e){}return r}}
 /*P26-END*/
 /*P27-BEGIN v22.4.1 第03-B批：舊版示範教材完全移除（併入 GitHub 15:30 的 P23B 並補強）、materials/ 依賴移除、跨瀏覽器語音備援、版本識別 */
-APP.id='20261127-04G';
+APP.id='20261127-04H';
 /* ---- 一、舊版內建示範教材（materials/ 18 張、4 個分類）：備份後一次性移除 ----
    只移除「仍與網站原始版本完全相同」的舊版圖卡（以 packSnap 簽章比對，不看名稱）；老師改過的保留為自訂教材；
    舊版分類只有在裡面已經沒有任何保留下來的圖卡時才移除；學習紀錄全部保留；S.legacyGone 標記後不再重複執行。
@@ -6553,6 +6553,19 @@ P33.draw=()=>{try{if(!G||!G.on||S.set.mode!=='expose'||!P33.on())return;const bx
 /* 語音診斷：麥克風測試頁連結 */
 {const f=P29.diag;P29.diag=function(){let h=f.apply(this,arguments);try{h=h.replace('<a href="tts-test.html" target="_blank" rel="noopener">語音測試頁</a>','<a href="tts-test.html" target="_blank" rel="noopener">語音測試頁</a>；麥克風或語音辨識有問題時，請開啟 <a href="mic-test.html" target="_blank" rel="noopener">麥克風測試頁</a>')}catch(e){}return h}}
 /*P33-END*/
+/*P34-BEGIN v22.5.7 第04-H批：引導語音「這是什麼／換你說囉」播放中，學生說對也算過關
+  教師：系統正在說「這是什麼」時，如果偵測到孩子說話，也要記錄答對並接續下一關。
+  原本為了避免把系統聲音當成學生答案，引導語音播放期間的辨識結果一律略過。這兩段引導語音本身不含答案，
+  所以「辨識文字符合目標詞（A 正確／B 同音）」時才採用：停止引導語音、記為辨識成功；只有聲音、或接近／其他詞，仍照原規則略過。 */
+const P34={GV:/^gv_(what|turn)$/};
+P34.ok=()=>{try{return !!(G&&G.on&&!G.lock&&!G.paused&&S.set.mode==='speak'&&G.cur&&AM.cur&&P34.GV.test(AM.cur.k||'')&&!SP.speaking&&!ZQ.busy&&Date.now()>=ASR.lockUntil)}catch(e){return false}};
+{const _a=asrRes;asrRes=function(e){try{if(P34.ok()){const alts=[];for(let i=e.resultIndex||0;i<e.results.length;i++){const r=e.results[i];if(r)for(const x of r)alts.push(nz(x.transcript))}
+   const m=alts.length?(SK.match(alts)||MV.judge(alts)):null;if(m&&m.by){P34.take(m,alts);return}}}catch(x){console.warn('P34',x)}return _a.apply(this,arguments)}}
+P34.take=(m,alts)=>{const now=Date.now();try{AM.cut()}catch(e){}ASR.paused=false;try{GV.mp=0;GV.clear()}catch(e){}try{micBreath(0)}catch(e){}
+ const o=P28.o();if(o){o.tries++;o.barge=1;if(o.fr==null&&RE.cur)o.fr=now-RE.cur.t0}try{RE.asrEvt({resultIndex:0,results:[Object.assign([{transcript:alts[0]||''}],{isFinal:true})]})}catch(e){}
+ G.sp.asr++;G.sp.asrOk++;G.sp.txt.push(alts[0]||'');G.sp.choice='asr';ASR.lockUntil=now+2500;MV.acc=[];MV.asrSince=now;asrMsg('收到！','var(--leaf)');SK.credit('asr',m)};
+{const _c=RE.close;RE.close=function(){const r=RE.cur,o=r&&r.o28,rec=_c.apply(this,arguments);try{if(rec&&o&&rec.ext&&rec.ext.oral)rec.ext.oral.duringPrompt=!!o.barge}catch(e){}return rec}}
+/*P34-END*/
 (async()=>{let s=await load();if(s&&s.decks&&!s.v){await kvPut('backup-pre-v2',s);s=migrate(s)}const mb=await kvGet('music').catch(()=>null);if(mb)mus.url=URL.createObjectURL(mb);if(s)S={...DEF(),...s,set:{...DEF().set,...s.set}};if(s&&s.set&&s.set.vs==null&&s.set.vol!=null)S.set.vs=s.set.vol;
 await zaLoad();await LRN.ensure();try{if(await LIB.load()){await LIB.defBoot();LIB.sync()}}catch(e){console.warn('LIB boot',e)}if(S.set.stuName===undefined)S.set.stuName='';try{P28.init()}catch(e){}if(S.set.musSrc==='project'&&!S.set.musPicked)S.set.musSrc='builtin';if(!['key','listen','spell','speak'].includes(S.set.mode))S.set.mode='key';if(S.set.ttsMig!==3){S.set.ttsMig=3;S.set.ttsRate=.75;S.set.recRate=1.25;S.set.aiGain=1.5}if(!S.bankMap)S.bankMap={};if((S.banks||[]).some(b=>!(b.id in S.bankMap))||/^b:/.test(S.set.src||'')){if(!(await kvGet('backup-pre-bankmig')))await kvPut('backup-pre-bankmig',JSON.parse(JSON.stringify(S)));migrateBanks()}if(!S.set.musMig){S.set.musMig=1;S.set.musSrc='project';save()}FL.recover();try{FL.applyPref()}catch(e){}save();UI.init();home();mtLbl();packLoad();
  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();

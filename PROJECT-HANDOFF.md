@@ -5,9 +5,13 @@
 > **重要教訓**：增量包必須以 GitHub 實際提交為基準（不是舊 ZIP）；交付前比對校驗碼；部署後用 Console `APP.build+' '+APP.id` 確認版本。教師以 GitHub 網頁版「Add file → Upload files」上傳，**只能拖入檔案本身，不能拖整個資料夾**（曾因此產生子資料夾 vocabulary-express-v22_2-patch／v22_3-patch，待刪除）。
 > 新對話請提供：GitHub 目前的實際檔案（或最新完整網站）＋本文件＋DEVELOPMENT-ROADMAP.md。
 
-## 0-F. 第04-G批摘要（最新，v22.5.6）
+## 0-G. 第04-H批摘要（最新，v22.5.7）
+- 「這是什麼」只在每回合第 1、2 題（P18 兩處 qi 條件 3→2）。
+- P34：`gv_what`／`gv_turn` 播放中，辨識符合目標詞（SK.match／MV.judge 有 by）→ AM.cut、記為 asr 成功、`ext.oral.duringPrompt`。其他語音期間仍略過結果。新批次包裝放在 P34 之後。
+
+## 0-F. 第04-G批摘要（v22.5.6）
 - 教師決定：口語練習只有一星先念示範；二星以上新詞直接看圖說（SM.plan 包裝取消起點評量的兩題拆分、SM.pre 包裝將 expose 轉為 speak；題數＝詞彙數）。
-- Mac Chrome 的 mic-test A～D 都正常（輸入裝置是接續互通的 iPhone 麥克風）；但口語練習「有聲波、辨識不到」（顯示「有聽到你的聲音」或「聽不清楚」）。**待教師在 Console 取得辨識紀錄**，判斷是結果被略過（MV.gate／AM.cur／ZQ.busy／ASR.paused），還是文字不符（SK.match）。
+- Mac Chrome 的 mic-test A～D 都正常（輸入裝置是接續互通的 iPhone 麥克風）；但口語練習「有聲波、辨識不到」（顯示「有聽到你的聲音」或「聽不清楚」）。2026-11-27 v22.5.6 部署後，教師回報 Mac Chrome 口語三星「一切正常」（有聲波、能辨識），沒有再出現辨識不到的情況；若再出現，用 BATCH04B-REPORT 12-3 的 Console 指令取得紀錄。
 
 ## 0-E. 第04-F批摘要（v22.5.5）
 - 教師回報三台裝置口語練習「讀不到聲音、沒有聲波」。模擬環境中流程正常（聽詞認識→我知道了→口說題有聲波與辨識）。
@@ -58,7 +62,7 @@
 國小特殊需求學生（自閉症、ADHD、低口語、詞彙提取困難、仿說等）的遊戲化詞彙學習網站：聽覺理解、圖詞連結、詞彙提取、注音輸入、口語表達、語意組織、短語／語句組合、生活溝通。教師端提供學習歷程分析，家長端提供家庭複習。系統紀錄是教學參考，**不是臨床評估或診斷**。
 
 ## 2. 目前版本
-- 程式 build：`v22.5.6`，建置 `20261127-04G`。**版本唯一來源**：index.html 主程式開頭 `const APP={build:'v22.5.6',id:''}`（建置 id 在 P27 設定）（備份清單、教師後臺、完整性檢查、診斷都讀它；升版只改這一處）。
+- 程式 build：`v22.5.7`，建置 `20261127-04H`。**版本唯一來源**：index.html 主程式開頭 `const APP={build:'v22.5.7',id:''}`（建置 id 在 P27 設定）（備份清單、教師後臺、完整性檢查、診斷都讀它；升版只改這一處）。
 - 開發方式：分批增量更新；v22.4＝v22.1 完整 ZIP＋第01、02、03批增量包（依序覆蓋）。線上 GitHub Pages 仍為 v22.1（使用者確認，兩批預定一起推送）。
 - 正式教材：V077_merged（1000 詞／16 主題／20 Level／961 張 WebP／950 有圖詞／50 缺圖詞）。
 - v22.1 基準 ZIP SHA-256：`8b5a66a1208b29175279e12ed61da84a8fc516f63efa20d8c24feec2f6bef9ce`；各批檔案校驗見 PATCH-MANIFEST.json。
@@ -177,6 +181,7 @@
 - 規則：未經使用者確認不得推送。使用者以 GitHub Desktop 自行更新。
 
 ## 13. 最近一次修改的檔案及原因
+- v22.5.7 第04-H批（2026-11-27）：`index.html`（P18 兩處「這是什麼」題數、P34、`APP.build`、P27 的 `APP.id`）；新增 `tests/e2e/batch04h-prompt.js`；`tests/t230.js`；文件 BATCH04B-REPORT（第 13 節）、CHANGELOG、PROJECT-HANDOFF、DEVELOPMENT-ROADMAP、PATCH-README、PATCH-MANIFEST。原因：教師需求。
 - v22.5.6 第04-G批（2026-11-27）：`index.html`（P28 的 SM.pre 包裝、`APP.build`、P27 的 `APP.id`）；新增 `tests/e2e/batch04g-noread.js`；`tests/t230.js`；文件 BATCH04B-REPORT（第 12 節）、CHANGELOG、PROJECT-HANDOFF、DEVELOPMENT-ROADMAP、PATCH-README、PATCH-MANIFEST。原因：教師決定口語二星以上不先念題目。
 - v22.5.5 第04-F批（2026-11-27）：`index.html`（P33、`APP.build`、P27 的 `APP.id`）；新增 `mic-test.html`、`tests/e2e/batch04f-mic.js`；`tests/t230.js`；文件 BATCH04B-REPORT（第 11 節）、CHANGELOG、PROJECT-HANDOFF、DEVELOPMENT-ROADMAP、PATCH-README、PATCH-MANIFEST。原因：教師回報口語練習沒有聲波、讀不到聲音。
 - v22.5.4 第04-E批（2026-11-27）：`index.html`（P32、`APP.build`、P27 的 `APP.id`）；新增 `voice/tts/`（1818 段＋index.json）、`tools/make-tts-audio.sh`、`tests/e2e/batch04e-ios-pre.js`；調整 `tests/e2e/batch04d-ios-text.js`、`tests/t230.js`；文件 BATCH04B-REPORT（第 10 節）、CHANGELOG、PROJECT-HANDOFF、DEVELOPMENT-ROADMAP、PATCH-README、PATCH-MANIFEST。原因：iPhone 網頁語音無聲，改播預錄音檔。
