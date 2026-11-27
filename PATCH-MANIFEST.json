@@ -20,8 +20,8 @@
   "overwrite": [
    {
     "path": "tts-test.html",
-    "sha256": "79f1d31f068ab612b8ad9191d84011a61c8edc0f37da109aea3b514b1b9c68a5",
-    "bytes": 9316,
+    "sha256": "ce32cc7e0a44cef6f830d13e9c321343beff82651e41bec8378a6d906f48fc15",
+    "bytes": 9489,
     "previousSha256": "b86bcd45807c9c37f914fca351191208eda45d6eb07c55025ff7a712d1a45b08"
    }
   ]
@@ -31,33 +31,15 @@
   "overwrite": [
    {
     "path": "BATCH04B-REPORT.md",
-    "sha256": "21354c937dc782129f38d8a4addcd41bb9a272a08da230689b53f2f419e08d4d",
-    "bytes": 11090,
+    "sha256": "76bc9a211816f6e0ccd4f1d8fc2b60e9edd237866520bcba67efbd3a04f5b13f",
+    "bytes": 11865,
     "previousSha256": "168a202a41a8840bb4b695baeff9afb0f62dfbc261aad79a8e3f15d68a991242"
-   },
-   {
-    "path": "CHANGELOG.md",
-    "sha256": "4de38f5787b8ce9581a7c4dc29bd1692b1fc495fba7dba06d3a825565cbf882a",
-    "bytes": 76184,
-    "previousSha256": "16271cb8574d35632b21b34056e37d42334b77c679ab83f3151199d85feb5aaa"
    },
    {
     "path": "PATCH-MANIFEST.json",
     "sha256": "（本檔案，不自我校驗）",
-    "bytes": 3852,
+    "bytes": 2553,
     "previousSha256": "39141ba4c11ed8f614c98036629580ab620e96a2f8d22b5973cba78f50325c6a"
-   },
-   {
-    "path": "PATCH-README.md",
-    "sha256": "008bb6c97dabaf8f80459023b3eb6e9fbeb0eceffa611269dd9c35544b66ddb9",
-    "bytes": 1192,
-    "previousSha256": "46c037a6b4cf3f7c434cc959af244abff311106bf22476d33354c2fcdd8de898"
-   },
-   {
-    "path": "tests/e2e/batch04b-tts.js",
-    "sha256": "c062b704f5e966124318c8bc9de9aaec42c72cbb8103301efa992d3c7658a021",
-    "bytes": 5873,
-    "previousSha256": "4eea630656703d6b550a9ed432e6820f4610ccd674420f673da1b9c17e782ca8"
    }
   ],
   "add": []

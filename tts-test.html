@@ -12,7 +12,7 @@ button.y{background:#1b7a3a}button.n{background:#b8322b}button.g{background:#667
 small{color:#556}
 </style></head><body>
 <h1>🔊 語音測試頁</h1>
-<div class="box"><b>使用方法</b>：音量先開好。由上往下，一次按一個「▶ 測試」，聽完後按「🔊 有聽到」或「🔇 沒聽到」。全部做完後，按最下面的「複製結果」，把文字貼給開發者。<br>
+<div class="box"><b>使用方法</b>：音量先開好。由上往下，一次按一個「▶ 測試」，聽完後按「🔊 有聽到「葡萄」」或「🔇 沒聽到「葡萄」」（只聽到「叮」「嗶」不算）。全部做完後，按最下面的「複製結果」，把文字貼給開發者。<br>
 <small>這一頁只用瀏覽器內建的語音功能，不會送出任何資料，也不需要麥克風。</small></div>
 <div class="box" id="env"></div>
 <div id="list"></div>
@@ -52,7 +52,6 @@ const TESTS=[
  ['H','先呼叫 resume 再念',async()=>{try{s.resume()}catch(e){}return say(W,{lang:'zh-TW'})}],
  ['I','先 cancel 再念',async()=>{try{s.cancel()}catch(e){}await new Promise(r=>setTimeout(r,80));return say(W,{lang:'zh-TW'})}],
  ['J','先念「音量 0」的一段，再正常念（網站舊的解鎖方式）',async()=>{say(' ',{vol:0});return say(W,{lang:'zh-TW'})}],
- ['K','先念「空字串」，再正常念',async()=>{say('',{vol:0});return say(W,{lang:'zh-TW'})}],
  /* ---- iPhone／iPad 專用：網頁聲音通道與「音訊播放模式」（navigator.audioSession，Safari 16.4 以上） ---- */
  ['M','先播一段錄音「叮」，播完馬上念',async()=>{await clip();return say(W,{lang:'zh-TW'})}],
  ['N','錄音「叮」還在播的時候同時念',async()=>{clip();await new Promise(r=>setTimeout(r,150));return say(W,{lang:'zh-TW'})}],
@@ -61,13 +60,14 @@ const TESTS=[
  ['Q','播放模式「playback」＋先播一聲「嗶」，再念',()=>sess('playback',async()=>{await beep();return say(W,{lang:'zh-TW'})})],
  ['R','音訊播放模式設為「短暫播放 transient」後再念',()=>sess('transient',()=>say(W,{lang:'zh-TW'}))],
  ['T','音訊播放模式設為「環境音 ambient」後再念',()=>sess('ambient',()=>say(W,{lang:'zh-TW'}))],
- ['Z','最後再試一次 A（看前面的步驟有沒有讓之後都沒聲音）',()=>say(W,{lang:'zh-TW'})]];
+ ['Z','再試一次 A（看前面的步驟有沒有讓之後都沒聲音）',()=>say(W,{lang:'zh-TW'})],
+ ['K','（請最後才測）先念「空字串」，再正常念——在 iPhone 會讓語音卡住，測完請重新整理',async()=>{say('',{vol:0});return say(W,{lang:'zh-TW'})}]];
 function env(){const z=zh();document.getElementById('env').innerHTML='<b>這個瀏覽器</b>：'+navigator.userAgent.replace(/[<>]/g,'')+'<br>語音總數：'+vs().length+'，中文語音：'+z.length+'<br><small>'+z.slice(0,30).map(vName).join('、')+'</small>';out()}
-function row([k,t,f,nm]){const d=document.createElement('div');d.className='box t';d.id='r'+k;d.innerHTML=`<b>${k}</b><span class="d">${t}${nm?'<br><small>'+nm()+'</small>':''}</span><button onclick="run('${k}')">▶ 測試</button><button class="y" onclick="mark('${k}',1)">🔊 有聽到</button><button class="n" onclick="mark('${k}',0)">🔇 沒聽到</button><div class="ev" id="e${k}"></div>`;document.getElementById('list').appendChild(d)}
+function row([k,t,f,nm]){const d=document.createElement('div');d.className='box t';d.id='r'+k;d.innerHTML=`<b>${k}</b><span class="d">${t}${nm?'<br><small>'+nm()+'</small>':''}</span><button onclick="run('${k}')">▶ 測試</button><button class="y" onclick="mark('${k}',1)">🔊 有聽到「葡萄」</button><button class="n" onclick="mark('${k}',0)">🔇 沒聽到「葡萄」</button><div class="ev" id="e${k}"></div>`;document.getElementById('list').appendChild(d)}
 async function run(k){const t=TESTS.find(x=>x[0]===k);document.getElementById('e'+k).textContent='播放中…';R[k]=await t[2]();document.getElementById('e'+k).textContent='瀏覽器回報：'+R[k].join('，');out()}
 function mark(k,h){HEARD[k]=h;const r=document.getElementById('r'+k);r.querySelectorAll('.y,.n').forEach(b=>b.classList.remove('sel'));r.querySelector(h?'.y':'.n').classList.add('sel');out()}
 function out(){const L=['【語音測試結果】'+new Date().toLocaleString(),navigator.userAgent,'音訊播放模式：'+(AS()?'支援（'+navigator.audioSession.type+'）':'不支援')+'；語音總數 '+vs().length+'，中文 '+zh().length+'；本機中文：'+vName(vLocal())+'；網路中文：'+vName(vNet())];
- TESTS.forEach(([k,t])=>L.push(k+' '+t+'｜'+(HEARD[k]==null?'未回答':HEARD[k]?'有聽到':'沒聽到')+'｜'+(R[k]?R[k].join('，'):'未測')));document.getElementById('out').value=L.join('\n')}
+ TESTS.forEach(([k,t])=>L.push(k+' '+t+'｜'+(HEARD[k]==null?'未回答':HEARD[k]?'有聽到葡萄':'沒聽到葡萄')+'｜'+(R[k]?R[k].join('，'):'未測')));document.getElementById('out').value=L.join('\n')}
 function copyOut(){const t=document.getElementById('out');t.select();try{navigator.clipboard.writeText(t.value).then(()=>alert('已複製'),()=>{document.execCommand('copy');alert('已複製')})}catch(e){document.execCommand('copy');alert('已複製')}}
 TESTS.forEach(row);env();if(s&&s.addEventListener)s.addEventListener('voiceschanged',()=>{document.getElementById('list').innerHTML='';TESTS.forEach(row);env()});
 </script></body></html>
