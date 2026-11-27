@@ -2,6 +2,7 @@
 
 - **更新前**：GitHub main 提交 `569cdbc`（v22.5.7，已部署）
 - **更新後**：v22.6（建置 `20261127-05`）
+- **狀態**：教師已上傳（提交 `5341a17`）。之後只需要再上傳 4 個更新過的測試檔（`tests/e2e/batch02-source.js`、`batch03-guide.js`、`batch03b-deploy.js`、`batch04b-tts.js`）和更新的文件，網站本身不用再上傳。
 - **資料遷移**：沒有。
   - 新增唯讀資料檔 `vocab/language-metadata.json`。
   - 教師的審查狀態存在原本的進階教材欄位裡（`S.cx[詞彙ID].lmrv`）。

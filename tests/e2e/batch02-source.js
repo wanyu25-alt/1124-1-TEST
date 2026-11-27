@@ -56,7 +56,7 @@ const addCustom=p=>p.evaluate(async()=>{S.cats.push({id:'cuA',name:'老師的教
  {const c=await fresh(b,{width:390,height:844});const g=await c.p.evaluate(()=>{SRC.calc();const R=SRC.rows.out,h=SRC.html(),d=document.createElement('div');d.style.width='360px';d.innerHTML=h;document.body.appendChild(d);const ow=[...d.querySelectorAll('div')].some(x=>x.scrollWidth>x.clientWidth&&getComputedStyle(x).overflowX!=='auto');d.remove();
    return{q11:R.quiet[1][0],q15:R.quiet[1][4],q31:R.quiet[3][0],o21:R.oral[2][0],cells:Object.values(R).reduce((a,m)=>a+Object.values(m).reduce((s,x)=>s+x.length,0),0),tbl:/學習站/.test(h)&&/聽讀練習/.test(h)&&/口語練習/.test(h)&&/綜合練習/.test(h),ow}});
   T('G1 六站×三模式×五星全部計算（90 格）',g.cells===90&&g.tbl,g);T('G2 第1站一星可用 950 個詞彙',g.q11.ok&&g.q11.n===950,g.q11);
-  T('G3 不可用時列出原因（第1站五星、第3站）',!g.q15.ok&&/需要/.test(g.q15.msg)&&!g.q31.ok&&/組合/.test(g.q31.msg),{q15:g.q15,q31:g.q31});T('G4 手機寬度下表格可捲動、不撐破版面',!g.ow,g.ow);await c.ctx.close()}
+  T('G3 不可用時列出原因（第3站）；第1站五星自 v22.6 起由正式語言屬性提供教材（可用）',g.q15.ok&&!g.q31.ok&&/組合/.test(g.q31.msg),{q15:g.q15,q31:g.q31});T('G4 手機寬度下表格可捲動、不撐破版面',!g.ow,g.ow);await c.ctx.close()}
  /* H：家長直接複習不使用停用來源（v22.4.1 起以教師自訂教材驗證） */
  {const c=await fresh(b);await addCustom(c.p);const h=await c.p.evaluate(async()=>{const now=Date.now();S.recs.push({id:'r_h1',ts:now,itemKind:'word',itemId:'cu_0',game:'pick',outcome:'wrong',purpose:'teach'},{id:'r_h2',ts:now,itemKind:'word',itemId:'VOC0010',game:'pick',outcome:'wrong',purpose:'teach'});
    const off=PAR.review().map(w=>w.id);await SRC.set('custom',1);const on=PAR.review().map(w=>w.id);return{off,on}});

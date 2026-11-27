@@ -21,7 +21,7 @@ const ZKC=p=>p.evaluate(()=>{const o={};for(const[c,s]of Object.entries(ZK))o[s]
   await c.p.locator(`[onclick="UI.pick('quiet')"]`).click();await c.p.waitForTimeout(500);const map=await c.p.locator('#mid').innerText();
   T('A2 六站地圖正常顯示、沒有教材警告',/第 1 站/.test(map)&&/第 2 站/.test(map)&&!/無法連到網站教材/.test(map),map.slice(0,200));
   T('A3 不再請求 materials/（原本 manifest.json、pack.js 兩個 404）',c.net.mat.length===0&&c.net.e404.length===0,c.net);
-  T('A4 版本（v22.4.1 以後）、建置識別碼存在；Console 版本指令可讀到版本（v22.5 起版本另由 batch04 檢查）',/^v22\.(4\.1|5(\.\d+)?)$/.test(h.ver)&&/^\d{8}-\w+$/.test(h.id),h);
+  T('A4 版本（v22.4.1 以後）、建置識別碼存在；Console 版本指令可讀到版本（v22.5 起版本另由 batch04 檢查）',/^v22\.(4\.1|5(\.\d+)?|6(\.\d+)?)$/.test(h.ver)&&/^\d{8}-\w+$/.test(h.id),h);
   T('A5 沒有頁面錯誤',c.errs.length===0,c.errs);await c.ctx.close()}
  /* ===== B：正式詞彙庫真的讀不到時，仍顯示正確警告並可重新載入 ===== */
  {const ctx=await b.newContext();await ctx.addInitScript({content:AS});const p=await ctx.newPage();await p.goto(URL);await ready(p);await p.waitForTimeout(300);

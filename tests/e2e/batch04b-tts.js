@@ -25,7 +25,7 @@ const open=async(b,o={})=>{const ctx=await b.newContext({viewport:o.vp||{width:1
   T('A4 沒有暫停時不呼叫 resume（每次念之前不再強制 resume）',r.rs===0,r.rs);
   T('A5 記錄最近一次合成語音的瀏覽器回報（開始、結束）',r.last&&r.last.text===r.cur&&r.last.start!=null&&r.last.end!=null,r.last);
   const d=await c.p.evaluate(()=>VDX.html());T('A6 語音診斷顯示目前語音、最近一次回報、語音測試頁連結',/合成語音（AI 念詞彙）檢查/.test(d)&&/tts-test\.html/.test(d)&&/最近一次/.test(d),d.slice(-400));
-  const v=await c.p.evaluate(()=>APP.build+' '+APP.id);T('A7 版本 v22.5.1 以後',/^v22\.5\.[1-9]\d* \d{8}-\w+$/.test(v),v);
+  const v=await c.p.evaluate(()=>APP.build+' '+APP.id);T('A7 版本 v22.5.1 以後',/^v22\.(5\.[1-9]\d*|6(\.\d+)?) \d{8}-\w+$/.test(v),v);
   T('A8 沒有頁面錯誤',c.errs.length===0,c.errs);await c.ctx.close()}
  /* ===== B：iPhone（模擬 User-Agent）仍保留解鎖，但用正常音量 ===== */
  {const c=await open(b,{ua:IPHONE,vp:{width:390,height:844}});const a0=await c.p.evaluate(()=>({ios:P29.ios,cn:window.__cn}));

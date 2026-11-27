@@ -1,28 +1,35 @@
 {
  "schemaVersion": 1,
  "project": "詞彙特快車 Vocabulary Express",
- "batch": "04-H",
- "fromVersion": "v22.5.6",
- "toVersion": "v22.5.7",
- "buildId": "20261127-04H",
+ "batch": "05",
+ "fromVersion": "v22.5.7",
+ "toVersion": "v22.6",
+ "buildId": "20261127-05",
  "base": {
   "github": "wanyu25-alt/1124-1-TEST",
-  "commit": "e8a04392998bf68961966cbeab39a41e9946faa6",
-  "indexSha256": "c5a51ad9c609911b7afb0327451ea9f007aa97d05509c91c651976985d9086fe",
-  "note": "直接套用於 GitHub 目前根目錄（v22.5.6，已部署）"
+  "commit": "569cdbcde679ace3e48c764d4edd27c76da78bd1",
+  "indexSha256": "651d7c1c8d8cc77221c12d77f2e26e635ab5b9a731f6d65012363445edb9cd76",
+  "note": "直接套用於 GitHub 目前根目錄（v22.5.7，已部署）"
  },
  "dataMigration": {
   "formatChange": false,
-  "notes": "沒有資料變更"
+  "notes": "沒有資料遷移；新增唯讀資料檔 vocab/language-metadata.json。教師審查狀態新增於 S.cx[詞彙ID].lmrv（原有欄位不變）"
  },
  "A_deploy": {
   "folder": "1_upload-to-github-root",
   "overwrite": [
    {
     "path": "index.html",
-    "sha256": "651d7c1c8d8cc77221c12d77f2e26e635ab5b9a731f6d65012363445edb9cd76",
-    "bytes": 1033747,
-    "previousSha256": "c5a51ad9c609911b7afb0327451ea9f007aa97d05509c91c651976985d9086fe"
+    "sha256": "20d748cebb102218aecfa0c5e793466b9bf28557875b5f4b1149f0949200da50",
+    "bytes": 1049291,
+    "previousSha256": "651d7c1c8d8cc77221c12d77f2e26e635ab5b9a731f6d65012363445edb9cd76"
+   }
+  ],
+  "add": [
+   {
+    "path": "vocab/language-metadata.json",
+    "sha256": "6cc8ed7b5b1f3a9c570e9380fb12ead0525357ca12f11006afc4d90b8f60e433",
+    "bytes": 654188
    }
   ]
  },
@@ -30,55 +37,48 @@
   "folder": "2_optional-dev-docs-tests",
   "overwrite": [
    {
-    "path": "BATCH04B-REPORT.md",
-    "sha256": "9ee806dd75632ac845fc495c81b4c0199b8b564c1af1030b4cfc828abba928e7",
-    "bytes": 25089,
-    "previousSha256": "5e44575bb88bfb817a44bd93a3792c95952be50e34c87183544344590989a4d5"
-   },
-   {
-    "path": "CHANGELOG.md",
-    "sha256": "b4e60ee191f6240177bece0444278d3d8ba21e6f722fc46232ae7fd213dba9ef",
-    "bytes": 80434,
-    "previousSha256": "60cec45e2e27e2e699bb915f0e5d41b2407d40b1b7212ceccef0bd0f5b1b449b"
-   },
-   {
-    "path": "DEVELOPMENT-ROADMAP.md",
-    "sha256": "03479fcd8d4782a4e3adf3136da7728559b690f4271dafe3a1e0a41ee7f2f76b",
-    "bytes": 11215,
-    "previousSha256": "b372eece50adbc77282c4475a7bee026ade11cb8e4da3ce5a3f4e5e7d0f1221f"
+    "path": "BATCH05-REPORT.md",
+    "sha256": "d57ed1ca4e9b9a1a8d1f9e9ba3db090960311f2f283c5027c9757aa22923185f",
+    "bytes": 6916
    },
    {
     "path": "PATCH-MANIFEST.json",
     "sha256": "（本檔案，不自我校驗）",
-    "bytes": 3332,
-    "previousSha256": "aa26621b8d4164502527644007a0c2cc582868be0f45d8e9b73fc1989625b560"
+    "bytes": 3071,
+    "previousSha256": "3c37523be36e1995fdfcad2fcba3e43d0eb88addc66a1dd8298e8e71d00c7b27"
    },
    {
     "path": "PATCH-README.md",
-    "sha256": "22529dfb52265f2c44181826e34a017bd088160aeaa8aa8010440641d7bc59bd",
-    "bytes": 1197,
-    "previousSha256": "0b8d5e4b72c6fd733b81119d91d98b9dd3245dc68180a88d2df071b13e80a369"
+    "sha256": "8852a2ebfcc85e9b6ab2b5c6eee5a8e8e032cad995ce3d2a39d51ae7d1ca1bd4",
+    "bytes": 1945,
+    "previousSha256": "22529dfb52265f2c44181826e34a017bd088160aeaa8aa8010440641d7bc59bd"
    },
    {
-    "path": "PROJECT-HANDOFF.md",
-    "sha256": "c31e6697c3db93597fb9aa83e436140257b98c15646788c63f9c87efef1571e0",
-    "bytes": 28972,
-    "previousSha256": "c2073b9928389e9d6d6a6a93bd840fab552ec2e379134860ee9fb9bbd066497f"
+    "path": "tests/e2e/batch02-source.js",
+    "sha256": "1396973e4e903b62e403e9303a4beebb9dda4fd4a5194b558261fae901e70af9",
+    "bytes": 11297,
+    "previousSha256": "35d94603a8e47835a131db1ef1e88ca89c3ab8b57cf30786adc0779364ee9b79"
    },
    {
-    "path": "tests/t230.js",
-    "sha256": "d1bfe60e0b159da3b1d85eaf013553f4e8f87fd2e8b17acd323f58280651e22e",
-    "bytes": 11463,
-    "previousSha256": "e9e2451ff75d23edd1f066e33df7ccf1c8a7b5f0341a9792ef4200a3926d7ac5"
+    "path": "tests/e2e/batch03-guide.js",
+    "sha256": "96ae0b36db12e3d3bac076747f75acca178f79e159af7cac43689329fae3e96f",
+    "bytes": 14263,
+    "previousSha256": "18a81ec20b047a37551910440fca07e17cf1001592679a0468500b46087f2e84"
+   },
+   {
+    "path": "tests/e2e/batch03b-deploy.js",
+    "sha256": "b7646e3163c40b4d76e29c261bf5668bc6bb36edd91c7df52d8e6e82e8a8d32c",
+    "bytes": 13267,
+    "previousSha256": "97d3e6bb4ea2751d576f9d84d1ddc5437a8fd8cf7042522aeb77dd1bd80bf231"
+   },
+   {
+    "path": "tests/e2e/batch04b-tts.js",
+    "sha256": "d05d98368bb7447113399f82d27d5c2240c327545cabf1d0d903ae5346b15b21",
+    "bytes": 6339,
+    "previousSha256": "454e483a81b6be525be60b622ec4a69b3f4b8b0668ec613184b856a072d80c04"
    }
   ],
-  "add": [
-   {
-    "path": "tests/e2e/batch04h-prompt.js",
-    "sha256": "78c640acdb8f35db7c3074431b2619fe602b4109ba2b1cd00efa2e86a5c0eb99",
-    "bytes": 3538
-   }
-  ]
+  "add": []
  },
  "deleteBeforeDeploy": [],
  "notIncluded": [
@@ -92,7 +92,8 @@
  ],
  "tests": {
   "jsdom": "1820 通過／10 失敗（與修改前逐檔相同）",
-  "e2e": "545 通過／0 失敗（含 batch04h 6 項）",
+  "e2e": "564 通過／0 失敗（含 batch05-lang 19 項；4 個舊測試更新版本／預期）",
   "device": "待教師 Mac Chrome 實測"
- }
+ },
+ "deployed": "教師已推送 5341a17（v22.6）；本包供紀錄，之後只需再上傳 tests/e2e 4 個更新檔與文件"
 }
