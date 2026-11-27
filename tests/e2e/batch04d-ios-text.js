@@ -1,4 +1,4 @@
-// v22.5.3 第04-D批：iPhone／iPad 念題目時自動顯示題目文字（Chromium＋iPhone User-Agent 模擬；不是真機）
+// v22.5.3 第04-D批：iPhone／iPad 念題目時自動顯示題目文字（v22.5.4 起為「沒有預錄音檔時」的備援）（Chromium＋iPhone User-Agent 模擬；不是真機）
 const {chromium}=require('playwright');const fs=require('fs'),path=require('path');
 const BASE='http://localhost:'+(process.env.E2E_PORT||8124)+'/1124-1-TEST/';let P=0,F=0;
 const T=(n,c,x)=>{c?P++:F++;console.log(c?'PASS':'FAIL',n,c?'':JSON.stringify(x===undefined?null:x).slice(0,500))};
@@ -6,7 +6,9 @@ const AS=fs.readFileSync(path.join(__dirname,'lib','audio-stub.js'),'utf8'),MS=f
 const IPHONE='Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.7 Mobile/15E148 Safari/604.1';
 const ready=async p=>{await p.waitForFunction(()=>typeof S!=='undefined'&&S.cards&&S.cards.length>=1000&&S.lrn&&typeof P31!=='undefined',null,{timeout:60000});await p.waitForTimeout(1000);await p.evaluate(()=>{window.confirm=()=>true;window.alert=()=>{}})};
 const open=async(b,ios)=>{const ctx=await b.newContext(ios?{userAgent:IPHONE,viewport:{width:430,height:900},isMobile:true,hasTouch:true}:{viewport:{width:1280,height:900}});await ctx.addInitScript({content:AS});await ctx.addInitScript({content:MS});
- const p=await ctx.newPage();const errs=[];p.on('pageerror',e=>errs.push(e.message));await p.goto(BASE);await ready(p);return{ctx,p,errs}};
+ const p=await ctx.newPage();const errs=[];p.on('pageerror',e=>errs.push(e.message));await p.goto(BASE);await ready(p);
+ /* v22.5.4 起 iPhone 有預錄音檔時改播音檔；這裡關閉預錄音檔，測「沒有音檔時顯示文字」的備援 */
+ await p.evaluate(()=>{S.set.iosPre=false});return{ctx,p,errs}};
 const start=async(p,mode,st,star)=>{await p.locator(`[onclick="UI.pick('${mode}')"]`).click();await p.waitForTimeout(400);await p.locator(`[onclick="FL.open(${st})"]`).first().click();await p.waitForTimeout(300);
  await p.locator('.fstar').nth(star-1).click();await p.getByRole('button',{name:'自行選擇教材'}).click();await p.locator('#fl_go').click();await p.waitForTimeout(900);
  if(await p.locator('#prep').count())await p.locator('#prep button',{hasText:'啟用麥克風並開始'}).click();await p.waitForTimeout(3500)};

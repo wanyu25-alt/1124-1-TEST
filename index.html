@@ -379,7 +379,7 @@ body.aid-calm #scene{max-height:90px;overflow:hidden}body.aid-calm .stc .ste{dis
 <script src="lib/pinyin-pro.js"></script>
 <script>
 /* ===== 基本工具 ===== */
-const APP={build:'v22.5.3',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
+const APP={build:'v22.5.4',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -6241,7 +6241,7 @@ ZG.KEEP=['ttsRate','recRate','aiGain'];
 {const f=LRN.ensure;LRN.ensure=async function(){const r=await f.apply(this,arguments);try{if(S.set&&!S.set.ttsFix224){(S.lrn&&S.lrn.list||[]).forEach(p=>{const pr=p.ext&&p.ext.pref;if(pr&&+pr.ttsRate===0.5)pr.ttsRate=.75});S.set.ttsFix224=1}}catch(e){}return r}}
 /*P26-END*/
 /*P27-BEGIN v22.4.1 第03-B批：舊版示範教材完全移除（併入 GitHub 15:30 的 P23B 並補強）、materials/ 依賴移除、跨瀏覽器語音備援、版本識別 */
-APP.id='20261127-04D';
+APP.id='20261127-04E';
 /* ---- 一、舊版內建示範教材（materials/ 18 張、4 個分類）：備份後一次性移除 ----
    只移除「仍與網站原始版本完全相同」的舊版圖卡（以 packSnap 簽章比對，不看名稱）；老師改過的保留為自訂教材；
    舊版分類只有在裡面已經沒有任何保留下來的圖卡時才移除；學習紀錄全部保留；S.legacyGone 標記後不再重複執行。
@@ -6494,6 +6494,36 @@ P31.show=()=>{if(!G||!G.on||!G.cur)return;const m=S.set.mode;if(m==='speak'||m==
 {const _o=RE.open;RE.open=function(){const r=_o.apply(this,arguments);try{G.iosTxt=0}catch(e){}return r}}
 {const _c=RE.close;RE.close=function(){const ios=G&&G.iosTxt,rec=_c.apply(this,arguments);try{if(rec&&ios&&!(rec.ext&&rec.ext.tx)){rec.ext=rec.ext||{};rec.ext.tx={m:0,a:'ios-tts',v:1,e:null,tw:0}}}catch(e){}return rec}}
 /*P31-END*/
+/*P32-BEGIN v22.5.4 第04-E批：iPhone／iPad 播放預錄詞彙音檔
+  iOS Safari 網頁合成語音無聲（P31），教師同意改用預錄音檔：tools/make-tts-audio.sh 以 macOS 內建「美佳」語音錄製
+  1000 個正式詞彙＋逐音引導會念的單字（共 1818 段），放在 voice/tts/，index.json 為「文字 → 檔名」。
+  只在 iPhone／iPad 使用：凡是要用合成語音念「有預錄音檔的文字」，改播音檔（播放錄音在 iOS 正常）；沒有音檔或播放失敗時，退回原本的合成語音＋顯示文字（P31）。
+  音檔已用 AI 語速 0.75 錄製；老師改了 AI 語速時依比例調整播放速度。電腦瀏覽器完全不變。 */
+const P32={map:null,a:null,ul:0,n:0};
+P32.on=()=>!!(P29.ios&&S.set.iosPre!==false);
+P32.load=()=>{if(P32.map||P32.loading)return;P32.loading=1;try{fetch('voice/tts/index.json',{cache:'no-cache'}).then(r=>r.ok?r.json():{}).then(j=>{P32.map=(j&&j.files)||{}}).catch(()=>{P32.map={}})}catch(e){P32.map={}}};
+P32.key=t=>String(t==null?'':t).trim();
+P32.has=t=>!!(P32.map&&P32.map[P32.key(t)]);
+P32.url=t=>'voice/tts/'+P32.map[P32.key(t)];
+P32.rate=()=>{try{return Math.max(.5,Math.min(1.6,V2.ar()/.75))}catch(e){return 1}};
+P32.audio=()=>{if(!P32.a){P32.a=new Audio();P32.a.preload='auto';try{P32.a.preservesPitch=true;P32.a.webkitPreservesPitch=true}catch(e){}}return P32.a};
+/* iOS：在第一次點擊（使用者操作）時先靜音播放一次，之後才能在程式中自動播放 */
+{const _u=AM.unlock;AM.unlock=function(){try{if(P29.ios&&!P32.ul){P32.ul=1;P32.load();const a=P32.audio();a.muted=true;a.src='voice/ok.m4a';const p=a.play(),f=()=>{try{a.pause()}catch(e){}a.muted=false};if(p&&p.then)p.then(f,()=>{a.muted=false;P32.ul=0});else f()}}catch(e){P32.ul=0}return _u.apply(this,arguments)}}
+/* 合成語音入口：有預錄音檔就改播音檔 */
+{const f=TTSX.say;TTSX.say=function(text,o={}){if(!P32.on()||!P32.has(text))return f.apply(this,arguments);
+  const a=P32.audio(),args=arguments;let fin=false,wd=0;const end=()=>{clearTimeout(wd);a.onended=a.onerror=null};
+  const ok=()=>{if(fin)return;fin=true;end();P32.n++;o.onend&&o.onend()},bad=()=>{if(fin)return;fin=true;end();try{a.pause()}catch(e){}f.apply(TTSX,args)};
+  a.onended=ok;a.onerror=bad;
+  try{a.pause();a.muted=false;a.src=P32.url(text);a.volume=Math.min(1,VV());a.currentTime=0;a.playbackRate=P32.rate()}catch(e){}
+  try{const p=a.play();if(p&&p.catch)p.catch(bad)}catch(e){bad()}
+  wd=setTimeout(()=>{if(!fin){if(a.paused||a.currentTime===0)bad();else ok()}},8000);
+  return()=>{if(fin)return;fin=true;end();try{a.pause()}catch(e){}}}}
+/* 舊的逐字語音（打字題「聽整個詞」「聽這個字」、口語「聽一聽」）：有音檔就播音檔 */
+{const _s=speak;speak=function(c){try{if(P32.on()&&c&&!c.audio&&P32.has(c.text)){const r=_s.call(this,{...c,audio:P32.url(c.text)});try{if(SP.audio)SP.audio.playbackRate=P32.rate()}catch(e){}return r}}catch(e){}return _s.apply(this,arguments)}}
+/* 語音診斷：顯示預錄音檔狀態 */
+{const f=P29.diag;P29.diag=function(){let h=f.apply(this,arguments);try{if(P29.ios)h=h.replace('<br>\n 最近一次','<br>iPhone／iPad 預錄音檔：'+(P32.map?Object.keys(P32.map).length+' 段，本次已播放 '+P32.n+' 次':'載入中')+'<br>\n 最近一次')}catch(e){}return h}}
+if(P29.ios)P32.load();
+/*P32-END*/
 (async()=>{let s=await load();if(s&&s.decks&&!s.v){await kvPut('backup-pre-v2',s);s=migrate(s)}const mb=await kvGet('music').catch(()=>null);if(mb)mus.url=URL.createObjectURL(mb);if(s)S={...DEF(),...s,set:{...DEF().set,...s.set}};if(s&&s.set&&s.set.vs==null&&s.set.vol!=null)S.set.vs=s.set.vol;
 await zaLoad();await LRN.ensure();try{if(await LIB.load()){await LIB.defBoot();LIB.sync()}}catch(e){console.warn('LIB boot',e)}if(S.set.stuName===undefined)S.set.stuName='';try{P28.init()}catch(e){}if(S.set.musSrc==='project'&&!S.set.musPicked)S.set.musSrc='builtin';if(!['key','listen','spell','speak'].includes(S.set.mode))S.set.mode='key';if(S.set.ttsMig!==3){S.set.ttsMig=3;S.set.ttsRate=.75;S.set.recRate=1.25;S.set.aiGain=1.5}if(!S.bankMap)S.bankMap={};if((S.banks||[]).some(b=>!(b.id in S.bankMap))||/^b:/.test(S.set.src||'')){if(!(await kvGet('backup-pre-bankmig')))await kvPut('backup-pre-bankmig',JSON.parse(JSON.stringify(S)));migrateBanks()}if(!S.set.musMig){S.set.musMig=1;S.set.musSrc='project';save()}FL.recover();try{FL.applyPref()}catch(e){}save();UI.init();home();mtLbl();packLoad();
  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();
