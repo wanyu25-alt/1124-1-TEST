@@ -8,7 +8,7 @@ const AS=fs.readFileSync(path.join(__dirname,'lib','audio-stub.js'),'utf8'),MS=f
  await p.waitForFunction(()=>typeof S!=='undefined'&&S.cards&&S.cards.length>=1000&&S.lrn&&typeof LM!=='undefined',null,{timeout:60000});await p.waitForTimeout(800);
  await p.evaluate(()=>{window.confirm=()=>true;window.alert=()=>{}});
  const r0=await p.evaluate(()=>({n:LM.map.size,err:LM.err,ver:APP.build,cnt:LM.meta&&LM.meta.count}));
- T('L1 開機時讀入正式語言屬性 1000 詞；版本 v22.6.2',r0.n===1000&&!r0.err&&r0.ver==='v22.6.2',r0);
+ T('L1 開機時讀入正式語言屬性 1000 詞；版本 v22.6.3',r0.n===1000&&!r0.err&&r0.ver==='v22.6.3',r0);
  const id=w=>S.cards.find(c=>c.text===w&&c.lib);
  const r1=await p.evaluate(()=>{const c=w=>S.cards.find(x=>x.text===w&&x.lib),pen=c('鉛筆'),run=c('刷牙'),red=c('紅色');const a=cxOf(pen),b=cxOf(run);
   return{use:a.use,sem:a.sem,posPen:a.pos,posRun:b.pos,raw:(S.cx[pen.id]||{}).use||'',scene:b.scene,verbs:a.rel.verbs,redScene:cxOf(red).scene}});
@@ -67,8 +67,8 @@ const AS=fs.readFileSync(path.join(__dirname,'lib','audio-stub.js'),'utf8'),MS=f
  /* 口語第2站五星：聽句子說詞 */
  await q.evaluate(()=>{G.on=false;try{endRound&&endRound()}catch(e){}});await q.goto(BASE);
  await q.waitForFunction(()=>typeof S!=='undefined'&&S.cards&&S.cards.length>=1000&&S.lrn&&typeof CLZ!=='undefined'&&LM.map.size,null,{timeout:60000});await q.waitForTimeout(800);await q.evaluate(()=>{window.confirm=()=>true;window.alert=()=>{}});
- const r13=await q.evaluate(()=>{const L=S.cards.filter(c=>c.lib&&PH.ok(c,'speak','clz'));const lad=FL.ladder(2,'oral')[4];return{n:L.length,t:lad.t,leak:L.filter(c=>CLZ.q(c).includes(c.text)).map(c=>c.text),obj:P15.objOf(lad)&&P15.objOf(lad)[0]}});
- T('L19 五星改為「聽句子說詞」：有問句的詞可出題、問句不含答案、有學習目標說明',/聽句子說詞/.test(r13.t)&&r13.n>=140&&r13.leak.length===0&&/聽句子/.test(r13.obj||''),r13);
+ const r13=await q.evaluate(()=>{const L=S.cards.filter(c=>c.lib&&PH.ok(c,'speak','clz'));const an=['大象','香蕉','粽子','彩虹'].map(w=>S.cards.find(c=>c.lib&&c.text===w)).filter(c=>c&&PH.ok(c,'speak','clz')).length;const lad=FL.ladder(2,'oral')[4];return{an,n:L.length,t:lad.t,leak:L.filter(c=>CLZ.q(c).includes(c.text)).map(c=>c.text),obj:P15.objOf(lad)&&P15.objOf(lad)[0]}});
+ T('L19 五星改為「聽句子說詞」：有問句的詞可出題（物品＋猜謎 300 句以上）、問句不含答案、有學習目標說明',/聽句子說詞/.test(r13.t)&&r13.n>=300&&r13.an===4&&r13.leak.length===0&&/聽句子/.test(r13.obj||''),r13);
  await q.locator(`[onclick="UI.pick('oral')"]`).click();await q.waitForTimeout(400);await q.locator('[onclick="FL.open(2)"]').first().click();await q.waitForTimeout(300);
  await q.locator('.fstar').nth(4).click();await q.waitForTimeout(200);await q.evaluate(()=>{window.__al.length=0});await q.locator('#fl_go').click();await q.waitForTimeout(900);
  if(await q.locator('#prep').count())await q.locator('#prep button',{hasText:'啟用麥克風並開始'}).click();

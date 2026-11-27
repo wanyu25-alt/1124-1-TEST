@@ -379,7 +379,7 @@ body.aid-calm #scene{max-height:90px;overflow:hidden}body.aid-calm .stc .ste{dis
 <script src="lib/pinyin-pro.js"></script>
 <script>
 /* ===== 基本工具 ===== */
-const APP={build:'v22.6.2',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
+const APP={build:'v22.6.3',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -6241,7 +6241,7 @@ ZG.KEEP=['ttsRate','recRate','aiGain'];
 {const f=LRN.ensure;LRN.ensure=async function(){const r=await f.apply(this,arguments);try{if(S.set&&!S.set.ttsFix224){(S.lrn&&S.lrn.list||[]).forEach(p=>{const pr=p.ext&&p.ext.pref;if(pr&&+pr.ttsRate===0.5)pr.ttsRate=.75});S.set.ttsFix224=1}}catch(e){}return r}}
 /*P26-END*/
 /*P27-BEGIN v22.4.1 第03-B批：舊版示範教材完全移除（併入 GitHub 15:30 的 P23B 並補強）、materials/ 依賴移除、跨瀏覽器語音備援、版本識別 */
-APP.id='20261128-05C';
+APP.id='20261128-05D';
 /* ---- 一、舊版內建示範教材（materials/ 18 張、4 個分類）：備份後一次性移除 ----
    只移除「仍與網站原始版本完全相同」的舊版圖卡（以 packSnap 簽章比對，不看名稱）；老師改過的保留為自訂教材；
    舊版分類只有在裡面已經沒有任何保留下來的圖卡時才移除；學習紀錄全部保留；S.legacyGone 標記後不再重複執行。
@@ -6668,7 +6668,7 @@ CLZ.q=c=>{if(!c||!LM.on(c.id))return null;const t=LM.tx(c.id).clz;if(t&&String(t
 CLZ.is=()=>{try{return !!(G&&G.on&&G.cur&&S.set.mode==='speak'&&PH.sub()==='clz'&&!G.cur._cb&&!G.cur._se&&!G.cur._sc)}catch(e){return false}};
 CLZ.key=()=>G.rid+':'+G.i;
 CLZ.st=()=>{const k=CLZ.key();if(!G.clz||G.clz.k!==k)G.clz={k,id:G.cur.id,q:CLZ.q(G.cur),shown:false,played:0};return G.clz};
-SUBN.speak.clz='聽句子說詞';PH.need.clz='有「聽句子說詞」問句、而且有圖片的詞（目前是有用途的物品，例如身體、文具、餐具、家電、衣物、交通工具；動物、水果、食物、植物還沒有問句）';
+SUBN.speak.clz='聽句子說詞';PH.need.clz='有「聽句子說詞」問句、而且有圖片的詞（物品、動物、水果蔬菜、食物、植物自然都有；人物、職業場所、動作、顏色形狀、時間方位、狀態情緒還沒有問句）';/* v22.6.3 第05-D批：加入 156 句猜謎問句 */
 PH.need.use='有「用途」而且有圖片的詞（例如文具、餐具、家電、衣物、交通工具；動物、水果、食物、植物沒有用途）';PH.need.act='動作詞而且有動作圖片（例如刷牙、洗手、跳舞；多在「動作」主題，Level 08、09、16～20 沒有）';
 P15.OBJ['speak:clz']=['詞彙提取：聽句子說出詞彙（不看圖）','先聽生活問句、不看圖自主說出；看圖片後才說出另記為提示後完成','oral'];
 {const _o=PH.ok;PH.ok=function(c,m,sub){if(m==='speak'&&sub==='clz')return !!(c&&c.img&&CLZ.q(c));return _o.apply(this,arguments)}}

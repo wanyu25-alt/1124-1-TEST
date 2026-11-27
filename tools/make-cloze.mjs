@@ -4,7 +4,7 @@
 // - 來源②：例句「我用＋詞＋動作」改成「我用什麼＋動作？」
 // - 例外寫法放在 FIX（逐句人工撰寫）；不適合的放在 SKIP
 // - 答案可能不只一個（用途相同或互相包含、或同類詞也說得通）→ 標為 amb，預設不出題，列給教師確認
-import fs from 'node:fs';import path from 'node:path';import url from 'node:url';
+import fs from 'node:fs';import {RIDDLES} from './lang-src/riddles.mjs';import path from 'node:path';import url from 'node:url';
 const ROOT=path.resolve(path.dirname(url.fileURLToPath(import.meta.url)),'..');
 const M=JSON.parse(fs.readFileSync(path.join(ROOT,'vocab/language-metadata.json'),'utf8')),V=JSON.parse(fs.readFileSync(path.join(ROOT,'vocab/vocabulary.json'),'utf8'));
 const byId=new Map(V.map(v=>[v.id,v])),byW=new Map(M.words.map(w=>[w.word,w]));
@@ -56,7 +56,11 @@ for(const w of M.words){const v=byId.get(w.id);if(!v.images||!v.images.length||w
  let q=fix||q1(w)||q2(w),src=fix?'fix':q1(w)?'use':'sent';if(!q)continue;
  if(q.includes(w.word)){skipped.push(w.word+'（句子含答案）');continue}
  const amb=fix?[]:ambOf(w);out.push({id:w.id,word:w.word,q,src,lv:v.levelId,...(amb.length?{amb}:{})})}
+/* 猜謎問句（動物、水果蔬菜、食物、植物自然）：教師確認前標 pending，不併入網站 */
+const RIDDLE_OK=true;/* 2026-11-28 教師確認 BATCH05-RIDDLE-REVIEW.md */
+for(const [word,q] of Object.entries(RIDDLES)){const w=byW.get(word);if(!w||out.some(x=>x.id===w.id))continue;if(q.includes(word)){skipped.push(word+'（猜謎含答案）');continue}
+ out.push({id:w.id,word,q,src:'riddle',lv:byId.get(w.id).levelId,...(RIDDLE_OK?{}:{pending:true})})}
 out.sort((a,b)=>a.id<b.id?-1:1);
 fs.writeFileSync(path.join(ROOT,'vocab/lang/cloze.json'),JSON.stringify({schema:1,kind:'cloze',made:new Date().toISOString().slice(0,10),note:'口語第2站五星「聽句子說詞」問句；2026-11-27 教師確認（BATCH05-CLOZE-REVIEW.md）。amb＝答案可能不只一個，不出題。由 merge-lang.mjs 併入 language-metadata.json 的 clz 欄位。',items:out},null,1));
-console.log('問句',out.length,'（答案可能不只一個',out.filter(x=>x.amb).length,'）略過',skipped.length);
+console.log('問句',out.length,'（猜謎待確認',out.filter(x=>x.pending).length,'）','（答案可能不只一個',out.filter(x=>x.amb).length,'）略過',skipped.length);
 console.log(out.map(x=>(x.amb?'⚠':'')+x.word+'｜'+x.q).join('\n'));
