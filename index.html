@@ -379,7 +379,7 @@ body.aid-calm #scene{max-height:90px;overflow:hidden}body.aid-calm .stc .ste{dis
 <script src="lib/pinyin-pro.js"></script>
 <script>
 /* ===== 基本工具 ===== */
-const APP={build:'v22.5.1',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
+const APP={build:'v22.5.2',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -6241,7 +6241,7 @@ ZG.KEEP=['ttsRate','recRate','aiGain'];
 {const f=LRN.ensure;LRN.ensure=async function(){const r=await f.apply(this,arguments);try{if(S.set&&!S.set.ttsFix224){(S.lrn&&S.lrn.list||[]).forEach(p=>{const pr=p.ext&&p.ext.pref;if(pr&&+pr.ttsRate===0.5)pr.ttsRate=.75});S.set.ttsFix224=1}}catch(e){}return r}}
 /*P26-END*/
 /*P27-BEGIN v22.4.1 第03-B批：舊版示範教材完全移除（併入 GitHub 15:30 的 P23B 並補強）、materials/ 依賴移除、跨瀏覽器語音備援、版本識別 */
-APP.id='20261126-04B';
+APP.id='20261127-04C';
 /* ---- 一、舊版內建示範教材（materials/ 18 張、4 個分類）：備份後一次性移除 ----
    只移除「仍與網站原始版本完全相同」的舊版圖卡（以 packSnap 簽章比對，不看名稱）；老師改過的保留為自訂教材；
    舊版分類只有在裡面已經沒有任何保留下來的圖卡時才移除；學習紀錄全部保留；S.legacyGone 標記後不再重複執行。
@@ -6451,6 +6451,30 @@ P29.diag=()=>{const v=(TTSX.last||TTSX.pick()),l=P29.last;
  瀏覽器回報「開始、結束」不代表喇叭真的有聲音。聽不到詞彙時，請開啟 <a href="tts-test.html" target="_blank" rel="noopener">語音測試頁</a>，照頁面說明逐項測試，再把結果交給開發者。</small></p></div>`};
 {const f=VDX.html;VDX.html=function(){let h=f.apply(this,arguments);try{h=h.replace(/<\/div>$/,P29.diag()+'</div>')}catch(e){}return h}}
 /*P29-END*/
+/*P30-BEGIN v22.5.2 第04-C批：語音挑選避開「趣味語音」＋偵測瀏覽器語音卡住
+  ① 新版 macOS／iOS 的中文（台灣）多了 Shelley、Grandma、Grandpa、Sandy、Flo、Eddy、Reed、Rocko 等趣味語音；Safari 把 Shelley 排第一，
+    網站「挑第一個台灣中文語音」就選到它（教師反映 Mac Safari 聲音怪；iPhone 上這類語音常未下載而無聲）。
+    → 自動挑選順序：老師指定 → 美佳／Meijia → 其他正常台灣中文 → 其他中文 → 趣味語音（最後備援）。
+  ② Mac Chrome 測試頁顯示：所有語音都沒有「開始」、speaking 一直為 true（瀏覽器語音卡住，網頁無法解開）。
+    → 連續兩次念不出來且仍在「念」：顯示一次給大人的提示（完全結束瀏覽器再開；或改用 Safari）；題目照舊改顯示文字（VF）。 */
+const P30={stuck:0,warned:0};
+P30.NOV=/^(Shelley|Grandma|Grandpa|Sandy|Flo|Eddy|Reed|Rocko|Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Good News|Jester|Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox|Junior|Ralph|Fred|Kathy)\b/i;
+P30.nov=v=>!!v&&P30.NOV.test(String(v.name||''));
+P30.good=v=>!!v&&/美佳|Meijia|Mei-Jia/i.test(String(v.name||''));
+{const f=TTSX.cands;TTSX.cands=function(){const c=f.apply(this,arguments);try{const pref=S&&S.set&&S.set.ttsVoice,isPref=v=>!!pref&&(v.name===pref||v.voiceURI===pref);
+  const sc=v=>isPref(v)?0:P30.nov(v)?9:P30.good(v)?1:/^zh[-_]TW$/i.test(v.lang||'')?2:3;
+  return c.map((v,i)=>[v,sc(v),i]).sort((a,b)=>a[1]-b[1]||a[2]-b[2]).map(x=>x[0])}catch(e){return c}}}
+/* 語音卡住：瀏覽器一直停在「正在念」卻沒有開始 */
+P30.hit=()=>{P30.stuck++;if(P30.stuck<2||P30.warned)return;P30.warned=1;try{const d=document.createElement('div');d.id='ttsStuck';
+  d.style.cssText='position:fixed;left:50%;top:8px;transform:translateX(-50%);z-index:9999;max-width:92vw;background:#fff4d6;border:2px solid #e0a800;border-radius:14px;padding:10px 14px;font-size:17px;box-shadow:0 2px 10px #0003';
+  d.innerHTML='⚠ <b>給大人</b>：這個瀏覽器的語音（AI 念詞彙）卡住了，題目先改成顯示文字。請<b>完全結束瀏覽器</b>（Mac 按 ⌘Q）再重新開啟；仍然沒有聲音，請改用 Safari。 <button class="btn alt sm" onclick="this.parentNode.remove()">知道了</button>';document.body.appendChild(d)}catch(e){}};
+{const f=TTSX.say;TTSX.say=function(text,o={}){const of=o.onfail,oe=o.onend;
+  return f.call(TTSX,text,{...o,onend:function(){P30.stuck=0;return oe&&oe.apply(this,arguments)},
+   onfail:function(r){try{const s=window.speechSynthesis;if(/^(blocked|no-start|timeout)$/.test(String(r))&&s&&s.speaking)P30.hit()}catch(e){}return of&&of.apply(this,arguments)}})}}
+/* 語音診斷：標示趣味語音、顯示卡住狀態 */
+{const f=VDX.list;VDX.list=function(){let h=f.apply(this,arguments);try{TTSX.voices().filter(v=>/^zh/i.test(v.lang||'')&&P30.nov(v)).forEach(v=>{h=h.split('<tr><td>'+esc(v.name)).join('<tr><td>'+esc(v.name)+' <small style="color:#a60">（趣味語音，不建議）</small>')})}catch(e){}return h}}
+{const f=P29.diag;P29.diag=function(){let h=f.apply(this,arguments);try{if(P30.stuck>=2)h=h.replace('<br>\n 最近一次','<br><b style="color:#b8322b">語音狀態：卡住（瀏覽器一直停在「正在念」）→ 請完全結束瀏覽器再開，或改用 Safari</b><br>\n 最近一次')}catch(e){}return h}}
+/*P30-END*/
 (async()=>{let s=await load();if(s&&s.decks&&!s.v){await kvPut('backup-pre-v2',s);s=migrate(s)}const mb=await kvGet('music').catch(()=>null);if(mb)mus.url=URL.createObjectURL(mb);if(s)S={...DEF(),...s,set:{...DEF().set,...s.set}};if(s&&s.set&&s.set.vs==null&&s.set.vol!=null)S.set.vs=s.set.vol;
 await zaLoad();await LRN.ensure();try{if(await LIB.load()){await LIB.defBoot();LIB.sync()}}catch(e){console.warn('LIB boot',e)}if(S.set.stuName===undefined)S.set.stuName='';try{P28.init()}catch(e){}if(S.set.musSrc==='project'&&!S.set.musPicked)S.set.musSrc='builtin';if(!['key','listen','spell','speak'].includes(S.set.mode))S.set.mode='key';if(S.set.ttsMig!==3){S.set.ttsMig=3;S.set.ttsRate=.75;S.set.recRate=1.25;S.set.aiGain=1.5}if(!S.bankMap)S.bankMap={};if((S.banks||[]).some(b=>!(b.id in S.bankMap))||/^b:/.test(S.set.src||'')){if(!(await kvGet('backup-pre-bankmig')))await kvPut('backup-pre-bankmig',JSON.parse(JSON.stringify(S)));migrateBanks()}if(!S.set.musMig){S.set.musMig=1;S.set.musSrc='project';save()}FL.recover();try{FL.applyPref()}catch(e){}save();UI.init();home();mtLbl();packLoad();
  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();

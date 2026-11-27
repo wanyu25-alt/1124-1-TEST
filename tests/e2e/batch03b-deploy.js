@@ -74,8 +74,8 @@ const ZKC=p=>p.evaluate(()=>{const o={};for(const[c,s]of Object.entries(ZK))o[s]
    VDX.auto();o.prefAfter=S.set.ttsVoice||null;
    window.__vb={'Google 國語（臺灣）':'notallowed','美佳':'notallowed','Eddy (中文（台灣）)':'notallowed'};TTSX.bad.clear();window.__al.length=0;o.na=await new Promise(r=>TTSX.say('棉被',{onend:()=>r('ok'),onfail:r}));o.naTries=window.__al.filter(x=>x.tts).length;
    return o});
-  T('F1 候選順序：本機 zh-TW 優先，網路語音在後',r.cands[0]==='美佳'&&r.cands.indexOf('Google 國語（臺灣）')>r.cands.indexOf('Eddy (中文（台灣）)'),r.cands);
-  T('F2 題目中的語音明確錯誤 → 自動改用下一個中文語音念出完整詞彙，不鎖住、不算錯',r.al[0]==='葡萄@美佳:error'&&/^葡萄@Eddy/.test(r.al[1])&&!r.lock&&r.tries===0,r);
+  T('F1 候選順序：美佳優先；v22.5.2 起趣味語音（Eddy 等）排在最後',r.cands[0]==='美佳'&&r.cands.indexOf('Eddy (中文（台灣）)')===r.cands.length-1,r.cands);
+  T('F2 題目中的語音明確錯誤 → 自動改用下一個中文語音念出完整詞彙，不鎖住、不算錯',r.al[0]==='葡萄@美佳:error'&&/^葡萄@Google 國語/.test(r.al[1])&&!r.lock&&r.tries===0,r);
   T('F3 備援後逐音引導照常（輸入ㄆ後提示下一個）',r.after.includes('zy'),r.after);
   T('F4 語音診斷：中文語音清單、試聽、「使用這個」、版本與建置識別碼',r.list,r.list);
   T('F5 教師在這台裝置指定的語音會優先使用；可恢復自動選擇',r.pref==='Tingting'&&r.used[0]==='Tingting'&&r.prefAfter===null,r);

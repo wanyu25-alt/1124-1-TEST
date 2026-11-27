@@ -22,9 +22,12 @@ small{color:#556}
 const s=window.speechSynthesis||null,R={},HEARD={};let keep=[];
 const vs=()=>{try{return s?s.getVoices():[]}catch(e){return[]}};
 const zh=()=>vs().filter(v=>/^zh/i.test(v.lang||''));
-const vLocal=()=>zh().find(v=>/^zh[-_]TW$/i.test(v.lang)&&v.localService)||zh().find(v=>v.localService)||null;
+const NOV=/^(Shelley|Grandma|Grandpa|Sandy|Flo|Eddy|Reed|Rocko)\b/i;
+const vLocal=()=>zh().find(v=>/美佳|Meijia/i.test(v.name))||zh().find(v=>/^zh[-_]TW$/i.test(v.lang)&&v.localService&&!NOV.test(v.name))||zh().find(v=>v.localService)||null;
+const vNov=()=>zh().find(v=>NOV.test(v.name))||null;
+const vDef=()=>vs().find(v=>v.default)||null;
 const vNet=()=>zh().find(v=>!v.localService)||null;
-const vOther=()=>{const a=vLocal();return zh().find(v=>/^zh[-_]TW$/i.test(v.lang)&&v!==a)||null};
+const vOther=()=>{const a=vLocal();return zh().find(v=>/^zh[-_]TW$/i.test(v.lang)&&v!==a&&!NOV.test(v.name))||null};
 const vName=v=>v?v.name+'（'+v.lang+'，'+(v.localService?'本機':'網路')+'）':'（沒有）';
 /* 念一段話，記錄瀏覽器回報的事件 */
 function say(text,o){return new Promise(res=>{const ev=[],t0=performance.now(),T=()=>Math.round(performance.now()-t0);if(!s||!window.SpeechSynthesisUtterance){res(['不支援語音合成']);return}
@@ -34,11 +37,12 @@ function say(text,o){return new Promise(res=>{const ev=[],t0=performance.now(),T
  try{s.speak(u)}catch(e){fin('例外:'+e.message)}setTimeout(()=>fin('逾時（5 秒沒有結束）speaking='+s.speaking+' pending='+s.pending+' paused='+s.paused),5000)})}
 const W='葡萄';
 const TESTS=[
- ['A','最簡單：中文、不指定語音',()=>say(W,{lang:'zh-TW'})],
+ ['A','最簡單：中文、不指定語音（瀏覽器預設）',()=>say(W,{lang:'zh-TW'}),()=>'瀏覽器預設語音：'+vName(vDef())],
  ['B','英文 hello（確認語音功能整體）',()=>say('hello',{lang:'en-US'})],
- ['C','本機中文語音：'+'（自動挑選）',()=>say(W,{lang:'zh-TW',voice:vLocal()}),()=>vName(vLocal())],
+ ['C','美佳（正常的台灣中文語音）',()=>say(W,{lang:'zh-TW',voice:vLocal()}),()=>vName(vLocal())],
  ['D','網路中文語音（Chrome 的 Google 語音）',()=>vNet()?say(W,{lang:vNet().lang,voice:vNet()}):Promise.resolve(['這個瀏覽器沒有網路中文語音']),()=>vName(vNet())],
- ['E','另一個本機中文語音',()=>vOther()?say(W,{lang:'zh-TW',voice:vOther()}):Promise.resolve(['沒有其他中文語音']),()=>vName(vOther())],
+ ['S','趣味語音（例如 Shelley；網站舊版會選到它）',()=>vNov()?say(W,{lang:'zh-TW',voice:vNov()}):Promise.resolve(['沒有趣味語音']),()=>vName(vNov())],
+ ['E','另一個正常的中文語音',()=>vOther()?say(W,{lang:'zh-TW',voice:vOther()}):Promise.resolve(['沒有其他中文語音']),()=>vName(vOther())],
  ['F','網站設定：慢速 0.75、音量 1、本機中文語音',()=>say(W,{lang:'zh-TW',voice:vLocal(),rate:.75,vol:1})],
  ['H','先呼叫 resume 再念',async()=>{try{s.resume()}catch(e){}return say(W,{lang:'zh-TW'})}],
  ['I','先 cancel 再念',async()=>{try{s.cancel()}catch(e){}await new Promise(r=>setTimeout(r,80));return say(W,{lang:'zh-TW'})}],
