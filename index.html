@@ -379,7 +379,7 @@ body.aid-calm #scene{max-height:90px;overflow:hidden}body.aid-calm .stc .ste{dis
 <script src="lib/pinyin-pro.js"></script>
 <script>
 /* ===== 基本工具 ===== */
-const APP={build:'v22.5.5',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
+const APP={build:'v22.5.6',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -6241,7 +6241,7 @@ ZG.KEEP=['ttsRate','recRate','aiGain'];
 {const f=LRN.ensure;LRN.ensure=async function(){const r=await f.apply(this,arguments);try{if(S.set&&!S.set.ttsFix224){(S.lrn&&S.lrn.list||[]).forEach(p=>{const pr=p.ext&&p.ext.pref;if(pr&&+pr.ttsRate===0.5)pr.ttsRate=.75});S.set.ttsFix224=1}}catch(e){}return r}}
 /*P26-END*/
 /*P27-BEGIN v22.4.1 第03-B批：舊版示範教材完全移除（併入 GitHub 15:30 的 P23B 並補強）、materials/ 依賴移除、跨瀏覽器語音備援、版本識別 */
-APP.id='20261127-04F';
+APP.id='20261127-04G';
 /* ---- 一、舊版內建示範教材（materials/ 18 張、4 個分類）：備份後一次性移除 ----
    只移除「仍與網站原始版本完全相同」的舊版圖卡（以 packSnap 簽章比對，不看名稱）；老師改過的保留為自訂教材；
    舊版分類只有在裡面已經沒有任何保留下來的圖卡時才移除；學習紀錄全部保留；S.legacyGone 標記後不再重複執行。
@@ -6316,8 +6316,12 @@ const P28={denied:0,err:null,procUntil:0,nosigT:0,ticker:0};
 P28.oral=()=>{try{return V2.lm()==='oral'}catch(e){return false}};
 /* ---------- ① 出題：口語練習的新詞＝先聽示範（聽詞認識）→ 接著自己說（記為示範後仿說） ---------- */
 {const _f=FLOW.stepsFor;FLOW.stepsFor=function(c,b,steps){const r=_f.apply(this,arguments);try{if(P28.oral()&&b==='new'&&steps.includes('speak')&&r.length===1&&r[0]==='expose')return['expose','speak']}catch(e){}return r}}
-{const _p=SM.pre;SM.pre=function(){const r=_p.apply(this,arguments);try{const q=PH.qq;if(q&&q.items&&P28.oral()&&SM.stepOf(S.set.mode)==='speak'){const out=[];
-  q.items.forEach((it,i)=>{out.push(it);const nx=q.items[i+1];if(it._step==='expose'&&!(nx&&nx.id===it.id&&nx._step==='speak'))out.push({...it,_step:'speak',_sub:S.set.sps||'obj',_sm:{...(it._sm||{}),base:1}})});q.items=out}}catch(e){console.warn('P28 SM.pre',e)}return r}}
+/* 口語二星以上：新詞的「起點評量」原本拆成「聽詞認識＋口說」兩題，再依題數截斷，會讓不同詞彙數少於學生選的數量 → 改為一題（記下起點詞，口說題仍標 base） */
+{const _pl=SM.plan;SM.plan=function(){const r=_pl.apply(this,arguments);try{P28.baseIds=null;if(r&&r.items&&P28.oral()&&S.set.mode==='speak'&&FL.star()>=2){P28.baseIds=new Set(r.items.filter(x=>x.base).map(x=>x.c&&x.c.id));r.items.forEach(x=>{if(x.base)x.base=false})}}catch(e){}return r}}
+{const _p=SM.pre;SM.pre=function(){const r=_p.apply(this,arguments);try{const q=PH.qq;if(q&&q.items&&P28.oral()&&SM.stepOf(S.set.mode)==='speak'){const out=[],sp=S.set.sps||'obj';
+  /* v22.5.6 教師決定：口語練習只有一星「先聽完整示範，再自己說」會先念；二星以上不先念，新詞直接看圖說（自主提取） */
+  if(FL.star()>=2){q.items.forEach(it=>{const x=it._step==='expose'?{...it,_step:'speak',_sub:sp,_sm:{...(it._sm||{}),...(P28.baseIds&&P28.baseIds.has(it.id)?{base:1}:{})}}:it,pv=out[out.length-1];if(!(pv&&pv.id===x.id&&pv._step===x._step))out.push(x)})}
+  else q.items.forEach((it,i)=>{out.push(it);const nx=q.items[i+1];if(it._step==='expose'&&!(nx&&nx.id===it.id&&nx._step==='speak'))out.push({...it,_step:'speak',_sub:sp,_sm:{...(it._sm||{}),base:1}})});q.items=out}}catch(e){console.warn('P28 SM.pre',e)}return r}}
 /* 「聽詞認識」緊接著同一個詞的口說＝示範後仿說（不是自主提取） */
 {const _q=PH.qinit;PH.qinit=function(){const r=_q.apply(this,arguments);try{const q=G.q||[];for(let i=1;i<q.length;i++){const a=q[i-1],c=q[i];if(c&&a&&c._step==='speak'&&a._step==='expose'&&a.id===c.id)c._demo=1}}catch(e){}return r}}
 {const _c=SK.clsHints;SK.clsHints=function(h){const r=_c.apply(this,arguments);try{if(G&&G.cur&&G.cur._demo&&r==='ok_indep')return 'ok_imitated'}catch(e){}return r}}

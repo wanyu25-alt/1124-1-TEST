@@ -17,8 +17,8 @@ const gid=s=>(s.match(/guidance\/(find_it|repeat_after_me|listen_carefully|speak
 const seed=w=>E(w,`S.set.music=false;S.set.sound=false;V2.prepDone=true;S.set.anim=false;S.set.ap=true;S.set.apd=100;S.set.n=10;S.asrAgreed=1;S.cats=[{id:'fr',name:'水果',order:[]},{id:'an',name:'動物',order:[]}];
  S.cards=${JSON.stringify(WORDS)}.map(([t,z],i)=>({id:'c'+i,text:t,zy:z,img:'${PNG}',audio:'',cats:[i%2?'an':'fr'],created:1,modified:1}));save()`);
 /* 逐題推進：依目前題型用程式事件完成，並記錄每題的模式與引導語音 */
-async function run(w,label,cfg){const L=w.L;L.aud.length=0;const r0=E(w,'S.recs.length');
- E(w,cfg+';startRound()');const seen=[];let key='',guard=0;const t0=Date.now();
+async function run(w,label,cfg){const L=w.L;L.aud.length=0;
+ E(w,cfg+';startRound()');const r0=E(w,'S.recs.length');/* v22.5.6：cfg 的 FL.go() 已開始一回合，再呼叫 startRound() 會把第一題記成「離開」；從這之後才開始計算 */const seen=[];let key='',guard=0;const t0=Date.now();
  while(guard++<400&&Date.now()-t0<150000){await sleep(250);
   if(!E(w,'G.on')||E(w,'S.recs.length')-r0>=10)break;
   const m=E(w,'S.set.mode'),k=E(w,'G.rid+":"+G.i+":"+S.set.mode');
