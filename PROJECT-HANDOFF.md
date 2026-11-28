@@ -5,7 +5,17 @@
 > **重要教訓**：增量包必須以 GitHub 實際提交為基準（不是舊 ZIP）；交付前比對校驗碼；部署後用 Console `APP.build+' '+APP.id` 確認版本。教師以 GitHub 網頁版「Add file → Upload files」上傳，**只能拖入檔案本身，不能拖整個資料夾**（曾因此產生子資料夾 vocabulary-express-v22_2-patch／v22_3-patch，待刪除）。
 > 新對話請提供：GitHub 目前的實際檔案（或最新完整網站）＋本文件＋DEVELOPMENT-ROADMAP.md。
 
-## 0-O. 美術改版第二階段摘要（最新，v22.6.7，建置 20261128-NJ2，未推送）
+## 0-P. 手機直式答題畫面修正（最新，v22.6.8，建置 20261128-MOB，未推送）
+- 位置：`index.html` 主 `<style>`，在 `@media (max-width:760px),(max-height:520px){.sc{…}}` 之後，註解「v22.6.8 手機直式答題畫面」。
+- 只在 `@media (max-width:760px) and (orientation:portrait)` 且 `body.ig`（答題中）時生效：
+  - `#mid:has(>#pic)` 改為 grid：圖片＋`#rep` 一列，其他（`#ans-col`、`#word`、`.spq`…）占滿下一列；圖片 `height:100%` 隨剩餘空間縮放。
+  - `align-content:safe center`（舊瀏覽器退回 start），內容太多時不會被切掉。
+  - `body.ig:not(.tk) #bot{max-height:44vh;overflow:auto}`：口語模式的大人區自己捲動。
+  - 短螢幕（高度 ≤700）另有一段：場景 10vh、鍵高 34px。
+- 不支援 `:has()` 的舊瀏覽器（Safari 15.3 以前）維持原本版面。
+- 測試：`tests/e2e/mobile-portrait-game.js`（27 項，含 360×640～430×932、口語、預覽主題、iPad／電腦／手機橫向不變）。
+
+## 0-O. 美術改版第二階段摘要（v22.6.7，建置 20261128-NJ2，已推送 f1a5cff）
 - 第一階段檢查見 `THEME-NATURE-STAGE1-REPORT.md`：素材包都是低解析的預覽裁切圖，需要重新生成；第 7 節有規格。
 - P41 `THEME`：
   - `?theme=nature` 會寫入 localStorage `vx-theme`，並在 body 加上 `th-nature` class。
