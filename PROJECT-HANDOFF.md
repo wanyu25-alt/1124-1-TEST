@@ -5,7 +5,16 @@
 > **重要教訓**：增量包必須以 GitHub 實際提交為基準（不是舊 ZIP）；交付前比對校驗碼；部署後用 Console `APP.build+' '+APP.id` 確認版本。教師以 GitHub 網頁版「Add file → Upload files」上傳，**只能拖入檔案本身，不能拖整個資料夾**（曾因此產生子資料夾 vocabulary-express-v22_2-patch／v22_3-patch，待刪除）。
 > 新對話請提供：GitHub 目前的實際檔案（或最新完整網站）＋本文件＋DEVELOPMENT-ROADMAP.md。
 
-## 0-M. 第05-F批摘要（最新，v22.6.5，建置 20261128-05F，未推送）
+## 0-N. 第05-H批摘要（最新，v22.6.6，建置 20261128-05H，未推送）
+- P40：聽讀第 2 站（`FL.ladder(2,'quiet')`）改為 `P40.cfg(1..5)`，設定上帶 `p40` 等級；`P40.lv()` 讀 `FL.run.cfg.p40`。
+  - ★1 用 `key`；★2–5 用 `spell`；★2–4 在 `showK` 包裝中補上圖片（`#pic`）。
+  - ★2：包裝 `V2.demo`，只顯示目前格子；`kPress` 包裝負責更新下一格。
+  - 逐音播放：`ZG.level` 依等級對應 `P40.ZL`（full／full／basic／self／indep）。★4–5 包裝 `ZG.start`、`ZG.prompt`，不播任何聲音，並隱藏「再聽一次」。
+  - ★4 提示：`P40.hint` 用 `ZG.curItem()`，記錄 `G.used.zy`、`G.h.p`、`RE.hint('zy_stage')`；紀錄加 `ext.zyLv`。
+  - 原本五星「聽音打字」移到 `FL.extras(2,'quiet')`。
+- 新批次的包裝請放在 P40 之後、開機程式之前。
+
+## 0-M. 第05-F批摘要（v22.6.5，建置 20261128-05F，已推送 ddfbeee）
 - P39：後台分頁整理（19 → 9）。
   - 包裝 `tch()`：`P39.G` 定義新分頁；有子頁的群組（ana：la／dash／log；adv：cb／se）第二排 `.sub.p39s` 切換；`P39.HIDE` 把隱藏的 `sub` 代號導到新分頁。
   - `P39.full=true`：顯示原本 19 個分頁、原本的 tIO／tSet／tLR 畫面（測試與日後恢復用）。
@@ -13,7 +22,7 @@
   - `tLR` 包裝：第 2 個面板收進 details，其後面板 display:none。
   - `tSet` 包裝：以文字比對移除與學生設定重複的 label；`#vsp` 收進最後的 details；原版在 `P39.setFull`。
 - 雲端預留（P17）程式與說明保留，只是分頁不顯示；`BK.remind()` 顯示在資料搬家頁最上方。
-- 下一批（05-G）：重做後台「學習分析」（見 DEVELOPMENT-ROADMAP）。新批次的包裝請放在 P39 之後、開機程式之前。
+- 下一批（05-G）：重做後台「學習分析」（見 DEVELOPMENT-ROADMAP）。
 
 ## 0-L. 第05-E批摘要（v22.6.4，建置 20261128-05E，已推送 79095f2）
 - P38：

@@ -58,9 +58,10 @@ T('G12 三聲（腳）、四聲（踏）、一聲（車）聲調前都播讀音�
    o.s4=await go('葡萄',4);await sl(1500);o.s4idle=take();V2.replay();await sl(1200);o.s4rep=take();stopG();
    o.s5=await go('葡萄',5);o.mode5=S.set.mode;V2.replay();await sl(900);o.s5r1=take();V2.replay();await sl(900);o.s5r2=take();V2.replay();await sl(1200);o.s5r3=take();stopG();return o});
   T('L1 二星：開始時念詞再提示第一個注音；正確後提示下一個',JSON.stringify(r.s2)==='["T:葡萄","p:p"]'&&r.s2p[1]==='p:u',r);
-  T('L2 三星：開始只念詞；正確後不自動提示；停一下才提示目前一個注音',JSON.stringify(r.s3)==='["T:葡萄"]'&&JSON.stringify(r.s3p)==='["e:p"]'&&JSON.stringify(r.s3idle)==='["p:u"]',r);
-  T('L3 四星：只念詞、停頓不自動提示；按「再聽一次」念詞＋目前一個注音',JSON.stringify(r.s4)==='["T:葡萄"]'&&r.s4idle.length===0&&JSON.stringify(r.s4rep)==='["T:葡萄","p:p"]',r);
-  T('L4 五星（聽音打字）：只念詞；第 1 次「再聽一次」只念詞，第 2 次起才加目前一個注音',r.mode5==='listen'&&JSON.stringify(r.s5)==='["T:葡萄"]'&&JSON.stringify(r.s5r1)==='["T:葡萄"]'&&JSON.stringify(r.s5r2)==='["T:葡萄","p:p"]'&&JSON.stringify(r.s5r3)==='["T:葡萄","p:p"]',r);
+  /* v22.6.6（第05-H批）教師重新設計第 2 站星級：三星＝畫面不顯示注音、但每個注音都自動播；四、五星＝不主動播任何聲音（四星改用「💡 聽下一個音」）。下面 L2～L4 依新設計更新預期 */
+  T('L2 三星：開始念詞再播第一個注音；正確後自動播下一個（畫面不顯示注音）',JSON.stringify(r.s3)==='["T:葡萄","p:p"]'&&r.s3p[1]==='p:u',r);
+  T('L3 四星：開始、停頓、按「再聽一次」都不主動播聲音',JSON.stringify(r.s4)==='[]'&&r.s4idle.length===0&&JSON.stringify(r.s4rep)==='[]',r);
+  T('L4 五星（只看國字打注音）：沒有任何聲音（原本的聽音打字移到語文延伸，見 batch05h-station2 H9）',r.mode5==='spell'&&JSON.stringify(r.s5)==='[]'&&JSON.stringify(r.s5r1)==='[]'&&JSON.stringify(r.s5r2)==='[]'&&JSON.stringify(r.s5r3)==='[]',r);
   await c.ctx.close()}
  /* ===== 四、停頓、快速輸入、重疊 ===== */
  {const c=await open(b);const r=await c.p.evaluate(async()=>{const im=ZG.idleMs;ZG.idleMs=()=>1500;const o={};o.s=await go('葡萄',1);await sl(1300);o.i1=take();await sl(1750);o.i2=take();await sl(100);o.cue=!!document.querySelector('.zs.zgcue');await sl(1700);o.i3=take();await sl(2200);o.i4=take();ZG.idleMs=im;

@@ -379,7 +379,7 @@ body.aid-calm #scene{max-height:90px;overflow:hidden}body.aid-calm .stc .ste{dis
 <script src="lib/pinyin-pro.js"></script>
 <script>
 /* ===== 基本工具 ===== */
-const APP={build:'v22.6.5',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
+const APP={build:'v22.6.6',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -6241,7 +6241,7 @@ ZG.KEEP=['ttsRate','recRate','aiGain'];
 {const f=LRN.ensure;LRN.ensure=async function(){const r=await f.apply(this,arguments);try{if(S.set&&!S.set.ttsFix224){(S.lrn&&S.lrn.list||[]).forEach(p=>{const pr=p.ext&&p.ext.pref;if(pr&&+pr.ttsRate===0.5)pr.ttsRate=.75});S.set.ttsFix224=1}}catch(e){}return r}}
 /*P26-END*/
 /*P27-BEGIN v22.4.1 第03-B批：舊版示範教材完全移除（併入 GitHub 15:30 的 P23B 並補強）、materials/ 依賴移除、跨瀏覽器語音備援、版本識別 */
-APP.id='20261128-05F';
+APP.id='20261128-05H';
 /* ---- 一、舊版內建示範教材（materials/ 18 張、4 個分類）：備份後一次性移除 ----
    只移除「仍與網站原始版本完全相同」的舊版圖卡（以 packSnap 簽章比對，不看名稱）；老師改過的保留為自訂教材；
    舊版分類只有在裡面已經沒有任何保留下來的圖卡時才移除；學習紀錄全部保留；S.legacyGone 標記後不再重複執行。
@@ -6832,6 +6832,49 @@ tSet=function(){const r=P39.setFull.apply(this,arguments);if(P39.full)return r;t
   sp.insertAdjacentHTML('afterbegin','<div class="panel" style="background:#eef7ff"><b>⚙ 教學設定</b>：這裡只放老師才需要調整的項目（題目數量、提示階梯、背景音樂來源、學生稱呼、過關慶祝條件）。<br><small>音量、語音速度、畫面、輸入方式請到上方選單的「⚙ 設定」。</small></div>')
  }catch(e){console.warn('P39 set',e)}return r};
 /*P39-END*/
+/*P40-BEGIN v22.6.6 第05-H批：聽讀第 2 站五個星級重新設計（核心：看懂國字、打出注音；每升一星少一種幫助）
+  教師：原本一到四星都是「看圖＋注音打字」，注音一律全部顯示，只差在提示按鈕，看起來都一樣。
+  ★1 看圖＋國字，注音全部顯示（照著打；原本的一星）
+  ★2 看圖＋國字，只顯示「下一個要打的注音」，同時播出它的聲音，一個一個來
+  ★3 看圖＋國字，下一個注音只播聲音、不顯示，一個一個來
+  ★4 看圖＋國字，沒有注音、不主動播聲音；卡住時可以按「💡 聽下一個音」（記為注音提示）
+  ★5 只有國字（沒有圖、注音、聲音），自己打出來
+  原本五星「看圖＋聽音打字」移到這一站的「語文延伸」。聲調與一聲（空白鍵）沒有獨立錄音，改播該字的完整讀音。 */
+const P40={};
+P40.lv=()=>{try{return G.on&&FL.run&&FL.run.cfg&&FL.run.cfg.p40||0}catch(e){return 0}};
+P40.cfg=(lv,t)=>{const m=lv===1?'key':'spell',hl=lv===1?{p:1,f:1,cap:0}:lv>=4?{p:0,f:0,w:0,c:0,cap:0}:{p:0,f:0,cap:0};
+ const c={...FL.cTyped(m,t,hl),p40:lv,k:lv===5?'typed:spell':'typed:key'};return c};
+{const _l=FL.ladder;FL.ladder=function(st,mode){const r=_l.apply(this,arguments);try{if(st===2&&mode==='quiet')return [
+  P40.cfg(1,'看圖＋國字＋注音打字：注音全部顯示，照著打'),
+  P40.cfg(2,'看圖＋國字＋注音打字：一次只顯示下一個注音，並播出它的聲音'),
+  P40.cfg(3,'看圖＋國字＋注音打字：下一個注音只播聲音、不顯示'),
+  P40.cfg(4,'看圖＋國字＋注音打字：沒有注音和聲音，卡住時可以聽下一個音'),
+  P40.cfg(5,'只看國字打注音：沒有圖片、注音和聲音')]}catch(e){console.warn('P40 ladder',e)}return r}}
+{const _e=FL.extras;FL.extras=function(st,mode){const r=_e.apply(this,arguments)||[];try{if(st===2&&mode==='quiet')return [...r,{...FL.cTyped('listen','',{p:0,f:0,cap:0}),t:'看圖＋聽音打字（語文延伸）',star:5}]}catch(e){}return r}}
+/* 逐音引導沿用 P26 的 ZG（一次只播目前要打的一個注音；聲調改播國字讀音；自動引導不算學生主動提示）
+   ★1、★2＝完整逐步引導（每打對一個就播下一個）；★3＝基本逐步引導（同樣播下一個，只是畫面不顯示注音）；
+   ★4、★5＝不主動播任何聲音（開頭不念詞、打錯不自動念正確的音、閒置不重播）；★4 可以按「💡 聽下一個音」 */
+P40.ZL={1:'full',2:'full',3:'basic',4:'self',5:'indep'};
+{const _lv=ZG.level;ZG.level=function(){const lv=P40.lv();return lv?P40.ZL[lv]:_lv.apply(this,arguments)}}
+{const _s=ZG.start;ZG.start=function(){if(P40.lv()>=4){G.listened=true;return}return _s.apply(this,arguments)}}
+{const _p=ZG.prompt;ZG.prompt=function(why){if(P40.lv()>=4)return;return _p.apply(this,arguments)}}
+P40.tag=()=>{try{const lv=P40.lv();if(lv&&RE.cur){RE.cur.ext=RE.cur.ext||{};RE.cur.ext.zyLv=lv}}catch(e){}};
+{const _r=V2.repBtn;V2.repBtn=function(){return P40.lv()>=4?'':_r.apply(this,arguments)}}
+/* 二星：只顯示下一個要打的注音 */
+P40.cell=x=>x===' '?'<span class="sps">空白鍵</span>':esc(x);
+{const _d=V2.demo;V2.demo=function(x,si,ci,tk){if(P40.lv()===2&&K&&ci===K.ci&&si===K.si)return P40.cell(x);return _d.apply(this,arguments)}}
+{const _s=showK;showK=function(){const r=_s.apply(this,arguments);try{const lv=P40.lv();if(lv>=2&&lv<=4&&G.cur&&G.cur.img&&!$('#pic'))$('#mid').insertAdjacentHTML('afterbegin',`<img id="pic" src="${G.cur.img}" alt="">`)}catch(e){console.warn('P40 showK',e)}return r}}
+{const _k=kPress;kPress=function(){const lv=P40.lv(),b=K?K.ci+':'+K.si:'';const r=_k.apply(this,arguments);try{P40.tag();if(lv===2&&K&&K.ci+':'+K.si!==b&&K.ci<K.seq.length){
+  const z=$('#z'+K.ci+'_'+K.si),d=z&&z.previousElementSibling;if(d&&d.classList.contains('dm'))d.innerHTML=P40.cell(K.seq[K.ci][K.si])}}catch(e){console.warn('P40 kPress',e)}return r}}
+/* 四星：卡住時可以聽下一個音（記為注音提示） */
+P40.hint=()=>{if(P40.lv()!==4||!G.on||G.lock||!K||K.ci>=K.seq.length)return;const it=ZG.curItem();if(!it)return;
+ G.used.zy=true;G.h.p=(G.h.p||0)+1;try{K.hlog.push({t:'p40',stages:['聽下一個音'],cost:0,ded:0,auto:0})}catch(e){}
+ RE.hint('zy_stage',{stages:['聽下一個音'],cost:0,deducted:0,auto:0});P40.tag();ZQ.play([it]);foc()};
+{const _b=kBot;kBot=function(){const r=_b.apply(this,arguments);try{if(P40.lv()===4){const g=$('#bot .hzg');if(g)g.insertAdjacentHTML('beforeend','<button id="p40h" class="btn alt" onclick="P40.hint()">💡 聽下一個音</button>')}}catch(e){console.warn('P40 kBot',e)}return r}}
+{const _a=V2.ask;V2.ask=function(){const r=_a.apply(this,arguments);P40.tag();return r}}
+/* 左上角「目前題目」：二到四星有圖片，名稱用「看圖＋注音打字」 */
+{const _m=mbd;mbd=function(){const r=_m.apply(this,arguments);try{const lv=P40.lv(),e=$('#mbd');if(e&&lv>=2&&lv<=4&&S.set.mode==='spell'&&e.style.display!=='none')e.textContent='目前題目：看圖＋注音打字'}catch(x){}return r}}
+/*P40-END*/
 (async()=>{let s=await load();if(s&&s.decks&&!s.v){await kvPut('backup-pre-v2',s);s=migrate(s)}const mb=await kvGet('music').catch(()=>null);if(mb)mus.url=URL.createObjectURL(mb);if(s)S={...DEF(),...s,set:{...DEF().set,...s.set}};if(s&&s.set&&s.set.vs==null&&s.set.vol!=null)S.set.vs=s.set.vol;
 await zaLoad();await LRN.ensure();try{if(await LIB.load()){await LIB.defBoot();LIB.sync()}}catch(e){console.warn('LIB boot',e)}if(S.set.stuName===undefined)S.set.stuName='';try{P28.init()}catch(e){}if(S.set.musSrc==='project'&&!S.set.musPicked)S.set.musSrc='builtin';if(!['key','listen','spell','speak'].includes(S.set.mode))S.set.mode='key';if(S.set.ttsMig!==3){S.set.ttsMig=3;S.set.ttsRate=.75;S.set.recRate=1.25;S.set.aiGain=1.5}if(!S.bankMap)S.bankMap={};if((S.banks||[]).some(b=>!(b.id in S.bankMap))||/^b:/.test(S.set.src||'')){if(!(await kvGet('backup-pre-bankmig')))await kvPut('backup-pre-bankmig',JSON.parse(JSON.stringify(S)));migrateBanks()}if(!S.set.musMig){S.set.musMig=1;S.set.musSrc='project';save()}FL.recover();try{FL.applyPref()}catch(e){}save();UI.init();home();mtLbl();packLoad();
  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();

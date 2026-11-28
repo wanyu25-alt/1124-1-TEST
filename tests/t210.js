@@ -15,7 +15,7 @@ const J=(E,c)=>JSON.parse(E('JSON.stringify('+c+')'));
   T('② goals match the spec (語意理解 / 提取+獨立性 / 語意關係 / 組合彈性 / 語句組織 / 功能性語言+類化+主動性)',/語意理解/.test(E('FL.SD[1].quiet'))&&/表達獨立性/.test(E('FL.SD[2].oral'))&&/語意關係/.test(E('FL.SD[3].quiet'))&&/組合彈性/.test(E('FL.SD[4].integ'))&&/語句組織/.test(E('FL.SD[5].quiet'))&&/溝通主動性/.test(E('FL.SD[6].oral')));
   const ex=(s,m)=>J(E,`FL.extras(${s},'${m}').map(x=>x.t)`);
   T('③ station 1 extras: verb / feature / function picks',ex(1,'quiet').some(t=>/動詞/.test(t))&&ex(1,'quiet').some(t=>/形容詞|特徵/.test(t))&&ex(1,'oral').some(t=>/功能/.test(t)));
-  T('③ station 2 extras (not in quiet): feature words and new-image naming',!ex(2,'quiet').length&&ex(2,'oral').some(t=>/新圖片說詞/.test(t))&&ex(2,'integ').some(t=>/特徵詞/.test(t)));
+  T('③ station 2 extras: quiet has only 看圖＋聽音打字 (v22.6.6 moved from ★5); oral/integ: feature words and new-image naming',JSON.stringify(ex(2,'quiet'))===JSON.stringify(['看圖＋聽音打字（語文延伸）'])&&ex(2,'oral').some(t=>/新圖片說詞/.test(t))&&ex(2,'integ').some(t=>/特徵詞/.test(t)));
   T('③ station 3 extras: classification + 物品功能/人物動作/場所/特徵/感受 pairings',(l=>/詞彙分類/.test(l)&&/物品與功能/.test(l)&&/人物與動作/.test(l)&&/物品與場所/.test(l)&&/特徵與物品/.test(l)&&/感受與情境/.test(l))(ex(3,'quiet').join('|')));
   T('③ station 5 extras: 人物動作物品 / 地點 / 特徵 / 感受 / 需求',(l=>/人物、動作、物品/.test(l)&&/地點/.test(l)&&/特徵/.test(l)&&/感受/.test(l)&&/需求/.test(l))(ex(5,'quiet').join('|')));
   T('③ oral mode station 5 extras are speaking tasks, quiet ones are arranging tasks (no forced typing/speaking)',ex(5,'oral').every(t=>/說/.test(t))&&ex(5,'quiet').every(t=>/排列/.test(t)));

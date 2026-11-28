@@ -1,0 +1,32 @@
+// v22.6.6 第05-H批：聽讀第 2 站五個星級（看懂國字、打出注音；每升一星少一種幫助）
+const {chromium}=require('playwright');const fs=require('fs'),path=require('path');
+const BASE='http://localhost:'+(process.env.E2E_PORT||8124)+'/1124-1-TEST/';let P=0,F=0;
+const T=(n,c,x)=>{c?P++:F++;console.log(c?'PASS':'FAIL',n,c?'':JSON.stringify(x===undefined?null:x).slice(0,700))};
+const AS=fs.readFileSync(path.join(__dirname,'lib','audio-stub.js'),'utf8');
+(async()=>{const b=await chromium.launch();const ctx=await b.newContext({viewport:{width:1280,height:900}});await ctx.addInitScript({content:AS});
+ const p=await ctx.newPage();const errs=[];p.on('pageerror',e=>errs.push(e.message));await p.goto(BASE);
+ await p.waitForFunction(()=>typeof S!=='undefined'&&S.cards&&S.cards.length>=1000&&S.lrn&&typeof P40!=='undefined',null,{timeout:60000});await p.waitForTimeout(800);
+ await p.evaluate(()=>{window.confirm=()=>true;window.alert=()=>{};window.sl=ms=>new Promise(r=>setTimeout(r,ms));window.__L=[];const o=ZQ.play;ZQ.play=function(items){window.__L.push(items.map(i=>i.k).join(','));return o.apply(this,arguments)}});
+ const lad=await p.evaluate(()=>({lad:FL.ladder(2,'quiet').map(c=>c.t),ex:FL.extras(2,'quiet').map(c=>c.t+'/'+c.star),oral:FL.ladder(2,'oral').length,st1:FL.ladder(1,'quiet').map(c=>c.t)}));
+ T('H1 第 2 站五個星級的名稱（每一星都有國字）；原本五星「看圖＋聽音打字」移到語文延伸',lad.lad.length===5&&/注音全部顯示/.test(lad.lad[0])&&/一次只顯示下一個注音/.test(lad.lad[1])&&/只播聲音、不顯示/.test(lad.lad[2])&&/卡住時可以聽下一個音/.test(lad.lad[3])&&/只看國字/.test(lad.lad[4])&&lad.ex.includes('看圖＋聽音打字（語文延伸）/5')&&lad.oral===5,lad);
+ const run=async star=>p.evaluate(async star=>{G.on=false;UI.pick('quiet');await sl(300);FL.open(2);await sl(300);FL.setStar(star);await sl(300);document.getElementById('fl_go').click();await sl(800);
+  for(let i=0;i<12&&S.set.mode==='expose';i++){EXP.done();await sl(600)}__L.length=0;await sl(2600);const dm=()=>[...document.querySelectorAll('#word .dm')].map(d=>d.textContent).join('|');
+  const o={star,lv:P40.lv(),zg:ZG.level(),mode:S.set.mode,w:G.cur.text,zy:G.cur.zy,hz:(document.getElementById('hint')||{}).textContent,pic:!!document.getElementById('pic'),rep:!!document.getElementById('rep'),hint:!!document.getElementById('p40h'),zyBtn:!!document.querySelector('#bot .hzb'),dm0:dm(),p0:__L.slice(),first:K.seq[0][0],second:K.seq[0][1]};
+  __L.length=0;kPress(K.seq[0][0],'test');await sl(2600);o.dm1=dm();o.p1=__L.slice();
+  __L.length=0;const exp=K.seq[K.ci][K.si];kPress(exp==='ㄈ'?'ㄅ':'ㄈ','test');await sl(2600);o.pWrong=__L.slice();
+  if(star===4){__L.length=0;const h0=G.h.p;P40.hint();await sl(300);o.ph=__L.slice();o.hinted=G.used.zy&&G.h.p===h0+1&&RE.cur&&RE.cur.hints.some(h=>h.type==='zy_stage');o.tag=RE.cur&&RE.cur.ext&&RE.cur.ext.zyLv}
+  G.on=false;return o},star);
+ const r={};for(const s of [1,2,3,4,5])r[s]=await run(s);
+ const sym=x=>/^[ㄅ-ㄩ]$/.test(x);
+ T('H2 一星：看圖＋國字，注音全部顯示；開頭念詞並播第一個注音',r[1].mode==='key'&&r[1].pic&&r[1].hz===r[1].w&&r[1].dm0.replace(/\|/g,'')===r[1].zy.replace(/ /g,'')&&r[1].p0.some(x=>x.startsWith('W:')),r[1]);
+ T('H3 二星：看圖＋國字，只顯示下一個要打的注音；打對後換顯示下一個，並播出它的聲音',r[2].mode==='spell'&&r[2].pic&&r[2].hz===r[2].w&&r[2].dm0.split('|')[0]===r[2].first&&r[2].dm0.split('|').slice(1).join('')===''&&r[2].dm1.split('|')[1]===(r[2].second===' '?'空白鍵':r[2].second)&&r[2].p0.some(x=>x.startsWith('W:')&&x.split(',').length===2)&&r[2].p1.length>=1&&!r[2].zyBtn,r[2]);
+ T('H4 三星：看圖＋國字，畫面不顯示注音；開頭與每打對一個都會播下一個注音的聲音',r[3].mode==='spell'&&r[3].pic&&r[3].dm0.replace(/\|/g,'')===''&&r[3].dm1.replace(/\|/g,'')===''&&r[3].p0.some(x=>x.split(',').length===2)&&r[3].p1.length>=1&&!r[3].zyBtn,r[3]);
+ T('H5 四星：看圖＋國字，沒有注音、不自動播任何聲音（開頭、打對、打錯都不播），沒有「再聽一次」',r[4].mode==='spell'&&r[4].pic&&r[4].dm0.replace(/\|/g,'')===''&&!r[4].p0.length&&!r[4].p1.length&&!r[4].pWrong.length&&!r[4].rep,r[4]);
+ T('H6 四星：按「💡 聽下一個音」才播目前這一個注音，並記為注音提示',r[4].hint&&r[4].ph.length===1&&r[4].ph[0].split(',').length===1&&r[4].hinted&&r[4].tag===4,r[4]);
+ T('H7 五星：只有國字，沒有圖片、注音、任何聲音與提示按鈕',r[5].mode==='spell'&&!r[5].pic&&r[5].hz===r[5].w&&r[5].dm0.replace(/\|/g,'')===''&&!r[5].p0.length&&!r[5].p1.length&&!r[5].pWrong.length&&!r[5].rep&&!r[5].hint&&!r[5].zyBtn,r[5]);
+ T('H8 一到三星打錯時仍會播正確的注音（原本的逐音引導）',[1,2,3].every(s=>r[s].pWrong.length>=1),[1,2,3].map(s=>r[s].pWrong));
+ const x=await p.evaluate(async()=>{G.on=false;UI.pick('quiet');await sl(300);FL.open(2);await sl(300);const i=FL.extras(2,'quiet').findIndex(c=>/聽音打字/.test(c.t));FL.actSel='x'+i;FL.go();await sl(800);for(let j=0;j<12&&S.set.mode==='expose';j++){EXP.done();await sl(600)}const o={mode:S.set.mode,lv:P40.lv(),hz:(document.getElementById('hint')||{}).textContent};G.on=false;FL.actSel='';return o});
+ T('H9 語文延伸的「看圖＋聽音打字」照原本方式運作（不受新星級影響）',x.mode==='listen'&&x.lv===0&&!x.hz,x);
+ const o1=await p.evaluate(()=>[FL.ladder(1,'quiet').length,FL.ladder(2,'integ').length,FL.ladder(3,'quiet').length]);
+ T('H10 其他站與其他模式不受影響',JSON.stringify(o1)===JSON.stringify([5,5,5])&&JSON.stringify(lad.st1)===JSON.stringify(await p.evaluate(()=>FL.ladder(1,'quiet').map(c=>c.t))),o1);
+ T('H11 沒有頁面錯誤',errs.length===0,errs);await b.close();console.log(`\n${P} 通過 / ${F} 失敗`);process.exit(F?1:0)})().catch(e=>{console.error('CRASH',e);process.exit(2)});
