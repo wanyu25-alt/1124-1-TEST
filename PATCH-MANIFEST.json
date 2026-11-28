@@ -1,152 +1,50 @@
 {
  "schemaVersion": 1,
  "project": "詞彙特快車 Vocabulary Express",
- "batch": "NJ-2",
- "fromVersion": "v22.6.6",
- "toVersion": "v22.6.7",
- "buildId": "20261128-NJ2",
+ "batch": "MOB",
+ "fromVersion": "v22.6.7",
+ "toVersion": "v22.6.8",
+ "buildId": "20261128-MOB",
  "base": {
   "github": "wanyu25-alt/1124-1-TEST",
-  "commit": "b03358e8f56e7629247aa893766ef9177a76a3cd",
-  "indexSha256": "844f4fa80a58a979d41480ceb078589ac45d5b3eab716cd1f76b7b36b0e81969",
+  "commit": "f1a5cffc71c651891fd23d6a2b6dac2190147a4c",
+  "indexSha256": "d85025573b57b071e6cdf682e353923f57598a40a3b3466d1730345407366601",
   "note": "直接套用於 GitHub 目前根目錄（v22.6.6，已部署）"
  },
  "dataMigration": {
   "formatChange": false,
-  "notes": "沒有資料遷移；預覽主題設定只存在 localStorage 的 vx-theme（不屬於學習資料）"
+  "notes": "沒有資料遷移；只改手機直式答題畫面的 CSS"
  },
  "A_deploy": {
   "folder": "1_upload-to-github-root",
   "overwrite": [
    {
     "path": "index.html",
-    "sha256": "d85025573b57b071e6cdf682e353923f57598a40a3b3466d1730345407366601",
-    "bytes": 1086466,
-    "previousSha256": "844f4fa80a58a979d41480ceb078589ac45d5b3eab716cd1f76b7b36b0e81969"
+    "sha256": "3f78bff00df7ab8fcad0abf3a88a88c7055e96196ca415b40c7af198b4eb05ab",
+    "bytes": 1087656,
+    "previousSha256": "d85025573b57b071e6cdf682e353923f57598a40a3b3466d1730345407366601"
    }
   ],
-  "addTheme": [
-   {
-    "path": "assets/themes/nature-journey/README.md",
-    "sha256": "702bff7469784b147d64a68ed559dbc3b45ac29d49016b984f667336678b6688",
-    "bytes": 1304
-   },
-   {
-    "path": "assets/themes/nature-journey/animals/.gitkeep",
-    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "bytes": 0
-   },
-   {
-    "path": "assets/themes/nature-journey/backgrounds/.gitkeep",
-    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "bytes": 0
-   },
-   {
-    "path": "assets/themes/nature-journey/characters/.gitkeep",
-    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "bytes": 0
-   },
-   {
-    "path": "assets/themes/nature-journey/decorations/.gitkeep",
-    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "bytes": 0
-   },
-   {
-    "path": "assets/themes/nature-journey/icons/.gitkeep",
-    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "bytes": 0
-   },
-   {
-    "path": "assets/themes/nature-journey/manifest.json",
-    "sha256": "14bf7c7f15ac3c34bc226a5bac4f31c09474e04a6b2f82cd9d882b1b0fd9bd28",
-    "bytes": 13474
-   },
-   {
-    "path": "assets/themes/nature-journey/rewards/.gitkeep",
-    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "bytes": 0
-   },
-   {
-    "path": "assets/themes/nature-journey/theme.css",
-    "sha256": "3efdb0a700701120da06cd069891888b5096cb86ef761fa1234a11838947598d",
-    "bytes": 12755
-   },
-   {
-    "path": "assets/themes/nature-journey/tracks/.gitkeep",
-    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "bytes": 0
-   },
-   {
-    "path": "assets/themes/nature-journey/ui/.gitkeep",
-    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "bytes": 0
-   },
-   {
-    "path": "assets/themes/nature-journey/vehicles/.gitkeep",
-    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "bytes": 0
-   }
-  ],
+  "addTheme": [],
   "addVoiceTts": "0 個 m4a（聽句子說詞問句）"
  },
  "B_optional": {
   "folder": "2_optional-dev-docs-tests",
   "overwrite": [
    {
-    "path": "CHANGELOG.md",
-    "sha256": "63b62a7d96dca15e7eaa4ddc806d9043ff69109ea8b162fbd75e7e880b1aa0ad",
-    "bytes": 91010,
-    "previousSha256": "5fc68e4c0b7755587e745ce80e0150e9604377e7948e005b2671647886487f90"
-   },
-   {
-    "path": "DEVELOPMENT-ROADMAP.md",
-    "sha256": "267e1db5258cd97eee5fbcc036f8435d505165c0c028083ca8b5fdb20153f738",
-    "bytes": 13273,
-    "previousSha256": "366a1fc55c93c68bcce62ac6622d2aa92bd84554f69c055b90abaabe6aaed8aa"
-   },
-   {
     "path": "PATCH-MANIFEST.json",
     "sha256": "（本檔案，不自我校驗）",
-    "bytes": 4578,
-    "previousSha256": "7144cf90db9970b7b9f218af601c2af5ca186e754502a4a33beae6fc14b3460d"
+    "bytes": 5487,
+    "previousSha256": "fbb63dfaa49213a49ce59868217c9c86111692d91771e936c209e888f11aef5c"
    },
    {
     "path": "PATCH-README.md",
-    "sha256": "cdbae2093bee56c565c6236ec2e1cf53f5bea4f9470826b56d9015c27708935b",
-    "bytes": 854,
-    "previousSha256": "c06fc962a4c1298774e3aaac4f83ccb88b06ca0a012932c701d5360ed556e0b7"
-   },
-   {
-    "path": "PROJECT-HANDOFF.md",
-    "sha256": "5c9d61e3fcefb97a92bee66b475844d93e52df3672f233f3dbe66e6be289694c",
-    "bytes": 37299,
-    "previousSha256": "97fcdf68065b4385bb8c23e900699efdb98d2901b39c4f873c0eddeb08901860"
-   },
-   {
-    "path": "tests/e2e/batch05-lang.js",
-    "sha256": "677235f45327b5efd35540f134a239e7a7412809d1b7ec84b590f9816ef08fec",
-    "bytes": 14360,
-    "previousSha256": "ea1d0fca94d8db58ad831659deb37384bd0a9729806d22fd586928bf9814e758"
-   },
-   {
-    "path": "tests/t230.js",
-    "sha256": "d189ea08f1945d427d0153aa0cdd1706d5022fbbef0f4395e2ff159e71ced4aa",
-    "bytes": 11537,
-    "previousSha256": "a5a4e0c63212a137b31383fcbef4f053881ad1a8530c53a0a238b0def71c926b"
+    "sha256": "812301b6c5f277f45108e120b67cc2514c8827e7bb58f0400c17f5a62dcc1524",
+    "bytes": 1235,
+    "previousSha256": "cdbae2093bee56c565c6236ec2e1cf53f5bea4f9470826b56d9015c27708935b"
    }
   ],
-  "add": [
-   {
-    "path": "THEME-NATURE-STAGE2-REPORT.md",
-    "sha256": "1248c98ec8c6e38fe3838d5d0fa5a8cb68f56ce62fea85029025107154a7d50f",
-    "bytes": 5351
-   },
-   {
-    "path": "tests/e2e/theme-nature-preview.js",
-    "sha256": "31af9627441a50042863b6cdb8d234da6e32e72239b25c9faa6fbd3d68fc48d0",
-    "bytes": 7972
-   }
-  ]
+  "add": []
  },
  "deleteBeforeDeploy": [],
  "notIncluded": [
@@ -160,8 +58,8 @@
  ],
  "tests": {
   "jsdom": "1821 通過／10 失敗（10 項與修改前相同）",
-  "e2e": "623 通過／0 失敗（含 theme-nature-preview 12 項；預設畫面不變）",
-  "device": "待教師 Mac Chrome 實測"
+  "e2e": "650 通過／0 失敗（含 mobile-portrait-game 27 項）",
+  "device": "待教師手機實測"
  },
  "deployed": "尚未推送"
 }
