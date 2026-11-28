@@ -5,7 +5,28 @@
 > **重要教訓**：增量包必須以 GitHub 實際提交為基準（不是舊 ZIP）；交付前比對校驗碼；部署後用 Console `APP.build+' '+APP.id` 確認版本。教師以 GitHub 網頁版「Add file → Upload files」上傳，**只能拖入檔案本身，不能拖整個資料夾**（曾因此產生子資料夾 vocabulary-express-v22_2-patch／v22_3-patch，待刪除）。
 > 新對話請提供：GitHub 目前的實際檔案（或最新完整網站）＋本文件＋DEVELOPMENT-ROADMAP.md。
 
-## 0-P. 手機直式答題畫面修正（最新，v22.6.8，建置 20261128-MOB，未推送）
+## 0-Q. 美術改版第三階段：V3 審核版素材（最新，v22.6.9，建置 20261128-NJ3，未推送）
+- P42（P41 之後）`NJA`：
+  - `NJA.IDS=['sky','scene-countryside']`。`NJA.img(id)` 用 `THEME.src` 取得網址，預先載入圖片。
+  - 成功後在 body 設定 `--nj-img-<id>`（絕對網址，避免 CSS 變數相對路徑問題），並加上 class `nj-<id>`。
+  - 包裝 `THEME.apply`：開啟時執行，關閉時清除。
+  - 包裝 `scene()`：設定 `#scene` 的 `--njx`，等於鏡頭位移的 5%。
+- `theme.css` 末段：`body.th-nature.nj-sky`（`#scene` 背景、`.arrsc`、首頁 `#stu:has(.hm3)` 天空帶）；`body.th-nature.nj-scene-countryside .arrsc`（過關插圖，老師 2026-11-28 同意，只用在過關畫面）。
+- `manifest.json` 的 status：
+  - `ready`：正式。
+  - `preview`：預覽可用。
+  - `redo`：待重製。
+  - `missing`：缺少。
+  - `pending`：未提供。
+  - 只有 `ready` 和 `preview` 會載入。
+- **規則**：review-only 的圖不得加入 manifest；scene-references 只有經老師同意的 countryside（轉存為 `scenes/countryside.jpg`）。測試 S4 檢查沒有從這兩個資料夾載入任何檔案。
+- 剩餘素材清單：`THEME-NATURE-STAGE3-REPORT.md` 第 6 節。
+- 加入新圖的方法：
+  1. 把圖放進對應資料夾。
+  2. 在 manifest 填 `src`，並把 status 改成 `preview`。
+  3. 把 ID 加進 `NJA.IDS`，再寫對應的 CSS。
+
+## 0-P. 手機直式答題畫面修正（v22.6.8，建置 20261128-MOB，已推送 7916d88）
 - 位置：`index.html` 主 `<style>`，在 `@media (max-width:760px),(max-height:520px){.sc{…}}` 之後，註解「v22.6.8 手機直式答題畫面」。
 - 只在 `@media (max-width:760px) and (orientation:portrait)` 且 `body.ig`（答題中）時生效：
   - `#mid:has(>#pic)` 改為 grid：圖片＋`#rep` 一列，其他（`#ans-col`、`#word`、`.spq`…）占滿下一列；圖片 `height:100%` 隨剩餘空間縮放。

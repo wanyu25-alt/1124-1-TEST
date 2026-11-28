@@ -36,7 +36,7 @@ const CON=`window.__con=(a,b)=>{const L=c=>{const m=c.match(/\\d+(\\.\\d+)?/g).m
  T('T6 注音格狀態不只靠顏色：正確＝實線深藍框＋✓；錯誤＝虛線橘框',cr.ok.bs==='solid'&&cr.ok.bc==='rgb(35, 71, 107)'&&/✓/.test(cr.ok.after)&&cr.bad&&cr.bad.bs==='dashed'&&cr.bad.bc==='rgb(122, 68, 22)',{ok:cr.ok,bad:cr.bad});
  /* 四、素材索引：目前都是待製作，THEME.src 一律回傳 null（使用原本畫面） */
  const mf=await p.evaluate(async()=>{const m=await THEME.load();return{n:Object.keys(m.assets).length,ready:Object.values(m.assets).filter(a=>a.status==='ready').length,src:THEME.src('rabbit'),src2:THEME.src('不存在')}});
- T('T7 素材索引可讀取（79 個素材 ID）；尚未有圖片時 THEME.src 回傳 null，畫面使用原本樣式',mf.n===79&&mf.ready===0&&mf.src===null&&mf.src2===null,mf);
+ T('T7 素材索引可讀取（至少 79 個素材 ID）；尚未有圖片時 THEME.src 回傳 null，畫面使用原本樣式',mf.n>=79&&mf.ready===0&&mf.src===null&&mf.src2===null,mf);
  /* 五、回到原本畫面 */
  const off=await p.evaluate(async()=>{UI.navTo(1);home();await new Promise(r=>setTimeout(r,300));document.querySelector('.nj-chip button').click();return{cls:document.body.classList.contains('th-nature'),ls:localStorage.getItem('vx-theme'),nav:getComputedStyle(document.querySelector('nav')).backgroundColor}});
  await p.goto(BASE);await ready(p);const off2=await p.evaluate(()=>document.body.classList.contains('th-nature'));

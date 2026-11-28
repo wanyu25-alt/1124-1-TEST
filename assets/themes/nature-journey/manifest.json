@@ -2,41 +2,65 @@
  "schemaVersion": 1,
  "themeId": "nature-journey",
  "name": "自然旅行繪本風",
- "stage": 2,
- "note": "素材索引。src 為 null 或 status 不是 ready 的素材，程式一律使用原本的畫面（備援）。放入新圖片時：把檔案放進對應資料夾，填寫 src（相對於本資料夾），status 改成 ready。規格見 THEME-NATURE-STAGE1-REPORT.md 第 7 節。",
+ "stage": 3,
+ "note": "素材索引。只有 status 為 ready（正式）或 preview（預覽可用，只在 ?theme=nature 生效）且有 src 的素材才會載入；其餘（pending 待製作、redo 待重製、missing 缺少）一律使用原本畫面（SVG 備援）。review-only 與 scene-references 的圖片不得加入本索引。規格見 THEME-NATURE-STAGE1-REPORT.md 第 7 節。",
  "assets": {
   "sky": {
    "category": "backgrounds",
-   "src": null,
-   "status": "pending",
+   "src": "backgrounds/sky.jpg",
+   "status": "preview",
    "transparent": false,
    "tileX": true,
    "size": [
     2400,
     600
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "預覽可用",
+    "reason": "獨立生成；寬度放大10.5%，拼接圖目視無明顯硬接縫；不符合嚴格原生寬度。",
+    "source": "2172×724"
+   },
+   "productionApproved": false,
+   "sourceSize": [
+    2172,
+    724
+   ],
+   "note": "V3 審核版：只在 ?theme=nature 預覽使用；原始 PNG 1.6MB 轉為 JPEG 品質 78（252KB），尺寸 2400×600 不變；寬度約放大 10.5%，不是正式合格"
   },
   "bike-far": {
    "category": "backgrounds",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": true,
    "size": [
     2400,
     400
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。 缺少透明分層。 無縫視覺未通過或未確認。",
+    "source": "2172×181"
+   }
   },
   "bike-mid": {
    "category": "backgrounds",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": true,
    "size": [
     2400,
     300
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。 缺少透明分層。 無縫視覺未通過或未確認。",
+    "source": "2172×179"
+   }
   },
   "car-far": {
    "category": "backgrounds",
@@ -63,24 +87,36 @@
   "train-far": {
    "category": "backgrounds",
    "src": null,
-   "status": "pending",
+   "status": "missing",
    "transparent": true,
    "tileX": true,
    "size": [
     2400,
     400
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "缺少",
+    "reason": "完整風景不能代替透明分層。",
+    "source": "無"
+   }
   },
   "train-mid": {
    "category": "backgrounds",
    "src": null,
-   "status": "pending",
+   "status": "missing",
    "transparent": true,
    "tileX": true,
    "size": [
     2400,
     300
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "缺少",
+    "reason": "完整風景不能代替透明分層。",
+    "source": "無"
+   }
   },
   "hsr-far": {
    "category": "backgrounds",
@@ -129,13 +165,19 @@
   "path": {
    "category": "tracks",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": true,
    "size": [
     1200,
     120
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。 缺少透明分層。 無縫視覺未通過或未確認。",
+    "source": "2172×174"
+   }
   },
   "road": {
    "category": "tracks",
@@ -151,13 +193,19 @@
   "rail": {
    "category": "tracks",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": true,
    "size": [
     1200,
     120
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。 無縫視覺未通過或未確認。",
+    "source": "1748×63"
+   }
   },
   "runway": {
    "category": "tracks",
@@ -184,13 +232,19 @@
   "bicycle": {
    "category": "vehicles",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": false,
    "size": [
     480,
     360
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。",
+    "source": "343×349"
+   }
   },
   "car": {
    "category": "vehicles",
@@ -206,35 +260,53 @@
   "train-engine": {
    "category": "vehicles",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": false,
    "size": [
     560,
     360
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。",
+    "source": "341×232"
+   }
   },
   "train-carriage": {
    "category": "vehicles",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": false,
    "size": [
     420,
     300
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。",
+    "source": "302×218"
+   }
   },
   "train-smoke": {
    "category": "vehicles",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": false,
    "size": [
     300,
     200
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。",
+    "source": "272×101"
+   }
   },
   "hsr-head": {
    "category": "vehicles",
@@ -272,13 +344,19 @@
   "kid-wave": {
    "category": "characters",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": false,
    "size": [
     320,
     420
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。",
+    "source": "240×294"
+   }
   },
   "kid-suitcase": {
    "category": "characters",
@@ -338,13 +416,19 @@
   "conductor-flag": {
    "category": "characters",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": false,
    "size": [
     320,
     440
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。",
+    "source": "266×302"
+   }
   },
   "kid-peek": {
    "category": "characters",
@@ -360,79 +444,121 @@
   "rabbit": {
    "category": "animals",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": false,
    "size": [
     240,
     240
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。",
+    "source": "202×215"
+   }
   },
   "snail": {
    "category": "animals",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": false,
    "size": [
     240,
     240
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。",
+    "source": "215×153"
+   }
   },
   "cat": {
    "category": "animals",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": false,
    "size": [
     240,
     240
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。",
+    "source": "175×205"
+   }
   },
   "dog": {
    "category": "animals",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": false,
    "size": [
     240,
     240
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。",
+    "source": "185×205"
+   }
   },
   "bird": {
    "category": "animals",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": false,
    "size": [
     240,
     240
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。",
+    "source": "190×190"
+   }
   },
   "hedgehog": {
    "category": "animals",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": false,
    "size": [
     240,
     240
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。",
+    "source": "210×182"
+   }
   },
   "squirrel": {
    "category": "animals",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": false,
    "size": [
     240,
     240
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。",
+    "source": "215×205"
+   }
   },
   "butterfly": {
    "category": "animals",
@@ -503,24 +629,36 @@
   "tree": {
    "category": "decorations",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": false,
    "size": [
     360,
     440
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。 可見鄰近素材殘片。",
+    "source": "218×223"
+   }
   },
   "tree-blossom": {
    "category": "decorations",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": false,
    "size": [
     360,
     440
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。",
+    "source": "187×210"
+   }
   },
   "pine": {
    "category": "decorations",
@@ -569,57 +707,87 @@
   "fence": {
    "category": "decorations",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": true,
    "size": [
     480,
     180
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。 無縫視覺未通過或未確認。",
+    "source": "215×145"
+   }
   },
   "signpost": {
    "category": "decorations",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": false,
    "size": [
     240,
     320
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。 可見鄰近素材殘片。",
+    "source": "162×200"
+   }
   },
   "house": {
    "category": "decorations",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": false,
    "size": [
     520,
     400
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。 可見鄰近素材殘片。",
+    "source": "245×193"
+   }
   },
   "station": {
    "category": "decorations",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": false,
    "size": [
     520,
     400
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。",
+    "source": "408×221"
+   }
   },
   "lamp": {
    "category": "decorations",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": false,
    "size": [
     160,
     320
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。",
+    "source": "96×225"
+   }
   },
   "stump": {
    "category": "decorations",
@@ -646,13 +814,19 @@
   "star": {
    "category": "icons",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": false,
    "size": [
     128,
     128
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。",
+    "source": "134×125"
+   }
   },
   "star-smile": {
    "category": "rewards",
@@ -668,24 +842,36 @@
   "badge": {
    "category": "rewards",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": false,
    "size": [
     300,
     360
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。",
+    "source": "180×193"
+   }
   },
   "bunting": {
    "category": "rewards",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": true,
    "size": [
     800,
     200
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。 無縫視覺未通過或未確認。",
+    "source": "337×125"
+   }
   },
   "confetti-1": {
    "category": "rewards",
@@ -734,13 +920,19 @@
   "trophy": {
    "category": "rewards",
    "src": null,
-   "status": "pending",
+   "status": "redo",
    "transparent": true,
    "tileX": false,
    "size": [
     300,
     340
-   ]
+   ],
+   "audit": {
+    "batch": "V3-audited",
+    "verdict": "待重製",
+    "reason": "組圖裁切，原生解析度不足；不納入正式載入。",
+    "source": "172×170"
+   }
   },
   "play": {
    "category": "icons",
@@ -873,6 +1065,24 @@
     512,
     512
    ]
+  },
+  "scene-countryside": {
+   "category": "scenes",
+   "src": "scenes/countryside.jpg",
+   "status": "preview",
+   "transparent": false,
+   "tileX": false,
+   "size": [
+    1600,
+    533
+   ],
+   "sourceSize": [
+    2172,
+    724
+   ],
+   "productionApproved": false,
+   "use": "arrival-only",
+   "note": "V3 審核版 scene-references/countryside.png；老師 2026-11-28 同意只用在過關畫面（完成旅程）的小場景背景，不可當透明視差圖層。轉為 JPEG 1600×533。"
   }
  }
 }

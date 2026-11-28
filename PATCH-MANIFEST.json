@@ -1,50 +1,113 @@
 {
  "schemaVersion": 1,
  "project": "詞彙特快車 Vocabulary Express",
- "batch": "MOB",
- "fromVersion": "v22.6.7",
- "toVersion": "v22.6.8",
- "buildId": "20261128-MOB",
+ "batch": "NJ-3",
+ "fromVersion": "v22.6.8",
+ "toVersion": "v22.6.9",
+ "buildId": "20261128-NJ3",
  "base": {
   "github": "wanyu25-alt/1124-1-TEST",
-  "commit": "f1a5cffc71c651891fd23d6a2b6dac2190147a4c",
-  "indexSha256": "d85025573b57b071e6cdf682e353923f57598a40a3b3466d1730345407366601",
+  "commit": "788da6312fa3c5fa08fd6d72b0eaecc1f7ec1667",
+  "indexSha256": "3f78bff00df7ab8fcad0abf3a88a88c7055e96196ca415b40c7af198b4eb05ab",
   "note": "直接套用於 GitHub 目前根目錄（v22.6.6，已部署）"
  },
  "dataMigration": {
   "formatChange": false,
-  "notes": "沒有資料遷移；只改手機直式答題畫面的 CSS"
+  "notes": "沒有資料遷移；預覽主題接上天空圖（只在 ?theme=nature）"
  },
  "A_deploy": {
   "folder": "1_upload-to-github-root",
   "overwrite": [
    {
     "path": "index.html",
-    "sha256": "3f78bff00df7ab8fcad0abf3a88a88c7055e96196ca415b40c7af198b4eb05ab",
-    "bytes": 1087656,
-    "previousSha256": "d85025573b57b071e6cdf682e353923f57598a40a3b3466d1730345407366601"
+    "sha256": "cdb0ea8ea7db283145a7acbe8e0ab4c48cbb301db30ee136a767630e8dfb7ec0",
+    "bytes": 1089490,
+    "previousSha256": "3f78bff00df7ab8fcad0abf3a88a88c7055e96196ca415b40c7af198b4eb05ab"
    }
   ],
-  "addTheme": [],
+  "addTheme": [
+   {
+    "path": "assets/themes/nature-journey/backgrounds/sky.jpg",
+    "sha256": "e6315d1c315ba1d5e8652f9ba2d179049e3443b835b31b8732033bda5bdb7e72",
+    "bytes": 252003
+   },
+   {
+    "path": "assets/themes/nature-journey/manifest-batch-audited.json",
+    "sha256": "eb22dd3de61dd735b65b2b480e3ee9f89c73bb6a77523a88c9c9c2737d4fec00",
+    "bytes": 376
+   },
+   {
+    "path": "assets/themes/nature-journey/scenes/countryside.jpg",
+    "sha256": "9949580b43f2bc5a0bc64dc166770626307420e8c21400b35d3d638d0533c766",
+    "bytes": 260705
+   }
+  ],
   "addVoiceTts": "0 個 m4a（聽句子說詞問句）"
  },
  "B_optional": {
   "folder": "2_optional-dev-docs-tests",
   "overwrite": [
    {
+    "path": "CHANGELOG.md",
+    "sha256": "5ce97f7800f6cab3533628915a4cdc943d41bfe0329fe0656e43b1dccada97ac",
+    "bytes": 93408,
+    "previousSha256": "55d34f8d901b52cf29c45079ac01a5e8ff5332299b49f172b28b35dde75d8d31"
+   },
+   {
+    "path": "DEVELOPMENT-ROADMAP.md",
+    "sha256": "a1b3770e6d246bab63be417c19ae2a25872f752fae6b2ac7ddddfd7ec0e2cb3c",
+    "bytes": 13622,
+    "previousSha256": "60476decc91fcff75b43b6a48d111595e19a99a8d918e31b3adedc82b84d0318"
+   },
+   {
     "path": "PATCH-MANIFEST.json",
     "sha256": "（本檔案，不自我校驗）",
-    "bytes": 5487,
-    "previousSha256": "fbb63dfaa49213a49ce59868217c9c86111692d91771e936c209e888f11aef5c"
+    "bytes": 3777,
+    "previousSha256": "aca8af986454406b00f5439e722098154a5906efc6cfd4dfd0d37ac0919efdab"
    },
    {
     "path": "PATCH-README.md",
-    "sha256": "812301b6c5f277f45108e120b67cc2514c8827e7bb58f0400c17f5a62dcc1524",
-    "bytes": 1235,
-    "previousSha256": "cdbae2093bee56c565c6236ec2e1cf53f5bea4f9470826b56d9015c27708935b"
+    "sha256": "fa69e5de9946a2057754dad4eaa1ddfebee1de4c8836483805b465565ea41975",
+    "bytes": 1604,
+    "previousSha256": "812301b6c5f277f45108e120b67cc2514c8827e7bb58f0400c17f5a62dcc1524"
+   },
+   {
+    "path": "PROJECT-HANDOFF.md",
+    "sha256": "6cc8821363cfa273e43c2f39f8a218b0800b447b1009c10dc35cba5e185a9716",
+    "bytes": 39774,
+    "previousSha256": "a110ca87d626e8a8e3a75c99d263da3d251c9949630294baf0e5a710b674622b"
+   },
+   {
+    "path": "tests/e2e/batch05-lang.js",
+    "sha256": "d7ce58821ebdce6af18bd9878bc1cac4ecd284bcea6e21e77f9991f937755106",
+    "bytes": 14360,
+    "previousSha256": "f4963a46e24abb1c6647b7395d8e73960c55077e16326b10b023706541de0587"
+   },
+   {
+    "path": "tests/e2e/theme-nature-preview.js",
+    "sha256": "1643a82e24ea9eb985c339900877dce2e861300d9fabc612693410e10a5e8312",
+    "bytes": 7978,
+    "previousSha256": "31af9627441a50042863b6cdb8d234da6e32e72239b25c9faa6fbd3d68fc48d0"
+   },
+   {
+    "path": "tests/t230.js",
+    "sha256": "3c59ba66b9d5742cb937c7d4951d0e86d0094e037aed14c22cd9781265dbd422",
+    "bytes": 11537,
+    "previousSha256": "8098b29d42cdd581c550b07f6234d8c60dacdae1b3ae23e98153c2ee04b8aa63"
    }
   ],
-  "add": []
+  "add": [
+   {
+    "path": "THEME-NATURE-STAGE3-REPORT.md",
+    "sha256": "6f3aa30ae4f176596424b7472f73b12b7b4387bba93b88794329dcef7102e5b3",
+    "bytes": 6632
+   },
+   {
+    "path": "tests/e2e/theme-nature-stage3.js",
+    "sha256": "37c197a6977e12972192d3f438844929a2e938c4f0c7767044ff7a5c3cdde962",
+    "bytes": 7664
+   }
+  ]
  },
  "deleteBeforeDeploy": [],
  "notIncluded": [
@@ -58,8 +121,8 @@
  ],
  "tests": {
   "jsdom": "1821 通過／10 失敗（10 項與修改前相同）",
-  "e2e": "650 通過／0 失敗（含 mobile-portrait-game 27 項）",
-  "device": "待教師手機實測"
+  "e2e": "663 通過／0 失敗（含 theme-nature-stage3 13 項）",
+  "device": "待教師以 ?theme=nature 實看"
  },
  "deployed": "尚未推送"
 }

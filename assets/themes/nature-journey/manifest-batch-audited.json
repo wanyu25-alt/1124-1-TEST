@@ -1,0 +1,20 @@
+{
+  "themeId": "nature-journey",
+  "status": "preview_only",
+  "assets": [
+    {
+      "id": "sky",
+      "path": "backgrounds/sky.png",
+      "width": 2400,
+      "height": 600,
+      "transparent": false,
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "status": "preview_approved",
+      "productionApproved": false,
+      "edgePixelsMatch": true
+    }
+  ]
+}

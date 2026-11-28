@@ -157,3 +157,13 @@ body.th-nature details.panel>summary{color:var(--nj-ink)}
 
 /* ===== 12. 減少動態：主題本身不加入任何持續動畫 ===== */
 @media (prefers-reduced-motion:reduce){body.th-nature .btn:active{transform:none}}
+/* ===== 第三階段（v22.6.9）：V3 審核版「預覽可用」圖片 =====
+   body.nj-sky 只在 sky 圖片成功載入後才加上；其餘畫面沿用原本 SVG。 */
+body.th-nature.nj-sky #scene{background:linear-gradient(#ffffff38,#ffffff38) 0 0/100% 62% no-repeat,var(--nj-img-sky) var(--njx,0px) 0/auto 62% repeat-x,linear-gradient(var(--sky) 62%,var(--gnd) 62%);transition:background-position 1.1s ease-in-out}
+body.th-nature.nj-sky #scene[data-th=plane]{--gnd:#B9C3BE}
+body.th-nature.nj-sky .arrsc{background:linear-gradient(#ffffff2e,#ffffff2e),var(--nj-img-sky) center top/cover no-repeat}
+body.th-nature.nj-sky:not(.ig) #stu:has(.hm3){background:linear-gradient(#F8F5EB00 0,#F8F5EB33 40px,#F8F5EB 120px) 0 0/100% 120px no-repeat,var(--nj-img-sky) 0 0/auto 120px repeat-x}
+@media (prefers-reduced-motion:reduce){body.th-nature.nj-sky #scene{transition:none}}
+body.th-nature.nj-sky.noanim #scene{transition:none}
+/* 過關畫面（完成旅程）：完整場景插圖 countryside（只用在這裡，不是視差圖層；載入失敗時沿用上面的天空或原本漸層） */
+body.th-nature.nj-scene-countryside .arrsc{background:var(--nj-img-scene-countryside) center 70%/cover no-repeat}

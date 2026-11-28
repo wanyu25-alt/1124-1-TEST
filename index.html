@@ -391,7 +391,7 @@ body.aid-calm #scene{max-height:90px;overflow:hidden}body.aid-calm .stc .ste{dis
 <script src="lib/pinyin-pro.js"></script>
 <script>
 /* ===== 基本工具 ===== */
-const APP={build:'v22.6.8',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
+const APP={build:'v22.6.9',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -6253,7 +6253,7 @@ ZG.KEEP=['ttsRate','recRate','aiGain'];
 {const f=LRN.ensure;LRN.ensure=async function(){const r=await f.apply(this,arguments);try{if(S.set&&!S.set.ttsFix224){(S.lrn&&S.lrn.list||[]).forEach(p=>{const pr=p.ext&&p.ext.pref;if(pr&&+pr.ttsRate===0.5)pr.ttsRate=.75});S.set.ttsFix224=1}}catch(e){}return r}}
 /*P26-END*/
 /*P27-BEGIN v22.4.1 第03-B批：舊版示範教材完全移除（併入 GitHub 15:30 的 P23B 並補強）、materials/ 依賴移除、跨瀏覽器語音備援、版本識別 */
-APP.id='20261128-MOB';
+APP.id='20261128-NJ3';
 /* ---- 一、舊版內建示範教材（materials/ 18 張、4 個分類）：備份後一次性移除 ----
    只移除「仍與網站原始版本完全相同」的舊版圖卡（以 packSnap 簽章比對，不看名稱）；老師改過的保留為自訂教材；
    舊版分類只有在裡面已經沒有任何保留下來的圖卡時才移除；學習紀錄全部保留；S.legacyGone 標記後不再重複執行。
@@ -6900,11 +6900,24 @@ THEME.css=()=>{if(document.getElementById('nj-css'))return;const l=document.crea
 THEME.chip=()=>{if(document.querySelector('.nj-chip'))return;const d=document.createElement('div');d.className='nj-chip';d.setAttribute('role','status');
  d.innerHTML='🎨 自然旅行風（預覽） <button type="button" onclick="THEME.off()">回到原本畫面</button>';document.body.appendChild(d)};
 THEME.load=()=>THEME.man?Promise.resolve(THEME.man):fetch(THEME.DIR+'manifest.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).catch(()=>null).then(m=>{THEME.man=m&&m.assets?m:{assets:{}};return THEME.man});
-THEME.src=id=>{try{const a=THEME.on()&&THEME.man&&THEME.man.assets[id];return a&&a.status==='ready'&&a.src?THEME.DIR+a.src:null}catch(e){return null}};
+THEME.src=id=>{try{const a=THEME.on()&&THEME.man&&THEME.man.assets[id];return a&&(a.status==='ready'||a.status==='preview')&&a.src?THEME.DIR+a.src:null}catch(e){return null}};/* v22.6.9：preview＝審核版「預覽可用」，只在預覽主題生效 */
 THEME.apply=id=>{THEME.id=id||null;document.body.classList.toggle('th-nature',THEME.on());if(THEME.on()){THEME.css();THEME.chip();THEME.load()}};
 THEME.off=()=>{try{localStorage.removeItem(THEME.KEY)}catch(e){}THEME.apply(null);try{const u=new URL(location.href);if(u.searchParams.has('theme')){u.searchParams.delete('theme');history.replaceState(null,'',u.toString())}}catch(e){}};
 try{THEME.apply(THEME.want())}catch(e){console.warn('THEME',e)}
 /*P41-END*/
+/*P42-BEGIN v22.6.9 美術改版第三階段（V3 審核版素材）：預覽主題接上「預覽可用」圖片（目前只有天空 sky）
+   規則：只讀 manifest.json 中 status 為 ready／preview 且有 src 的素材；review-only、scene-references 的圖不會載入。
+   圖片載入成功才加上 body.nj-<id>；沒有圖、載入失敗或關閉預覽時，畫面沿用原本的 SVG／CSS。 */
+const NJA={ok:{},IDS:['sky','scene-countryside']};/* scene-countryside：老師同意只用在過關畫面 */
+NJA.img=id=>{const u=THEME.src(id);if(!u)return Promise.resolve(false);const abs=new URL(u,location.href).href;
+ return new Promise(r=>{const im=new Image();im.onload=()=>{if(!THEME.on())return r(false);document.body.style.setProperty('--nj-img-'+id,'url("'+abs+'")');document.body.classList.add('nj-'+id);NJA.ok[id]=true;r(true)};im.onerror=()=>r(false);im.src=abs})};
+NJA.run=()=>THEME.on()?THEME.load().then(()=>Promise.all(NJA.IDS.map(NJA.img))).catch(()=>[]):Promise.resolve([]);
+NJA.clear=()=>{NJA.IDS.forEach(id=>{document.body.classList.remove('nj-'+id);document.body.style.removeProperty('--nj-img-'+id)});NJA.ok={}};
+{const _a=THEME.apply;THEME.apply=function(id){const r=_a.apply(this,arguments);try{THEME.on()?NJA.run():NJA.clear()}catch(e){}return r}}
+/* 天空慢速視差：跟著場景鏡頭移動，速度是前景的 5%；關閉動畫或減少動態時不移動 */
+{const _s=scene;scene=function(){const r=_s.apply(this,arguments);try{if(NJA.ok.sky){const st=$('#strip'),m=st&&/translateX\((-?[\d.]+)px/.exec(st.style.transform),mv=S.set.anim&&!REDUCED();$('#scene').style.setProperty('--njx',(m&&mv?(+m[1])*.05:0).toFixed(1)+'px')}}catch(e){}return r}}
+try{NJA.run()}catch(e){}
+/*P42-END*/
 (async()=>{let s=await load();if(s&&s.decks&&!s.v){await kvPut('backup-pre-v2',s);s=migrate(s)}const mb=await kvGet('music').catch(()=>null);if(mb)mus.url=URL.createObjectURL(mb);if(s)S={...DEF(),...s,set:{...DEF().set,...s.set}};if(s&&s.set&&s.set.vs==null&&s.set.vol!=null)S.set.vs=s.set.vol;
 await zaLoad();await LRN.ensure();try{if(await LIB.load()){await LIB.defBoot();LIB.sync()}}catch(e){console.warn('LIB boot',e)}if(S.set.stuName===undefined)S.set.stuName='';try{P28.init()}catch(e){}if(S.set.musSrc==='project'&&!S.set.musPicked)S.set.musSrc='builtin';if(!['key','listen','spell','speak'].includes(S.set.mode))S.set.mode='key';if(S.set.ttsMig!==3){S.set.ttsMig=3;S.set.ttsRate=.75;S.set.recRate=1.25;S.set.aiGain=1.5}if(!S.bankMap)S.bankMap={};if((S.banks||[]).some(b=>!(b.id in S.bankMap))||/^b:/.test(S.set.src||'')){if(!(await kvGet('backup-pre-bankmig')))await kvPut('backup-pre-bankmig',JSON.parse(JSON.stringify(S)));migrateBanks()}if(!S.set.musMig){S.set.musMig=1;S.set.musSrc='project';save()}FL.recover();try{FL.applyPref()}catch(e){}save();UI.init();home();mtLbl();packLoad();
  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();
