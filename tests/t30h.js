@@ -1,7 +1,7 @@
 const fs=require('fs');const {JSDOM}=require('jsdom');require('fake-indexeddb/auto');
 const html=fs.readFileSync(''+(process.env.IDX||(process.env.IDX||'/mnt/user-data/outputs/vocabulary-express/index.html'))+'','utf8').replace(/<script src[^>]*><\/script>/,'').replace('prepDone:false','prepDone:true');
 const R={P:0,F:0},T=(n,c)=>{c?R.P++:R.F++;console.log(c?'PASS':'FAIL',n)},sleep=ms=>new Promise(r=>setTimeout(r,ms));
-function mk(opt={}){const w=new JSDOM((opt.prep?html.replace('prepDone:true','prepDone:false'):html),{url:'http://localhost/?noseed'+(process.env.LIBMODE?'&libmode='+process.env.LIBMODE:''),runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){
+function mk(opt={}){const w=new JSDOM((opt.prep?html.replace('prepDone:true','prepDone:false'):html),{url:'http://localhost/?noseed'+(process.env.LIBMODE?'&libmode='+process.env.LIBMODE:''),runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){w.__P39FULL=opt.p39full!==false;/*v22.6.5：舊測試預設用原本 19 個後台分頁*/
  if(opt.vocab)w.fetch=async u=>{const p=require('path').join(process.env.VDIR||'/home/claude/repo',String(u).split('?')[0]);if(!fs.existsSync(p))return{ok:false,status:404};const b=fs.readFileSync(p);return{ok:true,status:200,json:async()=>JSON.parse(b.toString('utf8')),text:async()=>b.toString('utf8')}};
  w.indexedDB=opt.fresh?new (require('fake-indexeddb').IDBFactory)():indexedDB;w.alert=()=>{};w.confirm=()=>true;w.__ttsLog=[];w.__aud=[];w.__asr=[];w.__gum=0;
  w.speechSynthesis={getVoices:()=>[],cancel(){w.__ttsCancel=(w.__ttsCancel||0)+1},speak(u){w.__ttsLog.push({t:u.text,at:Date.now(),rate:u.rate,vol:u.volume});setTimeout(()=>u.onend&&u.onend(),60)}};w.SpeechSynthesisUtterance=function(t){this.text=t};

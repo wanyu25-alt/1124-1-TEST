@@ -2,7 +2,7 @@ const {JSDOM}=require('jsdom');const fs=require('fs');require('fake-indexeddb/au
 const html=fs.readFileSync((process.env.IDX||'/mnt/user-data/outputs/vocabulary-express/index.html'),'utf8').replace(/<script src[^>]*><\/script>/,'').replace("lm:'quiet'","lm:'integ'").replace("or:30,","or:0,").replace("hz:{u:'once',cost:true,n:1,free:false}","hz:{u:'none',cost:false,n:1,free:true}").replace("ap:true,","ap:false,").replace("oj:'A'","oj:'B'").replace("prepDone:false","prepDone:true");
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));let P=0,F=0;const T=(n,c)=>{c?P++:F++;console.log(c?'PASS':'FAIL',n)};
 const st={blob:null,alerts:[],conf:true,pw:'pw1'};
-const mk=()=>{const w=new JSDOM(html,{url:'http://localhost/?noseed',runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){w.indexedDB=indexedDB;w.alert=m=>st.alerts.push(m);w.confirm=()=>st.conf;w.prompt=()=>st.pw;
+const mk=()=>{const w=new JSDOM(html,{url:'http://localhost/?noseed',runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){w.__P39FULL=true;/*v22.6.5：用原本 19 個後台分頁檢查舊功能*/w.indexedDB=indexedDB;w.alert=m=>st.alerts.push(m);w.confirm=()=>st.conf;w.prompt=()=>st.pw;
  w.TextEncoder=TextEncoder;w.TextDecoder=TextDecoder;w.Blob=Blob;w.Response=Response;w.DecompressionStream=DecompressionStream;Object.defineProperty(w,'crypto',{value:nc.webcrypto,configurable:true});
  w.URL.createObjectURL=b=>{st.blob=b;return 'blob:x'};w.HTMLAnchorElement.prototype.click=function(){st.dl=this.download};
  w.AudioContext=function(){};w.speechSynthesis={getVoices:()=>[],cancel(){},speak(){}};w.SpeechSynthesisUtterance=function(){}}}).window;return w};

@@ -2,7 +2,7 @@
 const {JSDOM}=require('jsdom');const fs=require('fs');const {IDBFactory}=require('fake-indexeddb');
 const html=fs.readFileSync(process.env.IDX,'utf8').replace(/<script src[^>]*><\/script>/,'');
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));let P=0,F=0;const T=(n,c,x)=>{c?P++:F++;console.log(c?'PASS':'FAIL',n,c?'':JSON.stringify(x))};
-const mk=()=>{const w=new JSDOM(html,{url:'http://localhost/?noseed',runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){
+const mk=()=>{const w=new JSDOM(html,{url:'http://localhost/?noseed',runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){w.__P39FULL=true;/*v22.6.5：用原本 19 個後台分頁檢查舊功能*/
  w.indexedDB=new IDBFactory();w.alert=m=>{w.__al=m};w.confirm=()=>true;w.AudioContext=function(){};w.speechSynthesis={getVoices:()=>[],cancel(){},speak(u){setTimeout(()=>u.onend&&u.onend(),20)}};w.SpeechSynthesisUtterance=function(t){this.text=t};
  w.__net=0;w.fetch=()=>{w.__net++;return Promise.reject(new Error('no network in test'))};
  w.URL.createObjectURL=b=>{w.__blob=b;return 'blob:t'+Math.random()};w.URL.revokeObjectURL=()=>{};w.HTMLAnchorElement.prototype.click=function(){};
@@ -20,7 +20,7 @@ const importFull=async(w,b,mode)=>{const Pk=await w.eval('pkgFromZip')(b);w.__P=
  const A=await boot();seed(A,'甲','A');const bufA=await expFull(A);const z=await A.eval('zipRead')(bufA);const names=[...z.keys()];
  const man=JSON.parse(Buffer.from(z.get('manifest.json')).toString());
  T('① full backup contains teaching, observations, assessment files',['teaching.json','observations.json','assessment.json'].every(n=>names.includes(n)),names);
- T('① manifest has dataVersion, build, counts, and SHA-256 for every json file',man.dataVersion===3&&man.build==='v22.6.4'&&man.counts.records===2&&man.counts.observations===1&&man.counts.combos===1&&Object.entries(man.files).filter(([n])=>/\.json$/.test(n)).every(([,i])=>/^[0-9a-f]{64}$/.test(i.sha256||'')),man.counts);
+ T('① manifest has dataVersion, build, counts, and SHA-256 for every json file',man.dataVersion===3&&man.build==='v22.6.5'&&man.counts.records===2&&man.counts.observations===1&&man.counts.combos===1&&Object.entries(man.files).filter(([n])=>/\.json$/.test(n)).every(([,i])=>/^[0-9a-f]{64}$/.test(i.sha256||'')),man.counts);
  T('① backup never contains the teacher password hash or access log',!names.some(n=>/acl|pass/i.test(n))&&![...z.values()].some(b=>/"audit"|"salt"/.test(Buffer.from(b).toString().slice(0,200000))));
  const B=await boot();await importFull(B,bufA,'full');
  T('① full restore on a fresh browser brings back combos, matrix, sentences, scenes, observations, assessment fixes, records',B.eval('S.cb.length')===1&&B.eval('S.mx.length')===1&&B.eval('S.se.length')===1&&B.eval('S.sc.length')===1&&B.eval('S.ob.length')===1&&B.eval('!!S.as.fix.r_A')&&B.eval('S.recs.length')===2&&B.eval('S.cards.length')===3);

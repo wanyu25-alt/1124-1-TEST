@@ -5,13 +5,23 @@
 > **重要教訓**：增量包必須以 GitHub 實際提交為基準（不是舊 ZIP）；交付前比對校驗碼；部署後用 Console `APP.build+' '+APP.id` 確認版本。教師以 GitHub 網頁版「Add file → Upload files」上傳，**只能拖入檔案本身，不能拖整個資料夾**（曾因此產生子資料夾 vocabulary-express-v22_2-patch／v22_3-patch，待刪除）。
 > 新對話請提供：GitHub 目前的實際檔案（或最新完整網站）＋本文件＋DEVELOPMENT-ROADMAP.md。
 
-## 0-L. 第05-E批摘要（最新，v22.6.4，建置 20261128-05E，未推送）
+## 0-M. 第05-F批摘要（最新，v22.6.5，建置 20261128-05F，未推送）
+- P39：後台分頁整理（19 → 9）。
+  - 包裝 `tch()`：`P39.G` 定義新分頁；有子頁的群組（ana：la／dash／log；adv：cb／se）第二排 `.sub.p39s` 切換；`P39.HIDE` 把隱藏的 `sub` 代號導到新分頁。
+  - `P39.full=true`：顯示原本 19 個分頁、原本的 tIO／tSet／tLR 畫面（測試與日後恢復用）。
+  - `tIO` 改為兩個大按鈕（`#p39ex` → `ioExport('materials')`；`#iof1` → `ioPick`）；原版保留在 `P39.ioFull`。
+  - `tLR` 包裝：第 2 個面板收進 details，其後面板 display:none。
+  - `tSet` 包裝：以文字比對移除與學生設定重複的 label；`#vsp` 收進最後的 details；原版在 `P39.setFull`。
+- 雲端預留（P17）程式與說明保留，只是分頁不顯示；`BK.remind()` 顯示在資料搬家頁最上方。
+- 下一批（05-G）：重做後台「學習分析」（見 DEVELOPMENT-ROADMAP）。新批次的包裝請放在 P39 之後、開機程式之前。
+
+## 0-L. 第05-E批摘要（v22.6.4，建置 20261128-05E，已推送 79095f2）
 - P38：
   - `body:not(.ig) #scene{display:none}`；包裝 `scene()`：從隱藏變顯示時再排一次。
   - 選單 `#n4`「📊 學習分析」、`#n2`「🛠 後台更改」。
   - `PAR.TABS` 只留 res、ab：`PAR.sec.ab` 改為五邊形（`P38.AX`、`P38.axis`、`P38.radar`）；`PAR.sec.res` 加 `P38.recent`（生活問法 `P38.life` 用 `CLZ.q`／`sent`）。
   - 包裝 `UI.settings`，移除打勾項與學習輔助、麥克風區。
-- 詳見 BATCH05E-REPORT.md。新批次的包裝請放在 P38 之後、開機程式之前。
+- 詳見 BATCH05E-REPORT.md。
 
 ## 0-K. 第05-D批摘要（v22.6.3，建置 20261128-05D，已推送 9134777）
 - 聽句子說詞加入 156 句猜謎問句（`tools/lang-src/riddles.mjs`，教師確認），共 313 句。

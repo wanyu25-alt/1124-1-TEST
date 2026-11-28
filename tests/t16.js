@@ -1,7 +1,7 @@
 const {JSDOM}=require('jsdom');const fs=require('fs');require('fake-indexeddb/auto');
 const html=fs.readFileSync((process.env.IDX||'/mnt/user-data/outputs/vocabulary-express/index.html'),'utf8').replace(/<script src[^>]*><\/script>/,'').replace("lm:'quiet'","lm:'integ'").replace("or:30,","or:0,").replace("hz:{u:'once',cost:true,n:1,free:false}","hz:{u:'none',cost:false,n:1,free:true}").replace("ap:true,","ap:false,").replace("oj:'A'","oj:'B'").replace("prepDone:false","prepDone:true");const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 let P=0,F=0;const T=(n,c)=>{c?P++:F++;console.log(c?'PASS':'FAIL',n)};const al=[];let conf=true,cmsg=[];
-const mk=()=>new JSDOM(html,{url:'http://localhost/?noseed',runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){w.indexedDB=indexedDB;w.alert=m=>al.push(m);w.confirm=m=>{cmsg.push(m);return conf};w.prompt=()=>w.__p;w.AudioContext=function(){};w.speechSynthesis={getVoices:()=>[],cancel(){}}}}).window;
+const mk=()=>new JSDOM(html,{url:'http://localhost/?noseed',runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){w.__P39FULL=true;/*v22.6.5：用原本 19 個後台分頁檢查舊功能*/w.indexedDB=indexedDB;w.alert=m=>al.push(m);w.confirm=m=>{cmsg.push(m);return conf};w.prompt=()=>w.__p;w.AudioContext=function(){};w.speechSynthesis={getVoices:()=>[],cancel(){}}}}).window;
 (async()=>{let w=mk();await sleep(500);const E=s=>w.eval(s);
  const card=(id,t,cats)=>({id,text:t,zy:'ㄅ',img:'data:image/png;base64,AAA',audio:'',cats,created:1,modified:1});
  // data like the user's: 8 categories incl. six single-word ones

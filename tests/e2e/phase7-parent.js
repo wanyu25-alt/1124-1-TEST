@@ -1,6 +1,6 @@
 // 新版第05階段（Chromium 模擬，不是真機）：家長專區實際點擊——六個分頁、日期篩選、一鍵複習建立實際遊戲、生活觀察、教師設定模板、匯出入
 const {chromium}=require('playwright');const fs=require('fs');let P=0,F=0;const T=(n,c,x)=>{c?P++:F++;console.log(c?'PASS':'FAIL',n,c?'':JSON.stringify(x))};
-(async()=>{const b=await chromium.launch();const ctx=await b.newContext({viewport:{width:900,height:900},acceptDownloads:true});const p=await ctx.newPage();const errs=[];p.on('pageerror',e=>errs.push(e.message));
+(async()=>{const b=await chromium.launch();const ctx=await b.newContext({viewport:{width:900,height:900},acceptDownloads:true});await ctx.addInitScript(()=>{window.__P39FULL=true});/*v22.6.5：用原本 19 個後台分頁*/const p=await ctx.newPage();const errs=[];p.on('pageerror',e=>errs.push(e.message));
 await p.goto('http://localhost:8124/1124-1-TEST/');await p.waitForFunction(()=>typeof PAR!=='undefined'&&S&&S.cards&&S.cards.length>=8,null,{timeout:40000});await p.waitForTimeout(1200);
 await p.evaluate(()=>{window.confirm=()=>true;window.alert=m=>{window.__al=m};S.set.music=false;S.set.sound=false;V2.prepDone=true;S.set.ap=false;S.set.anim=false;S.set.lm='quiet';save();
  window.__n=0;const t=d=>Date.now()-d*864e5-36e5,cs=S.cards.filter(c=>c.img&&!c.part).slice(0,8);
@@ -61,7 +61,7 @@ T('其他個案名稱不出現在家長專區與切換清單',!/別人家的孩�
 // 匯出入：模板隨教材 ZIP
 const dl=p.waitForEvent('download');await p.evaluate(()=>{tab(2);sub='io';tch()});await p.click('text=⬇ 匯出完整教材 ZIP');const d=await dl;await d.saveAs('/tmp/par-export.zip');
 T('教材 ZIP 含 parent.json（模板）',/parent\.json/.test(fs.readFileSync('/tmp/par-export.zip').toString('latin1')));
-const p2=await (await b.newContext({viewport:{width:900,height:900}})).newPage();p2.on('pageerror',e=>errs.push('B:'+e.message));
+const c2=await b.newContext({viewport:{width:900,height:900}});await c2.addInitScript(()=>{window.__P39FULL=true});const p2=await c2.newPage();p2.on('pageerror',e=>errs.push('B:'+e.message));
 await p2.goto('http://localhost:8124/1124-1-TEST/');await p2.waitForFunction(()=>typeof PAR!=='undefined'&&S&&S.cards&&S.cards.length>=8,null,{timeout:40000});await p2.waitForTimeout(800);
 await p2.evaluate(()=>{window.confirm=()=>true;window.alert=()=>{};tab(2);sub='io';tch()});await p2.setInputFiles('#iof1','/tmp/par-export.zip');await p2.waitForSelector('text=確認匯入',{timeout:15000}).catch(()=>{});
 await p2.evaluate(()=>{const e=document.querySelector('input[name=iom][value=merge]');if(e)e.checked=true});await p2.click('button:has-text("確認匯入")').catch(async()=>{await p2.evaluate(()=>ioApply())});await p2.waitForTimeout(2500);

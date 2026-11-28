@@ -379,7 +379,7 @@ body.aid-calm #scene{max-height:90px;overflow:hidden}body.aid-calm .stc .ste{dis
 <script src="lib/pinyin-pro.js"></script>
 <script>
 /* ===== 基本工具 ===== */
-const APP={build:'v22.6.4',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
+const APP={build:'v22.6.5',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -6241,7 +6241,7 @@ ZG.KEEP=['ttsRate','recRate','aiGain'];
 {const f=LRN.ensure;LRN.ensure=async function(){const r=await f.apply(this,arguments);try{if(S.set&&!S.set.ttsFix224){(S.lrn&&S.lrn.list||[]).forEach(p=>{const pr=p.ext&&p.ext.pref;if(pr&&+pr.ttsRate===0.5)pr.ttsRate=.75});S.set.ttsFix224=1}}catch(e){}return r}}
 /*P26-END*/
 /*P27-BEGIN v22.4.1 第03-B批：舊版示範教材完全移除（併入 GitHub 15:30 的 P23B 並補強）、materials/ 依賴移除、跨瀏覽器語音備援、版本識別 */
-APP.id='20261128-05E';
+APP.id='20261128-05F';
 /* ---- 一、舊版內建示範教材（materials/ 18 張、4 個分類）：備份後一次性移除 ----
    只移除「仍與網站原始版本完全相同」的舊版圖卡（以 packSnap 簽章比對，不看名稱）；老師改過的保留為自訂教材；
    舊版分類只有在裡面已經沒有任何保留下來的圖卡時才移除；學習紀錄全部保留；S.legacyGone 標記後不再重複執行。
@@ -6774,6 +6774,64 @@ PAR.TABS0=PAR.TABS;/* 原本的六個分頁清單保留 */PAR.TABS=[['res','學�
   R.querySelectorAll('.panel').forEach(p=>{const h3=p.querySelector('h3');if(h3&&/學習輔助|麥克風/.test(h3.textContent))p.remove()});
   const d=document.createElement('div');d.appendChild(R);return d.innerHTML}catch(e){console.warn('P38 settings',e);return h}}}
 /*P38-END*/
+/*P39-BEGIN v22.6.5 第05-F批：後台更改整理（19 個分頁 → 9 個）、資料搬家簡化、教學設定精簡
+  教師：後台分頁太多、看不懂。
+  - 留下：詞彙管理、詞彙庫、分類管理、學習分析（熟悉度＋儀表板＋練習紀錄）、資料搬家與備份、學生名單、教學設定、密碼與隱私、自訂組合與句子（進階）。
+  - 隱藏：學習模式與口語、注音音檔、生活觀察、語言能力評量、初始評量與推薦、學習分析頁設定（家長用）、資料安全與雲端預留。
+    程式與資料都不刪，裡面的設定值照常生效；P39.full=true 可叫出原本 19 個分頁（測試與日後需要時用）。
+  - 資料搬家：只帶教材（不含學生紀錄），兩個大按鈕；完整備份收進「進階」。 */
+const P39={full:!!window.__P39FULL,last:{}};/* __P39FULL：舊測試在載入前設定，用原本 19 個分頁檢查舊功能；網站本身不會設定 */
+(()=>{try{const st=document.createElement('style');st.textContent='.sub.p39s{margin-top:-4px}.sub.p39s button{font-size:14px;padding:4px 10px}.p39big{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin:8px 0}.p39big>div{border:2px solid #cfe0f7;border-radius:14px;padding:10px;background:#f7fbff}.p39big h3{margin:0 0 4px}details.panel>summary{cursor:pointer}';document.head.appendChild(st)}catch(e){}})();
+P39.G=[{k:'cards',n:'🖼 詞彙管理'},{k:'lib',n:'📖 詞彙庫'},{k:'cats',n:'🏷 分類管理'},
+ {k:'ana',n:'🧭 學習分析',s:[['la','熟悉度（Level／主題）'],['dash','儀表板與報表'],['log','練習紀錄']]},
+ {k:'io',n:'📦 資料搬家與備份'},{k:'lr',n:'👤 學生名單'},{k:'set',n:'⚙ 教學設定'},{k:'acl',n:'🔒 密碼與隱私'},
+ {k:'adv',n:'✏ 自訂組合與句子（進階）',s:[['cb','詞彙組合'],['se','語句與情境']]}];
+P39.HIDE={lm:'set',za:'set',ob:'la',as:'la',rc:'la',par:'cards',sec:'io'};/* 被隱藏的分頁 → 最接近的新分頁 */
+P39.grp=k=>P39.G.find(g=>g.s?g.s.some(x=>x[0]===k):g.k===k);
+P39.go=k=>{const g=P39.G.find(x=>x.k===k);if(!g)return;sub=g.s?(P39.last[k]||g.s[0][0]):k;tch()};
+P39.bar=()=>{const t=$('#tch'),b=t&&t.querySelector('.sub');if(!b)return;const cur=P39.grp(sub);
+ b.innerHTML=P39.G.map(g=>`<button class="${g===cur?'on':''}" onclick="P39.go('${g.k}')">${g.n}</button>`).join('');
+ if(cur&&cur.s){P39.last[cur.k]=sub;b.insertAdjacentHTML('afterend',`<div class="sub p39s">${cur.s.map(([k,n])=>`<button class="${sub===k?'on':''}" onclick="sub='${k}';tch()">${n}</button>`).join('')}</div>`+
+  (cur.k==='adv'?'<div class="panel" style="background:#fff7d6"><b>這是進階功能，平常不用設定。</b><br><small>網站會內建詞彙組合與句子。只有想加入孩子的個人化內容（例如家人的稱呼、愛吃的東西），或要勾選「哪些組合已經教過」時，才需要到這裡。</small></div>':''))}};
+{const _t=tch;tch=function(){if(!P39.full&&P39.HIDE[sub])sub=P39.HIDE[sub];const r=_t.apply(this,arguments);if(!P39.full)try{P39.bar()}catch(e){console.warn('P39 bar',e)}return r}}
+/* 學生名單：只顯示個案清單（新增、切換、封存）；改名與學習設定收進摺疊區；其餘面板隱藏（資料與設定不變） */
+P39.lrOpen=false;
+{const _l=tLR;tLR=function(){const r=_l.apply(this,arguments);if(P39.full)return r;try{const sp=$('#sp'),ch=[...sp.children];
+  const h=ch[0]&&ch[0].querySelector('h3');if(h)h.textContent='👤 學生名單';
+  if(ch[1]){const d=document.createElement('details');d.className='panel';d.open=P39.lrOpen;d.ontoggle=()=>{P39.lrOpen=d.open};d.innerHTML='<summary><b>✏ 改名與這位學生的學習設定（一般不用改）</b></summary>';ch[1].classList.remove('panel');sp.insertBefore(d,ch[1]);d.appendChild(ch[1])}
+  ch.slice(2).forEach(e=>{e.style.display='none'})}catch(e){console.warn('P39 lr',e)}return r}}
+/* 資料搬家與備份 */
+P39.ioFull=tIO;
+tIO=function(){if(P39.full)return P39.ioFull.apply(this,arguments);
+ const my=S.cards.filter(c=>!c.lib),lx=S.lastExportAt?new Date(S.lastExportAt).toLocaleString('zh-TW',{hour12:false}):'尚未匯出過',AC='.zip,.json,.enc,application/zip,application/json,application/octet-stream';
+ let rm='';try{rm=BK.remind()||''}catch(e){}
+ $('#sp').innerHTML=rm+`<div class="panel"><h3 style="margin:0">📦 資料搬家：把教材帶到另一台電腦</h3>
+ <p style="margin:4px 0">教材只存在「這台電腦的這個瀏覽器」。換電腦或要把新做的圖卡給其他老師時：<br><b>A 電腦按 ①</b> → 把下載的檔案用隨身碟、雲端硬碟或 LINE 傳過去 → <b>B 電腦按 ②</b>。</p>
+ <div class="p39big"><div><h3>① 匯出這台電腦的教材</h3><p style="margin:2px 0 8px"><small>包含：老師或家長自己做的圖卡、圖片、錄音、分類，詞彙庫的設定，自訂組合與句子。<b>不含學生的學習紀錄。</b></small></p>
+  <button class="btn go" id="p39ex" style="font-size:22px;padding:14px 22px" onclick="ioExport('materials')">⬇ 匯出教材</button> ${IOP.last?'<button class="btn alt" onclick="ioShare()">📲 用分享選單儲存（iPad）</button>':''}</div>
+ <div><h3>② 放入別台電腦的教材</h3><p style="margin:2px 0 8px"><small>選擇從另一台電腦匯出的檔案。會先顯示預覽，按「執行匯入」才放入。預設「合併」：這台原有的教材和學生紀錄都不會被刪除，放入前也會自動備份。</small></p>
+  <label class="btn go" style="font-size:22px;padding:14px 22px;cursor:pointer;display:inline-block">⬆ 選擇檔案放入<input type="file" id="iof1" accept="${AC}" style="display:none" onchange="ioPick(this.files[0]);this.value=''"></label></div></div>
+ <p style="margin:0"><small>這台電腦目前有：自訂圖卡 ${my.length} 張、分類 ${S.cats.filter(c=>!c.lib).length} 個、圖片 ${my.filter(c=>c.img).length} 張、錄音 ${my.filter(c=>c.audio).length} 個。上次匯出：${lx}</small></p></div>
+ <div id="iopv"></div><p id="iop" style="font-weight:bold;color:#2f6fe4">${esc(IOP.msg||'')}</p>
+ <details class="panel"><summary><b>▸ 進階：完整備份與還原（含學習紀錄）、網站教材更新、匯出紀錄 CSV</b></summary>
+ <div style="background:#eef7ff;border-radius:10px;padding:8px;margin:8px 0"><h3 style="margin:0">💾 完整資料備份（含學習紀錄）</h3><p>備份所有教材、設定及學生學習紀錄、星星與進度，用來還原同一台電腦的完整資料。<b>包含學生學習紀錄，請妥善保管，不要分享給無關人員。</b></p>
+ <p><label>加密密碼（選填；留空＝不加密。忘記密碼無法復原）</label><input type="password" id="iopw" autocomplete="new-password"></p>
+ <button class="btn go" onclick="ioExport('full')">⬇ 匯出完整資料備份</button>
+ <p><label>還原完整資料備份（選擇備份檔）</label><input type="file" id="iof2" accept="${AC}" onchange="ioPick(this.files[0]);this.value=''"></p></div>
+ ${packPanel()}
+ <p><button class="btn alt" onclick="bkDl()">⬇ 下載升級前舊資料備份</button> <button class="btn alt" onclick="csv()">⬇ 匯出學習紀錄 CSV（可用 Excel 開啟）</button></p>
+ <p><small>匯入前系統會自動把目前資料另存一份在本機；匯入失敗時不會改動原有資料。iPad 匯出的檔案會出現在「下載項目」，可儲存到「檔案」App。清除瀏覽器資料會讓本機資料消失，請定期匯出。</small></p></details>`;
+ if(IOP.P)ioPreview()};
+/* 教學設定：只留老師才需要的項目；和上方「⚙ 設定」重複的項目不顯示（S.set 的值不變） */
+P39.setFull=tSet;
+tSet=function(){const r=P39.setFull.apply(this,arguments);if(P39.full)return r;try{const sp=$('#sp');
+  const RX=/開啟音效|老師語音回饋|真人操作引導語音|音效音量|老師語音音量|背景音樂音量|詞語語音音量|語音速度|麥克風聲音波浪|麥克風靈敏度|動畫效果/;
+  sp.querySelectorAll('label').forEach(l=>{if(RX.test(l.textContent))l.remove()});
+  sp.querySelectorAll('p').forEach(p=>{if(p.querySelector('[onclick^="measureGap"]'))p.remove()});
+  const v=sp.querySelector('#vsp');if(v){const d=document.createElement('details');d.className='panel';d.innerHTML='<summary><b>▸ 進階：語音速度與音檔測試</b></summary>';v.classList.remove('panel');d.appendChild(v);sp.appendChild(d)}
+  sp.insertAdjacentHTML('afterbegin','<div class="panel" style="background:#eef7ff"><b>⚙ 教學設定</b>：這裡只放老師才需要調整的項目（題目數量、提示階梯、背景音樂來源、學生稱呼、過關慶祝條件）。<br><small>音量、語音速度、畫面、輸入方式請到上方選單的「⚙ 設定」。</small></div>')
+ }catch(e){console.warn('P39 set',e)}return r};
+/*P39-END*/
 (async()=>{let s=await load();if(s&&s.decks&&!s.v){await kvPut('backup-pre-v2',s);s=migrate(s)}const mb=await kvGet('music').catch(()=>null);if(mb)mus.url=URL.createObjectURL(mb);if(s)S={...DEF(),...s,set:{...DEF().set,...s.set}};if(s&&s.set&&s.set.vs==null&&s.set.vol!=null)S.set.vs=s.set.vol;
 await zaLoad();await LRN.ensure();try{if(await LIB.load()){await LIB.defBoot();LIB.sync()}}catch(e){console.warn('LIB boot',e)}if(S.set.stuName===undefined)S.set.stuName='';try{P28.init()}catch(e){}if(S.set.musSrc==='project'&&!S.set.musPicked)S.set.musSrc='builtin';if(!['key','listen','spell','speak'].includes(S.set.mode))S.set.mode='key';if(S.set.ttsMig!==3){S.set.ttsMig=3;S.set.ttsRate=.75;S.set.recRate=1.25;S.set.aiGain=1.5}if(!S.bankMap)S.bankMap={};if((S.banks||[]).some(b=>!(b.id in S.bankMap))||/^b:/.test(S.set.src||'')){if(!(await kvGet('backup-pre-bankmig')))await kvPut('backup-pre-bankmig',JSON.parse(JSON.stringify(S)));migrateBanks()}if(!S.set.musMig){S.set.musMig=1;S.set.musSrc='project';save()}FL.recover();try{FL.applyPref()}catch(e){}save();UI.init();home();mtLbl();packLoad();
  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();

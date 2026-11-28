@@ -1,6 +1,6 @@
 // 第08階段（新版）（Chromium 模擬，不是真機）：本機儲存、備份檔內容、重新整理後保留、不同瀏覽器不共用資料
 const {chromium}=require('playwright');const cp=require('child_process');let P=0,F=0;const T=(n,c,x)=>{c?P++:F++;console.log(c?'PASS':'FAIL',n,c?'':JSON.stringify(x))};
-(async()=>{const b=await chromium.launch();const ctx=await b.newContext({viewport:{width:1000,height:900},acceptDownloads:true});const pg=await ctx.newPage();const errs=[],reqs=[];pg.on('pageerror',e=>errs.push(e.message));pg.on('request',r=>reqs.push(r.url()));
+(async()=>{const b=await chromium.launch();const ctx=await b.newContext({viewport:{width:1000,height:900},acceptDownloads:true});await ctx.addInitScript(()=>{window.__P39FULL=true});/*v22.6.5：用原本 19 個後台分頁*/const pg=await ctx.newPage();const errs=[],reqs=[];pg.on('pageerror',e=>errs.push(e.message));pg.on('request',r=>reqs.push(r.url()));
 await pg.goto('http://localhost:8124/1124-1-TEST/');await pg.waitForFunction(()=>typeof P17!=='undefined'&&S&&S.cards&&S.cards.length>=1,null,{timeout:40000});await pg.waitForTimeout(1200);
 await pg.evaluate(()=>{window.confirm=()=>true;window.alert=m=>{window.__al=m};V2.prepDone=true;S.cards.push({id:'pa',text:'喝',zy:'ㄏ',img:'',audio:'',cats:[],part:true},{id:'pb',text:'水',zy:'ㄕ',img:'',audio:'',cats:[],part:true});S.cb=[{id:'cbx',parts:['pa','pb'],rel:'act_obj',ok:true,created:1}];
  S.ob=[{id:'ob1',learnerId:LRN.id(),ts:Date.now(),text:'我要水',src:'real_life'}];S.recs.push({id:'RR1',learnerId:LRN.id(),itemId:S.cards[0].id,game:'pick',outcome:'correct',ts:Date.now()});save()});
@@ -20,7 +20,7 @@ T('備份清單有資料版本與 SHA-256',man.dataVersion===3&&man.files['teach
 await pg.evaluate(()=>{sub='sec';tab(2)});await pg.waitForTimeout(400);
 T('備份後提醒消失，並記錄備份時間',!/還沒有做過完整備份/.test(await pg.textContent('#sp'))&&await pg.evaluate(()=>S.lastFullBackupAt>0));
 // 不同瀏覽器（新的 context）不共用資料：沒有跨裝置同步
-const ctx2=await b.newContext();const p2=await ctx2.newPage();await p2.goto('http://localhost:8124/1124-1-TEST/');await p2.waitForFunction(()=>typeof P17!=='undefined'&&S&&S.cards,null,{timeout:40000});await p2.waitForTimeout(1200);
+const ctx2=await b.newContext();await ctx2.addInitScript(()=>{window.__P39FULL=true});const p2=await ctx2.newPage();await p2.goto('http://localhost:8124/1124-1-TEST/');await p2.waitForFunction(()=>typeof P17!=='undefined'&&S&&S.cards,null,{timeout:40000});await p2.waitForTimeout(1200);
 T('另一個瀏覽器環境看不到這份資料（目前沒有跨裝置同步）',await p2.evaluate(()=>!(S.cb||[]).length&&!(S.ob||[]).length&&!S.recs.some(r=>r.id==='RR1')));
 // 網路：除了本站靜態檔案，沒有任何對外連線
 const ext=reqs.filter(u=>!u.startsWith('http://localhost:8124/')&&!u.startsWith('data:')&&!u.startsWith('blob:'));
