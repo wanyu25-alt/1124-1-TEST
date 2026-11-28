@@ -1,0 +1,878 @@
+{
+ "schemaVersion": 1,
+ "themeId": "nature-journey",
+ "name": "自然旅行繪本風",
+ "stage": 2,
+ "note": "素材索引。src 為 null 或 status 不是 ready 的素材，程式一律使用原本的畫面（備援）。放入新圖片時：把檔案放進對應資料夾，填寫 src（相對於本資料夾），status 改成 ready。規格見 THEME-NATURE-STAGE1-REPORT.md 第 7 節。",
+ "assets": {
+  "sky": {
+   "category": "backgrounds",
+   "src": null,
+   "status": "pending",
+   "transparent": false,
+   "tileX": true,
+   "size": [
+    2400,
+    600
+   ]
+  },
+  "bike-far": {
+   "category": "backgrounds",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": true,
+   "size": [
+    2400,
+    400
+   ]
+  },
+  "bike-mid": {
+   "category": "backgrounds",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": true,
+   "size": [
+    2400,
+    300
+   ]
+  },
+  "car-far": {
+   "category": "backgrounds",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": true,
+   "size": [
+    2400,
+    400
+   ]
+  },
+  "car-mid": {
+   "category": "backgrounds",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": true,
+   "size": [
+    2400,
+    300
+   ]
+  },
+  "train-far": {
+   "category": "backgrounds",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": true,
+   "size": [
+    2400,
+    400
+   ]
+  },
+  "train-mid": {
+   "category": "backgrounds",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": true,
+   "size": [
+    2400,
+    300
+   ]
+  },
+  "hsr-far": {
+   "category": "backgrounds",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": true,
+   "size": [
+    2400,
+    400
+   ]
+  },
+  "hsr-mid": {
+   "category": "backgrounds",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": true,
+   "size": [
+    2400,
+    300
+   ]
+  },
+  "plane-far": {
+   "category": "backgrounds",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": true,
+   "size": [
+    2400,
+    400
+   ]
+  },
+  "plane-mid": {
+   "category": "backgrounds",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": true,
+   "size": [
+    2400,
+    300
+   ]
+  },
+  "path": {
+   "category": "tracks",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": true,
+   "size": [
+    1200,
+    120
+   ]
+  },
+  "road": {
+   "category": "tracks",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": true,
+   "size": [
+    1200,
+    120
+   ]
+  },
+  "rail": {
+   "category": "tracks",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": true,
+   "size": [
+    1200,
+    120
+   ]
+  },
+  "runway": {
+   "category": "tracks",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": true,
+   "size": [
+    1200,
+    120
+   ]
+  },
+  "viaduct": {
+   "category": "tracks",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": true,
+   "size": [
+    1200,
+    200
+   ]
+  },
+  "bicycle": {
+   "category": "vehicles",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    480,
+    360
+   ]
+  },
+  "car": {
+   "category": "vehicles",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    520,
+    320
+   ]
+  },
+  "train-engine": {
+   "category": "vehicles",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    560,
+    360
+   ]
+  },
+  "train-carriage": {
+   "category": "vehicles",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    420,
+    300
+   ]
+  },
+  "train-smoke": {
+   "category": "vehicles",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    300,
+    200
+   ]
+  },
+  "hsr-head": {
+   "category": "vehicles",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    640,
+    240
+   ]
+  },
+  "hsr-car": {
+   "category": "vehicles",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    480,
+    240
+   ]
+  },
+  "airplane": {
+   "category": "vehicles",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    600,
+    300
+   ]
+  },
+  "kid-wave": {
+   "category": "characters",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    320,
+    420
+   ]
+  },
+  "kid-suitcase": {
+   "category": "characters",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    360,
+    420
+   ]
+  },
+  "kid-binoculars": {
+   "category": "characters",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    320,
+    420
+   ]
+  },
+  "kid-jump": {
+   "category": "characters",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    360,
+    420
+   ]
+  },
+  "kid-ticket": {
+   "category": "characters",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    320,
+    420
+   ]
+  },
+  "kid-bench": {
+   "category": "characters",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    420,
+    360
+   ]
+  },
+  "conductor-flag": {
+   "category": "characters",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    320,
+    440
+   ]
+  },
+  "kid-peek": {
+   "category": "characters",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    260,
+    300
+   ]
+  },
+  "rabbit": {
+   "category": "animals",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    240,
+    240
+   ]
+  },
+  "snail": {
+   "category": "animals",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    240,
+    240
+   ]
+  },
+  "cat": {
+   "category": "animals",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    240,
+    240
+   ]
+  },
+  "dog": {
+   "category": "animals",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    240,
+    240
+   ]
+  },
+  "bird": {
+   "category": "animals",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    240,
+    240
+   ]
+  },
+  "hedgehog": {
+   "category": "animals",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    240,
+    240
+   ]
+  },
+  "squirrel": {
+   "category": "animals",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    240,
+    240
+   ]
+  },
+  "butterfly": {
+   "category": "animals",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    240,
+    240
+   ]
+  },
+  "duck": {
+   "category": "animals",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    240,
+    240
+   ]
+  },
+  "frog": {
+   "category": "animals",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    240,
+    240
+   ]
+  },
+  "rabbit-hop": {
+   "category": "animals",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    240,
+    240
+   ]
+  },
+  "bird-fly": {
+   "category": "animals",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    240,
+    240
+   ]
+  },
+  "cat-peek": {
+   "category": "animals",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    240,
+    240
+   ]
+  },
+  "tree": {
+   "category": "decorations",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    360,
+    440
+   ]
+  },
+  "tree-blossom": {
+   "category": "decorations",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    360,
+    440
+   ]
+  },
+  "pine": {
+   "category": "decorations",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    360,
+    440
+   ]
+  },
+  "flower-bush": {
+   "category": "decorations",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    320,
+    200
+   ]
+  },
+  "flowers-small": {
+   "category": "decorations",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    320,
+    200
+   ]
+  },
+  "grass-tuft": {
+   "category": "decorations",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    320,
+    200
+   ]
+  },
+  "fence": {
+   "category": "decorations",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": true,
+   "size": [
+    480,
+    180
+   ]
+  },
+  "signpost": {
+   "category": "decorations",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    240,
+    320
+   ]
+  },
+  "house": {
+   "category": "decorations",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    520,
+    400
+   ]
+  },
+  "station": {
+   "category": "decorations",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    520,
+    400
+   ]
+  },
+  "lamp": {
+   "category": "decorations",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    160,
+    320
+   ]
+  },
+  "stump": {
+   "category": "decorations",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    160,
+    320
+   ]
+  },
+  "mailbox": {
+   "category": "decorations",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    160,
+    320
+   ]
+  },
+  "star": {
+   "category": "icons",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    128,
+    128
+   ]
+  },
+  "star-smile": {
+   "category": "rewards",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    200,
+    200
+   ]
+  },
+  "badge": {
+   "category": "rewards",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    300,
+    360
+   ]
+  },
+  "bunting": {
+   "category": "rewards",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": true,
+   "size": [
+    800,
+    200
+   ]
+  },
+  "confetti-1": {
+   "category": "rewards",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    300,
+    300
+   ]
+  },
+  "confetti-2": {
+   "category": "rewards",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    300,
+    300
+   ]
+  },
+  "confetti-3": {
+   "category": "rewards",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    300,
+    300
+   ]
+  },
+  "confetti-4": {
+   "category": "rewards",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    300,
+    300
+   ]
+  },
+  "trophy": {
+   "category": "rewards",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    300,
+    340
+   ]
+  },
+  "play": {
+   "category": "icons",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    128,
+    128
+   ]
+  },
+  "listen": {
+   "category": "icons",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    128,
+    128
+   ]
+  },
+  "hint": {
+   "category": "icons",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    128,
+    128
+   ]
+  },
+  "retry": {
+   "category": "icons",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    128,
+    128
+   ]
+  },
+  "home": {
+   "category": "icons",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    128,
+    128
+   ]
+  },
+  "settings": {
+   "category": "icons",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    128,
+    128
+   ]
+  },
+  "mic": {
+   "category": "icons",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    128,
+    128
+   ]
+  },
+  "back": {
+   "category": "icons",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    128,
+    128
+   ]
+  },
+  "skip": {
+   "category": "icons",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    128,
+    128
+   ]
+  },
+  "adult-help": {
+   "category": "icons",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    128,
+    128
+   ]
+  },
+  "next": {
+   "category": "icons",
+   "src": null,
+   "status": "pending",
+   "transparent": true,
+   "tileX": false,
+   "size": [
+    128,
+    128
+   ]
+  },
+  "paper": {
+   "category": "ui",
+   "src": null,
+   "status": "pending",
+   "transparent": false,
+   "tileX": true,
+   "size": [
+    512,
+    512
+   ]
+  }
+ }
+}

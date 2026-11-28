@@ -1,0 +1,159 @@
+/* 詞彙特快車｜自然旅行繪本風主題（nature-journey）
+   - 只在 <body class="th-nature"> 時生效；沒有這個 class 時，網站維持原本的樣子。
+   - 第二階段：只有色彩與介面元件（HTML／CSS），還沒有使用任何圖片。
+   - 文字對比度：所有「文字／底色」組合都至少 4.5:1（一般文字標準）。不使用白字放在中間色上。
+   - 狀態除了顏色，也用邊框樣式與符號區分（正確 ✓＋實線、錯誤＋虛線、提示＋淡黃底線框）。 */
+
+/* ===== 1. 色彩變數（Design Tokens） ===== */
+body.th-nature{
+ /* 背景基底 */
+ --nj-paper:#F8F5EB;--nj-beige:#E9E5D6;--nj-sky:#DCE9EB;--nj-grass:#DCE7D2;--nj-card:#FFFDF7;
+ /* 主要功能色（淡色＝底色；深色＝邊框與文字） */
+ --nj-teal:#91B9A6;--nj-teal-l:#E2EEE6;--nj-teal-m:#CFE3D7;--nj-teal-d:#3F6E59;
+ --nj-ocean:#91B9D0;--nj-ocean-l:#E3EEF4;--nj-ocean-d:#2F5D8A;
+ --nj-butter:#EACB86;--nj-butter-l:#F4E6BE;--nj-butter-d:#6B4E1A;
+ --nj-coral:#DDAA96;--nj-coral-l:#F6E4DC;--nj-coral-d:#8A4A3A;
+ --nj-lilac:#C8BBD8;--nj-lilac-l:#EEE9F4;--nj-lilac-d:#5E4E7A;
+ /* 學習狀態 */
+ --nj-ok:#82B7D5;--nj-ok-l:#DCEAF4;--nj-ok-d:#23476B;
+ --nj-bad:#E6A16E;--nj-bad-l:#FBE7D7;--nj-bad-d:#7A4416;
+ --nj-star:#E8C35F;--nj-star-d:#8A6A1F;
+ /* 文字與線條 */
+ --nj-ink:#40584D;--nj-ink2:#5A6D5E;--nj-line:#E2DCC8;--nj-line-d:#CFC8B2;
+ --nj-r:16px;--nj-r-s:10px;--nj-shadow:0 2px 0 var(--nj-line);
+ /* 把原本程式的共用變數換成新色票（原本的元件會自動跟著換色） */
+ --ink:var(--nj-ink);--line:var(--nj-line);--leaf:var(--nj-teal-d);--red:var(--nj-coral-d);--sun:var(--nj-star);--card:var(--nj-card);--sky:var(--nj-sky);
+ color:var(--nj-ink);
+ background-color:var(--nj-paper);
+ /* 非常淡的紙張紋理（CSS 繪製，沒有圖片） */
+ background-image:radial-gradient(rgba(64,88,77,.035) 1px,transparent 1.2px),radial-gradient(rgba(64,88,77,.025) 1px,transparent 1.2px);
+ background-size:7px 7px,11px 11px;background-position:0 0,3px 5px;
+}
+
+/* ===== 2. 上方選單 ===== */
+body.th-nature nav{background:var(--nj-beige);border-bottom:2px solid var(--nj-line-d)}
+body.th-nature nav button{color:var(--nj-ink);font-weight:700;border-radius:12px;border:2px solid transparent}
+body.th-nature nav button:hover{background:var(--nj-card)}
+body.th-nature nav button.on{background:var(--nj-butter-l);color:var(--nj-butter-d);border-color:var(--nj-butter)}
+
+/* ===== 3. 按鈕 ===== */
+body.th-nature .btn{background:var(--nj-teal-m);color:var(--nj-ink);border:2px solid var(--nj-teal-d);border-radius:14px;font-weight:700;box-shadow:0 3px 0 rgba(63,110,89,.35);min-height:40px}
+body.th-nature .btn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(63,110,89,.35)}
+body.th-nature .btn:focus-visible,body.th-nature button:focus-visible,body.th-nature select:focus-visible,body.th-nature input:focus-visible{outline:3px solid var(--nj-ocean-d);outline-offset:2px}
+body.th-nature .btn.go{background:var(--nj-teal-m);color:var(--nj-teal-d);border-color:var(--nj-teal-d)}
+body.th-nature .btn.alt{background:var(--nj-card);color:var(--nj-ink);border:2px solid var(--nj-line-d);box-shadow:0 3px 0 var(--nj-line)}
+body.th-nature .btn.red{background:var(--nj-coral-l);color:var(--nj-coral-d);border-color:var(--nj-coral-d);box-shadow:0 3px 0 rgba(138,74,58,.3)}
+body.th-nature .btn[disabled],body.th-nature .btn.dn{opacity:.5;box-shadow:none}
+/* 再聽一次 */
+body.th-nature .rep{background:var(--nj-ocean-l);color:var(--nj-ocean-d);border:3px solid var(--nj-ocean-d);border-radius:18px;box-shadow:0 4px 0 rgba(47,93,138,.3)}
+
+/* ===== 4. 卡片、面板、彈出視窗 ===== */
+body.th-nature .box{background:var(--nj-card);border:2px solid var(--nj-line);border-radius:22px;box-shadow:var(--nj-shadow)}
+body.th-nature .panel{background:var(--nj-card);border:2px solid var(--nj-line);border-radius:var(--nj-r);box-shadow:var(--nj-shadow)}
+body.th-nature .ov{background:rgba(64,88,77,.38)}
+body.th-nature .toast{background:var(--nj-card);border:3px solid var(--nj-butter);color:var(--nj-butter-d);border-radius:18px}
+body.th-nature #msg{color:var(--nj-teal-d)}
+body.th-nature h1,body.th-nature h2,body.th-nature h3{color:var(--nj-ink)}
+body.th-nature small{color:var(--nj-ink2)}
+
+/* 分頁按鈕（後台、學習分析） */
+body.th-nature .sub button{background:var(--nj-card);color:var(--nj-ink);border:2px solid var(--nj-line-d);border-radius:12px}
+body.th-nature .sub button.on{background:var(--nj-teal-m);color:var(--nj-teal-d);border-color:var(--nj-teal-d);font-weight:700}
+
+/* ===== 5. 表單：下拉選單、輸入框、勾選框 ===== */
+body.th-nature select,body.th-nature input[type=text],body.th-nature input[type=number],body.th-nature input[type=password],body.th-nature textarea{background:var(--nj-card);color:var(--nj-ink);border:2px solid var(--nj-line-d);border-radius:var(--nj-r-s)}
+body.th-nature input[type=checkbox],body.th-nature input[type=radio],body.th-nature input[type=range]{accent-color:var(--nj-teal-d)}
+
+/* ===== 6. 表格（後台） ===== */
+body.th-nature table{background:var(--nj-card)}
+body.th-nature td,body.th-nature th{border-color:var(--nj-line)}
+body.th-nature th{background:var(--nj-grass);color:var(--nj-ink)}
+
+/* ===== 7. 首頁三種練習卡片、六站卡片、星級按鈕 ===== */
+body.th-nature .mc{background:var(--nj-card);border-width:4px;box-shadow:0 4px 0 var(--nj-line)}
+body.th-nature .mc-quiet{border-color:var(--nj-ocean-d);background:var(--nj-ocean-l)}
+body.th-nature .mc-oral{border-color:var(--nj-coral-d);background:var(--nj-coral-l)}
+body.th-nature .mc-integ{border-color:var(--nj-teal-d);background:var(--nj-teal-l)}
+body.th-nature .mc-quiet .mk{color:var(--nj-ocean-d)}
+body.th-nature .mc-oral .mk{color:var(--nj-coral-d)}
+body.th-nature .mc-integ .mk{color:var(--nj-teal-d)}
+body.th-nature .stc{background:var(--nj-card);border-color:var(--nj-line);box-shadow:var(--nj-shadow)}
+body.th-nature .fn{background:var(--nj-card);border-color:var(--nj-line-d);color:var(--nj-ink)}
+body.th-nature .fn.on{background:var(--nj-ocean-l);color:var(--nj-ocean-d);border-color:var(--nj-ocean-d);font-weight:700}
+body.th-nature .fstar{background:var(--nj-card);border-color:var(--nj-butter);color:var(--nj-butter-d)}
+body.th-nature .fstar.on{background:var(--nj-butter-l);border-color:var(--nj-star-d);color:var(--nj-butter-d);box-shadow:0 3px 0 rgba(138,106,31,.3)}
+/* 聽讀／口語／綜合的顏色標示（P37）：改用同一套色票 */
+body.th-nature .lm-quiet.hm3{border-color:var(--nj-ocean-d);background:rgba(227,238,244,.55)}
+body.th-nature .lm-oral.hm3{border-color:var(--nj-coral-d);background:rgba(246,228,220,.55)}
+body.th-nature .lm-integ.hm3{border-color:var(--nj-teal-d);background:rgba(226,238,230,.55)}
+body.th-nature .lm-quiet .lmband{background:var(--nj-ocean-l);border-color:var(--nj-ocean-d);color:var(--nj-ocean-d)}
+body.th-nature .lm-oral .lmband{background:var(--nj-coral-l);border-color:var(--nj-coral-d);color:var(--nj-coral-d)}
+body.th-nature .lm-integ .lmband{background:var(--nj-teal-l);border-color:var(--nj-teal-d);color:var(--nj-teal-d)}
+body.th-nature .lm-quiet .stc{border-left-color:var(--nj-ocean-d)}
+body.th-nature .lm-oral .stc{border-left-color:var(--nj-coral-d)}
+body.th-nature .lm-integ .stc{border-left-color:var(--nj-teal-d)}
+body.th-nature #lmbd.lm-quiet{border-color:var(--nj-ocean-d);color:var(--nj-ocean-d)}
+body.th-nature #lmbd.lm-oral{border-color:var(--nj-coral-d);color:var(--nj-coral-d)}
+body.th-nature #lmbd.lm-integ{border-color:var(--nj-teal-d);color:var(--nj-teal-d)}
+
+/* ===== 8. 答題畫面：題目圖片框、注音輸入格 ===== */
+body.th-nature #pic{border:6px solid var(--nj-card);border-radius:20px;box-shadow:0 0 0 2px var(--nj-line-d),0 4px 0 var(--nj-line);background:var(--nj-beige)}
+body.th-nature .hz,body.th-nature .gl{color:var(--nj-ink)}
+/* 未輸入：奶油白＋柔和邊框 */
+body.th-nature .zs{background:var(--nj-card);color:var(--nj-ink2);border:3px solid var(--nj-line-d);border-radius:14px;position:relative}
+/* 正確：藍色＋實線深藍邊框＋右上角 ✓ */
+body.th-nature .zs.ok{background:var(--nj-ok-l);color:var(--nj-ok-d);border:3px solid var(--nj-ok-d)}
+body.th-nature .zs.ok::after{content:'✓';position:absolute;top:-9px;right:-7px;width:18px;height:18px;line-height:18px;font-size:12px;font-weight:800;border-radius:50%;background:var(--nj-ok-d);color:#fff;text-align:center}
+/* 錯誤：橘色虛線邊框（保留原本短暫晃動，不閃紅色） */
+body.th-nature .zs.bad{background:var(--nj-bad-l);border:3px dashed var(--nj-bad-d)}
+/* 提示（部分注音／完整注音）：柔和奶油黃＋細線框 */
+body.th-nature .dm:not(:empty){background:var(--nj-butter-l);color:var(--nj-butter-d);border:2px solid var(--nj-butter);box-sizing:border-box}
+/* 提示按鈕區 */
+body.th-nature .hzg .btn{background:var(--nj-butter-l);color:var(--nj-butter-d);border-color:var(--nj-star-d);box-shadow:0 3px 0 rgba(138,106,31,.3)}
+body.th-nature #cap{border-color:var(--nj-teal-d)!important;background:var(--nj-card);color:var(--nj-ink)}
+
+/* ===== 9. 星星計數、旅程進度、車站牌 ===== */
+body.th-nature #stc{background:var(--nj-butter-l);border-color:var(--nj-star-d);color:var(--nj-butter-d)}
+body.th-nature .stn .sb{background:#F3E3C3;border-color:#A0784A;color:#5B4128;border-radius:8px 8px 10px 10px}
+body.th-nature .stn.lit .sb{background:var(--nj-butter-l);border-color:var(--nj-star-d);color:var(--nj-butter-d);box-shadow:0 0 10px rgba(232,195,95,.7)}
+body.th-nature .stn .pl{background:#A0784A}
+
+/* ===== 10. 上方旅行場景：先用柔和色調（第三階段換成手繪背景圖） ===== */
+body.th-nature #scene{--sky:var(--nj-sky);--gnd:#C9DDB8}
+body.th-nature #scene[data-th=bike]{--sky:#DCE9EB;--gnd:#C9DDB8}
+body.th-nature #scene[data-th=car]{--sky:#DDE7EC;--gnd:#CDD9C3}
+body.th-nature #scene[data-th=train]{--sky:#DCE6EC;--gnd:#C3D9B4}
+body.th-nature #scene[data-th=hsr]{--sky:#D8E7EF;--gnd:#CCDAC4}
+body.th-nature #scene[data-th=plane]{background:linear-gradient(#BFD8E8 0,#E6F0F2 62%,#B9C3BE 62%)}
+body.th-nature #scene .lay{filter:saturate(.72) brightness(1.04)}
+body.th-nature #scene .bg1{filter:saturate(.7);opacity:.9}
+body.th-nature #train{filter:saturate(.85)}
+
+/* ===== 11. 預覽主題標籤（只在非練習畫面顯示） ===== */
+.nj-chip{display:none}
+body.th-nature:not(.ig) .nj-chip{display:flex;position:fixed;left:10px;bottom:10px;z-index:30;gap:8px;align-items:center;background:var(--nj-card);border:2px solid var(--nj-line-d);border-radius:14px;padding:4px 6px 4px 12px;font-size:14px;color:var(--nj-ink);box-shadow:var(--nj-shadow)}
+.nj-chip button{font:inherit;font-size:13px;background:var(--nj-beige);color:var(--nj-ink);border:2px solid var(--nj-line-d);border-radius:10px;padding:2px 10px;cursor:pointer}
+
+
+/* ===== 13. 聽詞選圖的圖片卡 ===== */
+body.th-nature .pko{border:4px solid var(--nj-line-d);background:var(--nj-card);box-shadow:0 3px 0 var(--nj-line)}
+body.th-nature .pko.good{border:4px solid var(--nj-ok-d);box-shadow:0 0 0 5px var(--nj-ok-l);position:relative}
+body.th-nature .pko.good::after{content:'✓';position:absolute;top:-12px;right:-12px;width:28px;height:28px;line-height:28px;font-size:18px;font-weight:800;border-radius:50%;background:var(--nj-ok-d);color:#fff;text-align:center}
+body.th-nature .pko.glow{border-color:var(--nj-star-d)}
+body.th-nature .lstn{border-color:var(--nj-line-d);background:var(--nj-card)}
+body.th-nature .pknote{background:var(--nj-ocean-l);border-color:var(--nj-ocean-d);color:var(--nj-ink)}
+
+/* ===== 14. 寫在 HTML 裡的顏色（原本程式直接指定）：換成同一套色票 ===== */
+body.th-nature [style*="color:#2f6fe4"]{color:var(--nj-ocean-d)!important}
+body.th-nature [style*="color:#b8322b"]{color:var(--nj-coral-d)!important}
+body.th-nature [style*="border:2px solid #7fa8e8"]{border-color:var(--nj-line-d)!important}
+body.th-nature [style*="background:#e8f1ff"],body.th-nature [style*="background:#eef7ff"],body.th-nature [style*="background:#eef6ff"]{background:var(--nj-ocean-l)!important}
+body.th-nature [style*="background:#fff7d6"],body.th-nature [style*="background:#fff4d6"]{background:var(--nj-butter-l)!important}
+body.th-nature .hm3 .hq,body.th-nature .jl,body.th-nature .spq,body.th-nature .cbctx,body.th-nature #wst,body.th-nature .tc.act{color:var(--nj-ocean-d)}
+
+/* ===== 15. 後台「資料搬家」的兩個大區塊、摺疊區 ===== */
+body.th-nature .p39big>div{border-color:var(--nj-line);background:var(--nj-paper)}
+body.th-nature details.panel>summary{color:var(--nj-ink)}
+
+/* ===== 12. 減少動態：主題本身不加入任何持續動畫 ===== */
+@media (prefers-reduced-motion:reduce){body.th-nature .btn:active{transform:none}}

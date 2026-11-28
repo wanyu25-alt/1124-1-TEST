@@ -1,40 +1,90 @@
 {
  "schemaVersion": 1,
  "project": "詞彙特快車 Vocabulary Express",
- "batch": "05-H",
- "fromVersion": "v22.6.5",
- "toVersion": "v22.6.6",
- "buildId": "20261128-05H",
+ "batch": "NJ-2",
+ "fromVersion": "v22.6.6",
+ "toVersion": "v22.6.7",
+ "buildId": "20261128-NJ2",
  "base": {
   "github": "wanyu25-alt/1124-1-TEST",
-  "commit": "ddfbeee1d9562f1f821fe2ee93e00acaea114791",
-  "indexSha256": "39c2878178759fced85d4af8da9aad71294668d53c2d9ca8ac5638ac82afa6ad",
-  "note": "直接套用於 GitHub 目前根目錄（v22.6.5，已部署）"
+  "commit": "b03358e8f56e7629247aa893766ef9177a76a3cd",
+  "indexSha256": "844f4fa80a58a979d41480ceb078589ac45d5b3eab716cd1f76b7b36b0e81969",
+  "note": "直接套用於 GitHub 目前根目錄（v22.6.6，已部署）"
  },
  "dataMigration": {
   "formatChange": false,
-  "notes": "沒有資料遷移；第 2 站新紀錄多 ext.zyLv（星級），既有資料不變"
+  "notes": "沒有資料遷移；預覽主題設定只存在 localStorage 的 vx-theme（不屬於學習資料）"
  },
  "A_deploy": {
   "folder": "1_upload-to-github-root",
   "overwrite": [
    {
     "path": "index.html",
-    "sha256": "844f4fa80a58a979d41480ceb078589ac45d5b3eab716cd1f76b7b36b0e81969",
-    "bytes": 1083923,
-    "previousSha256": "39c2878178759fced85d4af8da9aad71294668d53c2d9ca8ac5638ac82afa6ad"
+    "sha256": "d85025573b57b071e6cdf682e353923f57598a40a3b3466d1730345407366601",
+    "bytes": 1086466,
+    "previousSha256": "844f4fa80a58a979d41480ceb078589ac45d5b3eab716cd1f76b7b36b0e81969"
+   }
+  ],
+  "addTheme": [
+   {
+    "path": "assets/themes/nature-journey/README.md",
+    "sha256": "702bff7469784b147d64a68ed559dbc3b45ac29d49016b984f667336678b6688",
+    "bytes": 1304
    },
    {
-    "path": "vocab/language-metadata.json",
-    "sha256": "dbf865f6da354bb597c2bcfbe404cae84f92abdf2f12c7239dd29374526f9335",
-    "bytes": 671790,
-    "previousSha256": "dbf865f6da354bb597c2bcfbe404cae84f92abdf2f12c7239dd29374526f9335"
+    "path": "assets/themes/nature-journey/animals/.gitkeep",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
    },
    {
-    "path": "voice/tts/index.json",
-    "sha256": "a896424c430c8a00b764ce00f27aa33b75bf68e3fcbedac49fd5b6c316b37971",
-    "bytes": 81868,
-    "previousSha256": "a896424c430c8a00b764ce00f27aa33b75bf68e3fcbedac49fd5b6c316b37971"
+    "path": "assets/themes/nature-journey/backgrounds/.gitkeep",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+   },
+   {
+    "path": "assets/themes/nature-journey/characters/.gitkeep",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+   },
+   {
+    "path": "assets/themes/nature-journey/decorations/.gitkeep",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+   },
+   {
+    "path": "assets/themes/nature-journey/icons/.gitkeep",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+   },
+   {
+    "path": "assets/themes/nature-journey/manifest.json",
+    "sha256": "14bf7c7f15ac3c34bc226a5bac4f31c09474e04a6b2f82cd9d882b1b0fd9bd28",
+    "bytes": 13474
+   },
+   {
+    "path": "assets/themes/nature-journey/rewards/.gitkeep",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+   },
+   {
+    "path": "assets/themes/nature-journey/theme.css",
+    "sha256": "3efdb0a700701120da06cd069891888b5096cb86ef761fa1234a11838947598d",
+    "bytes": 12755
+   },
+   {
+    "path": "assets/themes/nature-journey/tracks/.gitkeep",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+   },
+   {
+    "path": "assets/themes/nature-journey/ui/.gitkeep",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+   },
+   {
+    "path": "assets/themes/nature-journey/vehicles/.gitkeep",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
    }
   ],
   "addVoiceTts": "0 個 m4a（聽句子說詞問句）"
@@ -44,74 +94,57 @@
   "overwrite": [
    {
     "path": "CHANGELOG.md",
-    "sha256": "5fc68e4c0b7755587e745ce80e0150e9604377e7948e005b2671647886487f90",
-    "bytes": 89333,
-    "previousSha256": "d8d4b8ec7431830068cf523bd6274a3b5f4af01a060b50c6c4f86ce5f972cd46"
+    "sha256": "63b62a7d96dca15e7eaa4ddc806d9043ff69109ea8b162fbd75e7e880b1aa0ad",
+    "bytes": 91010,
+    "previousSha256": "5fc68e4c0b7755587e745ce80e0150e9604377e7948e005b2671647886487f90"
    },
    {
     "path": "DEVELOPMENT-ROADMAP.md",
-    "sha256": "366a1fc55c93c68bcce62ac6622d2aa92bd84554f69c055b90abaabe6aaed8aa",
-    "bytes": 12862,
-    "previousSha256": "0c2fd3cafd49746c4833d9c317b9d58a9af20cc3661cb89183a1beb2d7dcec35"
+    "sha256": "267e1db5258cd97eee5fbcc036f8435d505165c0c028083ca8b5fdb20153f738",
+    "bytes": 13273,
+    "previousSha256": "366a1fc55c93c68bcce62ac6622d2aa92bd84554f69c055b90abaabe6aaed8aa"
    },
    {
     "path": "PATCH-MANIFEST.json",
     "sha256": "（本檔案，不自我校驗）",
-    "bytes": 5817,
-    "previousSha256": "916585e75da5d97f8abfffa69bec2cb71a1eb42aaad19732546735ccf639ac72"
+    "bytes": 4578,
+    "previousSha256": "7144cf90db9970b7b9f218af601c2af5ca186e754502a4a33beae6fc14b3460d"
    },
    {
     "path": "PATCH-README.md",
-    "sha256": "c06fc962a4c1298774e3aaac4f83ccb88b06ca0a012932c701d5360ed556e0b7",
-    "bytes": 705,
-    "previousSha256": "2783ba849bda4d79b53c88901360b5ea6d1861ac158741bbf90426866b67d85b"
+    "sha256": "cdbae2093bee56c565c6236ec2e1cf53f5bea4f9470826b56d9015c27708935b",
+    "bytes": 854,
+    "previousSha256": "c06fc962a4c1298774e3aaac4f83ccb88b06ca0a012932c701d5360ed556e0b7"
    },
    {
     "path": "PROJECT-HANDOFF.md",
-    "sha256": "97fcdf68065b4385bb8c23e900699efdb98d2901b39c4f873c0eddeb08901860",
-    "bytes": 36332,
-    "previousSha256": "c9a516f2d1c2bb4b5be296d8c5ebbb469f0e43cab74e0e6b0bc7f9732915fddb"
-   },
-   {
-    "path": "tests/e2e/batch03-guide.js",
-    "sha256": "3e2f2f2ddf8d6c951c55549ad18654a8ad60c10659458faaadb4a7ee0f3d6472",
-    "bytes": 14388,
-    "previousSha256": "96ae0b36db12e3d3bac076747f75acca178f79e159af7cac43689329fae3e96f"
+    "sha256": "5c9d61e3fcefb97a92bee66b475844d93e52df3672f233f3dbe66e6be289694c",
+    "bytes": 37299,
+    "previousSha256": "97fcdf68065b4385bb8c23e900699efdb98d2901b39c4f873c0eddeb08901860"
    },
    {
     "path": "tests/e2e/batch05-lang.js",
-    "sha256": "ea1d0fca94d8db58ad831659deb37384bd0a9729806d22fd586928bf9814e758",
+    "sha256": "677235f45327b5efd35540f134a239e7a7412809d1b7ec84b590f9816ef08fec",
     "bytes": 14360,
-    "previousSha256": "0b9c62255a185dacfdbb1a7e0cb31478dde9798ee987b2ee91aef6d4f478100e"
-   },
-   {
-    "path": "tests/t210.js",
-    "sha256": "88d00c34305cfd481afd43718c201533939adc6e563ea1b4583ad00aeee97fc9",
-    "bytes": 9414,
-    "previousSha256": "2f7248e3c7b9f1a7ade944cae23d35637d912d8ccef812981e6788ec75524c44"
+    "previousSha256": "ea1d0fca94d8db58ad831659deb37384bd0a9729806d22fd586928bf9814e758"
    },
    {
     "path": "tests/t230.js",
-    "sha256": "a5a4e0c63212a137b31383fcbef4f053881ad1a8530c53a0a238b0def71c926b",
+    "sha256": "d189ea08f1945d427d0153aa0cdd1706d5022fbbef0f4395e2ff159e71ced4aa",
     "bytes": 11537,
-    "previousSha256": "b96c53b03146470f745b447935acb1ef3445d86816a17370a2d1c8c5140e7d5c"
+    "previousSha256": "a5a4e0c63212a137b31383fcbef4f053881ad1a8530c53a0a238b0def71c926b"
    }
   ],
   "add": [
    {
-    "path": "BATCH05H-REPORT.md",
-    "sha256": "bee8d4ac008cb9a6bb556e4049832800fa9cc6da0edb8361326b2e88b05ee89b",
-    "bytes": 3795
+    "path": "THEME-NATURE-STAGE2-REPORT.md",
+    "sha256": "1248c98ec8c6e38fe3838d5d0fa5a8cb68f56ce62fea85029025107154a7d50f",
+    "bytes": 5351
    },
    {
-    "path": "THEME-NATURE-STAGE1-REPORT.md",
-    "sha256": "8a536d0eb511566935a30e165e50baa0fff572c1ea4075232c769a4e2ae3f177",
-    "bytes": 15540
-   },
-   {
-    "path": "tests/e2e/batch05h-station2.js",
-    "sha256": "d03d6b4048e8bcc2e4835b0a632c99707e4549ed127e6106a1111b191778e84c",
-    "bytes": 5958
+    "path": "tests/e2e/theme-nature-preview.js",
+    "sha256": "31af9627441a50042863b6cdb8d234da6e32e72239b25c9faa6fbd3d68fc48d0",
+    "bytes": 7972
    }
   ]
  },
@@ -127,7 +160,7 @@
  ],
  "tests": {
   "jsdom": "1821 通過／10 失敗（10 項與修改前相同）",
-  "e2e": "611 通過／0 失敗（含 batch05h-station2 11 項；t210、batch03-guide 依新星級設計更新預期，見 BATCH05H-REPORT）",
+  "e2e": "623 通過／0 失敗（含 theme-nature-preview 12 項；預設畫面不變）",
   "device": "待教師 Mac Chrome 實測"
  },
  "deployed": "尚未推送"

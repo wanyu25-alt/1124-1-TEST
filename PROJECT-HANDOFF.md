@@ -5,14 +5,27 @@
 > **重要教訓**：增量包必須以 GitHub 實際提交為基準（不是舊 ZIP）；交付前比對校驗碼；部署後用 Console `APP.build+' '+APP.id` 確認版本。教師以 GitHub 網頁版「Add file → Upload files」上傳，**只能拖入檔案本身，不能拖整個資料夾**（曾因此產生子資料夾 vocabulary-express-v22_2-patch／v22_3-patch，待刪除）。
 > 新對話請提供：GitHub 目前的實際檔案（或最新完整網站）＋本文件＋DEVELOPMENT-ROADMAP.md。
 
-## 0-N. 第05-H批摘要（最新，v22.6.6，建置 20261128-05H，未推送）
+## 0-O. 美術改版第二階段摘要（最新，v22.6.7，建置 20261128-NJ2，未推送）
+- 第一階段檢查見 `THEME-NATURE-STAGE1-REPORT.md`：素材包都是低解析的預覽裁切圖，需要重新生成；第 7 節有規格。
+- P41 `THEME`：
+  - `?theme=nature` 會寫入 localStorage `vx-theme`，並在 body 加上 `th-nature` class。
+  - 只有開啟時才載入 `assets/themes/nature-journey/theme.css`。
+  - 開啟時左下角有 `.nj-chip`，練習中（`body.ig`）隱藏。
+  - `THEME.load()` 讀 `manifest.json`；`THEME.src(id)` 只回傳 status 為 ready 的路徑。
+- `theme.css`：
+  - 用 `--nj-*` 色彩變數，並覆蓋原本的 `--ink`、`--line`、`--leaf`、`--red`、`--sun`。
+  - 直接寫在 HTML 的顏色，用屬性選擇器加 `!important` 覆蓋，只限常用的幾種。
+- 第三階段：等第一批圖片到齊後，再讓 `buildStrip`／`vsvg` 在 `THEME.src` 有圖時改用圖片，沒圖時仍用原本 SVG。
+- 新批次的包裝請放在 P41 之後、開機程式之前。
+
+## 0-N. 第05-H批摘要（v22.6.6，建置 20261128-05H，已推送 b03358e）
 - P40：聽讀第 2 站（`FL.ladder(2,'quiet')`）改為 `P40.cfg(1..5)`，設定上帶 `p40` 等級；`P40.lv()` 讀 `FL.run.cfg.p40`。
   - ★1 用 `key`；★2–5 用 `spell`；★2–4 在 `showK` 包裝中補上圖片（`#pic`）。
   - ★2：包裝 `V2.demo`，只顯示目前格子；`kPress` 包裝負責更新下一格。
   - 逐音播放：`ZG.level` 依等級對應 `P40.ZL`（full／full／basic／self／indep）。★4–5 包裝 `ZG.start`、`ZG.prompt`，不播任何聲音，並隱藏「再聽一次」。
   - ★4 提示：`P40.hint` 用 `ZG.curItem()`，記錄 `G.used.zy`、`G.h.p`、`RE.hint('zy_stage')`；紀錄加 `ext.zyLv`。
   - 原本五星「聽音打字」移到 `FL.extras(2,'quiet')`。
-- 新批次的包裝請放在 P40 之後、開機程式之前。
+
 
 ## 0-M. 第05-F批摘要（v22.6.5，建置 20261128-05F，已推送 ddfbeee）
 - P39：後台分頁整理（19 → 9）。

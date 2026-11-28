@@ -379,7 +379,7 @@ body.aid-calm #scene{max-height:90px;overflow:hidden}body.aid-calm .stc .ste{dis
 <script src="lib/pinyin-pro.js"></script>
 <script>
 /* ===== 基本工具 ===== */
-const APP={build:'v22.6.6',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
+const APP={build:'v22.6.7',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -6241,7 +6241,7 @@ ZG.KEEP=['ttsRate','recRate','aiGain'];
 {const f=LRN.ensure;LRN.ensure=async function(){const r=await f.apply(this,arguments);try{if(S.set&&!S.set.ttsFix224){(S.lrn&&S.lrn.list||[]).forEach(p=>{const pr=p.ext&&p.ext.pref;if(pr&&+pr.ttsRate===0.5)pr.ttsRate=.75});S.set.ttsFix224=1}}catch(e){}return r}}
 /*P26-END*/
 /*P27-BEGIN v22.4.1 第03-B批：舊版示範教材完全移除（併入 GitHub 15:30 的 P23B 並補強）、materials/ 依賴移除、跨瀏覽器語音備援、版本識別 */
-APP.id='20261128-05H';
+APP.id='20261128-NJ2';
 /* ---- 一、舊版內建示範教材（materials/ 18 張、4 個分類）：備份後一次性移除 ----
    只移除「仍與網站原始版本完全相同」的舊版圖卡（以 packSnap 簽章比對，不看名稱）；老師改過的保留為自訂教材；
    舊版分類只有在裡面已經沒有任何保留下來的圖卡時才移除；學習紀錄全部保留；S.legacyGone 標記後不再重複執行。
@@ -6813,7 +6813,7 @@ tIO=function(){if(P39.full)return P39.ioFull.apply(this,arguments);
   <label class="btn go" style="font-size:22px;padding:14px 22px;cursor:pointer;display:inline-block">⬆ 選擇檔案放入<input type="file" id="iof1" accept="${AC}" style="display:none" onchange="ioPick(this.files[0]);this.value=''"></label></div></div>
  <p style="margin:0"><small>這台電腦目前有：自訂圖卡 ${my.length} 張、分類 ${S.cats.filter(c=>!c.lib).length} 個、圖片 ${my.filter(c=>c.img).length} 張、錄音 ${my.filter(c=>c.audio).length} 個。上次匯出：${lx}</small></p></div>
  <div id="iopv"></div><p id="iop" style="font-weight:bold;color:#2f6fe4">${esc(IOP.msg||'')}</p>
- <details class="panel"><summary><b>▸ 進階：完整備份與還原（含學習紀錄）、網站教材更新、匯出紀錄 CSV</b></summary>
+ <details class="panel"><summary><b>進階：完整備份與還原（含學習紀錄）、網站教材更新、匯出紀錄 CSV</b></summary>
  <div style="background:#eef7ff;border-radius:10px;padding:8px;margin:8px 0"><h3 style="margin:0">💾 完整資料備份（含學習紀錄）</h3><p>備份所有教材、設定及學生學習紀錄、星星與進度，用來還原同一台電腦的完整資料。<b>包含學生學習紀錄，請妥善保管，不要分享給無關人員。</b></p>
  <p><label>加密密碼（選填；留空＝不加密。忘記密碼無法復原）</label><input type="password" id="iopw" autocomplete="new-password"></p>
  <button class="btn go" onclick="ioExport('full')">⬇ 匯出完整資料備份</button>
@@ -6828,7 +6828,7 @@ tSet=function(){const r=P39.setFull.apply(this,arguments);if(P39.full)return r;t
   const RX=/開啟音效|老師語音回饋|真人操作引導語音|音效音量|老師語音音量|背景音樂音量|詞語語音音量|語音速度|麥克風聲音波浪|麥克風靈敏度|動畫效果/;
   sp.querySelectorAll('label').forEach(l=>{if(RX.test(l.textContent))l.remove()});
   sp.querySelectorAll('p').forEach(p=>{if(p.querySelector('[onclick^="measureGap"]'))p.remove()});
-  const v=sp.querySelector('#vsp');if(v){const d=document.createElement('details');d.className='panel';d.innerHTML='<summary><b>▸ 進階：語音速度與音檔測試</b></summary>';v.classList.remove('panel');d.appendChild(v);sp.appendChild(d)}
+  const v=sp.querySelector('#vsp');if(v){const d=document.createElement('details');d.className='panel';d.innerHTML='<summary><b>進階：語音速度與音檔測試</b></summary>';v.classList.remove('panel');d.appendChild(v);sp.appendChild(d)}
   sp.insertAdjacentHTML('afterbegin','<div class="panel" style="background:#eef7ff"><b>⚙ 教學設定</b>：這裡只放老師才需要調整的項目（題目數量、提示階梯、背景音樂來源、學生稱呼、過關慶祝條件）。<br><small>音量、語音速度、畫面、輸入方式請到上方選單的「⚙ 設定」。</small></div>')
  }catch(e){console.warn('P39 set',e)}return r};
 /*P39-END*/
@@ -6875,6 +6875,24 @@ P40.hint=()=>{if(P40.lv()!==4||!G.on||G.lock||!K||K.ci>=K.seq.length)return;cons
 /* 左上角「目前題目」：二到四星有圖片，名稱用「看圖＋注音打字」 */
 {const _m=mbd;mbd=function(){const r=_m.apply(this,arguments);try{const lv=P40.lv(),e=$('#mbd');if(e&&lv>=2&&lv<=4&&S.set.mode==='spell'&&e.style.display!=='none')e.textContent='目前題目：看圖＋注音打字'}catch(x){}return r}}
 /*P40-END*/
+/*P41-BEGIN v22.6.7 美術改版第二階段：自然旅行繪本風「預覽主題」（色彩系統＋共用介面元件，只用 CSS）
+  - 預設完全不變；網址加 ?theme=nature 才開啟（這台裝置會記住），?theme=default 或按左下角按鈕關閉。
+  - 樣式在 assets/themes/nature-journey/theme.css，全部以 body.th-nature 開頭；檔案載入失敗時就是原本的畫面。
+  - 素材索引 manifest.json：THEME.src(id) 只回傳 status 為 ready 的圖片路徑，其餘回傳 null（呼叫端用原本畫面）。
+  - 不改任何學習功能、紀錄、教材。 */
+const THEME={id:null,KEY:'vx-theme',DIR:'assets/themes/nature-journey/',man:null,ready:false};
+THEME.want=()=>{try{const q=new URLSearchParams(location.search).get('theme');if(q==='nature')localStorage.setItem(THEME.KEY,'nature');else if(q==='default'||q==='off')localStorage.removeItem(THEME.KEY);return localStorage.getItem(THEME.KEY)==='nature'?'nature':null}catch(e){return null}};
+THEME.on=()=>THEME.id==='nature';
+THEME.css=()=>{if(document.getElementById('nj-css'))return;const l=document.createElement('link');l.id='nj-css';l.rel='stylesheet';l.href=THEME.DIR+'theme.css?v='+encodeURIComponent(APP.build);
+ l.onload=()=>{THEME.ready=true};l.onerror=()=>{THEME.ready=false;document.body.classList.remove('th-nature');console.warn('主題樣式載入失敗，使用原本畫面')};document.head.appendChild(l)};
+THEME.chip=()=>{if(document.querySelector('.nj-chip'))return;const d=document.createElement('div');d.className='nj-chip';d.setAttribute('role','status');
+ d.innerHTML='🎨 自然旅行風（預覽） <button type="button" onclick="THEME.off()">回到原本畫面</button>';document.body.appendChild(d)};
+THEME.load=()=>THEME.man?Promise.resolve(THEME.man):fetch(THEME.DIR+'manifest.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).catch(()=>null).then(m=>{THEME.man=m&&m.assets?m:{assets:{}};return THEME.man});
+THEME.src=id=>{try{const a=THEME.on()&&THEME.man&&THEME.man.assets[id];return a&&a.status==='ready'&&a.src?THEME.DIR+a.src:null}catch(e){return null}};
+THEME.apply=id=>{THEME.id=id||null;document.body.classList.toggle('th-nature',THEME.on());if(THEME.on()){THEME.css();THEME.chip();THEME.load()}};
+THEME.off=()=>{try{localStorage.removeItem(THEME.KEY)}catch(e){}THEME.apply(null);try{const u=new URL(location.href);if(u.searchParams.has('theme')){u.searchParams.delete('theme');history.replaceState(null,'',u.toString())}}catch(e){}};
+try{THEME.apply(THEME.want())}catch(e){console.warn('THEME',e)}
+/*P41-END*/
 (async()=>{let s=await load();if(s&&s.decks&&!s.v){await kvPut('backup-pre-v2',s);s=migrate(s)}const mb=await kvGet('music').catch(()=>null);if(mb)mus.url=URL.createObjectURL(mb);if(s)S={...DEF(),...s,set:{...DEF().set,...s.set}};if(s&&s.set&&s.set.vs==null&&s.set.vol!=null)S.set.vs=s.set.vol;
 await zaLoad();await LRN.ensure();try{if(await LIB.load()){await LIB.defBoot();LIB.sync()}}catch(e){console.warn('LIB boot',e)}if(S.set.stuName===undefined)S.set.stuName='';try{P28.init()}catch(e){}if(S.set.musSrc==='project'&&!S.set.musPicked)S.set.musSrc='builtin';if(!['key','listen','spell','speak'].includes(S.set.mode))S.set.mode='key';if(S.set.ttsMig!==3){S.set.ttsMig=3;S.set.ttsRate=.75;S.set.recRate=1.25;S.set.aiGain=1.5}if(!S.bankMap)S.bankMap={};if((S.banks||[]).some(b=>!(b.id in S.bankMap))||/^b:/.test(S.set.src||'')){if(!(await kvGet('backup-pre-bankmig')))await kvPut('backup-pre-bankmig',JSON.parse(JSON.stringify(S)));migrateBanks()}if(!S.set.musMig){S.set.musMig=1;S.set.musSrc='project';save()}FL.recover();try{FL.applyPref()}catch(e){}save();UI.init();home();mtLbl();packLoad();
  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();
