@@ -5,7 +5,7 @@ const ctx=await b.newContext({viewport:{width:1100,height:800}});const p=await c
 await p.goto(URL);await p.waitForFunction(()=>typeof UI!=='undefined'&&S&&S.cards&&S.cards.length&&S.lrn,null,{timeout:40000});await p.waitForTimeout(1200);
 await p.evaluate(()=>{window.confirm=()=>true;window.alert=()=>{};S.set.music=false;S.set.sound=false;S.set.hz={...(S.set.hz||{}),free:true};V2.prepDone=true;S.set.n=3;save()});
 const navs=await p.$$eval('nav button',e=>e.map(x=>x.textContent.trim()));
-T('功能列恰為 首頁／家長專區／設定／教師專區',JSON.stringify(navs)==='["🏠 首頁","👪 家長專區","⚙ 設定","🧑‍🏫 教師專區"]',navs);
+T('功能列恰為 首頁／學習分析／設定／後台更改（v22.6.4 改名）',JSON.stringify(navs)==='["🏠 首頁","📊 學習分析","⚙ 設定","🛠 後台更改"]',navs);
 const body=await p.evaluate(()=>document.body.innerText);T('畫面上沒有「學生遊戲」入口',!/學生遊戲/.test(body),null);
 T('首頁只有三個主要學習入口',(await p.$$('.mc')).length===3&&(await p.$$('#mid .vc')).length===0,null);
 const titles=await p.$$eval('.mc b',e=>e.map(x=>x.textContent));T('三入口名稱',JSON.stringify(titles)==='["聽讀練習","口語練習","綜合練習"]',titles);
@@ -16,7 +16,7 @@ await scan('首頁');
 await p.click('#n4');await p.waitForTimeout(600);let v=await p.evaluate(()=>({tab:UI.curTab,on:[...document.querySelectorAll('nav button.on')].map(b=>b.id),txt:document.querySelector('#mid').innerText.slice(0,200),stuHidden:document.querySelector('#stu').classList.contains('hide')}));
 T('家長專區：顯示今日學習與推薦、功能列高亮',v.tab===4&&v.on.join()==='n4'&&/今日|學習|推薦/.test(v.txt)&&!v.stuHidden,v);await scan('家長專區');
 await p.click('#n5');await p.waitForTimeout(600);v=await p.evaluate(()=>({tab:UI.curTab,on:[...document.querySelectorAll('nav button.on')].map(b=>b.id),txt:document.querySelector('#mid').innerText}));
-T('設定：聲音／學習輔助／輸入方式／麥克風／畫面',v.tab===5&&v.on.join()==='n5'&&['聲音','學習輔助','輸入方式','麥克風','畫面'].every(k=>v.txt.includes(k)),v.txt.slice(0,120));await scan('設定');
+T('設定：聲音／輸入方式／畫面（v22.6.4 不顯示學習輔助、麥克風）',v.tab===5&&v.on.join()==='n5'&&['聲音','輸入方式','畫面'].every(k=>v.txt.includes(k))&&!['學習輔助','麥克風'].some(k=>v.txt.includes(k)),v.txt.slice(0,120));await scan('設定');
 // 設定實際改變資料
 await p.evaluate(()=>{FL.setDefN(10);const s=document.querySelector('#inmode');s.value='touch';s.dispatchEvent(new Event('change'))});
 const st=await p.evaluate(()=>({n:FL.mem().n,input:S.set.input,picked:S.set.inputPicked}));T('設定頁修改預設題數與輸入方式會寫入設定',st.n===10&&st.input==='touch'&&st.picked===true,st);

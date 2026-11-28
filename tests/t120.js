@@ -5,7 +5,7 @@ const {mk,R,T,sleep}=require('./t30h.js');
  const mkR=(o,L)=>({sv:1,id:'I'+(++n),learnerId:L||'L001',taskId:'S1.pick.word',itemId:'p'+(n%6),itemKind:'word',itemText:'水',game:'pick',sub:'word',stage:1,purpose:'assess',outcome:'correct',first:{result:'correct'},hints:[],independent:true,ts:now-DAY*(n%5)-n*100,tech:[],ext:{closedBy:'next_question'},...o});
  E(`S.cats=[{id:"k",name:"飲食",order:[]}];S.cards=${JSON.stringify(['水','飯','蘋果','牛奶','麵包','餅乾'].map((t,i)=>({id:'c'+i,text:t,zy:'',cats:['k'],img:png,audio:'',created:1,modified:1})))};S.set.n=3`);
  E('ACL.setPin("2468")');E('LRN.add("乙")');const [A,B]=JSON.parse(E('JSON.stringify(S.lrn.list.map(p=>p.id))'));
- T('1 new learner A: no data → initial assessment recommended; parent home offers it',(()=>{E('ACL.lock();tab(0);RC.ui.classic=false;UI.view="parent";home()');return E('RC.current().recs[0].rule')==='SUP'&&w.document.querySelector('#mid').innerHTML.includes('開始初始評量')})());
+ T('1 new learner A: no data → initial assessment recommended; parent home offers it',(()=>{E('ACL.lock();tab(0);RC.ui.classic=false;UI.view="parent";home()');return E('RC.current().recs[0].rule')==='SUP'&&E('PAR.sec0.today()').includes('開始初始評量')})());
  // 學生玩遊戲產生紀錄（以紀錄模擬）：A 理解弱
  E(`S.recs=${JSON.stringify(Array.from({length:8},(_,i)=>mkR(i<3?{}:{outcome:'wrong',first:{result:'wrong'},independent:false})))}`);
  T('2 records from play change the recommendation (weak comprehension → R01) and the dashboard shows the same figure',E('RC.current().recs[0].rule')==='R01'&&E('DSH.ui.pre="all";DSH.dash().cards[0].m.pct')===E('RC.ab(RC.rep(),RC.xr()).comp.m.pct'));

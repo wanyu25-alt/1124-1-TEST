@@ -367,7 +367,7 @@ body.aid-hc{background:#fff}body.aid-hc .btn{border:3px solid #000}body.aid-hc .
 body.aid-calm #scene{max-height:90px;overflow:hidden}body.aid-calm .stc .ste{display:none}
 @media (orientation:landscape) and (max-height:520px){.stg6{grid-template-columns:repeat(3,1fr)}}
 </style></head><body>
-<nav aria-label="主要功能"><button id="n1" class="on" onclick="UI.navTo(1)">🏠 首頁</button><button id="n4" onclick="UI.navTo(4)">👪 家長專區</button><button id="n5" onclick="UI.navTo(5)">⚙ 設定</button><button id="n2" onclick="UI.navTo(2)">🧑‍🏫 教師專區</button><span id="sayst" class="hide" style="color:#ffd54a;font-weight:700;margin:0 8px;align-self:center">🔊 播放中…</span></nav>
+<nav aria-label="主要功能"><button id="n1" class="on" onclick="UI.navTo(1)">🏠 首頁</button><button id="n4" onclick="UI.navTo(4)">📊 學習分析</button><button id="n5" onclick="UI.navTo(5)">⚙ 設定</button><button id="n2" onclick="UI.navTo(2)">🛠 後台更改</button><span id="sayst" class="hide" style="color:#ffd54a;font-weight:700;margin:0 8px;align-self:center">🔊 播放中…</span></nav>
 
 <div id="stu">
  <div id="scene"><div id="prog"></div><div id="strip"></div></div>
@@ -379,7 +379,7 @@ body.aid-calm #scene{max-height:90px;overflow:hidden}body.aid-calm .stc .ste{dis
 <script src="lib/pinyin-pro.js"></script>
 <script>
 /* ===== 基本工具 ===== */
-const APP={build:'v22.6.3',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
+const APP={build:'v22.6.4',id:''};/* 程式版本：唯一來源（教師後臺、備份、診斷都讀這裡） */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -839,7 +839,7 @@ function rwPage(){const R=S.rw;$('#tch').innerHTML=`<div class="panel"><h2>🏆 
  <div class="panel"><h3>車站徽章</h3>${R.badges.slice().reverse().slice(0,40).map(b=>`<span style="display:inline-block;margin:3px;padding:3px 10px;border:2px solid #e0a800;border-radius:12px;background:#fff7d6">🎖 ${esc(b.name)}</span>`).join('')||'<p>還沒有徽章，抵達車站就能獲得。</p>'}</div>
  <div class="panel"><h3>最近完成的旅程</h3>${R.journeys.slice().reverse().slice(0,10).map(j=>`<p>🏁 ${new Date(j.t).toLocaleDateString()}　${esc(j.deck)}　${j.n} 題・${j.stations} 站</p>`).join('')||'<p>還沒有完成的旅程。</p>'}</div>`}
 function tch(){
- const T={cards:'🖼 詞彙管理',cats:'🏷 分類管理',set:'⚙ 設定',log:'📊 紀錄',io:'📦 教材與資料管理',lm:'🎓 學習模式與口語',za:'🔤 注音音檔',lr:'👤 個案與學習路徑',cb:'🚃 詞彙組合',se:'💬 語句與情境',ob:'🌱 生活觀察',as:'📈 語言能力評量',dash:'📊 儀表板與報表',acl:'🔒 存取與隱私',rc:'🎯 初始評量與推薦',la:'🧭 學習分析（Level／主題／熟悉度）',lib:'📖 詞彙庫',par:'👪 家長專區設定',sec:'🛡 資料安全與雲端預留'};
+ const T={cards:'🖼 詞彙管理',cats:'🏷 分類管理',set:'⚙ 設定',log:'📊 紀錄',io:'📦 教材與資料管理',lm:'🎓 學習模式與口語',za:'🔤 注音音檔',lr:'👤 個案與學習路徑',cb:'🚃 詞彙組合',se:'💬 語句與情境',ob:'🌱 生活觀察',as:'📈 語言能力評量',dash:'📊 儀表板與報表',acl:'🔒 存取與隱私',rc:'🎯 初始評量與推薦',la:'🧭 學習分析（Level／主題／熟悉度）',lib:'📖 詞彙庫',par:'📊 學習分析頁設定（家長用）',sec:'🛡 資料安全與雲端預留'};
  $('#tch').innerHTML=`<div class="sub">${Object.entries(T).map(([k,v])=>`<button class="${sub===k?'on':''}" onclick="sub='${k}';tch()">${v}</button>`).join('')}</div><div id="sp"></div>`;
  ({cards:tCards,cats:tCats,set:tSet,log:tLog,io:tIO,lm:tLM,za:tZA,lr:tLR,cb:tCB,se:tSE,ob:tOB,as:tAS,dash:tDASH,acl:tACL,rc:tRC,la:()=>{$('#sp').innerHTML=LA.view()},lib:()=>{$('#sp').innerHTML=LIB.view()},par:tPAR,sec:()=>tSEC()})[sub]();
 }
@@ -4077,7 +4077,7 @@ UI.navTo=n=>{if(n===1){UI.origin=null;UI.view='home';UI.mode=null;goHome();retur
  o.innerHTML=`<div class="box"><h2>要離開目前的練習嗎？</h2><button class="btn go" style="font-size:22px" onclick="hmGo(1)">繼續遊戲</button> <button class="btn alt" style="font-size:22px" onclick="UI.lv(${n})">離開</button></div>`;document.body.appendChild(o)};
 UI.lv=n=>{const o=$('#hm');if(o)o.remove();G.paused=false;quitLog();UI.origin=null;leave();tab(n)};
 /* ---------- 各畫面 ---------- */
-UI.packNote=()=>S.cards.length?(PK.state==='warn'?'<p class="pknote warn">⚠ 目前無法連到網站教材，先使用這台電腦已儲存的教材。 <button class="btn alt" onclick="packRetry()">↻ 重新載入</button></p>':''):PK.state==='loading'||PK.state==='idle'?'<p class="pknote"><b>⏳ 教材載入中… '+esc(PK.prog)+'</b></p>':'<p class="pknote warn"><b>沒有載入到教材。</b>'+esc(PK.msg||'')+' <button class="btn go" onclick="packRetry()">↻ 重新載入教材</button> 　或到「教師專區 → 教材與資料管理」匯入教材 ZIP。</p>';
+UI.packNote=()=>S.cards.length?(PK.state==='warn'?'<p class="pknote warn">⚠ 目前無法連到網站教材，先使用這台電腦已儲存的教材。 <button class="btn alt" onclick="packRetry()">↻ 重新載入</button></p>':''):PK.state==='loading'||PK.state==='idle'?'<p class="pknote"><b>⏳ 教材載入中… '+esc(PK.prog)+'</b></p>':'<p class="pknote warn"><b>沒有載入到教材。</b>'+esc(PK.msg||'')+' <button class="btn go" onclick="packRetry()">↻ 重新載入教材</button> 　或到「後台更改 → 教材與資料管理」匯入教材 ZIP。</p>';
 UI.homeHtml=()=>`<div class="hm3"><h2>🚂 詞彙特快車</h2><p class="hq">今天想怎麼練習？</p>${UI.packNote()}${UI.rsHtml()}${UI.micHtml()||'<span id="micrem"></span>'}
  <div class="m3">${['quiet','oral','integ'].map(k=>{const L=UI.LM[k];return `<button class="mc mc-${k}" onclick="UI.pick('${k}')" aria-label="${L.n}：${L.s}"><span class="mi" aria-hidden="true">${L.ic}</span><span class="mtx"><b>${L.n}</b><span class="ms">${L.s}</span><span class="md">${L.d}</span><em class="mk">${L.mic}</em></span></button>`}).join('')}</div>
  <p class="hmf">${S.set.showRw===false?'':`<button class="btn alt" onclick="tab(3)">🏆 我的收藏　⭐ ${S.rw.stars}</button> `}<span class="who">個案：<b>${esc(LRN.cur().name)}</b></span></p></div>`;
@@ -4098,7 +4098,7 @@ UI.settings=()=>{const so=(v,t)=>`<option value="${v}" ${S.set.src===v?'selected
  <div class="panel"><h3>🎤 麥克風</h3><p>目前狀態：<b id="micst">${ms}</b> ${UI.mic.state==='granted'||UI.mic.state==='unsupported'?'':'<button class="btn go" onclick="UI.micAsk()">立即授權</button>'}</p><small>聽讀練習不使用麥克風；只有口語題目才會收音，離開題目就停止。</small></div>
  ${lrn.length>1?`<div class="panel"><h3>👤 切換個案</h3><select onchange="LRN.switchTo(this.value);home()">${lrn.map(x=>`<option value="${x.id}" ${x.id===LRN.cur().id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></div>`:''}
  <div class="panel"><h3>🖥 畫面</h3><small id="devn">${UI.devNote()}</small></div>
- <p class="hmf"><small>教材、圖片、錄音、評量與詳細設定在「教師專區」。</small></p></div>`};
+ <p class="hmf"><small>教材、圖片、錄音、評量與詳細設定在「後台更改」。</small></p></div>`};
 UI.setIn=v=>{S.set.input=v==='auto'?'phys':v;S.set.inputPicked=v!=='auto';save();UI.hw=false;try{UI.apply()}catch(e){}};
 /* ---------- home() 依目前分頁顯示 ---------- */
 {const _old=home;UI.legacyHome=_old;
@@ -4308,14 +4308,14 @@ UI.settings=()=>{const im=UI.inMode(),ms={granted:'已允許',denied:'已被拒�
  ${ck('s_adult','顯示「大人幫忙」按鈕（成人協助確認答案）',(S.set.hl||{}).a!==0&&(S.set.hl||{}).a!==false,"FL.setAdult(this.checked)")}
  ${ck('s_next','答對後自動換下一題（取消＝按「下一題」才換）',S.set.autoNext!==false,"FL.set('autoNext',this.checked)")}
  ${sel('s_dn','預設練習題數',FL.N.map(k=>[k,k+' 題']),FL.mem().n||pr.n||5,"FL.setDefN(this.value)")}${sel('s_ds','預設挑戰難度（各站可再各自調整）',[1,2,3,4,5].map(k=>[k,FL.STAR[k-1]]),pr.star||1,"FL.setDefStar(this.value)")}
- <small>正式評量的判定方式、提示順序、門檻與原始作答紀錄只能在「教師專區」修改，這裡不會動到。</small></div>
+ <small>正式評量的判定方式、提示順序、門檻與原始作答紀錄只能在「後台更改」修改，這裡不會動到。</small></div>
  <div class="panel"><h3>🖥 畫面</h3>${sel('s_am','動畫效果',[['std','完整'],['simple','簡化'],['off','關閉']],AMODE(),"FL.setAnim(this.value)")}
  ${sel('s_sz','文字與按鍵大小',[['std','標準'],['large','大'],['xl','特大']],S.set.uiSize||'std',"FL.set('uiSize',this.value)")}
  ${sel('s_aid','畫面輔助',[['none','無'],['contrast','高對比'],['calm','簡潔畫面（縮小場景、減少裝飾）']],S.set.uiAid||'none',"FL.set('uiAid',this.value)")}<small id="devn">${UI.devNote()}</small></div>
  <div class="panel"><h3>⌨ 輸入方式</h3><p><select id="inmode" onchange="UI.setIn(this.value)"><option value="auto" ${im==='auto'?'selected':''}>自動判斷（建議）</option><option value="phys" ${im==='phys'?'selected':''}>實體鍵盤</option><option value="touch" ${im==='touch'?'selected':''}>觸控注音鍵盤</option></select> <button class="btn alt" onclick="ktOpen()">⌨ 測試鍵盤</button></p></div>
  <div class="panel"><h3>🎤 麥克風</h3><p>目前狀態：<b id="micst">${ms}</b> ${UI.mic.state==='granted'||UI.mic.state==='unsupported'?'':'<button class="btn go" onclick="UI.micAsk()">立即授權</button>'}</p><small>麥克風的收音與辨識細節由程式自動調整，不需要設定。聽讀練習不使用麥克風，離開口語題目就停止收音。</small></div>
  ${lrn.length>1?`<div class="panel"><h3>👤 切換個案</h3><select onchange="LRN.switchTo(this.value);home()">${lrn.map(x=>`<option value="${x.id}" ${x.id===p.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></div>`:''}
- <p class="hmf"><button class="btn alt" onclick="FL.reset()">↺ 恢復這位個案的預設設定</button></p><p class="hmf"><small>教材、圖片、錄音、評量與報表在「教師專區」。</small></p></div>`};
+ <p class="hmf"><button class="btn alt" onclick="FL.reset()">↺ 恢復這位個案的預設設定</button></p><p class="hmf"><small>教材、圖片、錄音、評量與報表在「後台更改」。</small></p></div>`};
 FL.setRecSt=(id,st,el)=>{const p=LRN.get(id);if(!p)return;p.ext=p.ext||{};let a=(p.ext.recSt||[]).filter(x=>x!==st);if(el.checked){if(a.length>=2){el.checked=false;alert('最多只能推薦兩個學習站');return}a.push(st)}p.ext.recSt=a.sort((x,y)=>x-y);p.modified=Date.now();save()};
 /*P9B-END*/
 /*P9C-BEGIN 接線：錄音輔助紀錄、離開還原、開機復原*/
@@ -4651,7 +4651,7 @@ SM.stepOf=mode=>({pick:'pick',speak:'speak',key:'key',listen:'listen',spell:'spe
 SM.active=()=>{if(!SM.on()||PH.qq||S.set.mix||!SM.stepOf(S.set.mode))return false;const s=S.set.src;return s==='rec'||s==='rv'};
 SM.pre=()=>{try{if(!SM.active())return;const mode=S.set.mode,sub=mode==='pick'?(S.set.pks||'word'):mode==='speak'?(S.set.sps||'obj'):null,cs=PH.cards(deck().cards);if(!cs||!cs.length)return;
   const n=Math.max(1,+S.set.n||5),ab=[SM.abOf(mode,sub)],r=SM.plan(cs,n,ab,SNAP.on()?{noRepeat:true,baseK:n}:undefined);
-  if(SM.ratio().paused&&r.plan.avail.fam+r.plan.avail.need===0){alert('已暫停新詞彙，但目前教材裡沒有學過的詞彙可以出題。請老師到「教師專區→詞彙履歷→出題設定」取消「暫停新詞彙」，或先讓學生做過示範與練習。');SM._abort=true;return}
+  if(SM.ratio().paused&&r.plan.avail.fam+r.plan.avail.need===0){alert('已暫停新詞彙，但目前教材裡沒有學過的詞彙可以出題。請老師到「後台更改→詞彙履歷→出題設定」取消「暫停新詞彙」，或先讓學生做過示範與練習。');SM._abort=true;return}
   if(!r.items.length)return;SNAP.note(r.items.map(x=>x.c.id));
   const step=SM.stepOf(mode);SM._lastId=r.plan.id;
   let items=[];r.items.forEach(x=>{const it=(st,ex)=>({...x.c,_step:st,_sub:st==='expose'?undefined:sub||undefined,_sm:{b:x.b,pid:r.plan.id,...(ex||{})}});
@@ -5204,7 +5204,7 @@ PAR.obForm=()=>{const sel=(id,m,v)=>`<select id="par_${id}">${Object.entries(m).
 PAR.sec={};
 PAR.name=id=>((S.lrn.list.find(x=>x.id===id)||{}).name||id);
 PAR.guard=()=>{if(PAR.ok())return '';const ok=S.lrn.list.filter(x=>!x.archived&&PAR.allowed(x.id));
- return `<div class="box" style="width:min(640px,96%)"><h2>👪 家長專區</h2><p>這位個案目前沒有開放給家長查看。</p>${ok.length?`<p>請選擇有授權的個案：<select onchange="LRN.switchTo(this.value);home()"><option value="">選擇…</option>${ok.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select></p>`:'<p>目前沒有任何授權的個案。請老師在教師區的「👪 家長專區設定」授權。</p>'}<small>${esc(PAR.LIMIT)}</small></div>`};
+ return `<div class="box" style="width:min(640px,96%)"><h2>📊 學習分析</h2><p>這位個案目前沒有開放給家長查看。</p>${ok.length?`<p>請選擇有授權的個案：<select onchange="LRN.switchTo(this.value);home()"><option value="">選擇…</option>${ok.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select></p>`:'<p>目前沒有任何授權的個案。請老師在教師區的「📊 學習分析頁設定（家長用）」授權。</p>'}<small>${esc(PAR.LIMIT)}</small></div>`};
 PAR.sec.today=()=>{const pg=RC.progress(),d=pg.d,todo=d.items.filter(i=>i.state==='todo'),nq=todo.reduce((a,i)=>a+RC.tg(i),0),p=LRN.cur(),x=RC.xr();
  return RC.pHtml()+`<div class="box" style="width:min(720px,96%);text-align:left"><h3 style="margin:0">⚙ 今天的練習設定</h3><p style="margin:4px 0">建議題數：<b>${todo.length?'約 '+nq+' 題':'今天沒有待做項目'}</b>　預計時間：<b>${d.mins} 分鐘</b></p>
  <p>練習時間 <select onchange="PAR.setMins(this.value)">${[6,8,10,12,14,16,20].map(m=>`<option value="${m}" ${d.mins===m?'selected':''}>${m} 分鐘</option>`).join('')}</select>　
@@ -5253,7 +5253,7 @@ PAR.sec.ob=()=>{const my=OB.all().filter(r=>r.learnerId===LRN.cur().id).sort((a,
  <small>家長頁面不提供刪除或修改已儲存的紀錄；需要更正請告訴老師。</small></div>`};
 PAR.TABS=[['today','今天練習'],['res','學習成果'],['rev','待複習詞彙'],['ab','能力說明'],['tip','陪伴建議'],['ob','生活觀察']];
 PAR.page=()=>{RC.ctx='p';const g=PAR.guard();if(g)return g;RC.sync();const u=PAR.ui,p=LRN.cur(),body=(PAR.sec[u.sec]||PAR.sec.today)();
- return `<div class="box" style="width:min(720px,96%)"><h2 style="margin:0">👪 家長專區　<small style="font-weight:400">孩子：<b>${esc(p.name)}</b></small></h2><p style="margin:6px 0">${PAR.TABS.map(([k,t])=>`<button class="btn ${u.sec===k?'go':'alt'} sm" onclick="PAR.ui.sec='${k}';PAR.ui.msg='';home()">${t}</button>`).join(' ')}</p></div>${body}
+ return `<div class="box" style="width:min(720px,96%)"><h2 style="margin:0">📊 學習分析　<small style="font-weight:400">孩子：<b>${esc(p.name)}</b></small></h2><p style="margin:6px 0">${PAR.TABS.map(([k,t])=>`<button class="btn ${u.sec===k?'go':'alt'} sm" onclick="PAR.ui.sec='${k}';PAR.ui.msg='';home()">${t}</button>`).join(' ')}</p></div>${body}
  <div class="box" style="width:min(720px,96%);text-align:left"><small>${esc(PAR.LIMIT)}</small></div>`};
 UI.parent=()=>PAR.page();
 /* 只讓介面列出「有授權」的個案；生活觀察的快速表單同理 */
@@ -5263,7 +5263,7 @@ PAR.tDel=id=>{PAR.st().tpl=PAR.st().tpl.filter(t=>t.id!==id);save();tch()};
 PAR.tAuth=(id,on)=>{const s=PAR.st();let a=Array.isArray(s.auth)?s.auth.slice():[S.lrn.cur];a=a.filter(x=>x!==id);if(on)a.push(id);s.auth=a;PAR.log('授權個案：'+a.length+' 位');save();tch()};
 PAR.tReset=()=>{PAR.st().auth=null;save();tch()};
 function tPAR(){const s=PAR.st(),lr=S.lrn.list.filter(x=>!x.archived),au=PAR.auth(),ab=VP.AB.filter(a=>!['dl','se'].includes(a.k));
- $('#sp').innerHTML=`<div class="panel"><h3 style="margin:0">👪 家長專區設定</h3><p><small>${esc(PAR.LIMIT)}</small></p>
+ $('#sp').innerHTML=`<div class="panel"><h3 style="margin:0">📊 學習分析頁設定（家長用）</h3><p><small>${esc(PAR.LIMIT)}</small></p>
  <h4 style="margin:8px 0 2px">授權家長查看的個案</h4><p><small>${au===null?'目前是預設：家長只能看到「目前選取的個案」。勾選後改為自訂授權。':'自訂授權中：家長只能查看、切換下列個案。'}</small></p>
  ${lr.map(x=>`<label style="margin-right:12px"><input type="checkbox" ${(au===null?x.id===S.lrn.cur:au.includes(x.id))?'checked':''} onchange="PAR.tAuth('${x.id}',this.checked)"> ${esc(x.name)}</label>`).join('')}
  ${au!==null?' <button class="btn alt sm" onclick="PAR.tReset()">恢復預設（只有目前個案）</button>':''}
@@ -5405,7 +5405,7 @@ CLD.IDS={user:'usr_',teacher:'tch_',parent:'par_',student:'stu_',device:'dev_'};
 CLD.RESERVED=[
  ['正式使用者帳號ID／教師ID／家長ID','格式已定（usr_／tch_／par_），本機沒有帳號，未建立任何帳號資料'],
  ['學生ID','每位個案已有永久的 stu_ 編號（個案資料的 ext.cloud.sid），備份會帶著走；本機個案 ID（L001…）只在這台裝置內有效'],
- ['使用者角色','教師、家長、系統管理者（預留名稱）；目前的「教師密碼」與「家長專區授權」只是本機介面限制'],
+ ['使用者角色','教師、家長、系統管理者（預留名稱）；目前的「教師密碼」與「學習分析授權」只是本機介面限制'],
  ['個案授權關係','預留：使用者×學生×權限範圍（檢視／練習／觀察）×起迄日期；目前只有 S.par.auth（本機介面限制）'],
  ['家長邀請碼及綁定','預留：由教師為單一學生產生、有期限、一次使用的邀請碼。目前沒有，也不顯示任何假的邀請按鈕'],
  ['雲端教材資料庫、圖片及音檔儲存','預留：教材與媒體以編號和修改時間識別（現有 id／modified）；目前教材與錄音只在本機，以 ZIP 搬移'],
@@ -5458,7 +5458,7 @@ function tSEC(){const a=S.acl||{},aud=BK.audit(),rs=(()=>{try{return UI.rsGet()}
  <li>自動儲存：每次作答、設定變更都會立即存到這個瀏覽器的資料庫（IndexedDB）。本次開啟後最近一次儲存：${ls}。</li>
  <li>練習進度恢復：中途離開練習，回到首頁可以「繼續上次的練習」。${rs?'<b>目前有一個可繼續的練習。</b>':'目前沒有可繼續的練習。'}</li>
  <li>最近一次完整備份：<b>${fb}</b>　<button class="btn go sm" onclick="sub='io';tab(2)">到「教材與資料管理」匯出／還原</button></li>
- <li>備份內容：圖卡、分類、圖片、錄音、教學設定、詞彙庫設定、<b>詞彙組合、語句、生活情境、生活觀察、評量修正</b>、各個案的作答紀錄與熟悉度、家長專區設定。<b>不含</b>教師密碼與存取紀錄（避免密碼外流；還原到新裝置後請重新設定密碼）。</li>
+ <li>備份內容：圖卡、分類、圖片、錄音、教學設定、詞彙庫設定、<b>詞彙組合、語句、生活情境、生活觀察、評量修正</b>、各個案的作答紀錄與熟悉度、學習分析設定。<b>不含</b>教師密碼與存取紀錄（避免密碼外流；還原到新裝置後請重新設定密碼）。</li>
  <li>完整性檢查：備份內每個檔案都有大小與校驗碼（CRC32；資料檔另有 SHA-256），匯入時先檢查，不通過會警告並計入失敗；比目前程式新的資料版本會被拒絕。</li>
  <li>匯入前確認：顯示預覽（新增／相同／衝突筆數、個案與紀錄數、完整性結果）；匯入前自動在本機另存「還原前資料」，失敗不會改動原資料。同一份備份重複「合併」匯入不會產生重複紀錄。</li>
  <li>程式更新後的資料遷移：資料版本 ${DV}；舊版資料升級時會保留升級前備份，並在資料中留下遷移紀錄。</li></ul>
@@ -6089,7 +6089,7 @@ SRC.count=()=>{const o={builtin:{w:0,img:0},legacy:{w:0,img:0},custom:{w:0,img:0
 MAT.dimsOn=()=>{const D=MAT.dims();return{theme:D.theme,level:D.level,custom:(D.custom||[]).filter(x=>SRC.catOn(x.id))}};
 MAT.withOn=fn=>{const o=MAT.dims,d=MAT.dimsOn();MAT.dims=()=>d;try{return fn()}finally{MAT.dims=o}};
 ['catHtml','selAll'].forEach(k=>{const f=FL[k];if(typeof f!=='function')return;FL[k]=function(){const a=arguments;return MAT.withOn(()=>f.apply(this,a))}});
-{const f=FL.catHtml;FL.catHtml=function(){let h=f.apply(this,arguments);try{const m=FL.mem();if((m.dim||'theme')==='custom'&&!SRC.on('legacy')&&!SRC.on('custom'))h=h.replace(/<p>目前沒有教師自訂教材[^<]*<\/p>/,'<p>教師自訂教材與舊版內建教材目前<b>沒有啟用</b>（老師可在「教師專區 → 📖 詞彙庫 → 教材來源管理」啟用）。正式主題與 Level 不受影響。</p>')}catch(e){}return h}}
+{const f=FL.catHtml;FL.catHtml=function(){let h=f.apply(this,arguments);try{const m=FL.mem();if((m.dim||'theme')==='custom'&&!SRC.on('legacy')&&!SRC.on('custom'))h=h.replace(/<p>目前沒有教師自訂教材[^<]*<\/p>/,'<p>教師自訂教材與舊版內建教材目前<b>沒有啟用</b>（老師可在「後台更改 → 📖 詞彙庫 → 教材來源管理」啟用）。正式主題與 Level 不受影響。</p>')}catch(e){}return h}}
 MATFIX.defSel=d=>{const D=MAT.dimsOn();if(d==='theme')return(D.theme||[]).filter(x=>x.words>0).map(x=>x.id);return(D[d]||[]).filter(x=>x.words>0).map(x=>x.id)};
 /* 失效範圍修正擴充：分類存在但來源已停用，也視為「不可用」；全部不可用時改回正式主題（只移除真正已刪除的分類 ID，停用來源的選擇保留，重新啟用後恢復） */
 MATFIX.selFixM=m=>{if(!m||!m.sel||!Array.isArray(S.cats)||!S.cats.length)return null;const live=new Set(S.cats.map(c=>c.id));live.add('__none');let gone=0,reset=null;
@@ -6241,7 +6241,7 @@ ZG.KEEP=['ttsRate','recRate','aiGain'];
 {const f=LRN.ensure;LRN.ensure=async function(){const r=await f.apply(this,arguments);try{if(S.set&&!S.set.ttsFix224){(S.lrn&&S.lrn.list||[]).forEach(p=>{const pr=p.ext&&p.ext.pref;if(pr&&+pr.ttsRate===0.5)pr.ttsRate=.75});S.set.ttsFix224=1}}catch(e){}return r}}
 /*P26-END*/
 /*P27-BEGIN v22.4.1 第03-B批：舊版示範教材完全移除（併入 GitHub 15:30 的 P23B 並補強）、materials/ 依賴移除、跨瀏覽器語音備援、版本識別 */
-APP.id='20261128-05D';
+APP.id='20261128-05E';
 /* ---- 一、舊版內建示範教材（materials/ 18 張、4 個分類）：備份後一次性移除 ----
    只移除「仍與網站原始版本完全相同」的舊版圖卡（以 packSnap 簽章比對，不看名稱）；老師改過的保留為自訂教材；
    舊版分類只有在裡面已經沒有任何保留下來的圖卡時才移除；學習紀錄全部保留；S.legacyGone 標記後不再重複執行。
@@ -6719,6 +6719,61 @@ P37.go=null;P37.in=0;
 {const _s=startRound;startRound=function(){if(!P37.in)P37.go=null;return _s.apply(this,arguments)}}
 {const _q=showQ;showQ=function(){const r=_q.apply(this,arguments);P37.tag();return r}}
 /*P37-END*/
+/*P38-BEGIN v22.6.4 第05-E批：首頁簡化、上方選單改名、學習分析（五邊形圖）、設定精簡
+  教師：畫面要簡單。
+  - 非練習畫面（首頁、六站、學習分析、設定）不顯示上方車子動畫；練習中保留。
+  - 上方選單：首頁｜學習分析（原家長專區）｜設定｜後台更改（原教師專區，內容與密碼保護不變）。
+  - 學習分析只留「學習成果」（含近期可以陪孩子練習的詞彙與生活問法）與「能力說明與陪伴建議」（五邊形圖＋陪伴建議）。
+    今天練習、待複習、生活觀察等函式與資料都保留，只是不在這頁顯示。
+  - 設定頁不顯示：聲音的打勾項、學習輔助、麥克風；這些設定值完全不動，照常生效。 */
+const P38={};
+(()=>{try{const st=document.createElement('style');st.textContent='body:not(.ig) #scene{display:none!important}'+
+ '.p38ax{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px;margin:8px 0}.p38c{border:2px solid #d6dde8;border-radius:12px;padding:8px 10px;background:#fff}.p38c b{font-size:17px}.p38c .lv{display:inline-block;border-radius:8px;padding:0 8px;margin-left:6px;font-size:13px;color:#fff}'+
+ '.p38w{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:8px 0}.p38w>div{border:2px solid #e3e8ef;border-radius:12px;padding:6px;background:#fff;text-align:center}.p38w img{display:block;margin:0 auto;width:100%;max-width:120px;aspect-ratio:1;object-fit:contain}.p38w b{display:block;font-size:20px}.p38w small{display:block;text-align:left;margin-top:3px}';document.head.appendChild(st)}catch(e){}})();
+/* 1. 練習開始時場景由隱藏變成顯示：寬度從 0 變正常，立刻再排一次車道 */
+{const _s=scene;scene=function(){const sc=$('#scene'),w0=sc?sc.clientWidth:0;const r=_s.apply(this,arguments);try{if(sc&&!w0&&sc.clientWidth)_s.apply(this,arguments)}catch(e){console.warn('P38 scene',e)}return r}}
+/* 2. 上方選單名稱 */
+P38.nav=()=>{try{const a=$('#n4'),b=$('#n2');if(a)a.textContent='📊 學習分析';if(b)b.textContent='🛠 後台更改'}catch(e){}};P38.nav();
+/* 3. 學習分析 */
+P38.AX=[{k:'lc',n:'聽懂',full:'聽懂詞彙',ab:['lc','pi'],d:'聽到詞彙，能找到對的圖片。',tip:'說出物品名稱，請孩子指出來或拿給你，例如「把湯匙拿給我」。'},
+ {k:'sp',n:'說出',full:'說出詞彙',ab:['si','sp'],d:'看到圖片或物品，能自己說出詞彙。',tip:'看到熟悉的物品，先停 3 秒等孩子自己說；說不出來再給第一個音。'},
+ {k:'zy',n:'拼寫',full:'注音拼寫',ab:['zy','dc'],d:'能用注音拼出、聽打詞彙。',tip:'一起看繪本或招牌時，挑一兩個學過的詞，請孩子拼拼看注音。'},
+ {k:'ph',n:'組合',full:'詞彙組合',ab:['ph','se'],d:'能把詞彙組成短語或句子。',tip:'孩子說出一個詞後，幫他多加一個詞，例如「蘋果」→「吃蘋果」「紅色的蘋果」。'},
+ {k:'ap',n:'生活運用',full:'生活運用',ab:['gn','dl'],d:'換一張圖片、隔幾天、換一個情境，也能認得、說得出來。',tip:'在不同地方遇到同一個詞（家裡、超市、公園）時提醒孩子：「這也是○○」。'}];
+P38.axis=ax=>{const d={weak:0,mid:0,fa:0};let idx;try{idx=LA.idx().byW}catch(e){idx={}}
+ (LA.words()||[]).filter(w=>w.on).forEach(w=>{const seen=new Set(),ev=(idx[w.id]||[]).filter(e=>ax.ab.includes(e.ab)&&!seen.has(e.rid)&&seen.add(e.rid));if(!ev.length)return;const s=LA.stage(ev);if(d[s]!=null)d[s]++});
+ const j=d.weak+d.mid+d.fa;return{...d,j,v:j>=3?(d.fa+.5*d.mid)/j:null}};
+P38.lvl=v=>v==null?['資料不足','#9aa5b1']:v>=.7?['表現突出','#2e9d5b']:v>=.4?['穩定學習中','#2f6fe4']:['需要多陪伴練習','#e07a1f'];
+P38.radar=rows=>{const n=rows.length,C=170,R=110,pt=(i,f)=>{const a=-Math.PI/2+i*2*Math.PI/n;return[C+R*f*Math.cos(a),C+R*f*Math.sin(a)]};
+ let s=`<svg viewBox="0 0 340 340" width="100%" style="max-width:380px" role="img" aria-label="五個面向的學習狀況圖">`+[.25,.5,.75,1].map(f=>`<polygon points="${rows.map((_,i)=>pt(i,f).join(',')).join(' ')}" fill="none" stroke="#ccd3dd"/>`).join('');
+ rows.forEach((r,i)=>{const[x,y]=pt(i,1.2),[x2,y2]=pt(i,1);s+=`<line x1="${C}" y1="${C}" x2="${x2}" y2="${y2}" stroke="#dde3ec" ${r.v==null?'stroke-dasharray="4 4"':''}/><text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="middle" font-size="15" font-weight="700" fill="${r.v==null?'#9aa5b1':'#222'}">${esc(r.n)}</text>${r.v==null?`<text x="${x}" y="${y+16}" text-anchor="middle" font-size="11" fill="#9aa5b1">資料不足</text>`:''}`});
+ if(rows.some(r=>r.v!=null))s+=`<polygon points="${rows.map((r,i)=>pt(i,r.v||0).join(',')).join(' ')}" fill="rgba(47,111,228,.22)" stroke="#2f6fe4" stroke-width="2"/>`;
+ rows.forEach((r,i)=>{if(r.v==null)return;const[x,y]=pt(i,r.v);s+=`<circle cx="${x}" cy="${y}" r="5" fill="#2f6fe4"/>`});return s+'</svg>'};
+P38.life=id=>{try{const w=LM.map.get(id),c=byId(id);if(!w||!c)return'';const q=CLZ.q(c);if(q)return'可以問孩子：「'+q+'」';
+ const ex=(w.sent||[]).map(x=>x.ex).find(x=>x&&x.includes(c.text));return ex?'一起說說看：「'+ex+'」':'生活中看到時，指給孩子看，說說「'+c.text+'」。'}catch(e){return''}};
+P38.recent=()=>{let L=[];try{L=PAR.review().slice(0,8)}catch(e){}
+ return `<div class="box" style="width:min(720px,96%);text-align:left"><h3 style="margin:0">🌱 近期可以陪孩子練習的詞彙</h3>
+ ${L.length?`<p style="margin:4px 0"><small>依最近答錯、需要提示、到了複習時間挑出；每個詞附上一句生活中可以問的話。</small></p><div class="p38w">${L.map(w=>`<div>${w.img?`<img src="${w.img}" alt="">`:''}<b>${esc(w.text)}</b><small>${esc(w.why[0]||'')}</small>${P38.life(w.id)?`<small style="color:#2e7d4f">💬 ${esc(P38.life(w.id))}</small>`:''}</div>`).join('')}</div>
+ <p><button class="btn go" onclick="PAR.go('all')">▶ 一鍵複習這些詞彙</button></p>`:'<p>目前沒有需要特別複習的詞彙。多練習幾次後，這裡會列出近期可以陪孩子練習的詞彙。</p>'}</div>`};
+PAR.sec0={...PAR.sec};/* 原本的各分頁（今天練習、待複習、七項能力、陪伴建議、生活觀察）保留，供後續使用與測試 */
+{const _r=PAR.sec.res;PAR.sec.res=function(){let h='';try{h=_r.apply(this,arguments)}catch(e){console.warn('P38 res',e)}return h+P38.recent()}}
+PAR.sec.ab=()=>{const rows=P38.AX.map(a=>({...a,...P38.axis(a)})),has=rows.some(r=>r.v!=null),ord=[...rows].sort((a,b)=>(a.v==null?2:a.v)-(b.v==null?2:b.v));let tips=[];try{tips=PAR.tips().slice(0,3)}catch(e){}
+ const best=rows.filter(r=>r.v!=null&&r.v>=.7).map(r=>r.full),weak=rows.filter(r=>r.v!=null&&r.v<.4).map(r=>r.full);
+ return `<div class="box" style="width:min(720px,96%);text-align:left"><h3 style="margin:0">🧭 孩子目前的學習狀況</h3>
+ <div style="text-align:center">${P38.radar(rows)}</div>
+ <p style="margin:2px 0">${has?(best.length?'比較突出：<b>'+esc(best.join('、'))+'</b>。':'')+(weak.length?'可以多陪伴：<b>'+esc(weak.join('、'))+'</b>。':'')+(!best.length&&!weak.length?'各面向都在穩定學習中。':''):'練習紀錄還不夠，多練習幾次後就會畫出圖形。'}</p>
+ <p style="margin:2px 0"><small>圖形越往外表示越熟悉。每個面向依孩子學過的詞彙計算：已熟悉算 1、學習中算 0.5、待加強算 0；同一面向至少要有 3 個詞才會顯示。</small></p></div>
+ <div class="box" style="width:min(720px,96%);text-align:left"><h3 style="margin:0">💡 各面向說明與陪伴建議</h3><div class="p38ax">${ord.map(r=>{const[l,c]=P38.lvl(r.v);return `<div class="p38c"><b>${esc(r.full)}</b><span class="lv" style="background:${c}">${l}</span>
+  <div><small>${esc(r.d)}</small></div>${r.j?`<div><small>已熟悉 ${r.fa}、學習中 ${r.mid}、待加強 ${r.weak} 個詞</small></div>`:''}<div style="margin-top:4px;color:#2e7d4f"><small>🏠 生活中可以這樣做：${esc(r.tip)}</small></div></div>`}).join('')}</div>
+ ${tips.length?`<h4 style="margin:8px 0 2px">根據最近的練習</h4><ul style="margin:0 0 0 1.2em;padding:0">${tips.map(t=>`<li>${esc(t.t)}<br><small style="color:#666">依據：${esc(t.b)}</small></li>`).join('')}</ul>`:''}</div>`};
+PAR.TABS0=PAR.TABS;/* 原本的六個分頁清單保留 */PAR.TABS=[['res','學習成果'],['ab','能力說明與陪伴建議']];
+{const _p=PAR.page;PAR.page=function(){try{if(!PAR.TABS.some(([k])=>k===PAR.ui.sec))PAR.ui.sec='res'}catch(e){}return _p.apply(this,arguments)}}
+/* 4. 設定頁精簡（只是不顯示；S.set 的值不變） */
+{const _s=UI.settings;UI.settingsFull=_s;/* 完整設定頁（含隱藏項目）保留，供後續使用與測試 */UI.settings=function(){const h=_s.apply(this,arguments);try{const t=document.createElement('template');t.innerHTML=h;const R=t.content;
+  ['s_kv','s_aps','s_key','s_snd','s_vf','s_gv'].forEach(id=>{const i=R.querySelector('#'+id),l=i&&i.closest('label');if(l){const n=l.nextElementSibling;if(id==='s_kv'&&n&&n.tagName==='SMALL')n.remove();l.remove()}});
+  R.querySelectorAll('.panel').forEach(p=>{const h3=p.querySelector('h3');if(h3&&/學習輔助|麥克風/.test(h3.textContent))p.remove()});
+  const d=document.createElement('div');d.appendChild(R);return d.innerHTML}catch(e){console.warn('P38 settings',e);return h}}}
+/*P38-END*/
 (async()=>{let s=await load();if(s&&s.decks&&!s.v){await kvPut('backup-pre-v2',s);s=migrate(s)}const mb=await kvGet('music').catch(()=>null);if(mb)mus.url=URL.createObjectURL(mb);if(s)S={...DEF(),...s,set:{...DEF().set,...s.set}};if(s&&s.set&&s.set.vs==null&&s.set.vol!=null)S.set.vs=s.set.vol;
 await zaLoad();await LRN.ensure();try{if(await LIB.load()){await LIB.defBoot();LIB.sync()}}catch(e){console.warn('LIB boot',e)}if(S.set.stuName===undefined)S.set.stuName='';try{P28.init()}catch(e){}if(S.set.musSrc==='project'&&!S.set.musPicked)S.set.musSrc='builtin';if(!['key','listen','spell','speak'].includes(S.set.mode))S.set.mode='key';if(S.set.ttsMig!==3){S.set.ttsMig=3;S.set.ttsRate=.75;S.set.recRate=1.25;S.set.aiGain=1.5}if(!S.bankMap)S.bankMap={};if((S.banks||[]).some(b=>!(b.id in S.bankMap))||/^b:/.test(S.set.src||'')){if(!(await kvGet('backup-pre-bankmig')))await kvPut('backup-pre-bankmig',JSON.parse(JSON.stringify(S)));migrateBanks()}if(!S.set.musMig){S.set.musMig=1;S.set.musSrc='project';save()}FL.recover();try{FL.applyPref()}catch(e){}save();UI.init();home();mtLbl();packLoad();
  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();

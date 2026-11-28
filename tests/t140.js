@@ -4,7 +4,7 @@ const CARDS=`S.cards=[1,2,3,4,5,6].map(i=>({id:'c'+i,text:'詞'+i,zy:'ㄏㄨㄛ�
 const boot=async(o={})=>{const w=mk(Object.assign({fresh:true},o));const t0=Date.now();while(Date.now()-t0<8000&&!(w.eval('typeof UI!=="undefined"&&S.set.ttsMig===3&&!!document.querySelector("#mid .mc")')))await sleep(50);const E=s=>w.eval(s),q=s=>w.document.querySelector(s),qa=s=>[...w.document.querySelectorAll(s)];E(CARDS);return {w,E,q,qa}};
 (async()=>{
  {const {w,E,q,qa}=await boot();
-  T('nav has exactly 首頁／家長專區／設定／教師專區',JSON.stringify(qa('nav button').map(b=>b.textContent.trim()))==='["🏠 首頁","👪 家長專區","⚙ 設定","🧑‍🏫 教師專區"]');
+  T('nav has exactly 首頁／學習分析／設定／後台更改（v22.6.4 改名）',JSON.stringify(qa('nav button').map(b=>b.textContent.trim()))==='["🏠 首頁","📊 學習分析","⚙ 設定","🛠 後台更改"]');
   T('no 學生遊戲 entry anywhere in nav/home',!/學生遊戲/.test(q('nav').textContent+q('#mid').textContent));
   T('home shows exactly three large learning entries and no vehicle grid/settings',qa('.mc').length===3&&qa('#mid .vc').length===0&&qa('#mid select').length===0&&qa('#mid input').length===0);
   T('entry labels and one-line descriptions as specified',JSON.stringify(qa('.mc b').map(x=>x.textContent))==='["聽讀練習","口語練習","綜合練習"]'&&JSON.stringify(qa('.mc .ms').map(x=>x.textContent))==='["聽一聽、認一認、拼一拼","想一想、說一說","聽、說、認、拼，一起練習"]');
@@ -15,12 +15,12 @@ const boot=async(o={})=>{const w=mk(Object.assign({fresh:true},o));const t0=Date
   E('UI.pick("integ")');T('綜合 → six-station map, lm=integ',qa('#mid .stc').length===6&&E('S.set.lm')==='integ');
   T('mode view is the six-station map',q('#mid').textContent.includes('選一站開始'));
   // 設定
-  E('tab(5)');T('設定 page exists with 聲音/學習輔助/畫面/輸入方式/麥克風 and highlights n5',['聲音','學習輔助','畫面','輸入方式','麥克風'].every(k=>q('#mid').textContent.includes(k))&&q('#n5').classList.contains('on')&&!q('#n1').classList.contains('on'));
+  E('tab(5)');T('設定 page exists with 聲音/畫面/輸入方式（v22.6.4 不顯示學習輔助、麥克風） and highlights n5',['聲音','畫面','輸入方式'].every(k=>q('#mid').textContent.includes(k))&&!['學習輔助','麥克風'].some(k=>q('#mid').textContent.includes(k))&&q('#n5').classList.contains('on')&&!q('#n1').classList.contains('on'));
   T('設定 no longer holds the 分類／順序／題數 selectors (moved to setup)',!/選擇分類|出題順序/.test(q('#mid').textContent));
   E('S.set.src="all"');
   T('音樂 button label renders in 設定 (mtLbl)',/音樂/.test(q('#mt').textContent));
   // 家長專區 / 教師專區
-  E('tab(4)');T('家長專區 shows the parent home (today plan) and highlights n4',/今日|開始/.test(q('#mid').textContent)&&q('#n4').classList.contains('on'));
+  E('tab(4)');T('學習分析 shows 學習成果／能力說明與陪伴建議 and highlights n4',/學習成果/.test(q('#mid').textContent)&&/能力說明與陪伴建議/.test(q('#mid').textContent)&&q('#n4').classList.contains('on'));
   E('tab(2)');T('教師專區 shows teacher area, highlights n2, student area hidden',q('#tch')&&!q('#tch').classList.contains('hide')&&q('#stu').classList.contains('hide')&&q('#n2').classList.contains('on'));
   E('S.acl&&S.acl.h&&0;ACL&&ACL.unlock&&0');
   E('tab(1)');T('tab(1) returns to home with only n1 highlighted',qa('.mc').length===3&&qa('nav button.on').map(b=>b.id).join()==='n1');

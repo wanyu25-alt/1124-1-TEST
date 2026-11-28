@@ -1,15 +1,15 @@
 {
  "schemaVersion": 1,
  "project": "詞彙特快車 Vocabulary Express",
- "batch": "05-C",
- "fromVersion": "v22.6.1",
- "toVersion": "v22.6.2",
- "buildId": "20261128-05C",
+ "batch": "05-E",
+ "fromVersion": "v22.6.3",
+ "toVersion": "v22.6.4",
+ "buildId": "20261128-05E",
  "base": {
   "github": "wanyu25-alt/1124-1-TEST",
-  "commit": "4b68ff9939e0127f32e71d35f1f1a00c869b1698",
-  "indexSha256": "88321728c8e2d21b9f3c8020b1cdae81380b93325c541aa8f7ee9fbdefeba5aa",
-  "note": "直接套用於 GitHub 目前根目錄（v22.6.1，已部署）"
+  "commit": "9134777d7d56087caecc08245c9effc61fe2f586",
+  "indexSha256": "95c11ff428a932e4ece523d3ff538570dee37ac719e9f7096c963e124440e392",
+  "note": "直接套用於 GitHub 目前根目錄（v22.6.3，已部署）"
  },
  "dataMigration": {
   "formatChange": false,
@@ -20,21 +20,21 @@
   "overwrite": [
    {
     "path": "index.html",
-    "sha256": "8b07ca8fed9de903211411db399503a11bc50e1603845b4bf6446246e68458e2",
-    "bytes": 1060463,
-    "previousSha256": "88321728c8e2d21b9f3c8020b1cdae81380b93325c541aa8f7ee9fbdefeba5aa"
+    "sha256": "42dd13a816481066e3e8ee5efa50da40316d85fa89cee84498785ec812f71c98",
+    "bytes": 1069948,
+    "previousSha256": "95c11ff428a932e4ece523d3ff538570dee37ac719e9f7096c963e124440e392"
    },
    {
     "path": "vocab/language-metadata.json",
-    "sha256": "ab954804014866cf5aadb3e507c2336347b6fefa828b4665058416995e4dd38f",
-    "bytes": 661349,
-    "previousSha256": "ab954804014866cf5aadb3e507c2336347b6fefa828b4665058416995e4dd38f"
+    "sha256": "dbf865f6da354bb597c2bcfbe404cae84f92abdf2f12c7239dd29374526f9335",
+    "bytes": 671790,
+    "previousSha256": "dbf865f6da354bb597c2bcfbe404cae84f92abdf2f12c7239dd29374526f9335"
    },
    {
     "path": "voice/tts/index.json",
-    "sha256": "edd1ad0163376a5cbc4afd4cddac6351eec1b1a4367ac9add81b9061c1af516c",
-    "bytes": 56360,
-    "previousSha256": "edd1ad0163376a5cbc4afd4cddac6351eec1b1a4367ac9add81b9061c1af516c"
+    "sha256": "a896424c430c8a00b764ce00f27aa33b75bf68e3fcbedac49fd5b6c316b37971",
+    "bytes": 81868,
+    "previousSha256": "a896424c430c8a00b764ce00f27aa33b75bf68e3fcbedac49fd5b6c316b37971"
    }
   ],
   "addVoiceTts": "0 個 m4a（聽句子說詞問句）"
@@ -44,58 +44,111 @@
   "overwrite": [
    {
     "path": "BATCH05-REPORT.md",
-    "sha256": "7ffd60d5d392513d1c9b386460359fc0882877dd75ff17f84eaf1317e4e849df",
-    "bytes": 10387,
-    "previousSha256": "16b970001252168c5c1ac92c0b5e473ee849804492219e7fc8ac61eebcceefee"
+    "sha256": "ef6ce2f94dd4774267a38722b8de551710a945e721be9c9d99ef8e225b232afa",
+    "bytes": 11597,
+    "previousSha256": "72adb73874897b21efd2ca329f2e9d2a78ca5d09d4ff3a7b7347f01af32f40fb"
    },
    {
     "path": "CHANGELOG.md",
-    "sha256": "57f21c301712b8b6feef1ef75cbe107f4542da0c288099d0af3eef8b20d98b55",
-    "bytes": 84771,
-    "previousSha256": "2109b25cb236b2a6cc5e038c81bb510b797c3105a21b48b2e9eb131df8ed7783"
+    "sha256": "1ce39f84512725dacb67d92049e996e8490ad0959c4bfade643461c3966ef824",
+    "bytes": 86384,
+    "previousSha256": "e004116208b0faedc37ad7269b6249f7eb5f8a57b189948cea8a8886780ee44c"
    },
    {
     "path": "DEVELOPMENT-ROADMAP.md",
-    "sha256": "69175a7db967f71995bb7c1cdd9600a54b5fbc89d5b1103f774901af62929f60",
-    "bytes": 11880,
-    "previousSha256": "5690bfe3b08876d06c426b6ce60864c7cba352e0940b74b513753ff4f1ee4b3a"
+    "sha256": "869f1dc42cb67c95fa7e53f0210ad4de1d94e192e70cbfacbfdfe894fd79a9cc",
+    "bytes": 12286,
+    "previousSha256": "8148405b3e47af0823895af64c1e7a829c7b6e0ea38012d9245695e5e68f0947"
    },
    {
     "path": "PATCH-MANIFEST.json",
     "sha256": "（本檔案，不自我校驗）",
-    "bytes": 4541,
-    "previousSha256": "476dd4ed9085039bf31161382c8e6777356b605d0b57cc9881cb8160e39f6e2b"
+    "bytes": 2464,
+    "previousSha256": "8c5a54251743e9e6ae2fa499b55a5235208aba0d3e67abe0b271c4113b9960d3"
    },
    {
     "path": "PATCH-README.md",
-    "sha256": "374c94c55f7b00d1cca8c0a04c5e96b5ac169c492211435bbe9a979e7d1b4e35",
-    "bytes": 626,
-    "previousSha256": "1545ea03d7b3af05d8ce2fcd08ea97d5b10ff7ed935449cd288eb8ea8c5dbf41"
+    "sha256": "30eb98fb59db5c0300fd9b2a1cb7fb2f41eefcaf1b2a630eb839f4bc83730f64",
+    "bytes": 723,
+    "previousSha256": "504639f51a8da255aa1daa4eb885b092660c6a026fcb0a595e8039c4274cf2c6"
    },
    {
     "path": "PROJECT-HANDOFF.md",
-    "sha256": "0bfc5e017c8cd6bcf949110b75ef0498b35d498e9e25f5fc11f2aaecc2d77b7e",
-    "bytes": 32835,
-    "previousSha256": "b5bc47457c9d1a5ad0b8e76ebfcc5ff3fc6db6afc6ec4f1c0cf099342eb5474f"
+    "sha256": "b9b854bf172d283ad1f29b667f2e40f0f2f0a9f6f0474d9dd4eb1930f43ff069",
+    "bytes": 34535,
+    "previousSha256": "3a317cd85cc427596a4ef3f3ada01728a11a766c911faee88c3abd260e8dcb1a"
    },
    {
     "path": "tests/e2e/batch05-lang.js",
-    "sha256": "2d80b5746f161f6108897f9d40af4d19210dd98590ada97e0d557b1140c983c7",
-    "bytes": 14176,
-    "previousSha256": "56cf594ecfb99a79689e28babb156c60d372f19ab598f0052ba530c2b5fd184b"
+    "sha256": "a37958d37b9432ed50f60fefeca6668ae4ce4e56199e2362a2bd1e803566e087",
+    "bytes": 14360,
+    "previousSha256": "431aeb48e33cfd811366834d9ecd91a265e461cb0db2f7cf45c66a1aa132deb6"
+   },
+   {
+    "path": "tests/e2e/nav-screens.js",
+    "sha256": "f698b027adc25c6265e67f7fccdf5097a7ea8f0b2b5e502fa5a589a7d3b6c51d",
+    "bytes": 6655,
+    "previousSha256": "ab032ab8a663c240da513773ea1f9ee6b900fa8fe3a8574422293d2b12a886a3"
+   },
+   {
+    "path": "tests/e2e/phase7-parent.js",
+    "sha256": "f3ebdd63ade0ecca43a4b1e85065414d3062e62f2fa00fa5a8af2660fcfafc33",
+    "bytes": 9677,
+    "previousSha256": "6d48f6b6b3d9c4dc2e338d4b541a25a1f728a41fa79e71d8ea9cfef61ad9acc0"
+   },
+   {
+    "path": "tests/t110.js",
+    "sha256": "306d5b97e46dab4a4f0a585a54d73e6f50abd094de1a0d5713431ec9d1500fdd",
+    "bytes": 21088,
+    "previousSha256": "382a679c13e63f93bcb2a9e2527fc228e6b7c8f7d763ff773d6aeb031ec1ce44"
+   },
+   {
+    "path": "tests/t120.js",
+    "sha256": "a6c4ab6e2879af61a7b9ae2f593c3f6590581a0806d7920c6606e16d8178a045",
+    "bytes": 4343,
+    "previousSha256": "d3867d47166bce996248104b1a3d11787e5cf925ea2fdf054de61249cbda0f0b"
+   },
+   {
+    "path": "tests/t140.js",
+    "sha256": "3cd651fe1caa9fad2295aed7e2265e26a0df6fe0c83fbce3f555b5cdcb89427e",
+    "bytes": 12785,
+    "previousSha256": "718fff5a89b10bfc631f8bfaf34df9cdac744cad3eddae83d00fee3d976b9eac"
+   },
+   {
+    "path": "tests/t150.js",
+    "sha256": "1bb88d6d4c19a03754bda8f193e70158d426fea6a0392645b0af1edce139ea11",
+    "bytes": 2955,
+    "previousSha256": "5096f1a869549afc21b565c87d0ab86158541a50dea4aca9b14fc53ff658f03c"
+   },
+   {
+    "path": "tests/t152.js",
+    "sha256": "104455037d6afd8b47cdc81799593b4e95bc13f286745d3c9683ecd9ba05b59d",
+    "bytes": 12134,
+    "previousSha256": "5cae1e453c4e63fee8b1aedbaeac3d9ae0aaf83004c464a5847b4e12268aaf28"
+   },
+   {
+    "path": "tests/t200.js",
+    "sha256": "c9989109ee2f8ec9d9cc7baaef6f6f0a9ed4df7db0ad506eb45a6d9ba70e3687",
+    "bytes": 18412,
+    "previousSha256": "85840c9c33dd5ed77b193d46c49d3ffe97e2f75cf52fd5daa25afd90b1ed5505"
    },
    {
     "path": "tests/t230.js",
-    "sha256": "b6281eb96ea16962b1ad3c6e23357f0d7e2fa5676c081ccce5db9a840a16724f",
+    "sha256": "21562351c757a56830a4965620de8a8fd4a9523b63a1d9adf330c9c4072808b1",
     "bytes": 11463,
-    "previousSha256": "4000b03fb5f330b2f279e9c02eb8bc91bce56fcb7474e485758589f726325e62"
+    "previousSha256": "843a419db3fb5d7d2555ff3b3190e5ed98bcbf5560f313791ee217fe336bc6f4"
    }
   ],
   "add": [
    {
-    "path": "tests/e2e/batch05c-modeband.js",
-    "sha256": "52ad4f5e7d4bbed70ea20e513f93f7d8ac9b517cc188c4222dff3a46ee430eee",
-    "bytes": 4359
+    "path": "BATCH05E-REPORT.md",
+    "sha256": "1dee67637caeee24a25be5d2fafc3a2cd7c7639c4a3204ecc3bb845728290f9b",
+    "bytes": 6018
+   },
+   {
+    "path": "tests/e2e/batch05e-ui.js",
+    "sha256": "bedaeb67f01f7d9a053df4691eae562042c21908e413fc84471b9016ad812da4",
+    "bytes": 6934
    }
   ]
  },
@@ -110,8 +163,8 @@
   "舊增量包資料夾"
  ],
  "tests": {
-  "jsdom": "1820 通過／10 失敗（與修改前逐檔相同）",
-  "e2e": "578 通過／0 失敗（含 batch05c-modeband 8 項）",
+  "jsdom": "1821 通過／10 失敗（10 項與修改前相同）",
+  "e2e": "589 通過／0 失敗（含 batch05e-ui 11 項；舊測試依新介面更新預期，見 BATCH05E-REPORT）",
   "device": "待教師 Mac Chrome 實測"
  },
  "deployed": "尚未推送"

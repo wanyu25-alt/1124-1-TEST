@@ -23,7 +23,7 @@ const boot=async(o={})=>{const w=mk(Object.assign({fresh:true},o));const t0=Date
  E('FL.end()');
  T('end restores S.set',E('!S.set.flbk')&&E('FL.run')===null);
  E('tab(5)');
- T('settings has 聲音/學習輔助/畫面 and restore defaults',['聲音','學習輔助','畫面','恢復'].every(k=>q('#mid').textContent.includes(k)));
+ T('settings has 聲音/畫面 and restore defaults（v22.6.4 不顯示學習輔助）',['聲音','畫面','恢復'].every(k=>q('#mid').textContent.includes(k))&&!q('#mid').textContent.includes('學習輔助'));
  E('FL.set("waitSec",10)');T('wait 10 s applied to IDLE_MS',E('IDLE_MS')===10000);
  E('FL.set("waitSec",0)');T('unlimited wait → IDLE_MS Infinity',E('IDLE_MS')===Infinity);
  E('FL.set("hintMode","none")');T('hint none stored per learner',E('LRN.cur().ext.pref.hintMode')==='none');

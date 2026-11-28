@@ -8,7 +8,7 @@ const AS=fs.readFileSync(path.join(__dirname,'lib','audio-stub.js'),'utf8'),MS=f
  await p.waitForFunction(()=>typeof S!=='undefined'&&S.cards&&S.cards.length>=1000&&S.lrn&&typeof LM!=='undefined',null,{timeout:60000});await p.waitForTimeout(800);
  await p.evaluate(()=>{window.confirm=()=>true;window.alert=()=>{}});
  const r0=await p.evaluate(()=>({n:LM.map.size,err:LM.err,ver:APP.build,cnt:LM.meta&&LM.meta.count}));
- T('L1 開機時讀入正式語言屬性 1000 詞；版本 v22.6.3',r0.n===1000&&!r0.err&&r0.ver==='v22.6.3',r0);
+ T('L1 開機時讀入正式語言屬性 1000 詞；版本 v22.6.4',r0.n===1000&&!r0.err&&r0.ver==='v22.6.4',r0);
  const id=w=>S.cards.find(c=>c.text===w&&c.lib);
  const r1=await p.evaluate(()=>{const c=w=>S.cards.find(x=>x.text===w&&x.lib),pen=c('鉛筆'),run=c('刷牙'),red=c('紅色');const a=cxOf(pen),b=cxOf(run);
   return{use:a.use,sem:a.sem,posPen:a.pos,posRun:b.pos,raw:(S.cx[pen.id]||{}).use||'',scene:b.scene,verbs:a.rel.verbs,redScene:cxOf(red).scene}});

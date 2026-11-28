@@ -6,7 +6,8 @@ await p.evaluate(()=>{window.confirm=()=>true;window.alert=m=>{window.__al=m};S.
  window.__n=0;const t=d=>Date.now()-d*864e5-36e5,cs=S.cards.filter(c=>c.img&&!c.part).slice(0,8);
  const add=(w,game,o)=>{o=o||{};const out=o.out||'correct';S.recs.push({sv:1,id:'E'+(window.__n++),learnerId:LRN.id(),itemId:w,itemKind:'word',itemText:byId(w).text,game,outcome:out,independent:out==='correct'&&!(o.h),hints:o.h?[{type:'P1'}]:[],first:{result:out==='correct'?'correct':'wrong'},final:{},ts:t(o.d||0),session:{id:'s'+(o.d||0)},ext:{aid:{hint:'none'}},purpose:'assess',stage:2,tries:0,durMs:25000,pk:game==='pick'?{sub:'word',n:3}:undefined})};
  for(let i=0;i<4;i++){add(cs[0].id,'key',{d:i});add(cs[0].id,'pick',{d:i})}add(cs[1].id,'speak',{d:1,h:1});add(cs[2].id,'pick',{d:1,out:'wrong'});add(cs[3].id,'pick',{d:2});add(cs[5].id,'pick',{d:12});add(cs[4].id,'pick',{d:3});VP._k=null;save();window.__ws=cs.map(c=>c.id)});
-await p.evaluate(()=>{tab(4)});await p.waitForTimeout(600);
+/* v22.6.4：學習分析頁只顯示兩個分頁；原本六個分頁的函式都保留，這個測試切回原本六個分頁，繼續檢查它們的功能 */
+await p.evaluate(()=>{PAR.TABS=PAR.TABS0;PAR.sec=Object.assign(PAR.sec,PAR.sec0);tab(4)});await p.waitForTimeout(600);
 let h=await p.evaluate(()=>document.querySelector('#mid').innerText);
 T('家長專區：六個分頁、孩子名字、今日推薦（優先目標、預計時間、建議題數、開始按鈕）',['今天練習','學習成果','待複習詞彙','能力說明','陪伴建議','生活觀察'].every(t=>h.includes(t))&&/第一優先/.test(h)&&/預計約/.test(h)&&/建議題數/.test(h)&&/開始今日學習|繼續今日學習/.test(h),h.slice(0,200));
 T('家長頁沒有專業統計術語（沒有「獨立率」「P0」「標準差」）',!/獨立率|P0|標準差|信賴區間|顯著/.test(h));

@@ -9,7 +9,8 @@ window.__add=(wid,game,o)=>{o=o||{};const out=o.out||'correct',ts=o.ts!=null?o.t
  S.recs.push(r);VP._k=null;return r};`;
 const boot=async()=>{const w=mk({fresh:true});const t0=Date.now();while(Date.now()-t0<8000&&!w.eval('typeof PAR!=="undefined"&&typeof UI!=="undefined"&&S.set.ttsMig===3'))await sleep(50);const E=c=>w.eval(c);w.alert=m=>{w.__al=m};w.confirm=()=>true;E(SEED);E(HELP);return{w,E}};
 const J=(E,c)=>JSON.parse(E('JSON.stringify('+c+')'));
-const page=(E,sec)=>{E(`UI.view='parent';PAR.ui.sec='${sec}';PAR.ui.msg=''`);return E('UI.parent()')};
+/* v22.6.4：學習分析頁只顯示兩個分頁；原本的六個分頁函式保留在 PAR.sec0，這裡直接測試它們 */
+const page=(E,sec)=>{E(`UI.view='parent';PAR.ui.sec='${sec}';PAR.ui.msg=''`);return E(`PAR.sec0['${sec}']()`)};
 (async()=>{
  // ① 沒有任何紀錄：每一頁都能顯示，且不亂下判斷
  {const {E}=await boot();
@@ -18,7 +19,7 @@ const page=(E,sec)=>{E(`UI.view='parent';PAR.ui.sec='${sec}';PAR.ui.msg=''`);ret
   T('① no data → 尚未觀察 (not "表現不佳"); 七項能力 shown with plain names',/語意理解/.test(h[3])&&/聽得懂詞彙/.test(h[3])&&(h[3].match(/尚未觀察/g)||[]).length>=7&&!/表現不佳|不好意思|落後/.test(h[3].replace('不代表表現不好','')));
   T('① results page says no records instead of showing zeros as progress',/沒有練習紀錄/.test(h[1])&&/還沒有練習紀錄/.test(h[1]));
   T('① review page with no records lists nothing and does not invent words',/目前沒有待複習的詞彙/.test(h[2])&&E('PAR.review().length')===0);
-  T('① permission limits are shown plainly on the parent page',/本機測試階段的權限說明/.test(h[0])&&/不是資訊安全保護/.test(h[0]));}
+  {const pg=E("UI.view='parent';UI.parent()");T('① permission limits are shown plainly on the parent page',/本機測試階段的權限說明/.test(pg)&&/不是資訊安全保護/.test(pg));}}
  // ② 今日推薦
  {const {E}=await boot();
   E(`__add('c1','pick');__add('c1','pick',{d:1});__add('c2','speak',{hints:[{type:'P1'}]});__add('c2','speak',{d:1,hints:[{type:'P1'}]});__add('c3','speak',{out:'wrong',d:2});for(let i=0;i<6;i++)__add('c'+(4+i%3),'pick',{d:i%3})`);

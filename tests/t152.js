@@ -5,7 +5,8 @@ const SEED=`S.cards=[1,2,3,4,5,6].map(i=>({id:'c'+i,text:'詞'+i,zy:'ㄏㄨㄛˇ
 const boot=async(o={})=>{const w=mk(Object.assign({fresh:true},o));const t0=Date.now();while(Date.now()-t0<8000&&!(w.eval('typeof UI!=="undefined"&&typeof FL!=="undefined"&&S.set.ttsMig===3')))await sleep(50);const E=c=>w.eval(c),q=s=>w.document.querySelector(s),qa=s=>[...w.document.querySelectorAll(s)];w.alert=m=>{w.__al=m};w.confirm=()=>true;E(SEED);return{w,E,q,qa}};
 (async()=>{
  // ① 設定頁內容
- {const {w,E,q,qa}=await boot();E('tab(5)');const t=q('#mid').textContent;
+ {const {w,E,q,qa}=await boot();E('tab(5)');const shown=q('#mid').textContent,t=(()=>{const d=w.document.createElement('div');d.innerHTML=E('UI.settingsFull()');return d.textContent})();/* v22.6.4：畫面上只顯示部分設定；完整設定頁（UI.settingsFull）仍測試 */
+  T('設定（v22.6.4）：畫面上不顯示聲音打勾項、學習輔助、麥克風',!/按下注音鍵時立刻念出|鼓勵音效|學習輔助|作答等待時間|麥克風/.test(shown)&&/背景音樂/.test(shown)&&/播放速度/.test(shown));
   T('設定: 聲音 items',['背景音樂','真人錄音音量','播放速度','按下注音鍵時立刻念出','鼓勵音效'].every(k=>t.includes(k)||k==='語音播放速度'&&/播放速度/.test(t)));
   T('設定: 學習輔助 items (等待時間/注音提示/語音提示/圖片選項數量/成人協助/換題/預設題數難度)',['作答等待時間','注音提示','自動播放語音','圖片選項數量','大人幫忙','自動換下一題','預設練習題數','預設挑戰難度'].every(k=>t.includes(k)));
   T('設定: 畫面 items (動畫/文字按鍵大小/畫面輔助)',['動畫效果','文字與按鍵大小','畫面輔助'].every(k=>t.includes(k)));
